@@ -13,14 +13,11 @@ public class User {
     private Long createdAt;
     private Long updatedAt;
 
-    public User(UUID id, String userName, String password, String email, String nickName, Long createdAt, Long updatedAt) {
-        this.id = id;
+    public User(String userName, String password, String email, String nickName) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.nickName = nickName;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
