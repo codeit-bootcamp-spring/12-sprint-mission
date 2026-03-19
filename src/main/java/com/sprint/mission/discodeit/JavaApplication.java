@@ -12,8 +12,12 @@ public class JavaApplication {
 
         User user = new User("test", "test@email.com", "1234", "test");
         userService.save(user);
-        User user2 = new User("test2", "test2@email.com", "1234", "test");
+
+        User user2 = new User("test3", "test@email.com", "1234", "test");
         userService.save(user2);
+
+        User user3 = new User("test2", "test2@email.com", "1234", "test");
+        userService.save(user3);
         System.out.println(userService.findAll());
         System.out.println("---------------사용자 테스트 끝!!!---------------------\n");
     }
