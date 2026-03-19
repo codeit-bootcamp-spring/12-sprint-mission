@@ -28,16 +28,16 @@ public class JCFUserService implements UserService {
         return new ArrayList<>(data.values());
     }
 
-    // 일단 Username만 임시제작
-    public User update(UUID id, String newUserName) {
+    @Override
+    public User update(UUID id, String name, String email, String password, String nickname) {
         User user = findById(id);
         if (user != null) {
-            user.update(newUserName,null,null,null);
+            user.update(name, email, password, nickname);
+            return user;
         }
-        return user;
+        return null;
     }
 
-    // 삭제(delete) 예시
     public void delete(UUID id) {
         data.remove(id);
     }

@@ -9,6 +9,6 @@ public interface UserService {
     User save (User user);
     User findById(UUID id);
     List<User> findAll();
-    User update(UUID id, String newName);
+    User update(UUID id, String name, String email, String password, String nickname);
     void delete(UUID id);
 }
