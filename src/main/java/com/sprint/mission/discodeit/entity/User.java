@@ -9,16 +9,18 @@ public class User {
 	private String password;
 	private String nickname;
 	private String phoneNumber;
+	private String icon;
 	private Long createdAt;
 	private Long updatedAt;
 
-	public User(String username, String email, String password, String nickname,  String phoneNumber) {
+	public User(String username, String email, String password, String nickname,  String phoneNumber, String icon) {
 		id = UUID.randomUUID();
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
 		this.phoneNumber = phoneNumber;
+		this.icon = icon;
 		createdAt = System.currentTimeMillis();
 		updatedAt = System.currentTimeMillis();
 	}
@@ -55,23 +57,30 @@ public class User {
 		return phoneNumber;
 	}
 
-	public void update(String username, String email, String password, String nickname,  String phoneNumber) {
+	public String getIcon() {
+		return icon;
+	}
+
+	public void update(String username, String email, String password, String nickname,  String phoneNumber,  String icon) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
 		this.phoneNumber = phoneNumber;
+		this.icon = icon;
 		updatedAt = System.currentTimeMillis();
 	}
 
 	@Override
 	public String toString() {
 		return "User{" +
-			"id=" + id +
-			", username='" + username + '\'' +
-			", email='" + email + '\'' +
-			", password='" + password + '\'' +
-			", nickname='" + nickname + '\'' +
+			"사용자 ID=" + id +
+			", 사용자명='" + username + '\'' +
+			", 이메일='" + email + '\'' +
+			", 비밀번호='" + password + '\'' +
+			", 별명='" + nickname + '\'' +
+			", 휴대폰='" + phoneNumber + '\'' +
+			", 이미지='" + icon + '\'' +
 			", createdAt=" + createdAt +
 			", updatedAt=" + updatedAt +
 			'}';
