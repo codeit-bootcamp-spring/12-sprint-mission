@@ -12,16 +12,54 @@ public class User {
     private Long updatedAt;
 
     public User(String username, String email, String password, String nickname) {
+        long now = System.currentTimeMillis();
+
         id = UUID.randomUUID();
+        createdAt = now;
+        updatedAt = now;
+
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
     }
 
+    public UUID getId() {
+        return id;
+    }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void update(String username, String email, String password, String nickname) {
+        if (username != null) this.username = username;
+        if (email != null) this.email = email;
+        if (password != null) this.password = password;
+        if (nickname != null) this.nickname = nickname;
+
+        this.updatedAt = System.currentTimeMillis();
+    }
 
     @Override
     public String toString() {
