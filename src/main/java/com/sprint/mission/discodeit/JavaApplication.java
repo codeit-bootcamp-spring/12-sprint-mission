@@ -11,10 +11,16 @@ public class JavaApplication {
         // 사용자 테스트 시작!!
         System.out.println("-------------사용자 테스트 시작!!!--------------");
         UserService userService = new JCFUserService();
+
         User user = new User("test.com", "1234", "kim", "kk");
         userService.save(user);
+
         User user2 = new User("test2.com", "1234", "kim", "kk");
         userService.save(user2);
+
+        User user3 = new User("test2.com", "1234", "kim", "kk");
+        userService.save(user3);
+
         System.out.println(userService.findAll());
         System.out.println("-------------사용자 테스트 끝!!!----------------\n");
     }
