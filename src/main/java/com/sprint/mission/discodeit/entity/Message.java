@@ -1,0 +1,61 @@
+package com.sprint.mission.discodeit.entity;
+
+import java.awt.*;
+import java.util.UUID;
+
+public class Message {
+    private UUID id;
+    private Channel ch;
+    private User author;
+    private String title;
+    private String content;
+    private long createdAt;
+    private long updatedAt;
+
+    public Message(Channel ch, User author, String title, String content) {
+        id = UUID.randomUUID();
+        this.ch = ch;
+        this.author = author;
+        this.title = title;
+        this.content = content;
+        createdAt = System.currentTimeMillis();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Channel getCh() {
+        return ch;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+        updatedAt = System.currentTimeMillis();
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+        updatedAt = System.currentTimeMillis();
+    }
+}
