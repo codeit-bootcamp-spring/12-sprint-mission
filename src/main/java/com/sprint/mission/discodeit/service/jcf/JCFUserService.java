@@ -14,6 +14,10 @@ public class JCFUserService implements UserService {
 
     @Override
     public User save(User user) {
+        if (user == null) {
+            return null;
+        }
+
         data.put(user.getId(), user);
         return user;
     }
@@ -38,7 +42,7 @@ public class JCFUserService implements UserService {
         return null;
     }
 
-    public void delete(UUID id) {
-        data.remove(id);
+    public User delete(UUID id) {
+        return data.remove(id);
     }
 }
