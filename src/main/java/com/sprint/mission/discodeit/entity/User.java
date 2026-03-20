@@ -1,5 +1,9 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 public class User {
@@ -73,6 +77,9 @@ public class User {
 
 	@Override
 	public String toString() {
+		ZoneId zonedId = ZoneId.of("Asia/Seoul");
+		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
+		String updated =  Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
 		return """ 
 		User {
 			사용자 ID= %s
@@ -85,7 +92,7 @@ public class User {
 			생성일= %s
 			수정일= %s
 		}
-        """.formatted(
+		""".formatted(
 			id,
 			username,
 			email,
@@ -93,8 +100,8 @@ public class User {
 			nickname,
 			phoneNumber,
 			icon,
-			createdAt,
-			updatedAt
+			created,
+			updated
 		);
 	}
 }

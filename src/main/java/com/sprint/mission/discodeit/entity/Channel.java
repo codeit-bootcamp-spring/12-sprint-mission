@@ -2,29 +2,40 @@ package com.sprint.mission.discodeit.entity;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class Message {
+public class Channel {
 	private UUID id;
-	private UUID userUUID;
-	private String username;
-	private String content;
+	private String name;
+	private List<User> users;
+	private List<Message>  messages;
 	private String link;
 	private Long createdAt;
 	private Long updatedAt;
 
-	public Message(UUID userUUID, String username, String content) {
+	public Channel(String name, User creator) {
 		id = UUID.randomUUID();
-		this.userUUID = userUUID;
-		this.username = username;
-		this.content = content;
-		link = "https://codeit.kr/message/" + id;
+		this.name = name;
+		this.users = new ArrayList<>();
+		users.add(creator);
+		messages = new ArrayList<>();
+		link = "https://codeit.kr/channel/" + id;
 		createdAt = System.currentTimeMillis();
 		updatedAt = System.currentTimeMillis();
 	}
 
-	public void update(String content){
-		this.content = content;
+	public void update(String name, List<User> users, List<Message> messages) {
+		if (name != null) {
+			this.name = name;
+		}
+		if (users != null) {
+			this.users = users;
+		}
+		if (messages != null) {
+			this.messages = messages;
+		}
 		updatedAt = System.currentTimeMillis();
 	}
 
@@ -32,16 +43,16 @@ public class Message {
 		return id;
 	}
 
-	public UUID getUserUUID() {
-		return userUUID;
+	public String getName() {
+		return name;
 	}
 
-	public String getUsername() {
-		return username;
+	public List<User> getUsers() {
+		return users;
 	}
 
-	public String getContent() {
-		return content;
+	public List<Message> getMessages() {
+		return messages;
 	}
 
 	public String getLink() {
@@ -62,20 +73,20 @@ public class Message {
 		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
 		String updated =  Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
 		return """
-        Message {
-            메시지 ID= %s
-            사용자 ID= %s
-            사용자명= '%s'
-            내용= '%s'
-            메시지 링크= '%s'
+        Channel {
+            채널 ID= %s
+            채널명= '%s'
+            사용자= %s
+            메시지= %s
+            채널 링크= '%s'
             생성일= %s
             수정일= %s
         }
         """.formatted(
 			id,
-			userUUID,
-			username,
-			content,
+			name,
+			users,
+			messages,
 			link,
 			created,
 			updated
