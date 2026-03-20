@@ -35,11 +35,12 @@ public class JCFUserService implements UserService {
     @Override
     public User update(UUID id, String name, String email, String password, String nickname) {
         User user = findById(id);
+
         if (user != null) {
             user.update(name, email, password, nickname);
-            return user;
         }
-        return null;
+
+        return user;
     }
 
     public User delete(UUID id) {

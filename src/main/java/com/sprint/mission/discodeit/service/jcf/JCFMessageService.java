@@ -6,10 +6,10 @@ import com.sprint.mission.discodeit.service.MessageService;
 import java.util.*;
 
 public class JCFMessageService implements MessageService {
-    private final Map<UUID, Message> messages;
+    private final Map<UUID, Message> data;
 
     public JCFMessageService() {
-        messages = new HashMap<>();
+        data = new HashMap<>();
     }
 
     @Override
@@ -18,34 +18,33 @@ public class JCFMessageService implements MessageService {
             return null;
         }
 
-        messages.put(message.getId(), message);
+        data.put(message.getId(), message);
         return message;
     }
 
     @Override
     public Message findById(UUID id) {
-        return messages.get(id);
+        return data.get(id);
     }
 
     @Override
     public List<Message> findAll() {
-        return new ArrayList<>(messages.values());
+        return new ArrayList<>(data.values());
     }
 
     @Override
     public Message update(UUID messageId, String content, UUID channelId) {
-        Message message = messages.get(messageId);
+        Message message = findById(messageId);
 
         if (message != null) {
             message.update(content, channelId);
-            return message;
         }
 
-        return null;
+        return message;
     }
 
     @Override
     public Message delete(UUID messageId) {
-        return messages.remove(messageId);
+        return data.remove(messageId);
     }
 }
