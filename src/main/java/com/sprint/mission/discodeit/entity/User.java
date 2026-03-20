@@ -73,16 +73,28 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User{" +
-			"사용자 ID=" + id +
-			", 사용자명='" + username + '\'' +
-			", 이메일='" + email + '\'' +
-			", 비밀번호='" + password + '\'' +
-			", 별명='" + nickname + '\'' +
-			", 휴대폰='" + phoneNumber + '\'' +
-			", 이미지='" + icon + '\'' +
-			", createdAt=" + createdAt +
-			", updatedAt=" + updatedAt +
-			'}';
+		return """ 
+		User {
+			사용자 ID= %s
+			사용자명= %s
+			이메일= %s
+			비밀번호= %s
+			별명= %s
+			전화번호= %s
+			이미지= %s
+			생성일= %s
+			수정일= %s
+		}
+        """.formatted(
+			id,
+			username,
+			email,
+			password,
+			nickname,
+			phoneNumber,
+			icon,
+			createdAt,
+			updatedAt
+		);
 	}
 }

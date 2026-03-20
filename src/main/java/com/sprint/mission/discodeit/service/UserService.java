@@ -9,7 +9,7 @@ public interface UserService {
 	User save(User user);
 	User findById(UUID id);
 	List<User> findAll();
-	void update(UUID id, String username, String email, String password, String nickname,  String phoneNumber,  String icon);
+	User update(UUID id, String username, String email, String password, String nickname,  String phoneNumber,  String icon);
 	void deleteById(UUID id);
 
 }
