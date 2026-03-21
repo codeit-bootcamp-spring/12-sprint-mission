@@ -5,25 +5,23 @@ import java.time.ZoneId;
 import java.util.UUID;
 
 public class Message {
-	private UUID id;
-	private UUID userUUID;
-	private String username;
+	private final UUID id;
+	private final UUID userId;
+	private final UUID channelId;
+	private final Long createdAt;
 	private String content;
-	private String link;
-	private Long createdAt;
 	private Long updatedAt;
 
-	public Message(UUID userUUID, String username, String content) {
+	public Message(UUID userId, UUID channelId, String content) {
 		id = UUID.randomUUID();
-		this.userUUID = userUUID;
-		this.username = username;
+		this.userId = userId;
 		this.content = content;
-		link = "https://codeit.kr/message/" + id;
+		this.channelId = channelId;
 		createdAt = System.currentTimeMillis();
 		updatedAt = System.currentTimeMillis();
 	}
 
-	public void update(String content){
+	public void update(String content) {
 		this.content = content;
 		updatedAt = System.currentTimeMillis();
 	}
@@ -32,20 +30,16 @@ public class Message {
 		return id;
 	}
 
-	public UUID getUserUUID() {
-		return userUUID;
+	public UUID getUserId() {
+		return userId;
 	}
 
-	public String getUsername() {
-		return username;
+	public UUID getChannelId() {
+		return channelId;
 	}
 
 	public String getContent() {
 		return content;
-	}
-
-	public String getLink() {
-		return link;
 	}
 
 	public Long getCreatedAt() {
@@ -60,23 +54,21 @@ public class Message {
 	public String toString() {
 		ZoneId zonedId = ZoneId.of("Asia/Seoul");
 		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
-		String updated =  Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
+		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
 		return """
-        Message {
-            메시지 ID= %s
-            사용자 ID= %s
-            사용자명= '%s'
-            내용= '%s'
-            메시지 링크= '%s'
-            생성일= %s
-            수정일= %s
-        }
-        """.formatted(
+			Message {
+			    메시지 ID: %s
+			    사용자 ID: %s
+			    채널	ID: %s
+			    내용: '%s'
+			    생성일: %s
+			    수정일: %s
+			}
+			""".formatted(
 			id,
-			userUUID,
-			username,
+			userId,
+			channelId,
 			content,
-			link,
 			created,
 			updated
 		);

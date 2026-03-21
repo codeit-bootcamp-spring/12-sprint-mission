@@ -2,39 +2,35 @@ package com.sprint.mission.discodeit.entity;
 
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Channel {
-	private UUID id;
+	private final UUID id;
+	private final String link;
+	private final Long createdAt;
+	private ChannelType type;
 	private String name;
-	private List<User> users;
-	private List<Message>  messages;
-	private String link;
-	private Long createdAt;
+	private String description;
+	private UUID creator;
 	private Long updatedAt;
 
-	public Channel(String name, User creator) {
+	public Channel(ChannelType type, String name, String description, UUID creator) {
 		id = UUID.randomUUID();
+		this.type = type;
 		this.name = name;
-		this.users = new ArrayList<>();
-		users.add(creator);
-		messages = new ArrayList<>();
-		link = "https://codeit.kr/channel/" + id;
+		this.description = description;
+		this.creator = creator;
+		link = "https://codeit.kr/channel/" + UUID.randomUUID();
 		createdAt = System.currentTimeMillis();
 		updatedAt = System.currentTimeMillis();
 	}
 
-	public void update(String name, List<User> users, List<Message> messages) {
+	public void update(String name, String description) {
 		if (name != null) {
 			this.name = name;
 		}
-		if (users != null) {
-			this.users = users;
-		}
-		if (messages != null) {
-			this.messages = messages;
+		if (description != null) {
+			this.description = description;
 		}
 		updatedAt = System.currentTimeMillis();
 	}
@@ -47,12 +43,16 @@ public class Channel {
 		return name;
 	}
 
-	public List<User> getUsers() {
-		return users;
+	public ChannelType getType() {
+		return type;
 	}
 
-	public List<Message> getMessages() {
-		return messages;
+	public String getDescription() {
+		return description;
+	}
+
+	public UUID getCreator() {
+		return creator;
 	}
 
 	public String getLink() {
@@ -71,22 +71,20 @@ public class Channel {
 	public String toString() {
 		ZoneId zonedId = ZoneId.of("Asia/Seoul");
 		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
-		String updated =  Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
+		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
 		return """
-        Channel {
-            채널 ID= %s
-            채널명= '%s'
-            사용자= %s
-            메시지= %s
-            채널 링크= '%s'
-            생성일= %s
-            수정일= %s
-        }
-        """.formatted(
+			Channel {
+			    채널 ID: %s
+			    채널명: '%s'
+			    관리자: %s
+			    채널 링크: '%s'
+			    생성일: %s
+			    수정일: %s
+			}
+			""".formatted(
 			id,
 			name,
-			users,
-			messages,
+			creator,
 			link,
 			created,
 			updated

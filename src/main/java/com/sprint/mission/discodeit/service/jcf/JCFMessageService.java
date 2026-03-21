@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.MessageService;
 
 public class JCFMessageService implements MessageService {
@@ -14,20 +16,24 @@ public class JCFMessageService implements MessageService {
 	public JCFMessageService() {
 		data = new ArrayList<>();
 	}
+
 	@Override
-	public Message save(Message message) {
-		data.add(message);
-		return message;
+	public Message create(Channel channel, Message message) {
+
+		if (channel == null || message == null) {
+			return null;
+		}
+		if (channel.getId().equals(message.getChannelId())) {
+			data.add(message);
+			return message;
+		}
+
+		return null;
 	}
 
 	@Override
-	public Message findById(UUID id) {
-		for (Message message : data) {
-			if (message.getId().equals(id)) {
-				return message;
-			}
-		}
-		return null;
+	public Message find(UUID id) {
+		return data.stream().filter(m -> m.getId().equals(id)).findFirst().orElse(null);
 	}
 
 	@Override
@@ -37,17 +43,20 @@ public class JCFMessageService implements MessageService {
 
 	@Override
 	public Message update(UUID id, UUID userid, String content) {
-		Message message = this.findById(id);
-		if (message != null && message.getUserUUID().equals(userid)) {
-			message.update(content);
-			return message;
-		}else{
-			return null;
+		for (Message message : data) {
+			if (message.getId().equals(id)) {
+				message.update(content);
+				return message;
+			}
 		}
+		return null;
 	}
 
 	@Override
-	public void deleteById(UUID id) {
-		data.remove(findById(id));
+	public void delete(UUID id, User user) {
+		Message message = find(id);
+		if (user != null && message != null && message.getUserId().equals(user.getId())) {
+			data.remove(message);
+		}
 	}
 }

@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.MessageService;
 
 public class JCFChannelService implements ChannelService {
 
@@ -18,19 +19,14 @@ public class JCFChannelService implements ChannelService {
 	}
 
 	@Override
-	public Channel save(Channel channel) {
+	public Channel create(Channel channel) {
 		data.add(channel);
 		return channel;
 	}
 
 	@Override
-	public Channel findById(UUID id) {
-		for(Channel channel : data) {
-			if(channel.getId().equals(id)) {
-				return channel;
-			}
-		}
-		return null;
+	public Channel find(UUID id) {
+		return data.stream().filter(m -> m.getId().equals(id)).findFirst().orElse(null);
 	}
 
 	@Override
@@ -39,18 +35,26 @@ public class JCFChannelService implements ChannelService {
 	}
 
 	@Override
-	public Channel update(UUID id, String name, List<User> users, List<Message> messages) {
-		Channel  channel = findById(id);
-		if(channel != null) {
-			channel.update(name, users, messages);
+	public Channel update(UUID id, User creator, String name, String description) {
+		Channel channel = find(id);
+		if (channel != null && channel.getCreator().equals(creator.getId())) {
+			channel.update(name,  description);
 			return channel;
-		}else{
-			return null;
 		}
+
+		return null;
 	}
 
 	@Override
-	public void deleteById(UUID id) {
-		data.remove(findById(id));
+	public void delete(UUID id, User creator,  MessageService messageService) {
+		Channel channel = find(id);
+		if (channel != null && channel.getCreator().equals(creator.getId())) {
+			data.remove(channel);
+			for (Message message : messageService.findAll()) {
+				if (message.getChannelId().equals(id)) {
+					messageService.delete(message.getId(), creator);
+				}
+			}
+		}
 	}
 }
