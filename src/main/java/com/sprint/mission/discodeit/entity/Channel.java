@@ -5,13 +5,15 @@ import java.util.UUID;
 public class Channel {
     private final UUID id;
     private final User author;
+    private String title;
     private String category;
 //    private List<User> userList = new ArrayList<>();
     private final long createdAt;
     private long updatedAt;
 
-    public Channel(User author, String type) {
+    public Channel(String title, User author, String type) {
         id = UUID.randomUUID();
+        this.title = title;
         this.author = author;
         this.category = type;
 //        userList.add(user);
@@ -24,6 +26,10 @@ public class Channel {
 
     public User getAuthor() {
         return author;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getCategory() {
@@ -43,11 +49,17 @@ public class Channel {
         updatedAt = System.currentTimeMillis();
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+        updatedAt = System.currentTimeMillis();
+    }
+
     @Override
     public String toString() {
         return "Channel{" +
                 "id=" + id +
-                ", author=" + author +
+                ", author=" + author.getName() +
+                ", title='" + title + '\'' +
                 ", category='" + category + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

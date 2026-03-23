@@ -62,7 +62,7 @@ public class Message {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", ch=" + ch +
+                ", ch=" + ch.getTitle() +
                 ", author=" + author.getName() +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +

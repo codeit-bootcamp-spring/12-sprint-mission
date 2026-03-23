@@ -19,7 +19,7 @@ public class JavaApplication {
         ChannelService channelService = new JCFChannelService();
 
         User user = new User("testUser1","testUser1@email.com","testNick","1234");
-        Channel channel = new Channel(user,"Notice");
+        Channel channel = new Channel("First Channel",user,"Notice");
         Message message = new Message(channel,user,"testMessage","first Test message");
         userService.save(user);
         channelService.save(channel);
