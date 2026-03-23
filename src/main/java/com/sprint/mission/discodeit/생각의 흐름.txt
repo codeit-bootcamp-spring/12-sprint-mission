@@ -1,0 +1,13 @@
+03-20 10:00 ~ 19:00
+목표: 도메인 모델링 구조 파악, ai에게 전부 부탁 금지 (이름 변경, 과제 내용, 반복 작업, 구조 설계 방식만 묻기)
+1. User, Channel, Message가 공통된 데이터를 가지고 있어 BaseEntity 구현.
+3. entity를 생성할 때 필요한 데이터가 증가할 가능성 + Service나 Repository가 달라도 유효한 데이터인지 일관된 검증이 필요해 DTO 생성.
+4. 검증 방법
+- 검증 실패해도 다른 데이터들은 계속 받아야 함.-> runSafely 구현.
+- Service에서 중복되면 안되는 데이터인지 검증도 받아야 함 -> try에 service하는 부분을 다시 감싸기.
+
+03-23 10:00 ~ 17:00
+1. 이메일 관련 정합성 체크 메서드 -> 자바에선 어떤 형태로 만들어야 하는지 몰라 일단 Util 패키지 생성 후 EmailVerifier 구현
+2. Load관련 기능 메서드 중복 -> 1번과 동일하게 FileSerialization 구현
+3. Repository부분에서 IllegalArgumentException, Optional 중에 고민 -> 귀찮아서 그냥 예외로 전달
+4. 구현 끝
