@@ -7,14 +7,18 @@ import java.util.*;
 
 public class JCFMessageService implements MessageService {
     private final Map<UUID, Message> data;
+    private final JCFChannelService cs;
+    private final JCFUserService us;
 
-    public JCFMessageService() {
+    public JCFMessageService(JCFChannelService cs, JCFUserService us) {
         data = new HashMap<>();
+        this.cs = cs;
+        this.us = us;
     }
 
     @Override
     public Message save(Message message) {
-        if (message == null) {
+        if (message == null || us.findById(message.getUserId()) == null || cs.findById(message.getChannelId()) == null) {
             return null;
         }
 

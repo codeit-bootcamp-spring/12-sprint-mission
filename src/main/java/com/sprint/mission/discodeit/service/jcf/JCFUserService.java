@@ -12,6 +12,19 @@ public class JCFUserService implements UserService {
         data = new HashMap<>();
     }
 
+    public boolean isNicknameUnique(String nickname) {
+        return data.values().stream().noneMatch(user -> nickname.equals(user.getNickname()));
+    }
+
+    public User createAndSaveUser(String username, String email, String password, String nickname){
+        if(username == null || email == null || password == null || nickname == null || !isNicknameUnique(nickname)){
+            return null; // 입력값 오류와 닉네임 중복에 대한 알림은 어떻게 따로 알릴지,
+            // 유저 서비스 내에서 객체 식별은 id로 하되 nickname을 유니크하게 만드는게 JavaApp에서 테스트 하기 편할듯함
+            // 콘솔은 추천 안한다고 하셔서 테스트 편하게 하기 위한 메소드 추가로 만들어야 할 지 고민중 아니면 id를 따로 app에서 저장해둬야 됨.
+        }
+        return save(new User(username, email, password, nickname));
+    }
+
     @Override
     public User save(User user) {
         if (user == null) {

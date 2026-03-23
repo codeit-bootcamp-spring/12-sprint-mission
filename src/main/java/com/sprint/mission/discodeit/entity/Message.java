@@ -30,7 +30,7 @@ public class Message {
         return userId;
     }
 
-    public UUID getChanelId() {
+    public UUID getChannelId() {
         return channelId;
     }
 
