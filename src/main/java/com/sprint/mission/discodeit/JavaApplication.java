@@ -24,9 +24,9 @@ public class JavaApplication {
         userService.save(user);
         channelService.save(channel);
         messageService.save(message);
-        System.out.println(userService.findAll());
-        System.out.println(channelService.findAll());
-        System.out.println(messageService.findAll());
+        System.out.println(userService.findAll().toString());
+        System.out.println(channelService.findAll().toString());
+        System.out.println(messageService.findAll().toString());
         System.out.println("--------------- 사용자 테스트 종료! ---------------");
     }
 }

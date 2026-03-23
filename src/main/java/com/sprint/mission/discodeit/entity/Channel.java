@@ -43,4 +43,14 @@ public class Channel {
         updatedAt = System.currentTimeMillis();
     }
 
+    @Override
+    public String toString() {
+        return "Channel{" +
+                "id=" + id +
+                ", author=" + author +
+                ", category='" + category + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

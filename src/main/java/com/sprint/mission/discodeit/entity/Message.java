@@ -57,4 +57,17 @@ public class Message {
         this.content = content;
         updatedAt = System.currentTimeMillis();
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", ch=" + ch +
+                ", author=" + author.getName() +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
