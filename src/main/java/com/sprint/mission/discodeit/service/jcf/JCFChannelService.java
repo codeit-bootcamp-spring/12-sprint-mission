@@ -24,7 +24,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel findById(UUID id) {
+    public Channel findById(UUID id) { // 객체 리턴하는 메소드들에 옵셔널 도입하는 방법 고려중(공부중), 도입하는게 나을지? 어느부분에서 사용하는게 정석적인지
         if (id == null) {
             return null;
         }

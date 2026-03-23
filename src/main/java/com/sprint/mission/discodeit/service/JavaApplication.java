@@ -49,7 +49,7 @@ public class JavaApplication {
         List<Message> messages = messageService.findAll();
 
 
-        System.out.println("\n========== [2-1. 메시지 조회] ==========");
+        System.out.println("\n========== [2-1. 메시지 조회] =========="); // 단일 조회시 id 기준? nickname기준 ?
 
         System.out.println("========== 2-1-1. 전체 메세지 조회 ===========");
 

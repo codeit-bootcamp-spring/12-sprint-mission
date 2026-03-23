@@ -3,12 +3,12 @@ package com.sprint.mission.discodeit.entity;
 import java.util.UUID;
 
 public class User {
-    private UUID id;
+    private UUID id; // final로 선언해도 문제 없는것 같은데 일단 보류
     private String username;
     private String email;
     private String password;
     private String nickname;
-    private Long createdAt;
+    private Long createdAt; // id 와 동일
     private Long updatedAt;
 
     public User(String username, String email, String password, String nickname) {
@@ -62,7 +62,7 @@ public class User {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // 어떻게 수정할지
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
