@@ -3,12 +3,12 @@ package com.sprint.mission.discodeit.entity;
 import java.util.UUID;
 
 public class User {
-    private UUID id;
+    private final UUID id;
     private String name;
     private String email;
     private String nickname;
     private String password;
-    private long createdAt;
+    private final long createdAt;
     private long updatedAt;
 
     public User(String name, String email, String nickname, String password) {

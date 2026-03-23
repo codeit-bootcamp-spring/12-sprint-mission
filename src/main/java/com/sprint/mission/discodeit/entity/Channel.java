@@ -1,19 +1,20 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.util.List;
 import java.util.UUID;
 
 public class Channel {
-    private UUID id;
-    private User author;
-    private String type;
-    private long createdAt;
+    private final UUID id;
+    private final User author;
+    private String category;
+//    private List<User> userList = new ArrayList<>();
+    private final long createdAt;
     private long updatedAt;
 
-    public Channel(User author, String type) {
+    public Channel(User author, String type, User user) {
         id = UUID.randomUUID();
         this.author = author;
-        this.type = type;
+        this.category = type;
+//        userList.add(user);
         createdAt = System.currentTimeMillis();
     }
 
@@ -25,8 +26,8 @@ public class Channel {
         return author;
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
     public long getCreatedAt() {
@@ -37,8 +38,8 @@ public class Channel {
         return updatedAt;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(String category) {
+        this.category = this.category;
         updatedAt = System.currentTimeMillis();
     }
 

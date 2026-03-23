@@ -16,26 +16,39 @@ public class JCFUserService implements UserService {
 
     @Override
     public User save(User user) {
-        return null;
+        data.add(user);
+        return user;
     }
 
     @Override
     public User findById(UUID id) {
+        for(User user : data){
+            if(user.getId().equals(id)) return user;
+        }
         return null;
     }
 
     @Override
     public List<User> findAll() {
-        return List.of();
+        return data;
     }
 
     @Override
     public User update(User user) {
+        for(User updateUser : data){
+            if(updateUser.getId().equals(user.getId())){
+                updateUser.setName(user.getName());
+                updateUser.setNickname(user.getNickname());
+                updateUser.setEmail(user.getEmail());
+                updateUser.setPassword(user.getPassword());
+                return updateUser;
+            }
+        }
         return null;
     }
 
     @Override
     public void delete(UUID id) {
-
+        data.removeIf(user -> user.getId().equals(id));
     }
 }

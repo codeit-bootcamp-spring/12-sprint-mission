@@ -1,15 +1,14 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.awt.*;
 import java.util.UUID;
 
 public class Message {
-    private UUID id;
-    private Channel ch;
-    private User author;
+    private final UUID id;
+    private final Channel ch;
+    private final User author;
     private String title;
     private String content;
-    private long createdAt;
+    private final long createdAt;
     private long updatedAt;
 
     public Message(Channel ch, User author, String title, String content) {

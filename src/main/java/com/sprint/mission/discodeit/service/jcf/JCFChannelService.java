@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class JCFChannelService implements ChannelService {
-    private List<Channel> data;
+    private final List<Channel> data;
 
     public JCFChannelService(List<Channel> data) {
         this.data = data;
@@ -15,26 +15,36 @@ public class JCFChannelService implements ChannelService {
 
     @Override
     public Channel save(Channel channel) {
+        data.add(channel);
         return null;
     }
 
     @Override
     public Channel findById(UUID id) {
+        for(Channel channel : data){
+            if(channel.getId().equals(id)) return channel;
+        }
         return null;
     }
 
     @Override
     public List<Channel> findAll() {
-        return List.of();
+        return data;
     }
 
     @Override
     public Channel update(Channel channel) {
+        for(Channel updateChannel : data){
+            if(updateChannel.getId().equals(channel.getId())){
+                updateChannel.setCategory(channel.getCategory());
+                return updateChannel;
+            }
+        }
         return null;
     }
 
     @Override
     public void delete(UUID id) {
-
+        data.removeIf(channel -> channel.getId().equals(id));
     }
 }
