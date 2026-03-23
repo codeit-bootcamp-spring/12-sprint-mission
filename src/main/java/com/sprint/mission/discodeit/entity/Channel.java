@@ -10,7 +10,7 @@ public class Channel {
     private final long createdAt;
     private long updatedAt;
 
-    public Channel(User author, String type, User user) {
+    public Channel(User author, String type) {
         id = UUID.randomUUID();
         this.author = author;
         this.category = type;
@@ -39,7 +39,7 @@ public class Channel {
     }
 
     public void setCategory(String category) {
-        this.category = this.category;
+        this.category = category;
         updatedAt = System.currentTimeMillis();
     }
 
