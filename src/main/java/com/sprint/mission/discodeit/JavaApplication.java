@@ -39,8 +39,8 @@ public class JavaApplication {
 
         //jctTest();
         //fileTest();
-        //basic1Test();
-        basic2Test();
+        //basicFileTest();
+        //basicJCFTest();
     }
 
     //region jct
@@ -294,7 +294,7 @@ public class JavaApplication {
     //endregion
 
     //region basic
-    public static void basic1Test() {
+    public static void basicFileTest() {
         UserRepository userRepository = new FileUserRepository();
         ChannelRepository channelRepository = new FileChannelRepository();
         MessageRepository messageRepository = new FileMessageRepository();
@@ -308,7 +308,7 @@ public class JavaApplication {
         fileMessageTest(userService, channelService, messageService);
     }
 
-    public static void basic2Test() {
+    public static void basicJCFTest() {
         UserRepository userRepository = new JCFUserRepository();
         ChannelRepository channelRepository = new JCFChannelRepository();
         MessageRepository messageRepository = new JCFMessageRepository();
