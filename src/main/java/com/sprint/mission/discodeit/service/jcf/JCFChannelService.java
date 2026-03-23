@@ -3,14 +3,15 @@ package com.sprint.mission.discodeit.service.jcf;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class JCFChannelService implements ChannelService {
     private final List<Channel> data;
 
-    public JCFChannelService(List<Channel> data) {
-        this.data = data;
+    public JCFChannelService() {
+        this.data = new ArrayList<>();
     }
 
     @Override

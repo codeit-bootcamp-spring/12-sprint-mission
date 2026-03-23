@@ -3,14 +3,15 @@ package com.sprint.mission.discodeit.service.jcf;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.MessageService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class JCFMessageService implements MessageService {
     private final List<Message> data;
 
-    public JCFMessageService(List<Message> data) {
-        this.data = data;
+    public JCFMessageService() {
+        this.data = new ArrayList<>();
     }
 
     @Override
