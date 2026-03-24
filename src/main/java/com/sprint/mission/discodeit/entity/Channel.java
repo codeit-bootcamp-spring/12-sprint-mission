@@ -75,6 +75,7 @@ public class Channel {
 		return """
 			Channel {
 			    채널 ID: %s
+			    채널 타입: %s
 			    채널명: '%s'
 			    관리자: %s
 			    채널 링크: '%s'
@@ -83,6 +84,7 @@ public class Channel {
 			}
 			""".formatted(
 			id,
+			type,
 			name,
 			creator,
 			link,
