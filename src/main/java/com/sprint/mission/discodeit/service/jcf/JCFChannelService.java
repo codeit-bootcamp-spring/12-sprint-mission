@@ -2,7 +2,6 @@ package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
-import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ public class JCFChannelService implements ChannelService {
     public Channel update(Channel channel) {
         for(Channel updateChannel : data){
             if(updateChannel.getId().equals(channel.getId())){
+                updateChannel.updateTitle(channel.getTitle());
                 updateChannel.updateCategory(channel.getCategory());
                 return updateChannel;
             }
