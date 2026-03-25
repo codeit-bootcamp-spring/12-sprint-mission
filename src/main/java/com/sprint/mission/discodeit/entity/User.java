@@ -48,22 +48,22 @@ public class User {
         return updatedAt;
     }
 
-    public void setName(String name) {
+    public void updateName(String name) {
         this.name = name;
         this.updatedAt = System.currentTimeMillis();
     }
 
-    public void setEmail(String email) {
+    public void updateEmail(String email) {
         this.email = email;
         this.updatedAt = System.currentTimeMillis();
     }
 
-    public void setNickname(String nickname) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
         this.updatedAt = System.currentTimeMillis();
     }
 
-    public void setPassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
         this.updatedAt = System.currentTimeMillis();
 
@@ -79,6 +79,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                '}';
+                '}'+"\n";
     }
 }

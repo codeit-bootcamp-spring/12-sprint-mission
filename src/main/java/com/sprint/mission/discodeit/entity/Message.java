@@ -68,6 +68,6 @@ public class Message {
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                '}';
+                '}'+"\n";
     }
 }

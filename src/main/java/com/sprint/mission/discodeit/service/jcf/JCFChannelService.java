@@ -2,6 +2,8 @@ package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +11,20 @@ import java.util.UUID;
 
 public class JCFChannelService implements ChannelService {
     private final List<Channel> data;
+    private final UserService userService;
 
-    public JCFChannelService() {
+    public JCFChannelService(UserService userService) {
         this.data = new ArrayList<>();
+        this.userService = userService;
     }
 
     @Override
     public Channel save(Channel channel) {
+        if(userService.findById(channel.getAuthor().getId()) == null){
+            System.out.println("Author information is not exist.");
+        }
         data.add(channel);
-        return null;
+        return channel;
     }
 
     @Override
@@ -37,7 +44,7 @@ public class JCFChannelService implements ChannelService {
     public Channel update(Channel channel) {
         for(Channel updateChannel : data){
             if(updateChannel.getId().equals(channel.getId())){
-                updateChannel.setCategory(channel.getCategory());
+                updateChannel.updateCategory(channel.getCategory());
                 return updateChannel;
             }
         }

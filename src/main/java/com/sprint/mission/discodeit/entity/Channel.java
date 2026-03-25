@@ -44,12 +44,12 @@ public class Channel {
         return updatedAt;
     }
 
-    public void setCategory(String category) {
+    public void updateCategory(String category) {
         this.category = category;
         updatedAt = System.currentTimeMillis();
     }
 
-    public void setTitle(String title) {
+    public void updateTitle(String title) {
         this.title = title;
         updatedAt = System.currentTimeMillis();
     }
@@ -63,6 +63,6 @@ public class Channel {
                 ", category='" + category + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                '}';
+                '}'+"\n";
     }
 }
