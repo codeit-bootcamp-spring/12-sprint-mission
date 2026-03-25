@@ -4,16 +4,20 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 public class User {
-    private UUID id;
+    private final UUID id;
     private String userName;
     private String password;
     private String email;
     private String nickName;
 
-    private Long createdAt;
+    private final Long createdAt;
     private Long updatedAt;
 
     public User(String userName, String password, String email, String nickName) {
+        this.id = UUID.randomUUID();
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = this.createdAt;
+
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -24,56 +28,36 @@ public class User {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getUserName() {
         return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getNickName() {
         return nickName;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public Long getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(Long createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Long updatedAt) {
-        this.updatedAt = updatedAt;
+    public void update(String newUserName, String newPassword, String newEmail, String newNickName) {
+        this.userName = newUserName;
+        this.password = newPassword;
+        this.email = newEmail;
+        this.updatedAt = System.currentTimeMillis();
+        this.nickName = newNickName;
     }
 
     @Override

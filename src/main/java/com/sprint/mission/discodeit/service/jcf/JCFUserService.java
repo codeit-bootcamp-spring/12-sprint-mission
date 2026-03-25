@@ -31,6 +31,27 @@ public class JCFUserService implements UserService {
 
     @Override
     public List<User> findAll() {
-        return List.of();
+        return List.copyOf(data);
+    }
+
+    @Override
+    public boolean delete(UUID id) {
+        for(User user : data) {
+            if(user.getId().equals(id)) {
+                data.remove(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public User update(UUID id, User user) {
+        User found = findById(id);
+        if (found != null) {
+            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
+            return found;
+        }
+        return null;
     }
 }

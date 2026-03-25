@@ -9,4 +9,6 @@ public interface UserService {
     User save(User user);
     User findById(UUID id);
     List<User> findAll();
+    User update(UUID id, User user);
+    boolean delete(UUID id);
 }
