@@ -4,16 +4,16 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class JCFChannelService implements ChannelService {
-    private final List<Channel> data;
+//    private final List<Channel> data; // map 형식으로 받아서 iteration에서 시간복잡도를 줄이는게 좋을 것 같음.
+    private final Map<UUID, Channel> data;
     private final UserService userService;
 
     public JCFChannelService(UserService userService) {
-        this.data = new ArrayList<>();
+//        this.data = new ArrayList<>();
+        this.data = new HashMap<>();
         this.userService = userService;
     }
 
@@ -21,38 +21,37 @@ public class JCFChannelService implements ChannelService {
     public Channel save(Channel channel) {
         if(userService.findById(channel.getAuthor().getId()) == null){
             System.out.println("Author information is not exist.");
+            return null;
         }
-        data.add(channel);
+        data.put(channel.getId(),channel);
         return channel;
     }
 
     @Override
     public Channel findById(UUID id) {
-        for(Channel channel : data){
-            if(channel.getId().equals(id)) return channel;
+        if(data.containsKey(id)){
+            return data.get(id);
         }
         return null;
     }
 
     @Override
     public List<Channel> findAll() {
-        return data;
+        return new ArrayList<>(data.values());
     }
 
     @Override
     public Channel update(Channel channel) {
-        for(Channel updateChannel : data){
-            if(updateChannel.getId().equals(channel.getId())){
-                updateChannel.updateTitle(channel.getTitle());
-                updateChannel.updateCategory(channel.getCategory());
-                return updateChannel;
-            }
+        if(data.containsKey(channel.getId())){
+            data.get(channel.getId()).updateTitle(channel.getTitle());
+            data.get(channel.getId()).updateCategory(channel.getCategory());
+            return data.get(channel.getId());
         }
         return null;
     }
 
     @Override
     public void delete(UUID id) {
-        data.removeIf(channel -> channel.getId().equals(id));
+        Channel removeChannel = data.remove(id);
     }
 }
