@@ -29,18 +29,15 @@ import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
-import java.util.Scanner;
 import java.util.List;
 
 public class JavaApplication {
-    private static final Scanner sc = new Scanner(System.in);
-
     public static void main(String[] args) {
 
         //jctTest();
         //fileTest();
         //basicFileTest();
-        //basicJCFTest();
+        basicJCFTest();
     }
 
     //region jct

@@ -12,7 +12,7 @@ public record MessageData(UUID authorId, UUID channelId, String content) {
             throw new IllegalArgumentException("채널 없음");
         }
 
-        if (content == null || content.isEmpty()) {
+        if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("메세지 내용 없음");
         }
     }
