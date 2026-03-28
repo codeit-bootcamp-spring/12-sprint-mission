@@ -1,8 +1,13 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private UUID id; // final로 선언해도 문제 없는것 같은데 일단 보류
     private String username;
     private String email;

@@ -1,8 +1,12 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Channel {
+public class Channel implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     UUID id;
     String name;
     String description;
@@ -42,7 +46,7 @@ public class Channel {
 
     public void update(String name, String description) {
         if (name != null) this.name = name;
-        if (name != null) this.description = description;
+        if (description != null) this.description = description;
 
         updatedAt = System.currentTimeMillis();
     }
