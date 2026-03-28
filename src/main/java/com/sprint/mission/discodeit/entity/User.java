@@ -12,13 +12,15 @@ public class User {
     private Long updatedAt;
 
     public User(String username, String email, String password, String nickname) {
+        long now = System.currentTimeMillis();
+
         id = UUID.randomUUID();
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        createdAt = now;
+        updatedAt = now;
     }
 
     public UUID getId() {
