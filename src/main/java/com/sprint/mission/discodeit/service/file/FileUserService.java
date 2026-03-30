@@ -96,7 +96,7 @@ public class FileUserService implements UserService {
                 .noneMatch(user -> user.getNickname().equals(nickname));
     }
 
-    public User createAndSaveUser(String username, String email, String password, String nickname) {
+    public User create(String username, String email, String password, String nickname) {
         if(username == null || email == null || password == null || nickname == null || !isNicknameUnique(nickname)){
             return null;
         }

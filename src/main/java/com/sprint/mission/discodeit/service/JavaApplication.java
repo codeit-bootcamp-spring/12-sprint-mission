@@ -3,6 +3,15 @@ package com.sprint.mission.discodeit.service;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
+import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
+import com.sprint.mission.discodeit.repository.file.FileUserRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
+import com.sprint.mission.discodeit.service.basic.BasicChannelService;
+import com.sprint.mission.discodeit.service.basic.BasicMessageService;
+import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import com.sprint.mission.discodeit.service.file.*;
 import com.sprint.mission.discodeit.service.jcf.*;
 
@@ -13,32 +22,59 @@ import java.util.UUID;
 
 public class JavaApplication {
     public static void main(String[] args) {
-
+        // test1
 //        JCFUserService userService = new JCFUserService();
 //        JCFChannelService channelService = new JCFChannelService();
 //        JCFMessageService messageService = new JCFMessageService(channelService, userService);
 
-        File file1 = new File("user.dat");
-        if(file1.exists()){
-           file1.delete();
-        }
-        File file2 = new File("messages.dat");
-        if(file2.exists()){
-           file2.delete();
-        }
-        File file3 = new File("channel.dat");
-        if(file3.exists()){
-           file3.delete();
-        }
+        // test2
 
-        FileUserService userService = new FileUserService();
-        FileChannelService channelService = new FileChannelService();
-        FileMessageService messageService = new FileMessageService(userService, channelService);
 
+//        File file1 = new File("user.dat");
+//        if(file1.exists()){
+//           file1.delete();
+//        }
+//        File file2 = new File("messages.dat");
+//        if(file2.exists()){
+//           file2.delete();
+//        }
+//        File file3 = new File("channel.dat");
+//        if(file3.exists()){
+//           file3.delete();
+//        }
+//
+//        FileUserService userService = new FileUserService();
+//        FileChannelService channelService = new FileChannelService();
+//        FileMessageService messageService = new FileMessageService(userService, channelService);
+
+
+
+        // test3
+
+
+
+        // JCF레포지토리 테스트
+        JCFChannelRepository channelRepository = new JCFChannelRepository();
+        JCFUserRepository userRepository = new JCFUserRepository();
+        JCFMessageRepository messageRepository = new JCFMessageRepository();
+
+        // File레포지토리 테스트
+//        FileChannelRepository channelRepository = new FileChannelRepository();
+//        FileUserRepository userRepository = new FileUserRepository();
+//        FileMessageRepository messageRepository = new FileMessageRepository();
+
+        BasicChannelService channelService = new BasicChannelService(channelRepository);
+        BasicUserService userService = new BasicUserService(userRepository);
+        BasicMessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
+
+
+
+
+        // 테스트코드
         System.out.println("========== [1. 데이터 일괄 생성] ==========");
-        User u1 = userService.createAndSaveUser("lee", "lee@test.com", "1", "이경훈");
-        User u2 = userService.createAndSaveUser("song", "song@test.com", "2", "송민형");
-        User u3 = userService.createAndSaveUser("kim", "kim@test.com", "3", "김철수");
+        User u1 = userService.create("lee", "lee@test.com", "1", "이경훈");
+        User u2 = userService.create("song", "song@test.com", "2", "송민형");
+        User u3 = userService.create("kim", "kim@test.com", "3", "김철수");
 
         Channel c1 = new Channel("자바기초", "자바 기본 문법 공부방");
         Channel c2 = new Channel("프로젝트", "최종 프로젝트 협업 전용");
