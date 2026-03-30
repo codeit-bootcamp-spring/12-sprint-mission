@@ -51,8 +51,8 @@ public class JCFMessageService implements MessageService {
     public Message update(Message message) {
         for(Message update : data){
             if(update.getId().equals(message.getId())){
-                update.updateTitle(message.getTitle());
-                update.updateContent(message.getContent());
+                if(message.getTitle() != null) update.updateTitle(message.getTitle());
+                if(message.getContent() != null) update.updateContent(message.getContent());
                 return update;
             }
         }

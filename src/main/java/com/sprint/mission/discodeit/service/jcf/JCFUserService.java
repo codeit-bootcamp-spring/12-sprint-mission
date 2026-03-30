@@ -37,10 +37,10 @@ public class JCFUserService implements UserService {
     public User update(User user) {
         for(User updateUser : data){
             if(updateUser.getId().equals(user.getId())){
-                updateUser.updateName(user.getName());
-                updateUser.updateNickname(user.getNickname());
-                updateUser.updateEmail(user.getEmail());
-                updateUser.updatePassword(user.getPassword());
+                if(user.getName() != null) updateUser.updateName(user.getName());
+                if(user.getNickname() != null) updateUser.updateNickname(user.getNickname());
+                if(user.getEmail() != null) updateUser.updateEmail(user.getEmail());
+                if(user.getPassword() != null) updateUser.updatePassword(user.getPassword());
                 return updateUser;
             }
         }

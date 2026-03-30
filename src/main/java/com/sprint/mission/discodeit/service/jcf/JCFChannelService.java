@@ -43,10 +43,10 @@ public class JCFChannelService implements ChannelService {
     @Override
     public Channel update(Channel channel) {
         if(data.containsKey(channel.getId())){
-            data.get(channel.getId()).updateTitle(channel.getTitle());
-            data.get(channel.getId()).updateCategory(channel.getCategory());
+            if(channel.getTitle() != null) data.get(channel.getId()).updateTitle(channel.getTitle());
+            if(channel.getCategory() != null) data.get(channel.getId()).updateCategory(channel.getCategory());
             return data.get(channel.getId());
-        }
+        }   
         return null;
     }
 
