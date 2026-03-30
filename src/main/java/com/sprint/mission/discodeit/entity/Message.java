@@ -10,7 +10,6 @@ public class Message {
     private Long createdAt;
     private Long updatedAt;
 
-    // 생성자: 어디에, 누가, 무슨 내용을 썼는지만 밖에서 받아옴!
     public Message(UUID channelId, UUID authorId, String content) {
         this.id = UUID.randomUUID();
         this.channelId = channelId;
