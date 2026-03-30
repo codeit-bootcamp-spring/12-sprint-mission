@@ -1,5 +1,7 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class User {
@@ -60,14 +62,18 @@ public class User {
 
     @Override
     public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String ct = sdf.format(new Date(createdAt));
+        String ut = sdf.format(new Date(updatedAt));
+
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                ", 이름='" + username + '\'' +
+                ", 이메일='" + email + '\'' +
+                ", 비밀번호='" + password + '\'' +
+                ", 닉네임='" + nickname + '\'' +
+                ", 가입 시간=" + ct +
+                ", 수정 시간=" + ut +
                 '}';
     }
 }
