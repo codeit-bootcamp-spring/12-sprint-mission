@@ -26,7 +26,6 @@ public class FileMessageService implements MessageService {
         }
     }
 
-    // [저장 로직] 파일 전체 쓰기
     private void saveAll(List<Message> messages) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             oos.writeObject(messages);
@@ -35,7 +34,6 @@ public class FileMessageService implements MessageService {
         }
     }
 
-    // [저장 로직] 파일 전체 읽기
     @SuppressWarnings("unchecked")
     private List<Message> loadAll() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
@@ -47,7 +45,6 @@ public class FileMessageService implements MessageService {
 
     @Override
     public Message save(Message message) {
-        // 기존 JCF 로직 유지: 유저와 채널 존재 여부 확인
         if (message == null ||
                 userService.findById(message.getUserId()) == null ||
                 channelService.findById(message.getChannelId()) == null) {
@@ -78,7 +75,6 @@ public class FileMessageService implements MessageService {
         List<Message> messages = loadAll();
         for (Message message : messages) {
             if (message.getId().equals(messageId)) {
-                // 비즈니스 로직: 내용 및 채널 업데이트
                 message.update(content, channelId);
                 saveAll(messages);
                 return message;

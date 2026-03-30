@@ -15,7 +15,6 @@ public class BasicMessageService implements MessageService {
     private final UserRepository userRepository;
     private final ChannelRepository channelRepository;
 
-    // 의존성 주입 (DI): 메시지 저장 시 유저와 채널의 존재 여부를 확인하기 위해 추가 주입받습니다.
     public BasicMessageService(MessageRepository messageRepository,
                                UserRepository userRepository,
                                ChannelRepository channelRepository) {
@@ -68,11 +67,18 @@ public class BasicMessageService implements MessageService {
     @Override
     public Message update(UUID messageId, String content, UUID channelId) {
         // 수정 전 해당 메시지가 존재하는지 확인
-        findById(messageId);
+        if (messageRepository.findById(messageId).isEmpty()) {
+            System.err.println("수정하려는 메시지가 존재하지 않습니다.");
+            return null;
+        }
 
-        // 채널 변경 요청이 있을 경우 채널 존재 여부 확인
         if (channelId != null && channelRepository.findById(channelId).isEmpty()) {
             System.err.println("변경하려는 채널이 존재하지 않습니다.");
+            return null;
+        }
+
+        if (content == null) {
+            System.err.println("null 값으로는 변경이 불가합니다.");
             return null;
         }
 

@@ -13,13 +13,11 @@ public class FileChannelService implements ChannelService {
 
     public FileChannelService() {
         File file = new File(FILE_PATH);
-        // 파일이 없거나 비어있으면 빈 리스트로 초기화 (EOFException 방지)
         if (!file.exists() || file.length() == 0) {
             saveAll(new ArrayList<>());
         }
     }
 
-    // [저장 로직] 파일에 리스트 전체를 직렬화하여 저장
     private void saveAll(List<Channel> channels) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             oos.writeObject(channels);
@@ -28,7 +26,6 @@ public class FileChannelService implements ChannelService {
         }
     }
 
-    // [저장 로직] 파일에서 리스트 전체를 역직렬화하여 로드
     @SuppressWarnings("unchecked")
     private List<Channel> loadAll() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {

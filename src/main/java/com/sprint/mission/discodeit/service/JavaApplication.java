@@ -54,14 +54,14 @@ public class JavaApplication {
 
 
         // JCF레포지토리 테스트
-        JCFChannelRepository channelRepository = new JCFChannelRepository();
-        JCFUserRepository userRepository = new JCFUserRepository();
-        JCFMessageRepository messageRepository = new JCFMessageRepository();
+//        JCFChannelRepository channelRepository = new JCFChannelRepository();
+//        JCFUserRepository userRepository = new JCFUserRepository();
+//        JCFMessageRepository messageRepository = new JCFMessageRepository();
 
         // File레포지토리 테스트
-//        FileChannelRepository channelRepository = new FileChannelRepository();
-//        FileUserRepository userRepository = new FileUserRepository();
-//        FileMessageRepository messageRepository = new FileMessageRepository();
+        FileChannelRepository channelRepository = new FileChannelRepository();
+        FileUserRepository userRepository = new FileUserRepository();
+        FileMessageRepository messageRepository = new FileMessageRepository();
 
         BasicChannelService channelService = new BasicChannelService(channelRepository);
         BasicUserService userService = new BasicUserService(userRepository);

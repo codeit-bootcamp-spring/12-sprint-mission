@@ -20,7 +20,6 @@ public class FileUserService implements UserService {
         }
     }
 
-    // 리스트 전체를 파일에 쓰기
     private void saveAll(List<User> users) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             oos.writeObject(users);
@@ -29,7 +28,6 @@ public class FileUserService implements UserService {
         }
     }
 
-    // 파일에서 리스트 전체 읽어오기
     @SuppressWarnings("unchecked")
     private List<User> loadAll() {
         File file = new File(FILE_PATH);
