@@ -1,10 +1,11 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Channel {
+public class Channel implements Serializable,Comparable<Channel> {
     private final UUID id;
     private final User author;
     private String title;
@@ -12,6 +13,8 @@ public class Channel {
 //    private List<User> userList = new ArrayList<>();
     private final long createdAt;
     private long updatedAt;
+
+    private static final long serialVersionUID = 1L;
 
     public Channel(String title, User author, String type) {
         id = UUID.randomUUID();
@@ -66,5 +69,9 @@ public class Channel {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}'+"\n";
+    }
+
+    public int compareTo(Channel o) {
+        return o.category.compareTo(category);
     }
 }
