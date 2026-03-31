@@ -7,8 +7,6 @@ import java.util.*;
 
 
 public class JCFUserRepository implements UserRepository {
-    private static final String FILE_PATH = "user.ser";
-
     private final Map<UUID, User> data;
 
     public JCFUserRepository() {

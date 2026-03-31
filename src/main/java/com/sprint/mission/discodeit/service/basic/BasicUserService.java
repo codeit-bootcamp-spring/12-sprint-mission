@@ -1,18 +1,15 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.DTO.CreateUserRequest;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.util.EmailVerifier;
-import com.sprint.mission.discodeit.util.FileSerialization;
 
 import java.util.*;
 
 public class BasicUserService implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public BasicUserService(UserRepository userRepository) {
         this.userRepository = userRepository;

@@ -6,8 +6,6 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import java.util.*;
 
 public class JCFMessageRepository implements MessageRepository {
-    private static final String FILE_PATH = "message.ser";
-
     private final Map<UUID, Message> data;
 
     public JCFMessageRepository() {
