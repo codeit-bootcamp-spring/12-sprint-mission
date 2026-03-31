@@ -1,8 +1,9 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Message {
+public class Message implements Serializable,Comparable<Message> {
     private final UUID id;
     private final Channel ch;
     private final User author;
@@ -10,6 +11,8 @@ public class Message {
     private String content;
     private final long createdAt;
     private long updatedAt;
+
+    private static final long serialVersionUID = 1L;
 
     public Message(Channel ch, User author, String title, String content) {
         id = UUID.randomUUID();
@@ -69,5 +72,10 @@ public class Message {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}'+"\n";
+    }
+
+    @Override
+    public int compareTo(Message o) {
+        return o.ch.compareTo(ch);
     }
 }
