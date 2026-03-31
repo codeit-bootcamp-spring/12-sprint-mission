@@ -1,11 +1,14 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.DTO.MessageData;
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.util.FileSerialization;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BasicMessageService implements MessageService {
@@ -24,21 +27,36 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public Message findMessageByContent(String content) {
-        return messageRepository.findMessageByContent(content);
+        Optional<Message> message = messageRepository.findByContent(content);
+
+        if (message.isPresent()) {
+            return message.get();
+        } else {
+            throw new IllegalArgumentException("해당 이름을 가진 메시지 없음");
+        }
     }
 
     @Override
     public List<Message> findAllMessage() {
-        return messageRepository.findAllMessage();
+        return messageRepository.findAll();
     }
 
     @Override
     public Message changeMessageContent(UUID id, String content) {
-        return messageRepository.changeMessageContent(id, content);
+        Optional<Message> opMsg = messageRepository.findById(id);
+
+        if (opMsg.isEmpty()) {
+            throw new IllegalArgumentException("해당 id를 가진 메시지 없음.");
+        }
+        Message msg = opMsg.get();
+
+        msg.update(msg.getAuthorId(), msg.getChannelId(), content);
+
+        return messageRepository.save(msg);
     }
 
     @Override
     public Message deleteMessage(UUID id) {
-        return messageRepository.deleteMessage(id);
+        return messageRepository.delete(id);
     }
 }

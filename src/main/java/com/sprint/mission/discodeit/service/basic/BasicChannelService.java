@@ -4,8 +4,10 @@ import com.sprint.mission.discodeit.DTO.CreateChannelRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.util.FileSerialization;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BasicChannelService implements ChannelService {
@@ -24,21 +26,36 @@ public class BasicChannelService implements ChannelService {
 
     @Override
     public Channel findChannelByName(String name) {
-        return channelRepository.findChannelByName(name);
+        Optional<Channel> channel = channelRepository.findByName(name);
+
+        if (channel.isPresent()) {
+            return channel.get();
+        } else {
+            throw new IllegalArgumentException("해당 이름을 가진 채널 없음");
+        }
     }
 
     @Override
     public List<Channel> findAllChannels() {
-        return channelRepository.findAllChannels();
+        return channelRepository.findAll();
     }
 
     @Override
     public Channel changeChannelName(UUID id, String name) {
-        return channelRepository.changeChannelName(id, name);
+        Optional<Channel> opCh = channelRepository.findById(id);
+
+        if (opCh.isEmpty()) {
+            throw new IllegalArgumentException("해당 id를 가진 채널 없음.");
+        }
+
+        Channel ch = opCh.get();
+        ch.update(ch.getChannelOwnerId(), ch.getType(), name, ch.isPrivate());
+
+        return channelRepository.save(ch);
     }
 
     @Override
     public Channel deleteChannel(UUID id) {
-        return channelRepository.deleteChannel(id);
+        return channelRepository.delete(id);
     }
 }
