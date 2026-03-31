@@ -2,7 +2,9 @@ package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +14,7 @@ public class JCFMessageService implements MessageService {
     private final MessageRepository messageRepository;
 
     // 의존성 주입
-    public JCFMessageService(MessageRepository messageRepository) {
+    public JCFMessageService(MessageRepository messageRepository, UserService userService, ChannelService channelService) {
         this.messageRepository = messageRepository;
     }
 
