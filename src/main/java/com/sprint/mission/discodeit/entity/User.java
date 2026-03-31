@@ -1,8 +1,9 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable,Comparable<User> {
     private final UUID id;
     private String name;
     private String email;
@@ -10,6 +11,8 @@ public class User {
     private String password;
     private final long createdAt;
     private long updatedAt;
+
+    private static final long serialVersionUID = 1L;
 
     public User(String name, String email, String nickname, String password) {
         id = UUID.randomUUID();
@@ -80,5 +83,10 @@ public class User {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}'+"\n";
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return o.name.compareTo(name);
     }
 }
