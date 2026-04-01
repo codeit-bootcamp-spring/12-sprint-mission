@@ -2,16 +2,17 @@ package com.sprint.mission.discodeit.entity;
 
 import java.util.UUID;
 
-public class User {
+public class User implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private UUID id;
     private String username;
     private String email;
-    private String password;
+    private int password;
     private String nickname;
     private Long createdAt;
     private Long updatedAt;
 
-    public User(String username, String email, String password, String nickname) {
+    public User(String username, String email, int password, String nickname) {
         id = UUID.randomUUID();
         this.username = username;
         this.email = email;
@@ -33,7 +34,7 @@ public class User {
         return email;
     }
 
-    public String getPassword() {
+    public int getPassword() {
         return password;
     }
 
@@ -50,7 +51,7 @@ public class User {
     }
 
 
-    public void update(String username, String email, String password, String nickname){
+    public void update(String username, String email, int password, String nickname){
         this.username = username;
         this.email = email;
         this.password = password;
