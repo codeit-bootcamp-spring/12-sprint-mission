@@ -1,5 +1,10 @@
-package com.sprint.mission.discodeit.service.jcf;
+package com.sprint.mission.discodeit.service.file;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -10,17 +15,39 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.MessageService;
 
-public class JCFMessageService implements MessageService {
-
+public class FileMessageService implements MessageService {
+	private final Path fileName;
 	private final Map<UUID, Message> data;
 
-	public JCFMessageService() {
-		data = new HashMap<>();
+	public FileMessageService() {
+		Path directory = Path.of(System.getProperty("user.dir"), "data");
+		try {
+			Files.createDirectories(directory);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		fileName = directory.resolve("message.ser");
+		if (!Files.exists(fileName)) {
+			data = new HashMap<>();
+		} else {
+			try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(fileName))) {
+				data = (HashMap<UUID, Message>)ois.readObject();
+			} catch (IOException | ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	private void saveToFile() {
+		try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(fileName))) {
+			oos.writeObject(data);
+		} catch (IOException e) {
+			throw new RuntimeException("파일 저장 실패", e);
+		}
 	}
 
 	@Override
 	public Message create(Channel channel, Message message) {
-
 		if (channel == null || message == null) {
 			return null;
 		}
@@ -28,7 +55,9 @@ public class JCFMessageService implements MessageService {
 			return null;
 		}
 		if (!data.containsKey(message.getId())) {
-			return data.put(message.getId(), message);
+			data.put(message.getId(), message);
+			saveToFile();
+			return message;
 		} else {
 			System.err.println("메세지가 이미 존재합니다.");
 			return null;
@@ -50,6 +79,7 @@ public class JCFMessageService implements MessageService {
 		for (Message message : data.values()) {
 			if (message.getId().equals(id)) {
 				message.update(content);
+				saveToFile();
 				return message;
 			}
 		}
@@ -61,6 +91,7 @@ public class JCFMessageService implements MessageService {
 		Message message = find(id);
 		if (message != null && message.getUserId().equals(userId)) {
 			data.remove(message.getId());
+			saveToFile();
 		}
 	}
 }

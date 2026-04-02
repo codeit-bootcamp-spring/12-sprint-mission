@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.service;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 import com.sprint.mission.discodeit.entity.Channel;
@@ -11,7 +11,7 @@ public interface ChannelService {
 
 	Channel find(UUID id);
 
-	List<Channel> findAll();
+	Collection<Channel> findAll();
 
 	Channel update(UUID id, User creator, String name, String description);
 

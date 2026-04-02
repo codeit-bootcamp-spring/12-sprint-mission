@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.service.jcf;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,8 +33,8 @@ public class JCFUserService implements UserService {
 	}
 
 	@Override
-	public List<User> findAll() {
-		return data.values().stream().toList();
+	public Collection<User> findAll() {
+		return data.values();
 	}
 
 	@Override

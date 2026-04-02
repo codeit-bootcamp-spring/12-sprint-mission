@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
 
 public interface MessageService {
 	Message create(Channel channel, Message message);
@@ -16,5 +15,5 @@ public interface MessageService {
 
 	Message update(UUID id, UUID userid, String content);
 
-	void delete(UUID id, User user);
+	void delete(UUID id, UUID userId);
 }
