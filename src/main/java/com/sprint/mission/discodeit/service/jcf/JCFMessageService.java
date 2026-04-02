@@ -23,11 +23,11 @@ public class JCFMessageService implements MessageService {
     @Override
     public Message save(Message message) {
         if(channelService.findById(message.getCh().getId()) == null){
-            System.out.println("Channel information is not exist");
+            System.out.println("Channel이 존재하지 않습니다.");
             return null;
         }
         if(userService.findById(message.getAuthor().getId()) == null){
-            System.out.println("Author information is not exist");
+            System.out.println("Author가 존재하지 않습니다.");
             return null;
         }
         data.add(message);
@@ -49,14 +49,12 @@ public class JCFMessageService implements MessageService {
 
     @Override
     public Message update(Message message) {
-        for(Message update : data){
-            if(update.getId().equals(message.getId())){
-                if(message.getTitle() != null) update.updateTitle(message.getTitle());
-                if(message.getContent() != null) update.updateContent(message.getContent());
-                return update;
-            }
+        Message updateMessage =findById(message.getId());
+        if(updateMessage == null){
+            return null;
         }
-        return null;
+        updateMessage.update(message);
+        return updateMessage;
     }
 
     @Override

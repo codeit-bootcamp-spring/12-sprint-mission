@@ -9,8 +9,8 @@ public class User implements Serializable,Comparable<User> {
     private String email;
     private String nickname;
     private String password;
-    private final long createdAt;
-    private long updatedAt;
+    private final Long createdAt;
+    private Long updatedAt;
 
     private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,7 @@ public class User implements Serializable,Comparable<User> {
         this.nickname = nickname;
         this.password = password;
         createdAt = System.currentTimeMillis();
+        updatedAt = System.currentTimeMillis();
     }
 
     public UUID getId() {
@@ -51,25 +52,29 @@ public class User implements Serializable,Comparable<User> {
         return updatedAt;
     }
 
-    public void updateName(String name) {
-        this.name = name;
-        this.updatedAt = System.currentTimeMillis();
-    }
+    public void update(User user){
+        boolean isUpdated = false;
 
-    public void updateEmail(String email) {
-        this.email = email;
-        this.updatedAt = System.currentTimeMillis();
-    }
+        if(user.getName() != null){
+            this.name = user.getName();
+            isUpdated = true;
+        }
+        if(user.getNickname() != null){
+            this.nickname = user.getNickname();
+            isUpdated = true;
+        }
+        if(user.getEmail() != null){
+            this.email = user.getEmail();
+            isUpdated = true;
+        }
+        if(user.getPassword() != null){
+            this.password = user.getPassword();
+            isUpdated = true;
+        }
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-        this.updatedAt = System.currentTimeMillis();
-    }
-
-    public void updatePassword(String password) {
-        this.password = password;
-        this.updatedAt = System.currentTimeMillis();
-
+        if(isUpdated){
+            this.updatedAt = System.currentTimeMillis();
+        }
     }
 
     @Override

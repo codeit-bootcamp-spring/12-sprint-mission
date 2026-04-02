@@ -22,8 +22,8 @@ public class FileMessageService implements MessageService {
     public FileMessageService(ChannelService channelService, UserService userService) {
         this.channelService = channelService;
         this.userService = userService;
-        this.DIRECTORY = Path.of(System.getProperty("user.dir"),"data", "messages");
-        if(Files.notExists(DIRECTORY)){
+        this.DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "messages");
+        if (Files.notExists(DIRECTORY)) {
             try {
                 Files.createDirectories(DIRECTORY);
             } catch (IOException e) {
@@ -32,51 +32,48 @@ public class FileMessageService implements MessageService {
         }
     }
 
-    public Path makePath (UUID id){
+    public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
     public Message save(Message message) {
-        if(userService.findById(message.getAuthor().getId()) == null){
-            System.out.println("Author is not exist");
+        if (userService.findById(message.getAuthor().getId()) == null) {
+            System.out.println("Author가 존재하지 않습니다.");
             return null;
         }
-        if(channelService.findById(message.getCh().getId()) == null){
-            System.out.println("Channel is not exist");
+        if (channelService.findById(message.getCh().getId()) == null) {
+            System.out.println("Channel이 존재하지 않습니다.");
             return null;
         }
-
         Path path = makePath(message.getId());
-        boolean result = false;
+        boolean result;
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
-             ObjectOutputStream oos = new ObjectOutputStream(fos);
-        ){
+             ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
             oos.writeObject(message);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
             result = false;
         }
-
-        if(!result){
-            throw new IllegalStateException("Could not save Message");
+        if (!result) {
+            throw new IllegalStateException("Message를 저장할 수 없습니다.");
         }
         return message;
     }
 
-    public Message loadMessages(Path path){
-        if(Files.notExists(path)){
+    public Message loadMessages(Path path) {
+        if (Files.notExists(path)) {
             return null;
         }
-        try (
-                FileInputStream fis = new FileInputStream(path.toFile());
-                ObjectInputStream ois = new ObjectInputStream(fis);
-        ){
+        try (FileInputStream fis = new FileInputStream(path.toFile());
+             ObjectInputStream ois = new ObjectInputStream(fis)
+        ) {
             return (Message) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException("File io Error");
+            throw new RuntimeException("파일 입출력 에러 발생");
         }
     }
 
@@ -91,7 +88,7 @@ public class FileMessageService implements MessageService {
         try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(path -> (Message)loadMessages(path))
+                    .map(this::loadMessages)
                     .sorted()
                     .toList();
         } catch (Exception e) {
@@ -103,19 +100,20 @@ public class FileMessageService implements MessageService {
     public Message update(Message message) {
         Path path = makePath(message.getId());
         Message oldMessage = loadMessages(path);
-        if(message.getTitle() != null) oldMessage.updateTitle(message.getTitle());
-        if(message.getContent() != null) oldMessage.updateContent(message.getContent());
+        if(oldMessage == null){
+            return null;
+        }
+        oldMessage.update(message);
         save(oldMessage);
-        return message;
+        return oldMessage;
     }
 
     @Override
     public void delete(UUID id) {
         Path path = makePath(id);
-        if(Files.notExists(path)){
+        if (Files.notExists(path)) {
             return;
         }
-
         try {
             Files.delete(path);
         } catch (IOException e) {

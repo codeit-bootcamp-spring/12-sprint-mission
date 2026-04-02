@@ -19,8 +19,8 @@ public class FileChannelService implements ChannelService {
 
     public FileChannelService(UserService userService) {
         this.userService = userService;
-        this.DIRECTORY = Path.of(System.getProperty("user.dir"),"data","channels");
-        if(Files.notExists(DIRECTORY)){
+        this.DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "channels");
+        if (Files.notExists(DIRECTORY)) {
             try {
                 Files.createDirectories(DIRECTORY);
             } catch (IOException e) {
@@ -35,47 +35,44 @@ public class FileChannelService implements ChannelService {
 
     @Override
     public Channel save(Channel channel) {
-        if(userService.findById(channel.getAuthor().getId()) == null){
-            System.out.println("Author is not exist.");
+        if (userService.findById(channel.getAuthor().getId()) == null) {
+            System.out.println("Author가 존재하지 않습니다.");
             return null;
         }
-
         Path path = makePath(channel.getId());
-        boolean result = false;
-        try (
-                FileOutputStream fos = new FileOutputStream(path.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-        ){
+        boolean result;
+        try (FileOutputStream fos = new FileOutputStream(path.toFile());
+             ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
             oos.writeObject(channel);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
             result = false;
         }
-
-        if(!result){
-            throw new IllegalStateException("Could not save Channel");
+        if (!result) {
+            throw new IllegalStateException("Channel을 저장할 수 없습니다.");
         }
         return channel;
     }
 
-    public Channel loadChannels(Path path){
-        if(Files.notExists(path)){
+    public Channel loadChannels(Path path) {
+        if (Files.notExists(path)) {
             return null;
         }
         try (FileInputStream fis = new FileInputStream(path.toFile());
-             ObjectInputStream ois = new ObjectInputStream(fis);
-        ){
-            return (Channel)ois.readObject();
+             ObjectInputStream ois = new ObjectInputStream(fis)
+        ) {
+            return (Channel) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException("File io error");
+            throw new RuntimeException("파일 입출력 에러 발생");
         }
     }
 
     @Override
     public Channel findById(UUID id) {
-        Path path =makePath(id);
+        Path path = makePath(id);
         return loadChannels(path);
     }
 
@@ -84,7 +81,7 @@ public class FileChannelService implements ChannelService {
         try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(path -> (Channel)loadChannels(path))
+                    .map(this::loadChannels)
                     .sorted()
                     .toList();
         } catch (Exception e) {
@@ -95,23 +92,21 @@ public class FileChannelService implements ChannelService {
     @Override
     public Channel update(Channel channel) {
         Path path = makePath(channel.getId());
-
         Channel oldChannel = loadChannels(path);
-
-        if(channel.getTitle() != null) oldChannel.updateTitle(channel.getTitle());
-        if(channel.getCategory() != null) oldChannel.updateCategory(channel.getCategory());
-
+        if(oldChannel == null){
+            return null;
+        }
+        oldChannel.update(channel);
         save(oldChannel);
-        return channel;
+        return oldChannel;
     }
 
     @Override
     public void delete(UUID id) {
         Path path = makePath(id);
-        if(Files.notExists(path)){
+        if (Files.notExists(path)) {
             return;
         }
-
         try {
             Files.delete(path);
         } catch (IOException e) {

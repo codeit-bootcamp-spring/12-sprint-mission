@@ -1,8 +1,6 @@
 package com.sprint.mission.discodeit.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Channel implements Serializable,Comparable<Channel> {
@@ -10,9 +8,8 @@ public class Channel implements Serializable,Comparable<Channel> {
     private final User author;
     private String title;
     private String category;
-//    private List<User> userList = new ArrayList<>();
-    private final long createdAt;
-    private long updatedAt;
+    private final Long createdAt;
+    private Long updatedAt;
 
     private static final long serialVersionUID = 1L;
 
@@ -21,8 +18,8 @@ public class Channel implements Serializable,Comparable<Channel> {
         this.title = title;
         this.author = author;
         this.category = type;
-//        userList.add(user);
         createdAt = System.currentTimeMillis();
+        updatedAt = System.currentTimeMillis();
     }
 
     public UUID getId() {
@@ -49,14 +46,21 @@ public class Channel implements Serializable,Comparable<Channel> {
         return updatedAt;
     }
 
-    public void updateCategory(String category) {
-        this.category = category;
-        updatedAt = System.currentTimeMillis();
-    }
+    public void update(Channel channel){
+        boolean isUpdated = false;
 
-    public void updateTitle(String title) {
-        this.title = title;
-        updatedAt = System.currentTimeMillis();
+        if(channel.getTitle() != null){
+            this.title = channel.getTitle();
+            isUpdated = true;
+        }
+        if(channel.getCategory() != null){
+            this.category = channel.getCategory();
+            isUpdated = true;
+        }
+
+        if(isUpdated){
+            this.updatedAt = System.currentTimeMillis();
+        }
     }
 
     @Override

@@ -9,8 +9,8 @@ public class Message implements Serializable,Comparable<Message> {
     private final User author;
     private String title;
     private String content;
-    private final long createdAt;
-    private long updatedAt;
+    private final Long createdAt;
+    private Long updatedAt;
 
     private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,7 @@ public class Message implements Serializable,Comparable<Message> {
         this.title = title;
         this.content = content;
         createdAt = System.currentTimeMillis();
+        updatedAt = System.currentTimeMillis();
     }
 
     public UUID getId() {
@@ -51,14 +52,21 @@ public class Message implements Serializable,Comparable<Message> {
         return updatedAt;
     }
 
-    public void updateTitle(String title) {
-        this.title = title;
-        updatedAt = System.currentTimeMillis();
-    }
+    public void update(Message message){
+        boolean isUpdated = false;
 
-    public void updateContent(String content) {
-        this.content = content;
-        updatedAt = System.currentTimeMillis();
+        if(message.getTitle() != null){
+            this.title = message.getTitle();
+            isUpdated = true;
+        }
+        if(message.getContent() != null){
+            this.content = message.getContent();
+            isUpdated = true;
+        }
+
+        if(isUpdated){
+            this.updatedAt = System.currentTimeMillis();
+        }
     }
 
     @Override

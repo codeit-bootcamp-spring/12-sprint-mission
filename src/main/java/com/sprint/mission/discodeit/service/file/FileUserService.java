@@ -6,7 +6,6 @@ import com.sprint.mission.discodeit.service.UserService;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -28,16 +27,15 @@ public class FileUserService implements UserService {
     }
 
     private Path makePath(UUID id) {
-        return DIRECTORY.resolve(id + EXTENSION); // data/users/{id}.ser
+        return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
     public User save(User user) {
         Path path = makePath(user.getId());
-        boolean result = false;
-        try (
-                FileOutputStream fos = new FileOutputStream(path.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
+        boolean result;
+        try (FileOutputStream fos = new FileOutputStream(path.toFile());
+             ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
             oos.writeObject(user);
             result = true;
@@ -46,7 +44,7 @@ public class FileUserService implements UserService {
             result = false;
         }
         if (!result) {
-            throw new IllegalStateException("Could not save User");
+            throw new IllegalStateException("User를 저장할 수 없습니다.");
         }
         return user;
     }
@@ -55,13 +53,13 @@ public class FileUserService implements UserService {
         if (Files.notExists(path)) {
             return null;
         }
-        try (
-                FileInputStream fis = new FileInputStream(path.toFile());
-                ObjectInputStream ois = new ObjectInputStream(fis)) {
+        try (FileInputStream fis = new FileInputStream(path.toFile());
+             ObjectInputStream ois = new ObjectInputStream(fis)
+        ) {
             return (User) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException("File io Error");
+            throw new RuntimeException("파일 입출력 에러 발생");
         }
     }
 
@@ -73,14 +71,10 @@ public class FileUserService implements UserService {
 
     @Override
     public List<User> findAll() {
-        if(Files.notExists(DIRECTORY)){
-            return new ArrayList<>();
-        }
-
         try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(path -> (User) loadUsers(path))
+                    .map(this::loadUsers)
                     .sorted()
                     .toList();
         } catch (Exception e) {
@@ -92,21 +86,20 @@ public class FileUserService implements UserService {
     public User update(User user) {
         Path path = makePath(user.getId());
         User oldUser = loadUsers(path);
-        if (user.getName() != null) oldUser.updateName(user.getName());
-        if (user.getNickname() != null) oldUser.updateNickname(user.getNickname());
-        if (user.getEmail() != null) oldUser.updateEmail(user.getEmail());
-        if (user.getPassword() != null) oldUser.updatePassword(user.getPassword());
+        if(oldUser == null){
+            return null;
+        }
+        oldUser.update(user);
         save(oldUser);
-        return user;
+        return oldUser;
     }
 
     @Override
     public void delete(UUID id) {
         Path path = makePath(id);
-        if(Files.notExists(path)){
+        if (Files.notExists(path)) {
             return;
         }
-
         try {
             Files.delete(path);
         } catch (IOException e) {
