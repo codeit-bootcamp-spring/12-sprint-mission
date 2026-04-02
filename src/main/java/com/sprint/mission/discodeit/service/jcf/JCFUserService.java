@@ -3,35 +3,44 @@ package com.sprint.mission.discodeit.service.jcf;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class JCFUserService implements UserService {
 
-    private final List<User> data;
+    private final Map<UUID, User> data;
 
-    public JCFUserService() {
-        data = new ArrayList<>();
+    public JCFUserService(){
+        this.data = new HashMap<>();
     }
 
     @Override
-    public User save(User user) {
-        data.add(user);
+    public User create(String username, String email, String password, String nickname) {
+        User user = new User(username, email, password, nickname) ;
+        data.put(user.getId(), user);
         return user;
     }
 
     @Override
-    public User findById(UUID id) {
-        for(User user : data){
-            if(user.getId().equals(id)) return user;
-        }
-//        data.stream().filter(idata -> idata.getId().equals(id));
-        return null;
+    public Optional<User> findById(UUID id) {
+        return Optional.ofNullable(data.get(id));
     }
 
     @Override
     public List<User> findAll() {
-        return data;
+        return new ArrayList<>(data.values());
+    }
+
+    @Override
+    public void update(UUID id, String username, String email, String password, String nickname) {
+        User user = data.get(id);
+        if(user == null){
+            throw new RuntimeException("유저 없음");
+        }
+        user.update(username, email, password, nickname);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        data.remove(id);
     }
 }
