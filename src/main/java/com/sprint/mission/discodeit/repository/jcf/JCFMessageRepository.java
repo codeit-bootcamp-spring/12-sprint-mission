@@ -10,7 +10,9 @@ public class JCFMessageRepository implements MessageRepository {
 
     @Override
     public Message save(Message message) {
-        data.put(message.getId(),message);
+        if (message == null) throw new NullPointerException("Message 객체가 비어있습니다.");
+        if (message.getId() == null) throw new IllegalArgumentException("Message ID를 찾을 수 없습니다.");
+        data.put(message.getId(), message);
         return message;
     }
 

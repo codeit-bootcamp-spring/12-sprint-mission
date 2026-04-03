@@ -10,7 +10,9 @@ public class JCFChannelRepository implements ChannelRepository {
 
     @Override
     public Channel save(Channel channel) {
-        data.put(channel.getId(),channel);
+        if (channel == null) throw new NullPointerException("Channel 객체가 비어있습니다.");
+        if (channel.getId() == null) throw new IllegalArgumentException("Channel ID를 찾을 수 없습니다.");
+        data.put(channel.getId(), channel);
         return channel;
     }
 

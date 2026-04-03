@@ -6,9 +6,7 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class FileMessageRepository implements MessageRepository {
@@ -17,6 +15,10 @@ public class FileMessageRepository implements MessageRepository {
 
     public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
+    }
+
+    public FileMessageRepository() {
+        createDirectory(DIRECTORY);
     }
 
     public void createDirectory(Path path) {
@@ -31,11 +33,14 @@ public class FileMessageRepository implements MessageRepository {
 
     @Override
     public Message save(Message message) {
-        createDirectory(DIRECTORY);
+        if (message == null) throw new NullPointerException("Message 객체가 비어있습니다.");
+        if (message.getId() == null) throw new IllegalArgumentException("Message ID를 찾을 수 없습니다.");
+        if (message.getAuthor() == null) throw new IllegalArgumentException("Message의 작성자 정보가 누락되었습니다.");
+        if (message.getCh() == null) throw new IllegalArgumentException("Message의 채널 정보가 누락되었습니다.");
+
         Path path = makePath(message.getId());
-        try(
-                FileOutputStream fos = new FileOutputStream(path.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        try (FileOutputStream fos = new FileOutputStream(path.toFile());
+             ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
             oos.writeObject(message);
             return message;
@@ -46,17 +51,19 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     public Message loadMessages(Path path) {
-        if (Files.notExists(path)) {
-            return null;
-        }
-        try (
-                FileInputStream fis = new FileInputStream(path.toFile());
-                ObjectInputStream ois = new ObjectInputStream(fis)
+        if (Files.notExists(path) || Files.isDirectory(path)) return null;
+
+        try (FileInputStream fis = new FileInputStream(path.toFile());
+             ObjectInputStream ois = new ObjectInputStream(fis)
         ) {
-            return (Message) ois.readObject();
+            Object obj = ois.readObject();
+            if(!(obj instanceof Message)){
+                throw new IllegalArgumentException("파일 내용이 Message가 아닙니다.: " + path);
+            }
+            return (Message) obj;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException("File io Error");
+            throw new RuntimeException("파일 입출력 에러");
         }
     }
 
@@ -67,23 +74,27 @@ public class FileMessageRepository implements MessageRepository {
 
     @Override
     public List<Message> findAll() {
-        try(Stream<Path> stream = Files.list(DIRECTORY)){
+        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+        try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
                     .map(this::loadMessages)
                     .sorted()
                     .toList();
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new NoSuchElementException("경로를 찾을 수 없습니다.");
         }
     }
 
     @Override
     public void delete(UUID id) {
-        try{
-            Files.delete(makePath(id));
+        try {
+            boolean deleted = Files.deleteIfExists(makePath(id));
+            if (!deleted) {
+                System.out.println("삭제 실패 : 해당 ID의 파일이 존재하지 않습니다.");
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("파일 삭제 중 오류 발생", e);
         }
     }
 }
