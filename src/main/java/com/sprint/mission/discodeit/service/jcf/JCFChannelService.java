@@ -50,7 +50,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel delete(UUID id) {
-        return data.remove(id);
+    public void delete(UUID id) {
+        data.remove(id);
     }
 }

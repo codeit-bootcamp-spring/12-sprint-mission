@@ -86,8 +86,8 @@ public class BasicMessageService implements MessageService {
     }
 
     @Override
-    public Message delete(UUID messageId) {
+    public void delete(UUID messageId) {
         findById(messageId);
-        return messageRepository.delete(messageId);
+        messageRepository.delete(messageId);
     }
 }

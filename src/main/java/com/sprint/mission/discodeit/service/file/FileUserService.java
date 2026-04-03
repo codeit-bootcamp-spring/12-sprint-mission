@@ -75,7 +75,7 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User delete(UUID id) {
+    public void delete(UUID id) {
         List<User> users = loadAll();
         User target = users.stream()
                 .filter(u -> u.getId().equals(id))
@@ -86,7 +86,6 @@ public class FileUserService implements UserService {
             users.remove(target);
             saveAll(users);
         }
-        return target;
     }
 
     public boolean isNicknameUnique(String nickname) {

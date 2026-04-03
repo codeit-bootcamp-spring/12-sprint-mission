@@ -11,6 +11,8 @@ import java.util.UUID;
 
 public class FileUserRepository implements UserRepository {
     private final String FILE_PATH = "user.dat";
+    // loadAll시 컬렉션을 유지해서 IO를 최적화 하는게 나을것 같음 다른 레포지토리도 마찬가지
+    // private List<User> users;
 
     public FileUserRepository() {
         File file = new File(FILE_PATH);
@@ -74,7 +76,7 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public User delete(UUID id) {
+    public void delete(UUID id) {
         List<User> users = loadAll();
         User target = users.stream()
                 .filter(u -> u.getId().equals(id))
@@ -85,6 +87,5 @@ public class FileUserRepository implements UserRepository {
             users.remove(target);
             saveAll(users);
         }
-        return target;
     }
 }

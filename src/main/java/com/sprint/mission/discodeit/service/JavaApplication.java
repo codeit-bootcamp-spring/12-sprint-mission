@@ -30,28 +30,25 @@ public class JavaApplication {
         // test2
 
 
-//        File file1 = new File("user.dat");
-//        if(file1.exists()){
-//           file1.delete();
-//        }
-//        File file2 = new File("messages.dat");
-//        if(file2.exists()){
-//           file2.delete();
-//        }
-//        File file3 = new File("channel.dat");
-//        if(file3.exists()){
-//           file3.delete();
-//        }
+        File file1 = new File("user.dat");
+        if(file1.exists()){
+           file1.delete();
+        }
+        File file2 = new File("messages.dat");
+        if(file2.exists()){
+           file2.delete();
+        }
+        File file3 = new File("channel.dat");
+        if(file3.exists()){
+           file3.delete();
+        }
 //
 //        FileUserService userService = new FileUserService();
 //        FileChannelService channelService = new FileChannelService();
 //        FileMessageService messageService = new FileMessageService(userService, channelService);
 
 
-
         // test3
-
-
 
         // JCF레포지토리 테스트
 //        JCFChannelRepository channelRepository = new JCFChannelRepository();

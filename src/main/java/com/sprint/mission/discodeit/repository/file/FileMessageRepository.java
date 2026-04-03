@@ -70,7 +70,7 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public Message delete(UUID messageId) {
+    public void delete(UUID messageId) {
         List<Message> messages = loadAll();
         Message target = messages.stream()
                 .filter(m -> m.getId().equals(messageId))
@@ -81,6 +81,5 @@ public class FileMessageRepository implements MessageRepository {
             messages.remove(target);
             saveAll(messages);
         }
-        return target;
     }
 }

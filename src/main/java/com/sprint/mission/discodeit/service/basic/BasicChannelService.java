@@ -27,7 +27,7 @@ public class BasicChannelService implements ChannelService {
             return null;
         }
 
-        if (channel.getDescription() == null) {
+        if (channel.getDescription() == null) { // 빈 문자열은 허용하되 null은 허용하지 않음
             System.err.println("채널 설명은 필수 입력 항목입니다.");
             return null;
         }
@@ -43,7 +43,8 @@ public class BasicChannelService implements ChannelService {
     @Override
     public Channel findById(UUID id) {
         return channelRepository.findById(id)
-                .orElseThrow(()->new NoSuchElementException("해당 ID의 채널을 찾을 수 없습니다."));
+                .orElse(null);
+//                .orElseThrow(()->new NoSuchElementException("해당 ID의 채널을 찾을 수 없습니다."));
     }
 
     @Override
@@ -57,7 +58,7 @@ public class BasicChannelService implements ChannelService {
     }
 
     @Override
-    public Channel delete(UUID id) {
-        return channelRepository.delete(id);
+    public void delete(UUID id) {
+        channelRepository.delete(id);
     }
 }

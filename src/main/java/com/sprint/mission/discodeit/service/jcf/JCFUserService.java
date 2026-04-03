@@ -56,7 +56,7 @@ public class JCFUserService implements UserService {
         return user;
     }
 
-    public User delete(UUID id) {
-        return data.remove(id);
+    public void delete(UUID id) {
+        data.remove(id);
     }
 }

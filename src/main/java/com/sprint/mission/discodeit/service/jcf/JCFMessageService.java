@@ -48,8 +48,8 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message delete(UUID messageId) {
-        return data.remove(messageId);
+    public void delete(UUID messageId) {
+        data.remove(messageId);
     }
     // 메세지는 그냥 삭제하면 되는데 유저와 채널이 삭제되었을때 남아있는 메세지는 어떻게 삭제할지?
     // ex) 유저는 삭제된 유저는 [삭제된 유저]로 메세지는 남기고 채널 삭제시 메세지는 전부 삭제?

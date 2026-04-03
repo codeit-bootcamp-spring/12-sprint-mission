@@ -28,7 +28,8 @@ public class BasicUserService implements UserService {
         }
 
         if (userRepository.findAll().stream()
-                .anyMatch(u -> u.getNickname().equals(user.getNickname()))) {
+                .map(User::getNickname)
+                .anyMatch(n -> n.equals(user.getNickname()))) {
             System.err.println("이미 존재하는 닉네임입니다.");
             return null;
         }
@@ -39,7 +40,8 @@ public class BasicUserService implements UserService {
     @Override
     public User findById(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(()-> new NoSuchElementException("해당 ID의 사용자를 찾을 수 없습니다."));
+                .orElse(null);
+//                .orElseThrow(()-> new NoSuchElementException("해당 ID의 사용자를 찾을 수 없습니다."));
     }
 
     @Override
@@ -53,8 +55,8 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public User delete(UUID id) {
-        return userRepository.delete(id);
+    public void delete(UUID id) {
+        userRepository.delete(id);
     }
 
     public User create(String username, String email, String password, String nickname) {

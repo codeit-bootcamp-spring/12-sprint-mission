@@ -70,7 +70,7 @@ public class FileChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public Channel delete(UUID id) {
+    public void delete(UUID id) {
         List<Channel> channels = loadAll();
         Channel target = channels.stream()
                 .filter(c -> c.getId().equals(id))
@@ -81,6 +81,5 @@ public class FileChannelRepository implements ChannelRepository {
             channels.remove(target);
             saveAll(channels);
         }
-        return target;
     }
 }

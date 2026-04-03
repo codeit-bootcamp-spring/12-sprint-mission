@@ -49,7 +49,7 @@ public class JCFMessageRepository implements MessageRepository {
     }
 
     @Override
-    public Message delete(UUID messageId) {
-        return data.remove(messageId);
+    public void delete(UUID messageId) {
+        data.remove(messageId);
     }
 }
