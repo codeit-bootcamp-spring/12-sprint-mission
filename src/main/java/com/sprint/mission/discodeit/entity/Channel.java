@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Channel {
-    private UUID id;
+    private final UUID id;
     private String name;
-    private Long createdAt;
+    private final Long createdAt;
     private Long updatedAt;
 
     public Channel(String name) {
@@ -36,6 +36,11 @@ public class Channel {
         return updatedAt;
     }
 
+    public void update(String name){
+        this.name = name;
+        updatedAt = System.currentTimeMillis();
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter
@@ -51,10 +56,6 @@ public class Channel {
                 "updatedAt: " + updatedAtStr + "\n";
     }
 
-    public void update(String name){
-        this.name = name;
-        updatedAt = System.currentTimeMillis();
-    }
 
 
 }

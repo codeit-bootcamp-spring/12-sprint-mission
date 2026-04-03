@@ -6,13 +6,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Message {
-    private UUID id;
+    private final UUID id;
     private String content;
-    private Long createdAt;
+    private final Long createdAt;
     private Long updatedAt;
 
-    private UUID channelId;
-    private UUID userId;
+    private final UUID channelId;
+    private final UUID userId;
 
     public Message(String content, UUID channelId, UUID userId) {
         long now = System.currentTimeMillis();
@@ -68,6 +68,6 @@ public class Message {
                 "createdAt: " + createdAtStr + "\n" +
                 "updatedAt: " + updatedAtStr + "\n" +
                 "channelId: " + channelId + "\n" +
-                "userId: " + userId;
+                "userId: " + userId + "\n";
     }
 }

@@ -14,7 +14,7 @@ public class JavaApplication {
     public static void main(String[] args) {
         UserService userService = new JCFUserService();
         ChannelService channelService = new JCFChannelService();
-        MessageService messageService = new JCFMessageService();
+        MessageService messageService = new JCFMessageService(channelService, userService);
 
         // User Service 구현 테스트
         // 등록
@@ -74,7 +74,7 @@ public class JavaApplication {
         System.out.println("----------------------- 수정된 ch1 조회 -----------------------");
         System.out.println(channelService.findById(ch1.getId()));
 
-        // msg1 삭제
+        // ch1 삭제
         channelService.delete(ch1.getId());
         System.out.println("----------------------- ch1 삭제 조회 -----------------------");
         System.out.println(channelService.findById(ch1.getId()));
@@ -82,10 +82,10 @@ public class JavaApplication {
         System.out.println();
 
         // Message 구현 테스트
-        Message msg1 = new Message("mgs1", ch1.getId(), user1.getId());
+        Message msg1 = new Message("msg1", ch2.getId(), user2.getId());
         messageService.create(msg1);
 
-        Message msg2 = new Message("mgs2", ch1.getId(), user2.getId());
+        Message msg2 = new Message("msg2", ch2.getId(), user3.getId());
         messageService.create(msg2);
 
         System.out.println("----------------------- msg1 조회 -----------------------");
@@ -104,6 +104,30 @@ public class JavaApplication {
         System.out.println("----------------------- msg1 삭제 조회 -----------------------");
         System.out.println(messageService.findById(msg1.getId()));
 
+        System.out.println();
+
+
+        // 심화 요구 사항 테스트
+        System.out.println("======================= 심화 테스트 =======================");
+        System.out.println("---------------------- 성공 ----------------------");
+        Message vMsg = new Message("valid msg", ch2.getId(), user2.getId());
+        Message result1 = messageService.create(vMsg);
+
+        if (result1 == null) {
+            System.out.println("메세지 생성 실패");
+        } else {
+            System.out.println("메세지 생성내용: " + result1);
+        }
+
+        System.out.println("---------------------- 실패 ----------------------");
+        Message vMsg2 = new Message("valid msg", ch2.getId(), user1.getId()); // 삭제된 user1
+        Message result2 = messageService.create(vMsg2);
+
+        if (result2 == null) {
+            System.out.println("메세지 생성 실패");
+        } else {
+            System.out.println("메세지 생성내용: " + result2);
+        }
 
     }
 }
