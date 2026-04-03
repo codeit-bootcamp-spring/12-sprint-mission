@@ -1,5 +1,8 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Message {
@@ -53,13 +56,18 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", content='" + content + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", channelId=" + channelId +
-                ", userId=" + userId +
-                '}';
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneId.systemDefault());
+
+        String createdAtStr = formatter.format(Instant.ofEpochMilli(createdAt));
+        String updatedAtStr = formatter.format(Instant.ofEpochMilli(updatedAt));
+
+        return "id: " + id + "\n" +
+                "content: " + content + "\n" +
+                "createdAt: " + createdAtStr + "\n" +
+                "updatedAt: " + updatedAtStr + "\n" +
+                "channelId: " + channelId + "\n" +
+                "userId: " + userId;
     }
 }

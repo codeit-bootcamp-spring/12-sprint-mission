@@ -1,5 +1,8 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Channel {
@@ -35,12 +38,17 @@ public class Channel {
 
     @Override
     public String toString() {
-        return "Channel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneId.systemDefault());
+
+        String createdAtStr = formatter.format(Instant.ofEpochMilli(createdAt));
+        String updatedAtStr = formatter.format(Instant.ofEpochMilli(updatedAt));
+
+        return  "id: " + id + "\n" +
+                "name: " + name + "\n" +
+                "createdAt: " + createdAtStr + "\n" +
+                "updatedAt: " + updatedAtStr + "\n";
     }
 
     public void update(String name){
