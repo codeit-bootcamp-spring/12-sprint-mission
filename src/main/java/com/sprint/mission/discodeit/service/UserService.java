@@ -11,4 +11,5 @@ public interface UserService {
     List<User> findAll();
     User update(UUID id, String name, String email, String password, String nickname);
     void delete(UUID id);
+    User create(String name, String email, String password, String nickname); // test 편하게 하려고 만들었는데 나중에 삭제하고 save로 통합 시킬계획입니다.
 }

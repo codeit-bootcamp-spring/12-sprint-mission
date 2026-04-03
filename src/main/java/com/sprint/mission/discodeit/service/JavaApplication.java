@@ -22,52 +22,75 @@ import java.util.UUID;
 
 public class JavaApplication {
     public static void main(String[] args) {
-        // test1
-//        JCFUserService userService = new JCFUserService();
-//        JCFChannelService channelService = new JCFChannelService();
-//        JCFMessageService messageService = new JCFMessageService(channelService, userService);
+        // 실행하고 싶은 테스트 하나만 주석 해제하여 사용하세요.
+        // test1(); // JCF 전용 서비스 테스트
+        // test2(); // 파일 직렬화 전용 서비스 테스트
+        test3(); // Basic 서비스 + JCF 레포지토리 테스트
+        // test4(); // Basic 서비스 + File 레포지토리 테스트
+    }
 
-        // test2
+    // [Test 1] 기존 JCF 전용 서비스 사용
+    public static void test1() {
+        System.out.println(">>> 실행 모드: Test 1 (JCF Service 전용)");
+        JCFUserService userService = new JCFUserService();
+        JCFChannelService channelService = new JCFChannelService();
+        JCFMessageService messageService = new JCFMessageService(channelService, userService);
+        runTest(userService, channelService, messageService);
+    }
 
+    // [Test 2] 기존 파일 직렬화 전용 서비스 사용 (파일 삭제 선행)
+    public static void test2() {
+        System.out.println(">>> 실행 모드: Test 2 (File Serialization Service 전용)");
+        clearDataFiles();
+        FileUserService userService = new FileUserService();
+        FileChannelService channelService = new FileChannelService();
+        FileMessageService messageService = new FileMessageService(userService, channelService);
+        runTest(userService, channelService, messageService);
+    }
 
-        File file1 = new File("user.dat");
-        if(file1.exists()){
-           file1.delete();
-        }
-        File file2 = new File("messages.dat");
-        if(file2.exists()){
-           file2.delete();
-        }
-        File file3 = new File("channel.dat");
-        if(file3.exists()){
-           file3.delete();
-        }
-//
-//        FileUserService userService = new FileUserService();
-//        FileChannelService channelService = new FileChannelService();
-//        FileMessageService messageService = new FileMessageService(userService, channelService);
+    // [Test 3] Basic 서비스 + JCF 레포지토리 주입
+    public static void test3() {
+        System.out.println(">>> 실행 모드: Test 3 (Basic Service + JCF Repository)");
+        JCFUserRepository userRepository = new JCFUserRepository();
+        JCFChannelRepository channelRepository = new JCFChannelRepository();
+        JCFMessageRepository messageRepository = new JCFMessageRepository();
 
+        BasicUserService userService = new BasicUserService(userRepository);
+        BasicChannelService channelService = new BasicChannelService(channelRepository);
+        BasicMessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
+        runTest(userService, channelService, messageService);
+    }
 
-        // test3
-
-        // JCF레포지토리 테스트
-//        JCFChannelRepository channelRepository = new JCFChannelRepository();
-//        JCFUserRepository userRepository = new JCFUserRepository();
-//        JCFMessageRepository messageRepository = new JCFMessageRepository();
-
-        // File레포지토리 테스트
-        FileChannelRepository channelRepository = new FileChannelRepository();
+    // [Test 4] Basic 서비스 + File 레포지토리 주입 (파일 삭제 선행)
+    public static void test4() {
+        System.out.println(">>> 실행 모드: Test 4 (Basic Service + File Repository)");
+        clearDataFiles();
         FileUserRepository userRepository = new FileUserRepository();
+        FileChannelRepository channelRepository = new FileChannelRepository();
         FileMessageRepository messageRepository = new FileMessageRepository();
 
-        BasicChannelService channelService = new BasicChannelService(channelRepository);
         BasicUserService userService = new BasicUserService(userRepository);
+        BasicChannelService channelService = new BasicChannelService(channelRepository);
         BasicMessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
+        runTest(userService, channelService, messageService);
+    }
 
+    // 테스트 실행 전 기존 데이터 파일 삭제
+    // 이전 테스트 시 남아 있는 객체에 대해 create를 하면서 중복이 발생하면 null이 리턴되도록 구성 되어 있기 때문에 일단 삭제하는 방식으로 구성
+    // 이미 존재하는 객체에 대해 null 대신 User객체를 리턴하도록 전부 변경하면 삭제 해도 될 것 같습니다.
+    private static void clearDataFiles() {
+        String[] files = {"user.dat", "messages.dat", "channel.dat"};
+        for (String fileName : files) {
+            File f = new File(fileName);
+            if (f.exists()) {
+                f.delete();
+            }
+        }
+        System.out.println("기존 .dat 파일 삭제 완료.");
+    }
 
+    private static void runTest(UserService userService, ChannelService channelService, MessageService messageService) {
 
-
-        // 테스트코드
         System.out.println("========== [1. 데이터 일괄 생성] ==========");
         User u1 = userService.create("lee", "lee@test.com", "1", "이경훈");
         User u2 = userService.create("song", "song@test.com", "2", "송민형");
@@ -151,14 +174,17 @@ public class JavaApplication {
 
         System.out.println("\n========== [3. 수정 및 재조회 검증] ==========");
         // 유저 2의 닉네임 변경 및 확인
+        System.out.println("유저2 수정된 정보 (기존 닉네임): " + u2.getNickname());
         userService.update(u2.getId(), null, null, null, "민형마스터");
-        System.out.println("유저2 수정된 정보");
+
+        System.out.print("수정된 닉네임으로 재조회 - [");
 
         u2 = userService.findById(u2.getId());
 
         System.out.println("ID : " + u2.getId()
                 + " | 닉네임 : " + u2.getNickname()
-                + " | 이메일 : " + u2.getEmail());
+                + " | 이메일 : " + u2.getEmail()
+                + "]");
         System.out.println("----------------------------------------------------");
 
         // 마지막 메시지 내용 수정 및 확인
@@ -181,6 +207,9 @@ public class JavaApplication {
         System.out.println("'자바-기초' 삭제 전 채널 수: " + channelService.findAll().size());
 
         channelService.delete(c1.getId());
+
+        System.out.println("'자바-기초' 삭제 후 채널 수: " + channelService.findAll().size() + " (기대값: 1)"
+                            + " \n===========모든 채널 출력===========");
 
         for (Channel c : channelService.findAll()) {
             System.out.println("채널명 : " + c.getName());
