@@ -26,7 +26,7 @@ public class FileChannelRepository implements ChannelRepository {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		fileName = directory.resolve("channels.ser");
+		fileName = directory.resolve("channelsRepository.ser");
 		if (!Files.exists(fileName)) {
 			data = new HashMap<>();
 		} else {

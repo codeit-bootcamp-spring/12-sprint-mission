@@ -26,7 +26,7 @@ public class FileMessageRepository implements MessageRepository {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		fileName = directory.resolve("message.ser");
+		fileName = directory.resolve("messageRepository.ser");
 		if (!Files.exists(fileName)) {
 			data = new HashMap<>();
 		} else {

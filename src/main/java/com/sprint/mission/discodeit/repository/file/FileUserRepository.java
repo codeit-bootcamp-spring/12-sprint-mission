@@ -25,7 +25,7 @@ public class FileUserRepository implements UserRepository {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		fileName = directory.resolve("user.ser");
+		fileName = directory.resolve("userRepository.ser");
 		if (!Files.exists(fileName)) {
 			data = new HashMap<>();
 		} else {

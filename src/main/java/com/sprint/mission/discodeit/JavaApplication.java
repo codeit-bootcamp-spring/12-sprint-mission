@@ -16,6 +16,12 @@ import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.basic.BasicChannelService;
 import com.sprint.mission.discodeit.service.basic.BasicMessageService;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
+import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
+import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
+import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
 public class JavaApplication {
 
@@ -96,21 +102,38 @@ public class JavaApplication {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("════════════════════════ JCF 기반 서비스 테스트 시작!!! ════════════════════════");
-		UserService JCFUserService = new BasicUserService(new JCFUserRepository());
-		ChannelService JCFChannelService = new BasicChannelService(new JCFChannelRepository());
-		MessageService JCFMessageService = new BasicMessageService(new JCFMessageRepository());
+
+		System.out.println("════════════════════════ JCF 서비스 기반 테스트 시작!!! ════════════════════════");
+		UserService JCFUserService = new JCFUserService();
+		ChannelService JCFChannelService = new JCFChannelService();
+		MessageService JCFMessageService = new JCFMessageService();
 
 		Test(JCFUserService, JCFChannelService, JCFMessageService);
-		System.out.println("════════════════════════ JCF 기반 서비스 테스트 끝!!! ════════════════════════\n");
+		System.out.println("════════════════════════ JCF 서비스 기반 테스트 끝!!! ════════════════════════\n");
 
-		System.out.println("════════════════════════ 파일 기반 서비스 테스트 시작!!! ════════════════════════");
-		UserService FileUserService = new BasicUserService(new FileUserRepository());
-		ChannelService FileChannelService = new BasicChannelService(new FileChannelRepository());
-		MessageService FileMessageService = new BasicMessageService(new FileMessageRepository());
+		System.out.println("════════════════════════ 파일 서비스 기반 테스트 시작!!! ════════════════════════");
+		UserService FileUserService = new FileUserService();
+		ChannelService FileChannelService = new FileChannelService();
+		MessageService FileMessageService = new FileMessageService();
 
 		Test(FileUserService, FileChannelService, FileMessageService);
-		System.out.println("════════════════════════ 파일 기반 서비스 테스트 끝!!! ════════════════════════\n");
+		System.out.println("════════════════════════ 파일 서비스 기반 테스트 끝!!! ════════════════════════\n");
+
+		System.out.println("════════════════════════ JCF 레포지토리 기반 테스트 시작!!! ════════════════════════");
+		UserService JCFBasicUserService = new BasicUserService(new JCFUserRepository());
+		ChannelService JCFBasicChannelService = new BasicChannelService(new JCFChannelRepository());
+		MessageService JCFBasicMessageService = new BasicMessageService(new JCFMessageRepository());
+
+		Test(JCFBasicUserService, JCFBasicChannelService, JCFBasicMessageService);
+		System.out.println("════════════════════════ JCF 레포지토리 기반 테스트 끝!!! ════════════════════════\n");
+
+		System.out.println("════════════════════════ 파일 레포지토리 기반 테스트 시작!!! ════════════════════════");
+		UserService FileBasicUserService = new BasicUserService(new FileUserRepository());
+		ChannelService FileBasicChannelService = new BasicChannelService(new FileChannelRepository());
+		MessageService FileBasicMessageService = new BasicMessageService(new FileMessageRepository());
+
+		Test(FileBasicUserService, FileBasicChannelService, FileBasicMessageService);
+		System.out.println("════════════════════════ 파일 레포지토리 기반 테스트 끝!!! ════════════════════════\n");
 	}
 
 }
