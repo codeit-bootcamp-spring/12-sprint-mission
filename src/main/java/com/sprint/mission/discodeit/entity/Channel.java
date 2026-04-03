@@ -1,12 +1,38 @@
 package com.sprint.mission.discodeit.entity;
 
-public class Channel extends BaseEntity{
+import java.io.Serializable;
+import java.util.UUID;
 
+public class Channel implements Serializable {
+
+    private UUID id;
+    private long createdAt;
+    private long updatedAt;
+
+    private ChannelType type;
     private String name;
+    private String description;
 
-    public Channel(String name) {
-        super();
+    public Channel(ChannelType type, String name, String description) {
+        this.id = UUID.randomUUID();
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = createdAt;
         this.name = name;
+        this.type = type;
+        this.description = description;
+    }
+
+
+    public UUID getId() {
+        return id;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return updatedAt;
     }
 
     public String getName() {
@@ -17,15 +43,20 @@ public class Channel extends BaseEntity{
         this.name = name;
     }
 
-    public void update(String name){
+    public void update(ChannelType type, String name, String description){
+        this.type = type;
         this.name = name;
-        updateTimestamp();
+        this.description = description;
+        this.updatedAt = System.currentTimeMillis();
     }
 
     @Override
     public String toString() {
         return "Channel{" +
-                "name='" + name + '\'' +
-                '}';
+                "type=" + type +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' + ", " +
+                "id=" + id + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt +
+                '}' + "\n";
     }
 }

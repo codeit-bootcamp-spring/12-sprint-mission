@@ -14,8 +14,8 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User create(String username, String email, String password, String nickname) {
-        User user = new User(username, email, password, nickname) ;
+    public User create(String username, String email, String password) {
+        User user = new User(username, email, password) ;
         data.put(user.getId(), user);
         return user;
     }
@@ -31,12 +31,12 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void update(UUID id, String username, String email, String password, String nickname) {
+    public void update(UUID id, String username, String email, String password) {
         User user = data.get(id);
         if(user == null){
             throw new RuntimeException("유저 없음");
         }
-        user.update(username, email, password, nickname);
+        user.update(username, email, password);
     }
 
     @Override
