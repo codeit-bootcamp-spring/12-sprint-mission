@@ -38,8 +38,8 @@ public class BasicUserService implements UserService {
 	public User update(UUID id, String username, String email, String password, String nickname, String phoneNumber,
 		String icon) {
 		Optional<User> user = ur.findById(id);
-		if (user.isPresent() && user.get().getUsername().equals(username) && user.get().getEmail().equals(email)) {
-			user.get().update(username, email, password, nickname, phoneNumber, icon);
+		if (user.isPresent() && user.get().getUsername().equals(username)) {
+			user.get().update(email, password, nickname, phoneNumber, icon);
 			ur.save(user.get());
 			return user.get();
 		}

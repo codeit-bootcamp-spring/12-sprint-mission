@@ -70,8 +70,8 @@ public class FileUserService implements UserService {
 	public User update(UUID id, String username, String email, String password, String nickname, String phoneNumber,
 		String icon) {
 		for (User updateUser : data.values()) {
-			if (updateUser.getId().equals(id)) {
-				updateUser.update(username, email, password, nickname, phoneNumber, icon);
+			if (updateUser.getId().equals(id) && updateUser.getUsername().equals(username)) {
+				updateUser.update(email, password, nickname, phoneNumber, icon);
 				saveToFile();
 				return updateUser;
 			}

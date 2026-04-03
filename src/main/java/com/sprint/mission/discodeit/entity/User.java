@@ -8,13 +8,13 @@ import java.util.UUID;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final UUID id;
-	private final Long createdAt;
-	private String username;
+	private final String username;
 	private String email;
 	private transient String password;
 	private String nickname;
 	private String phoneNumber;
 	private String icon;
+	private final Long createdAt;
 	private Long updatedAt;
 
 	public User(String username, String email, String password, String nickname, String phoneNumber, String icon) {
@@ -65,11 +65,8 @@ public class User implements Serializable {
 		return icon;
 	}
 
-	public void update(String username, String email, String password, String nickname, String phoneNumber,
+	public void update(String email, String password, String nickname, String phoneNumber,
 		String icon) {
-		if (username != null) {
-			this.username = username;
-		}
 		if (email != null) {
 			this.email = email;
 		}
@@ -90,31 +87,20 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		ZoneId zonedId = ZoneId.of("Asia/Seoul");
-		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
-		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
-		return """ 
-			User {
-				사용자 ID: %s
-				사용자명: %s
-				이메일: %s
-				비밀번호: %s
-				별명: %s
-				전화번호: %s
-				이미지: %s
-				생성일: %s
-				수정일: %s
-			}
-			""".formatted(
-			id,
-			username,
-			email,
-			password,
-			nickname,
-			phoneNumber,
-			icon,
-			created,
-			updated
-		);
+
+			ZoneId zonedId = ZoneId.of("Asia/Seoul");
+			String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
+			String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
+		return "User{" +
+			"id=" + id +
+			", username='" + username + '\'' +
+			", email='" + email + '\'' +
+			", password='" + password + '\'' +
+			", nickname='" + nickname + '\'' +
+			", phoneNumber='" + phoneNumber + '\'' +
+			", icon='" + icon + '\'' +
+			", createdAt=" + created +
+			", updatedAt=" + updated +
+			'}';
 	}
 }

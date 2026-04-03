@@ -8,12 +8,11 @@ import java.util.UUID;
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final UUID id;
-	private final String link;
-	private final Long createdAt;
 	private ChannelType type;
 	private String name;
 	private String description;
 	private UUID creator;
+	private final Long createdAt;
 	private Long updatedAt;
 
 	public Channel(ChannelType type, String name, String description, UUID creator) {
@@ -22,7 +21,6 @@ public class Channel implements Serializable {
 		this.name = name;
 		this.description = description;
 		this.creator = creator;
-		link = "https://codeit.kr/channel/" + UUID.randomUUID();
 		createdAt = System.currentTimeMillis();
 		updatedAt = System.currentTimeMillis();
 	}
@@ -57,10 +55,6 @@ public class Channel implements Serializable {
 		return creator;
 	}
 
-	public String getLink() {
-		return link;
-	}
-
 	public Long getCreatedAt() {
 		return createdAt;
 	}
@@ -74,24 +68,15 @@ public class Channel implements Serializable {
 		ZoneId zonedId = ZoneId.of("Asia/Seoul");
 		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
 		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
-		return """
-			Channel {
-			    채널 ID: %s
-			    채널 타입: %s
-			    채널명: '%s'
-			    관리자: %s
-			    채널 링크: '%s'
-			    생성일: %s
-			    수정일: %s
-			}
-			""".formatted(
-			id,
-			type,
-			name,
-			creator,
-			link,
-			created,
-			updated
-		);
+
+		return "Channel{" +
+			"id=" + id +
+			", type=" + type +
+			", name='" + name + '\'' +
+			", description='" + description + '\'' +
+			", creator=" + creator +
+			", createdAt=" + created +
+			", updatedAt=" + updated +
+			'}';
 	}
 }

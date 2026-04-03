@@ -10,8 +10,8 @@ public class Message implements Serializable {
 	private final UUID id;
 	private final UUID userId;
 	private final UUID channelId;
-	private final Long createdAt;
 	private String content;
+	private final Long createdAt;
 	private Long updatedAt;
 
 	public Message(UUID userId, UUID channelId, String content) {
@@ -54,25 +54,18 @@ public class Message implements Serializable {
 
 	@Override
 	public String toString() {
+
 		ZoneId zonedId = ZoneId.of("Asia/Seoul");
 		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
 		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
-		return """
-			Message {
-			    메시지 ID: %s
-			    사용자 ID: %s
-			    채널	ID: %s
-			    내용: '%s'
-			    생성일: %s
-			    수정일: %s
-			}
-			""".formatted(
-			id,
-			userId,
-			channelId,
-			content,
-			created,
-			updated
-		);
+
+		return "Message{" +
+			"id=" + id +
+			", userId=" + userId +
+			", channelId=" + channelId +
+			", content='" + content + '\'' +
+			", createdAt=" + created +
+			", updatedAt=" + updated +
+			'}';
 	}
 }
