@@ -1,46 +1,34 @@
-package com.sprint.mission.discodeit.service.jcf;
+package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
-import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class JCFMessageService implements MessageService {
-    private final UserService userService;
-    private final ChannelService channelService;
-
+public class JCFMessageRepository implements MessageRepository {
     private final List<Message> data;
 
-    public JCFMessageService(UserService userService, ChannelService channelService){
-        this.userService = userService;
-        this.channelService = channelService;
+    public JCFMessageRepository(){
         data = new ArrayList<>();
     }
 
     @Override
     public Message save(Message message) {
-        if (userService.findById(message.getMemberId()) == null) {
-            System.out.println("존재하지 않는 유저 ID 입니다.");
-            return null;
-        }
-        if (channelService.findById(message.getChannelId()) == null) {
-            System.out.println("존재하지 않는 채널 ID 입니다.");
-            return null;
-        }
         data.add(message);
         return message;
     }
 
     @Override
-    public Message findById(UUID id) {
+    public Optional<Message> findById(UUID id) {
         for(Message message : data) {
-            if(message.getId().equals(id)) return message;
+            if(message.getId().equals(id)) return Optional.of(message);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -50,8 +38,9 @@ public class JCFMessageService implements MessageService {
 
     @Override
     public Message update(UUID id, Message message) {
-        Message found = findById(id);
-        if (found != null) {
+        Optional<Message> OptionalMessage = findById(id);
+        if (OptionalMessage.isPresent()) {
+            Message found = OptionalMessage.get();
             found.update(message.getContent());
             return found;
         }

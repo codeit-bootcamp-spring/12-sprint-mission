@@ -1,16 +1,17 @@
-package com.sprint.mission.discodeit.service.jcf;
+package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class JCFChannelService implements ChannelService {
+public class JCFChannelRepository implements ChannelRepository {
     private final List<Channel> data;
 
-    public JCFChannelService() {
+    public JCFChannelRepository() {
         data = new ArrayList<>();
     }
 
@@ -21,11 +22,11 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel findById(UUID id) {
+    public Optional<Channel> findById(UUID id) {
         for(Channel channel : data) {
-            if(channel.getId().equals(id)) return channel;
+            if(channel.getId().equals(id)) return Optional.of(channel);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -33,8 +34,9 @@ public class JCFChannelService implements ChannelService {
 
     @Override
     public Channel update(UUID id, Channel channel) {
-        Channel found = findById(id);
-        if (found != null) {
+        Optional<Channel> OptionalChannel = findById(id);
+        if (OptionalChannel.isPresent()) {
+            Channel found = OptionalChannel.get();
             found.update(channel.getName(), channel.getIsPrivate());
             return found;
         }
