@@ -6,6 +6,9 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
@@ -17,7 +20,8 @@ public class JavaApplication {
         // ------------------ 등록 ----------------------
         // 사용자 (User) 테스트 시작!!
         System.out.println("-------------사용자 테스트 시작!!!---------------");
-        UserService userService = new JCFUserService();
+//        UserService userService = new JCFUserService(); // JCF 기반
+        UserService userService = new FileUserService(); // File 기반
         User user = new User("test.com", "1234", "kim", "kk");
         userService.save(user);
 
@@ -32,7 +36,8 @@ public class JavaApplication {
 
         // 채널 (Channel) 테스트 시작!!
         System.out.println("-------------채널 테스트 시작!!!---------------");
-        ChannelService channelService = new JCFChannelService();
+//        ChannelService channelService = new JCFChannelService(); // JCF 기반
+        ChannelService channelService = new FileChannelService(); // File 기반
 
         // TEXT, VOICE, FORUM 채널 타입
         Channel channel = new Channel("텍스트 채널", Channel.ChannelType.TEXT, true);
@@ -49,7 +54,8 @@ public class JavaApplication {
 
         // 메세지 (Message) 테스트 시작!!
         System.out.println("-------------메세지 테스트 시작!!!---------------");
-        MessageService messageService = new JCFMessageService(userService, channelService); // message의 user와 channel 의존성
+//        MessageService messageService = new JCFMessageService(userService, channelService); // message의 user와 channel 의존성 // JCF 기반
+        MessageService messageService = new FileMessageService(userService, channelService); //  File 기반
 
         // TEXT, VOICE, FORUM 채널 타입
         Message message = new Message(channel.getId(), UUID.randomUUID(), user.getId(), "메세지 테스트 1");
