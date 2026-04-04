@@ -6,6 +6,9 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
 import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
@@ -129,5 +132,111 @@ public class JavaApplication {
             System.out.println("메세지 생성내용: " + result2);
         }
 
+
+        System.out.println();
+        System.out.println("==================================================");
+        System.out.println("============== FileService 구현 테스트 ==============");
+        System.out.println("==================================================");
+
+        UserService fileUserService = new FileUserService();
+        ChannelService fileChannelService = new FileChannelService();
+        MessageService fileMessageService = new FileMessageService(fileChannelService, fileUserService);
+
+        // User Service 구현 테스트
+        User fUser1 = new User("fileUser1", "fileUser1@email.com", "1111", "fileNick1");
+        fileUserService.create(fUser1);
+
+        User fUser2 = new User("fileUser2", "fileUser2@email.com", "2222", "fileNick2");
+        fileUserService.create(fUser2);
+
+        System.out.println("----------------------- file user1 조회 -----------------------");
+        System.out.println(fileUserService.findById(fUser1.getId()));
+
+        System.out.println("----------------------- 모든 File User 조회 -----------------------");
+        System.out.println(fileUserService.findAll());
+
+        fUser1.update("fileUser12", "fileUser12@email.com", "9999", "fileNick12");
+        fileUserService.update(fUser1.getId(), fUser1);
+
+        System.out.println("----------------------- 수정된 file user1 조회 -----------------------");
+        System.out.println(fileUserService.findById(fUser1.getId()));
+
+        fileUserService.delete(fUser1.getId());
+        System.out.println("----------------------- 삭제된 file user1 조회 -----------------------");
+        System.out.println(fileUserService.findById(fUser1.getId()));
+
+        System.out.println();
+
+        // Channel Service 구현 테스트
+        Channel fCh1 = new Channel("file channel 1");
+        fileChannelService.create(fCh1);
+
+        Channel fCh2 = new Channel("file channel 2");
+        fileChannelService.create(fCh2);
+
+        System.out.println("----------------------- file channel1 조회 -----------------------");
+        System.out.println(fileChannelService.findById(fCh1.getId()));
+
+        System.out.println("----------------------- 모든 File Channel 조회 -----------------------");
+        System.out.println(fileChannelService.findAll());
+
+        fCh1.update("file-channel-12");
+        fileChannelService.update(fCh1);
+
+        System.out.println("----------------------- 수정된 file channel1 조회 -----------------------");
+        System.out.println(fileChannelService.findById(fCh1.getId()));
+
+        fileChannelService.delete(fCh1.getId());
+        System.out.println("----------------------- 삭제된 file channel1 조회 -----------------------");
+        System.out.println(fileChannelService.findById(fCh1.getId()));
+
+        System.out.println();
+
+        // Message Service 구현 테스트
+        Message fMsg1 = new Message("file message1", fCh2.getId(), fUser2.getId());
+        fileMessageService.create(fMsg1);
+
+        Message fMsg2 = new Message("file message2", fCh2.getId(), fUser2.getId());
+        fileMessageService.create(fMsg2);
+
+        System.out.println("----------------------- file msg1 조회 -----------------------");
+        System.out.println(fileMessageService.findById(fMsg1.getId()));
+
+        System.out.println("----------------------- 모든 File Message 조회 -----------------------");
+        System.out.println(fileMessageService.findAll());
+
+        fMsg1.update("file message1 123");
+        fileMessageService.update(fMsg1);
+
+        System.out.println("----------------------- 수정된 file msg1 조회 -----------------------");
+        System.out.println(fileMessageService.findById(fMsg1.getId()));
+
+        fileMessageService.delete(fMsg1.getId());
+        System.out.println("----------------------- 삭제된 file msg1 조회 -----------------------");
+        System.out.println(fileMessageService.findById(fMsg1.getId()));
+
+        System.out.println();
+
+        // 심화 요구 사항 테스트
+        System.out.println("======================= File 심화 테스트 =======================");
+        System.out.println("---------------------- 성공 ----------------------");
+        Message fileValidMsg = new Message("file valid msg", fCh2.getId(), fUser2.getId());
+        Message fileResult1 = fileMessageService.create(fileValidMsg);
+
+        if (fileResult1 == null) {
+            System.out.println("메세지 생성 실패");
+        } else {
+            System.out.println("메세지 생성내용: " + fileResult1);
+        }
+
+        System.out.println("---------------------- 실패 ----------------------");
+        Message fileInvalidMsg = new Message("file invalid msg", fCh2.getId(), fUser1.getId()); // 삭제된 user
+        Message fileResult2 = fileMessageService.create(fileInvalidMsg);
+
+        if (fileResult2 == null) {
+            System.out.println("메세지 생성 실패");
+        } else {
+            System.out.println("메세지 생성내용: " + fileResult2);
+        }
     }
 }
