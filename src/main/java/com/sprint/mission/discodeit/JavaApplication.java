@@ -3,9 +3,21 @@ package com.sprint.mission.discodeit;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
+import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
+import com.sprint.mission.discodeit.repository.file.FileUserRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.basic.BasicChannelService;
+import com.sprint.mission.discodeit.service.basic.BasicMessageService;
+import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import com.sprint.mission.discodeit.service.file.FileChannelService;
 import com.sprint.mission.discodeit.service.file.FileMessageService;
 import com.sprint.mission.discodeit.service.file.FileUserService;
@@ -14,6 +26,23 @@ import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
 public class JavaApplication {
+
+    static User setupUser(UserService userService) {
+        User user = new User("woody", "woody@codeit.com", "woody1234", "woody");
+        return userService.create(user);
+    }
+
+    static Channel setupChannel(ChannelService channelService) {
+        Channel channel = new Channel("공지");
+        return channelService.create(channel);
+    }
+
+    static void messageCreateTest(MessageService messageService, Channel channel, User author) {
+        Message message = new Message("안녕하세요.", channel.getId(), author.getId());
+        Message created = messageService.create(message);
+        System.out.println("메시지 생성: " + created.getId());
+    }
+
     public static void main(String[] args) {
         UserService userService = new JCFUserService();
         ChannelService channelService = new JCFChannelService();
@@ -238,5 +267,46 @@ public class JavaApplication {
         } else {
             System.out.println("메세지 생성내용: " + fileResult2);
         }
+
+        System.out.println();
+
+        // JCFRepository 테스트
+        UserRepository userRepository = new JCFUserRepository();
+        ChannelRepository channelRepository = new JCFChannelRepository();
+        MessageRepository messageRepository = new JCFMessageRepository();
+
+        UserService userBService = new BasicUserService(userRepository);
+        ChannelService channelBService = new BasicChannelService(channelRepository);
+        MessageService messageBService = new BasicMessageService(
+                messageRepository,
+                channelBService,
+                userBService
+        );
+
+        User juser = setupUser(userBService);
+        Channel jchannel = setupChannel(channelBService);
+
+        System.out.println("---------- JCF Repository message TEST ----------");
+        messageCreateTest(messageBService, jchannel, juser);
+        System.out.println();
+
+        // FileRepository 테스트
+        UserRepository userFRepository = new FileUserRepository();
+        ChannelRepository channelFRepository = new FileChannelRepository();
+        MessageRepository messageFRepository = new FileMessageRepository();
+
+        UserService userFService = new BasicUserService(userFRepository);
+        ChannelService channelFService = new BasicChannelService(channelFRepository);
+        MessageService messageFService = new BasicMessageService(
+                messageFRepository,
+                channelFService,
+                userFService
+        );
+
+        User fuser = setupUser(userFService);
+        Channel fchannel = setupChannel(channelFService);
+
+        System.out.println("---------- FileRepository Message TEST----------");
+        messageCreateTest(messageFService, fchannel, fuser);
     }
 }
