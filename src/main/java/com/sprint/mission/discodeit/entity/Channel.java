@@ -13,7 +13,6 @@ public class Channel {
     private String name;
     private String description;
 
-    // 사용자 목록
     private List<User> users;
 
     private Long createdAt;
@@ -29,7 +28,6 @@ public class Channel {
 
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = this.createdAt;
-
     }
 
     public UUID getId() {
@@ -62,19 +60,16 @@ public class Channel {
         this.updatedAt = System.currentTimeMillis();
     }
 
-    // 채널에 사용자 들어오기
     public void addUser(User user) {
         this.users.add(user);
     }
 
-    // 채널에 사용자 나가기
     public void removeUser(User user) {
         this.users.remove(user);
     }
 
     @Override
     public String toString() {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime created = LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());

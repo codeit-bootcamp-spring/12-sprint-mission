@@ -16,7 +16,7 @@ public class Message {
 
     public Message(String content, User user, Channel channel) {
         this.id = UUID.randomUUID();
-        this.content = content; // 메세지
+        this.content = content;
         this.user = user;
         this.channel = channel;
         this.createdAt = System.currentTimeMillis();
@@ -54,7 +54,6 @@ public class Message {
 
     @Override
     public String toString() {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime created = LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
