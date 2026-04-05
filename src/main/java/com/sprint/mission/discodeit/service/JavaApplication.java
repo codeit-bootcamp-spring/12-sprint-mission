@@ -23,10 +23,10 @@ import java.util.UUID;
 public class JavaApplication {
     public static void main(String[] args) {
         // 실행하고 싶은 테스트 하나만 주석 해제하여 사용하세요.
-        // test1(); // JCF 전용 서비스 테스트
-        // test2(); // 파일 직렬화 전용 서비스 테스트
-        test3(); // Basic 서비스 + JCF 레포지토리 테스트
-        // test4(); // Basic 서비스 + File 레포지토리 테스트
+        test1(); // JCF 전용 서비스 테스트
+//        test2(); // 파일 직렬화 전용 서비스 테스트
+//        test3(); // Basic 서비스 + JCF 레포지토리 테스트
+//        test4(); // Basic 서비스 + File 레포지토리 테스트
     }
 
     // [Test 1] 기존 JCF 전용 서비스 사용
@@ -92,6 +92,8 @@ public class JavaApplication {
     private static void runTest(UserService userService, ChannelService channelService, MessageService messageService) {
 
         System.out.println("========== [1. 데이터 일괄 생성] ==========");
+        // 기존 repo service 를 분리하기 전 jcf 서비스에서 테스트의 용이성을 위해 create로 입력값 검증을 수행하고 save는 객체를 저장하는 식으로 구성하였고
+        // repository 분리 후 service에서 값을 검사하면 되므로 create는 제거해도 되지만 4가지 종류의 테스트 시나리오에서 동일한 테스트 코드를 사용하기 위해 일단 유지
         User u1 = userService.create("lee", "lee@test.com", "1", "이경훈");
         User u2 = userService.create("song", "song@test.com", "2", "송민형");
         User u3 = userService.create("kim", "kim@test.com", "3", "김철수");
@@ -203,7 +205,6 @@ public class JavaApplication {
         System.out.println("삭제 확인 (null): " + messageService.findById(m1.getId()));
 
         System.out.println("\n========== [5. 채널 삭제] ==========");
-        // '자바-기초' 채널 삭제 전 상황: 메시지 9개 중 5개(하나 지움)가 이 채널 것
         System.out.println("'자바-기초' 삭제 전 채널 수: " + channelService.findAll().size());
 
         channelService.delete(c1.getId());
