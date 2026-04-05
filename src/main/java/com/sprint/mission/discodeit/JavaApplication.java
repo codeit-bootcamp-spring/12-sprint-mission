@@ -6,15 +6,22 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
 import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
 public class JavaApplication {
     public static void main(String[] args) {
-        UserService userService = new JCFUserService();
-        ChannelService channelService = new JCFChannelService();
-        MessageService messageService = new JCFMessageService(userService, channelService);
+//        UserService userService = new JCFUserService();
+//        ChannelService channelService = new JCFChannelService();
+//        MessageService messageService = new JCFMessageService(userService, channelService);
+//
+        UserService userService = new FileUserService();
+        ChannelService channelService = new FileChannelService();
+        MessageService messageService = new FileMessageService(userService, channelService);
 
         // 사용자 테스트 시작
         System.out.println("-----------------사용자 테스트 시작-----------------");
@@ -74,8 +81,8 @@ public class JavaApplication {
         Message message = new Message(user1.getId(), channel.getId(), "안녕하세요!");
         messageService.save(message);
         // 존재하지 않는 사용자 메시지 저장
-        Message messageNotUser = new Message(user2.getId(), channel.getId(), "안뇽");
-        messageService.save(messageNotUser);
+//        Message messageNotUser = new Message(user2.getId(), channel.getId(), "안뇽");
+//        messageService.save(messageNotUser);
 
         // 메시지 수정 및 조회
         System.out.println("===== 메시지 수정 및 단건 조회 =====");
