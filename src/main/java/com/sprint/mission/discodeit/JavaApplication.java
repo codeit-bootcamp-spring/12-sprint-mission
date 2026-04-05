@@ -3,30 +3,65 @@ package com.sprint.mission.discodeit;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+
 import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
+
+import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
+import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
+import com.sprint.mission.discodeit.repository.file.FileUserRepository;
+
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
-import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
-import com.sprint.mission.discodeit.service.jcf.JCFUserService;
+
+import com.sprint.mission.discodeit.service.basic.BasicChannelService;
+import com.sprint.mission.discodeit.service.basic.BasicMessageService;
+import com.sprint.mission.discodeit.service.basic.BasicUserService;
 
 public class JavaApplication {
+
+    static User setupUser(UserService userService) {
+        return userService.createUser("woody", "woody@codeit.com", "woody1234", "우디");
+    }
+    //채널 타입을 미구현하여 코드 템플릿을 일부 수정
+    static Channel setupChannel(ChannelService channelService) {
+        return channelService.createChannel("공지");
+    }
+
+    static void messageCreateTest(MessageService messageService, Channel channel, User author) {
+        Message message = messageService.sendMessage(channel.getId(), author.getId(), "안녕하세요.");
+        System.out.println("메시지 생성: " + message.getId());
+    }
+
     public static void main(String[] args) {
 
-        // 1. Repository, Service 초기화 (의존성? 주입)
-        UserRepository userRepository = new JCFUserRepository();
-        ChannelRepository channelRepository = new JCFChannelRepository();
-        MessageRepository messageRepository = new JCFMessageRepository();
+        // =========================================================
+        // Repository 초기화 (원하는 저장 방식의 주석을 풀어 사용)
+        // =========================================================
 
-        UserService userService = new JCFUserService(userRepository);
-        ChannelService channelService = new JCFChannelService(channelRepository);
-        MessageService messageService = new JCFMessageService(messageRepository, userService, channelService);
+         //[메모리 저장 방식 - JCF]
+         UserRepository userRepository = new JCFUserRepository();
+         ChannelRepository channelRepository = new JCFChannelRepository();
+         MessageRepository messageRepository = new JCFMessageRepository();
+
+        // [하드디스크 저장 방식 - File]
+//        UserRepository userRepository = new FileUserRepository();
+//        ChannelRepository channelRepository = new FileChannelRepository();
+//        MessageRepository messageRepository = new FileMessageRepository();
+
+
+        // =========================================================
+        // 2. Service 초기화 (의존성 주입)
+        // =========================================================
+        UserService userService = new BasicUserService(userRepository);
+        ChannelService channelService = new BasicChannelService(channelRepository);
+        MessageService messageService = new BasicMessageService(messageRepository, userService, channelService);
 
 
         System.out.println("--- [User 도메인 테스트] ---");
@@ -55,7 +90,7 @@ public class JavaApplication {
 
         // 조회를 통해 삭제되었는지 확인
         User deletedUser = userService.getUser(user2.getId());
-        System.out.println("[삭제 확인] 삭제된 유저 조회 결과 (null): " + deletedUser);
+        System.out.println("[삭제 확인] 삭제된 유저 조회 결과 (null 예상): " + deletedUser);
 
         System.out.println("\n--- [Channel 도메인 테스트] ---");
 
@@ -83,7 +118,7 @@ public class JavaApplication {
 
         // 조회를 통해 삭제되었는지 확인
         Channel deletedChannel = channelService.getChannel(channel2.getId());
-        System.out.println("[삭제 확인] 삭제된 채널 조회 결과 (null): " + deletedChannel);
+        System.out.println("[삭제 확인] 삭제된 채널 조회 결과 (null 예상): " + deletedChannel);
 
 
         System.out.println("\n--- [Message 도메인 테스트] ---");
@@ -112,7 +147,7 @@ public class JavaApplication {
 
         // 조회를 통해 삭제되었는지 확인
         Message deletedMsg = messageService.getMessage(msg2.getId());
-        System.out.println("[삭제 확인] 삭제된 메시지 조회 결과 (null): " + deletedMsg);
+        System.out.println("[삭제 확인] 삭제된 메시지 조회 결과 (null 예상): " + deletedMsg);
 
         System.out.println("\n========== 테스트 정상 종료 ==========");
     }

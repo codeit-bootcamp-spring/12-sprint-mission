@@ -1,10 +1,11 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private UUID id;
     private String username;
     private String email;

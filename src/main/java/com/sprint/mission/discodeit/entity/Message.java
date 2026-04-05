@@ -1,8 +1,9 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Message {
+public class Message implements Serializable {
     private UUID id;
     private UUID channelId;   // 이 메시지가 어느 방에 써졌는지
     private UUID authorId;    // 이 메시지를 누가 썼는지 (유저 ID)
