@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 public class FileUserService {
+    // 저장 로직
     public static void main(String[] args) throws FileNotFoundException {
         User u = new User("JaneDoe", "JaneDoe@gmail.com",9876,"JD1");
         System.out.println(u);
@@ -19,4 +20,10 @@ public class FileUserService {
             e.printStackTrace();
         }
     }
+
+    // 비즈니스 로직 코드 - User sign-up
+    User user = new User("JohnDoe","JohnDoe@gmail.com",3456,"JD2");
+
+
+
 }

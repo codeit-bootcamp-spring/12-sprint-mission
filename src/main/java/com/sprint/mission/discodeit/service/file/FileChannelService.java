@@ -6,7 +6,7 @@ import java.io.*;
 
 public class FileChannelService {
     public static void main(String[] args) throws FileNotFoundException {
-        Channel c = new Channel("General", "General","General","Channel for general inquiries","All users");
+        Channel c = new Channel();
         System.out.println(c);
         try(FileOutputStream fos = new FileOutputStream("channel.ser");
             ObjectOutputStream oos = new ObjectOutputStream(fos);

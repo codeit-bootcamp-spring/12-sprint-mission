@@ -30,10 +30,5 @@ public class JCFMessageRepository implements MessageRepository {
 
     }
 
-    @Override
-    public boolean existsById(UUID id) {
-        return store.containsKey(id);
-    }
-
 
 }

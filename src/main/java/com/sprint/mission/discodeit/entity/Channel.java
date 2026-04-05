@@ -14,7 +14,7 @@ public class Channel implements java.io.Serializable{
     private Long updatedAt;
 
 
-    public Channel(String name, String category, String purpose, String description, String accessToken) {
+    public Channel() {
         this.id = UUID.randomUUID();
         this.name = name;
         this.category = category;

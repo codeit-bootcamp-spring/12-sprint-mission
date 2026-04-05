@@ -33,10 +33,6 @@ public class JCFUserRepository implements UserRepository {
         store.remove(id);
     }
 
-    @Override
-    public boolean existsById(UUID id) {
-        return store.containsKey(id);
-    }
 }
 
 

@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel read(String channelName) {
+    public ChannelRepository read(String channelName) {
         return data.values().stream()
                 .filter(c -> c.getName().equals(channelName))
                 .findFirst()

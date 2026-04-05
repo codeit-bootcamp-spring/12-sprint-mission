@@ -1,4 +1,36 @@
 package com.sprint.mission.discodeit.repository.jcf;
 
-public class JCFChannelRepository {
+import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
+
+import java.util.*;
+
+import static java.util.Optional.ofNullable;
+
+public class JCFChannelRepository implements ChannelRepository {
+
+    private final Map<UUID, Channel> store = new HashMap<>();
+
+    @Override
+    public Channel save(Channel channel) {
+        store.put(channel.getId(), channel);
+        return channel;
+    }
+
+    @Override
+    public Optional<Channel> findById(UUID id) {
+        return ofNullable(store.get(id));
+
+    }
+
+    @Override
+    public List<Channel> findAll() {
+        return new ArrayList<>(store.values());
+    }
+
+    @Override
+    public void delete(UUID id) {
+        store.remove(id);
+
+    }
 }
