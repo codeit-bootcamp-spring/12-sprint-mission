@@ -16,6 +16,8 @@ public interface MessageService {
     // 전체 조회
     List<Message> findAll();
 
+    Message update(UUID id, Message message);
+
     // 삭제
     void delete(UUID id);
 }

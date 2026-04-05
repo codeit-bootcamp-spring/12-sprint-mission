@@ -17,7 +17,7 @@ public interface ChannelService {
     List<Channel> findAll();
 
     // 수정
-    void update(UUID id, Channel channel);
+    Channel update(UUID id, Channel channel);
 
     // 삭제
     void delete(UUID id);

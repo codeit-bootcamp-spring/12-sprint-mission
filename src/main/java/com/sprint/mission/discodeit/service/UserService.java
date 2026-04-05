@@ -9,7 +9,7 @@ public interface UserService {
     User create (User user);
     User findById(UUID id);
     List<User> findAll();
-    void update(UUID id, User user);
+    User update(UUID id, User user);
     void delete(UUID id);
 
 }
