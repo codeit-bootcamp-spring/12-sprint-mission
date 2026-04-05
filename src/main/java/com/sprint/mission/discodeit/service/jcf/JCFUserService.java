@@ -31,8 +31,9 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void update(UUID id, User user) {
+    public User update(UUID id, User user) {
         data.put(id, user);
+        return user;
     }
 
     @Override

@@ -36,8 +36,9 @@ public class JCFChannelService implements ChannelService {
 
     // 채널 수정
     @Override
-    public void update(UUID id, Channel channel){
+    public Channel update(UUID id, Channel channel){
         data.put(id, channel);
+        return channel;
     }
 
     // 채널 삭제
