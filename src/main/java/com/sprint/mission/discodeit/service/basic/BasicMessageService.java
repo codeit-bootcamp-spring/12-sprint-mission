@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.jcf;
+package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
@@ -10,13 +10,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class JCFMessageService implements MessageService {
-
+public class BasicMessageService implements MessageService {
     private final UserService userService;
     private final ChannelService channelService;
     private final MessageRepository messageRepository;
 
-    public JCFMessageService(UserService userService, ChannelService channelService, MessageRepository messageRepository) {
+    public BasicMessageService(UserService userService, ChannelService channelService, MessageRepository messageRepository) {
         this.userService = userService;
         this.channelService = channelService;
         this.messageRepository = messageRepository;

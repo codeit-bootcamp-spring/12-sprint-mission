@@ -1,52 +1,47 @@
 package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class JCFUserService implements UserService {
-    private final List<User> data;
+    private final UserRepository userRepository;
 
-    public JCFUserService() {
-        data = new ArrayList<>();
+    public JCFUserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public User save(User user) {
-        data.add(user);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public User findById(UUID userId) {
-        for (User user : data) {
-            if (user.getId().equals(userId)) {
-                return user;
-            }
-        }
-        return null;
+        return userRepository.findById(userId);
     }
 
     @Override
     public List<User> findAll() {
-        return data;
+        return userRepository.findAll();
     }
 
     @Override
     public void update(UUID userId, String username, String email, String password, String nickname) {
-        for (User user : data) {
-            if (user.getId().equals(userId)) {
-                user.update(username, email, password, nickname);
-                break;
-            }
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            throw new NoSuchElementException("존재하지 않는 사용자");
         }
+        user.update(username, email, password, nickname);
+        userRepository.update(user);
     }
 
     @Override
     public void delete(UUID userId) {
-        data.removeIf(user -> user.getId().equals(userId));
+        userRepository.delete(userId);
     }
 }

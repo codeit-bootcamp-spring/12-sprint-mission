@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.jcf;
+package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class JCFChannelService implements ChannelService {
+public class BasicChannelService implements ChannelService {
     private final ChannelRepository channelRepository;
 
-    public JCFChannelService(ChannelRepository channelRepository) {
+    public BasicChannelService(ChannelRepository channelRepository) {
         this.channelRepository = channelRepository;
     }
-
     @Override
     public Channel save(Channel channel) {
         return channelRepository.save(channel);
