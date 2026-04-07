@@ -1,56 +1,52 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
+@Service("userService")
+@RequiredArgsConstructor
 public class BasicUserService implements UserService {
-	private final UserRepository ur;
+	private final UserRepository userRepository;
 
-	public BasicUserService(UserRepository ur) {
-		this.ur = ur;
+	@Override
+	public User create(String username, String email, String password) {
+		User user = new User(username, email, password);
+		return userRepository.save(user);
 	}
 
 	@Override
-	public User create(User user) {
-		if (!ur.existsById(user.getId())) {
-			ur.save(user);
-			return user;
+	public User find(UUID userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+	}
+
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+		user.update(newUsername, newEmail, newPassword);
+		return userRepository.save(user);
+	}
+
+	@Override
+	public void delete(UUID userId) {
+		if (!userRepository.existsById(userId)) {
+			throw new NoSuchElementException("User with id " + userId + " not found");
 		}
-		return null;
-	}
-
-	@Override
-	public User find(UUID id) {
-		return ur.findById(id).orElse(null);
-	}
-
-	@Override
-	public Collection<User> findAll() {
-		return ur.findAll();
-	}
-
-	@Override
-	public User update(UUID id, String username, String email, String password, String nickname, String phoneNumber,
-		String icon) {
-		Optional<User> user = ur.findById(id);
-		if (user.isPresent() && user.get().getUsername().equals(username)) {
-			user.get().update(email, password, nickname, phoneNumber, icon);
-			ur.save(user.get());
-			return user.get();
-		}
-		return null;
-	}
-
-	@Override
-	public void delete(UUID id) {
-		Optional<User> user = ur.findById(id);
-		if (user.isPresent()) {
-			ur.delete(id);
-		}
+		userRepository.deleteById(userId);
 	}
 }

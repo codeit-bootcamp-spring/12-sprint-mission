@@ -1,21 +1,15 @@
 package com.sprint.mission.discodeit.repository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 import com.sprint.mission.discodeit.entity.Channel;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;import org.springframework.stereotype.Repository;
+
 public interface ChannelRepository {
-	Channel save(Channel channel);
-
-	Optional<Channel> findById(UUID id);
-
-	List<Channel> findAll();
-
-	Long count();
-
-	void delete(UUID id);
-
-	boolean existsById(UUID id);
+    Channel save(Channel channel);
+    Optional<Channel> findById(UUID id);
+    List<Channel> findAll();
+    boolean existsById(UUID id);
+    void deleteById(UUID id);
 }

@@ -2,70 +2,52 @@ package com.sprint.mission.discodeit.entity;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.util.UUID;
+import java.util.List;
+import java.util.UUID;import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@ToString
 public class Message implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final UUID id;
-	private final UUID userId;
-	private final UUID channelId;
-	private String content;
-	private final Long createdAt;
-	private Long updatedAt;
+    private static final long serialVersionUID = 1L;
 
-	public Message(UUID userId, UUID channelId, String content) {
-		id = UUID.randomUUID();
-		this.userId = userId;
-		this.content = content;
-		this.channelId = channelId;
-		createdAt = System.currentTimeMillis();
-		updatedAt = System.currentTimeMillis();
-	}
+    private final UUID id;
+    private final Instant createdAt;
+    private Instant updatedAt;
+    //
+    private String content;
+    //
+    private UUID channelId;
+    private UUID authorId;
+    private List<UUID> attachmentIds;
 
-	public void update(String content) {
-		this.content = content;
-		updatedAt = System.currentTimeMillis();
-	}
+    public Message(String content, UUID channelId, UUID authorId) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.content = content;
+        this.channelId = channelId;
+        this.authorId = authorId;
+    }
+    public Message(String content, UUID channelId, UUID authorId,  List<UUID> attachmentIds) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.content = content;
+        this.channelId = channelId;
+        this.authorId = authorId;
+        this.attachmentIds = attachmentIds;
+    }
 
-	public UUID getId() {
-		return id;
-	}
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
 
-	public UUID getUserId() {
-		return userId;
-	}
-
-	public UUID getChannelId() {
-		return channelId;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public Long getCreatedAt() {
-		return createdAt;
-	}
-
-	public Long getUpdatedAt() {
-		return updatedAt;
-	}
-
-	@Override
-	public String toString() {
-
-		ZoneId zonedId = ZoneId.of("Asia/Seoul");
-		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
-		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
-
-		return "Message{" +
-			"id=" + id +
-			", userId=" + userId +
-			", channelId=" + channelId +
-			", content='" + content + '\'' +
-			", createdAt=" + created +
-			", updatedAt=" + updated +
-			'}';
-	}
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
+    }
 }
