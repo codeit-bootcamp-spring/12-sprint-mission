@@ -13,6 +13,9 @@ import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @SpringBootApplication
 public class DiscodeitApplication {
 	static User setupUser(UserService userService) {

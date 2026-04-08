@@ -1,43 +1,49 @@
 package com.sprint.mission.discodeit.repository.jcf;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
+
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 
-import java.util.*;
-
-import org.springframework.stereotype.Repository;
-
 @Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 public class JCFMessageRepository implements MessageRepository {
-    private final Map<UUID, Message> data;
+	private final Map<UUID, Message> data;
 
-    public JCFMessageRepository() {
-        this.data = new HashMap<>();
-    }
+	public JCFMessageRepository() {
+		this.data = new HashMap<>();
+	}
 
-    @Override
-    public Message save(Message message) {
-        this.data.put(message.getId(), message);
-        return message;
-    }
+	@Override
+	public Message save(Message message) {
+		this.data.put(message.getId(), message);
+		return message;
+	}
 
-    @Override
-    public Optional<Message> findById(UUID id) {
-        return Optional.ofNullable(this.data.get(id));
-    }
+	@Override
+	public Optional<Message> findById(UUID id) {
+		return Optional.ofNullable(this.data.get(id));
+	}
 
-    @Override
-    public List<Message> findAll() {
-        return this.data.values().stream().toList();
-    }
+	@Override
+	public List<Message> findAll() {
+		return this.data.values().stream().toList();
+	}
 
-    @Override
-    public boolean existsById(UUID id) {
-        return this.data.containsKey(id);
-    }
+	@Override
+	public boolean existsById(UUID id) {
+		return this.data.containsKey(id);
+	}
 
-    @Override
-    public void deleteById(UUID id) {
-        this.data.remove(id);
-    }
+	@Override
+	public void deleteById(UUID id) {
+		this.data.remove(id);
+	}
 }

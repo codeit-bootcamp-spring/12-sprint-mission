@@ -44,12 +44,12 @@ public class JavaApplication {
 
 	public static void main(String[] args) {
 		// 레포지토리 초기화
-		UserRepository userRepository = new FileUserRepository();
-		ChannelRepository channelRepository = new FileChannelRepository();
-		MessageRepository messageRepository = new FileMessageRepository();
-		BinaryContentRepository binaryContentRepository = new FileBinaryContentRepository();
-		ReadStatusRepository readStatusRepository = new FileReadStatusRepository();
-		UserStatusRepository userStatusRepository = new FileUserStatusRepository();
+		UserRepository userRepository = new FileUserRepository(".discodeit");
+		ChannelRepository channelRepository = new FileChannelRepository(".discodeit");
+		MessageRepository messageRepository = new FileMessageRepository(".discodeit");
+		BinaryContentRepository binaryContentRepository = new FileBinaryContentRepository(".discodeit");
+		ReadStatusRepository readStatusRepository = new FileReadStatusRepository(".discodeit");
+		UserStatusRepository userStatusRepository = new FileUserStatusRepository(".discodeit");
 
 		// 서비스 초기화
 		UserService userService = new BasicUserService(userRepository, binaryContentRepository, userStatusRepository);
