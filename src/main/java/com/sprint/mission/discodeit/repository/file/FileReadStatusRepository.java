@@ -16,17 +16,17 @@ import java.util.stream.Stream;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.entity.ReadStatus;
+import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 
 @Repository
 @Primary
-public class FileUserRepository implements UserRepository {
+public class FileReadStatusRepository implements ReadStatusRepository {
 	private final Path DIRECTORY;
 	private final String EXTENSION = ".ser";
 
-	public FileUserRepository() {
-		this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", User.class.getSimpleName());
+	public FileReadStatusRepository() {
+		this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", ReadStatus.class.getSimpleName());
 		if (Files.notExists(DIRECTORY)) {
 			try {
 				Files.createDirectories(DIRECTORY);
@@ -41,52 +41,38 @@ public class FileUserRepository implements UserRepository {
 	}
 
 	@Override
-	public User save(User user) {
-		Path path = resolvePath(user.getId());
+	public ReadStatus save(ReadStatus readStatus) {
+		Path path = resolvePath(readStatus.getId());
 		try (
 			FileOutputStream fos = new FileOutputStream(path.toFile());
 			ObjectOutputStream oos = new ObjectOutputStream(fos)
 		) {
-			oos.writeObject(user);
+			oos.writeObject(readStatus);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return user;
+		return readStatus;
 	}
 
 	@Override
-	public Optional<User> findById(UUID id) {
-		User userNullable = null;
+	public Optional<ReadStatus> findById(UUID id) {
+		ReadStatus readStatusNullable = null;
 		Path path = resolvePath(id);
 		if (Files.exists(path)) {
 			try (
 				FileInputStream fis = new FileInputStream(path.toFile());
 				ObjectInputStream ois = new ObjectInputStream(fis)
 			) {
-				userNullable = (User)ois.readObject();
+				readStatusNullable = (ReadStatus)ois.readObject();
 			} catch (IOException | ClassNotFoundException e) {
 				throw new RuntimeException(e);
 			}
 		}
-		return Optional.ofNullable(userNullable);
+		return Optional.ofNullable(readStatusNullable);
 	}
 
 	@Override
-	public Optional<User> findByUsername(String username) {
-		return findAll().stream()
-			.filter(user -> user.getUsername().equals(username))
-			.findFirst();
-	}
-
-	@Override
-	public Optional<User> findByEmail(String email) {
-		return findAll().stream()
-			.filter(user -> user.getEmail().equals(email))
-			.findFirst();
-	}
-
-	@Override
-	public List<User> findAll() {
+	public List<ReadStatus> findAll() {
 		try (Stream<Path> pathStream = Files.list(DIRECTORY)) {
 			return pathStream.filter(path -> path.toString().endsWith(EXTENSION))
 				.map(path -> {
@@ -94,12 +80,11 @@ public class FileUserRepository implements UserRepository {
 						FileInputStream fis = new FileInputStream(path.toFile());
 						ObjectInputStream ois = new ObjectInputStream(fis)
 					) {
-						return (User)ois.readObject();
+						return (ReadStatus)ois.readObject();
 					} catch (IOException | ClassNotFoundException e) {
 						throw new RuntimeException(e);
 					}
 				})
-				.sorted()
 				.toList();
 		} catch (IOException e) {
 			throw new RuntimeException(e);

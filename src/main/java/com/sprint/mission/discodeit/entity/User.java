@@ -1,13 +1,18 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.UUID;import lombok.Getter;
+import java.util.UUID;
+
+import lombok.Builder;
+import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
-public class User implements Serializable {
+public class User implements Serializable, Comparable<User> {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
@@ -19,16 +24,18 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    public User(String username, String email, String password) {
+    @Builder
+    public User(String username, String email, String password, UUID profileId) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
         //
         this.username = username;
         this.email = email;
         this.password = password;
+        this.profileId = profileId;
     }
 
-    public void update(String newUsername, String newEmail, String newPassword) {
+    public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
         boolean anyValueUpdated = false;
         if (newUsername != null && !newUsername.equals(this.username)) {
             this.username = newUsername;
@@ -43,8 +50,17 @@ public class User implements Serializable {
             anyValueUpdated = true;
         }
 
+        if (newProfileId != null && !newProfileId.equals(this.profileId)) {
+            this.profileId = newProfileId;
+            anyValueUpdated = true;
+        }
+
         if (anyValueUpdated) {
             this.updatedAt = Instant.now();
         }
     }
-}
+
+@Override
+	public int compareTo(User o) {
+		return this.createdAt.compareTo(o.getCreatedAt());
+	}}
