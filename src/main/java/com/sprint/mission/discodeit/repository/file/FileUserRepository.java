@@ -2,88 +2,93 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
+@Repository
+@Primary
 public class FileUserRepository implements UserRepository {
 
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public FileUserRepository() {
-        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "my_dir", "users");
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", User.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    private Path makePath(UUID id) {
+    private Path resolvePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
-    public void save(User user) {
-        Path path = makePath(user.getId());
-
+    public User save(User user) {
+        Path path = resolvePath(user.getId());
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(user);
         } catch (IOException e) {
-            System.out.println("저장에 실패하였습니다.");
+            throw new RuntimeException(e);
         }
+        return user;
     }
 
-    public User findById(UUID id) {
-        Path path = makePath(id);
-
-        if (Files.notExists(path)) {
-            return null;
+    @Override
+    public Optional<User> findById(UUID id) {
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+                return Optional.ofNullable((User) ois.readObject());
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
-            return (User) ois.readObject();
-        } catch (Exception e) {
-            System.out.println("해당 유저가 존재하지 않습니다.");
-            return null;
-        }
+        return Optional.empty();
     }
 
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return findAll().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
+    }
+
+    @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
-
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(DIRECTORY,
-                path -> path.toString().endsWith(EXTENSION))) {
-            for (Path path : stream) {
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            paths.filter(p -> p.toString().endsWith(EXTENSION)).forEach(path -> {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     users.add((User) ois.readObject());
-                } catch (Exception e) {
-                    System.out.println("일부 유저를 불러오지 못했습니다.");
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
-            }
+            });
         } catch (IOException e) {
-            System.out.println("유저 목록 조회 실패");
+            throw new RuntimeException(e);
         }
         return users;
     }
 
     @Override
-    public void update(User user) {
-        save(user);
+    public boolean existsById(UUID id) {
+        return Files.exists(resolvePath(id));
     }
 
     @Override
-    public void delete(UUID id) {
-        Path path = makePath(id);
+    public void deleteById(UUID id) {
         try {
-            Files.deleteIfExists(path);
+            Files.deleteIfExists(resolvePath(id));
         } catch (IOException e) {
-            System.out.println("유저 삭제에 실패하였습니다.");
+            throw new RuntimeException(e);
         }
     }
 }

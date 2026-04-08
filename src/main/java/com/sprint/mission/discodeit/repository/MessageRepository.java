@@ -2,19 +2,19 @@ package com.sprint.mission.discodeit.repository;
 
 import com.sprint.mission.discodeit.entity.Message;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MessageRepository {
 
     void save(Message message);
 
-    Message findById(UUID id);
+    Optional<Message> findById(UUID id);
 
-    // 해당 채팅방에 속한 메세지만 가져옴
-    List<Message> findAllByChannelId(UUID channelId);
+    List<Message> findAll();
 
-    void update(Message message);
+    boolean existsById(UUID id);
 
-    void delete(UUID id);
+    void deleteById(UUID id);
 
 }

@@ -1,98 +1,99 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.service.ChannelService;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Stream;
 
+@Service
 public class FileChannelService implements ChannelService {
 
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public FileChannelService() {
-        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "my_dir", "channels");
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", Channel.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    private Path makePath(UUID id) {
+    private Path resolvePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
-    public Channel createChannel(String name) {
-        Channel channel = new Channel(name);
-
-        Path path = makePath(channel.getId());
+    public Channel create(ChannelType type, String name, String description) {
+        Channel channel = new Channel(type, name, description);
+        Path path = resolvePath(channel.getId());
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(channel);
         } catch (IOException e) {
-            System.out.println("채널 저장에 실패하였습니다.");
+            throw new RuntimeException(e);
         }
         return channel;
     }
 
     @Override
-    public Channel getChannel(UUID id) {
-        Path path = makePath(id);
-        if (Files.notExists(path)) return null;
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
-            return (Channel) ois.readObject();
-        } catch (Exception e) {
-            return null;
+    public Channel find(UUID id) {
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+                return (Channel) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
+        throw new NoSuchElementException("Channel with id " + id + " not found");
     }
 
     @Override
-    public List<Channel> getAllChannels() {
+    public List<Channel> findAll() {
         List<Channel> channels = new ArrayList<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(DIRECTORY,
-                path -> path.toString().endsWith(EXTENSION))) {
-            for (Path path : stream) {
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            paths.filter(p -> p.toString().endsWith(EXTENSION)).forEach(path -> {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     channels.add((Channel) ois.readObject());
-                } catch (Exception e) {
-                    System.out.println("일부 채널을 불러오지 못했습니다.");
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
-            }
+            });
         } catch (IOException e) {
-            System.out.println("채널 목록 조회 실패");
+            throw new RuntimeException(e);
         }
         return channels;
     }
 
     @Override
-    public Channel updateChannel(UUID id, String name) {
-        Channel channel = getChannel(id);
-        if (channel != null) {
-            channel.update(name); // 내용 변경
-
-            // 덮어쓰기
-            Path path = makePath(id);
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
-                oos.writeObject(channel);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public Channel update(UUID id, ChannelType type, String name, String description) {
+        Channel channel = find(id);
+        channel.update(type, name, description);
+        Path path = resolvePath(channel.getId());
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
+            oos.writeObject(channel);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return channel;
     }
 
     @Override
-    public void deleteChannel(UUID id) {
+    public void delete(UUID id) {
+        Path path = resolvePath(id);
+        if (!Files.exists(path)) {
+            throw new NoSuchElementException("Channel with id " + id + " not found");
+        }
         try {
-            Files.deleteIfExists(makePath(id));
+            Files.deleteIfExists(path);
         } catch (IOException e) {
-            System.out.println("채널 삭제에 실패하였습니다.");
+            throw new RuntimeException(e);
         }
     }
 }

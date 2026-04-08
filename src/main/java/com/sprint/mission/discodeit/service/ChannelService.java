@@ -1,19 +1,19 @@
 package com.sprint.mission.discodeit.service;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import java.util.List;
 import java.util.UUID;
 
 public interface ChannelService {
-    // 채팅방 개설
-    Channel createChannel(String name);
 
-    Channel getChannel(UUID id);
-    List<Channel> getAllChannels();
+    Channel create(ChannelType type, String name, String description);
 
-    // 채팅방 이름 변경
-    Channel updateChannel(UUID id, String name);
+    Channel find(UUID id);
 
-    // 채팅방 삭제
-    void deleteChannel(UUID id);
+    List<Channel> findAll();
+
+    Channel update(UUID id, ChannelType type, String name, String description);
+
+    void delete(UUID id);
 }

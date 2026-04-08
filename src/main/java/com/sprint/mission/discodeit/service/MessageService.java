@@ -5,17 +5,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageService {
-    // 메시지 전송
-    Message sendMessage(UUID channelId, UUID authorId, String content);
 
-    Message getMessage(UUID id);
+    Message create(String content, UUID channelId, UUID authorId);
 
-    // 특정 채팅방 메시지 내역 가져오기
-    List<Message> getMessagesByChannelId(UUID channelId);
+    Message find(UUID id);
 
-    // 메시지 수정
-    Message updateMessage(UUID id, String content);
+    List<Message> findAll();
 
-    // 메시지 삭제
-    void deleteMessage(UUID id);
+    Message update(UUID id, String newContent);
+
+    void delete(UUID id);
+
 }

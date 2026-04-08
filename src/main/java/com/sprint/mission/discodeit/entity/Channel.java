@@ -1,42 +1,40 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Channel implements Serializable {
+
     private UUID id;
-    private String name;      // 채팅방 이름
-    private Long createdAt;
-    private Long updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private ChannelType type;
+    private String name;
+    private String description;
 
-
-    public Channel(String name) {
+    public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+        this.type = type;
         this.name = name;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+        this.description = description;
     }
 
-
-    public UUID getId() { return id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public Long getCreatedAt() { return createdAt; }
-    public Long getUpdatedAt() { return updatedAt; }
-
-
-    public void update(String name) {
+    public void update(ChannelType type, String name, String description) {
+        this.type = type;
         this.name = name;
-        this.updatedAt = System.currentTimeMillis();
-    }
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        this.description = description;
+        this.updatedAt = Instant.now();
     }
 }

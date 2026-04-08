@@ -2,43 +2,42 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
+@Repository
 public class JCFMessageRepository implements MessageRepository {
 
     private final Map<UUID, Message> data = new HashMap<>();
 
     @Override
-    public void save(Message message) {
+    public Message save(Message message) {
         data.put(message.getId(), message);
+        return message;
     }
 
     @Override
-    public Message findById(UUID id) {
-        return data.get(id);
-    }
-
-    // 해당 채널의 메세지만 가져오기
-    @Override
-    public List<Message> findAllByChannelId(UUID channelId) {
-        List<Message> result = new ArrayList<>();
-
-        for (Message message : data.values()) {
-            if (message.getChannelId().equals(channelId)) {
-                result.add(message);
-            }
-        }
-        return result;
+    public Optional<Message> findById(UUID id) {
+        return Optional.ofNullable(data.get(id));
     }
 
     @Override
-    public void update(Message message) {
-        data.put(message.getId(), message);
+    public List<Message> findAll() {
+        return data.values().stream().toList();
     }
 
     @Override
-    public void delete(UUID id) {
+    public boolean existsById(UUID id) {
+        return data.containsKey(id);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
         data.remove(id);
     }
 }

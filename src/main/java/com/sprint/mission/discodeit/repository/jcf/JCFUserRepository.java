@@ -2,36 +2,49 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-
+@Repository
 public class JCFUserRepository implements UserRepository {
 
-    private final Map<UUID, User> userData = new HashMap<>();
+    private final Map<UUID, User> data = new HashMap<>();
 
     @Override
-    public void save(User user) {
-        userData.put(user.getId(), user);
+    public User save(User user) {
+        data.put(user.getId(), user);
+        return user;
     }
 
     @Override
-    public User findById(UUID id) {
-        return userData.get(id);
+    public Optional<User> findById(UUID id) {
+        return Optional.ofNullable(data.get(id));
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return data.values().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
     }
 
     @Override
     public List<User> findAll() {
-        return new ArrayList<>(userData.values());
+        return data.values().stream().toList();
     }
 
     @Override
-    public void update(User user) {
-        userData.put(user.getId(), user);
+    public boolean existsById(UUID id) {
+        return data.containsKey(id);
     }
 
     @Override
-    public void delete(UUID id) {
-        userData.remove(id);
+    public void deleteById(UUID id) {
+        data.remove(id);
     }
 }
