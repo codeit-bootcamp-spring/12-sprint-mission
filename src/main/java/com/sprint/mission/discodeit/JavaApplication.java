@@ -20,6 +20,8 @@ import com.sprint.mission.discodeit.service.basic.BasicChannelService;
 import com.sprint.mission.discodeit.service.basic.BasicMessageService;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
 
+import java.util.NoSuchElementException;
+
 public class JavaApplication {
     public static void main(String[] args) {
         // JCF Repository 테스트
@@ -35,6 +37,7 @@ public class JavaApplication {
         UserService userService = new BasicUserService(userRepository);
         ChannelService channelService = new BasicChannelService(channelRepository);
         MessageService messageService = new BasicMessageService(userService, channelService, messageRepository);
+
 
         // 사용자 테스트 시작
         System.out.println("-----------------사용자 테스트 시작-----------------");
@@ -68,6 +71,7 @@ public class JavaApplication {
         System.out.println("-----------------사용자 테스트 종료-----------------");
         System.out.println();
 
+
         // 채널 테스트 시작
         System.out.println("-----------------채널 테스트 시작-----------------");
 
@@ -86,6 +90,7 @@ public class JavaApplication {
         System.out.println("-----------------채널 테스트 종료-----------------");
         System.out.println();
 
+
         // 메시지 테스트 시작
         System.out.println("-----------------메시지 테스트 시작-----------------");
 
@@ -93,9 +98,15 @@ public class JavaApplication {
         System.out.println("===== 메시지 저장 =====");
         Message message = new Message(user1.getId(), channel.getId(), "안녕하세요!");
         messageService.save(message);
-        // 존재하지 않는 사용자 메시지 저장
-//        Message messageNotUser = new Message(user2.getId(), channel.getId(), "안뇽");
-//        messageService.save(messageNotUser);
+
+        System.out.println("===== 존재하지 않는 사용자 메시지 저장 테스트 =====");
+        try {
+            Message messageNotUser = new Message(user2.getId(), channel.getId(), "안뇽");
+            messageService.save(messageNotUser);
+            System.out.println("실패: 예외가 발생해야 하는 케이스");
+        } catch (NoSuchElementException e) {
+            System.out.println("성공: 예외 발생 확인 - " + e.getMessage());
+        }
 
         // 메시지 수정 및 조회
         System.out.println("===== 메시지 수정 및 단건 조회 =====");
