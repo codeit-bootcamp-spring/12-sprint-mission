@@ -2,86 +2,84 @@ package com.sprint.mission.discodeit;
 
 import com.sprint.mission.discodeit.entity.*;
 import com.sprint.mission.discodeit.service.*;
+import com.sprint.mission.discodeit.service.basic.BasicChannelService;
+import com.sprint.mission.discodeit.service.basic.BasicMessageService;
+import com.sprint.mission.discodeit.service.basic.BasicUserService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
 import com.sprint.mission.discodeit.service.jcf.*;
 
 import java.util.List;
+import java.util.UUID;
+
 
 public class JavaApplication {
-    public static void main(String[] args) {
+    static void userCRUDTest(UserService userService) {
 
-
-
-//        System.out.println("----user test initiates-----");
-//        UserService userService = new JCFUserService();
-//        User user = new User("JaneDoe", "Janedoe@gmail.com",9876,"JD1");
-//        userService.create(String User);
-//        System.out.println("Created: " + user.getUsername());
-//        userService.find(user.getId(), user);
-//        System.out.println("Read: " + user.getUsername());
-//        userService.findAll();
-//        System.out.println("Read All: " + user.getUsername());
-//        User updatedUser = new User("JaneDoe Updated", "Janedoe123@gmail.com",9876,"JD1");
-//        ((JCFUserService) userService).update(user.getId(), updatedUser);
-//        System.out.println("Updated user");
-//        userService.find(user.getId(), user);
-//        System.out.println("After update: " + updatedUser.getUsername());
-//        userService.delete(user.getId());
-//        System.out.println("Deleted user");
-//        User deletedUser = userService.find(user.getId(), user);
-//        System.out.println("After delete: " + (deletedUser == null ? "confirmed deleted" : "Still exists"));
-//        System.out.println("----user test ends-----");
-//
-//        System.out.println("----message test initiates-----");
-//        MessageService messageService = new JCFMessageService();
-//        Message message = new Message("Inquiry", "JaneDoe","Admin");
-//        messageService.create(message);
-//        System.out.println("Created: " + message.getContent());
-//        messageService.read(message.getId(), message);
-//        System.out.println("Read: " + message.getContent());
-//        messageService.readAll();
-//        System.out.println("Read All: " + message.getContent());
-//        Message updatedMessage = new Message("General Inquiry", "JaneDoe Updated","Admin");
-//        messageService.update(message.getId(), updatedMessage);
-//        System.out.println("Updated Message");
-//        messageService.read(user.getId(),message);
-//        System.out.println("After update: " + updatedMessage.getContent());
-//        messageService.delete(message.getContent());
-//        System.out.println("Deleted Message");
-//        Message deletedMessage = messageService.read(user.getId(),message);
-//        System.out.println((("After delete: " + deletedMessage) == null) ? "confirmed deleted" : "Still exists");
-//        System.out.println("----message test ends-----");
-//
-//        System.out.println("----channel test initiates-----");
-//        ChannelService channelService = new JCFChannelService();
-//        Channel channel = new Channel();
-//        channelService.create(channel);
-//        System.out.println("Created: " + channel.getName());
-//        channelService.read(channel.getName());
-//        System.out.println("Read: " + channel.getName());
-//        List<Channel> allChannels = channelService.readAll();
-//        System.out.println("Read All: " + allChannels.size() + " channels");
-//        Channel updatedChannel = new Channel();
-//        channelService.update(channel.getName(), updatedChannel);
-//        System.out.println("Updated Channel");
-//        channelService.read(channel.getName());
-//        System.out.println("After update: " + updatedChannel.getName());
-//        channelService.delete(channel.getName());
-//        System.out.println("Deleted Channel");
-//        Channel deletedChannel = channelService.read(channel.getName());
-//        System.out.println("After delete: " + (deletedChannel == null ? "confirmed deleted" : "Still exists"));
-//        System.out.println("----channel test ends-----");
-//
-//
-
-
-
-
-
-
-
-
-
-
-
+        User user = userService.create("JaneDoe", "JaneDoe@gmail.com", "JD1234", "JD10002");
+        System.out.println("created user: " + user.getId());
+        User foundUser = userService.find(user.getId());
+        System.out.println("found user: " + foundUser.getId());
+        List<User> foundUsers = userService.findAll();
+        System.out.println("all users: " + foundUsers.size());
+        User updatedUser = userService.update(user.getId(), null, null, null, "JD15645");
+        System.out.println("updated user: " + String.join("/", updatedUser.getUsername(), updatedUser.getEmail(), updatedUser.getNickname()));
+        userService.delete(user.getId());
+        List<User> foundUserAfterDelete = userService.findAll();
+        System.out.println("all users after delete: " + foundUserAfterDelete.size());
     }
+
+    static void channelCRUDTest(ChannelService channelService) {
+
+        Channel channel = channelService.create(ChannelCategory.valueOf("General"), "QnA", "QnA channel for all! ");
+        System.out.println("created channel: " + channel.getId());
+        Channel foundChannel = channelService.read(channel.getId());
+        System.out.println("found channel: " + foundChannel.getId());
+        List<Channel> foundChannels = channelService.readAll();
+        System.out.println("all channels: " + foundChannels.size());
+        Channel updatedChannel = channelService.update(channel.getId(), "QnA", "QnA channel only for sprint mission related inquiries!! ");
+        System.out.println("updated channel: " + updatedChannel.getId());
+        channelService.delete(channel.getId());
+        List<Channel> foundChannelAfterDelete = channelService.readAll();
+        System.out.println("all channels after delete: " + foundChannelAfterDelete.size());
+    }
+
+    static void messageCRUDTest(MessageService messageService) {
+
+        String sender = "JaneDoe";
+        String receiver = "Admin";
+        Message message = messageService.create( "hello", sender, receiver);
+        System.out.println("created message: " + message.getId());
+        Message foundMessage = messageService.read(message.getId());
+        System.out.println("found message: " + foundMessage.getId());
+        List<Message> foundMessages = messageService.readAll();
+        System.out.println("all messages: " + foundMessages.size());
+        Message updatedMessage = messageService.update(message.getId(), "hello, how are you?");
+        System.out.println("updated message: " + updatedMessage.getId());
+        messageService.delete(message.getId());
+        List<Message> foundMessageAfterDelete = messageService.readAll();
+        System.out.println("all messages after delete: " + foundMessageAfterDelete.size());
+
+        }
+    public static void main(String[] args) {
+        UserService userService = new JCFUserService();
+        ChannelService channelService = new JCFChannelService();
+        MessageService messageService = new JCFMessageService();
+
+        userCRUDTest(userService);
+        channelCRUDTest(channelService);
+        messageCRUDTest(messageService);
+
+
 }
+}
+
+
+
+
+
+
+
+
+

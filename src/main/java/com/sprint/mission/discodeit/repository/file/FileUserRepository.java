@@ -5,61 +5,91 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class FileUserRepository implements UserRepository {
-
-    private final String filePath = "user.ser";
-    private final Map<UUID, User> userMap = new HashMap<>();
-
+    private final Path DIRECTORY;
+    private final String EXTENSION = ".ser";
 
     public FileUserRepository() {
-        userMap.putAll(loadFromFile());
+        this.DIRECTORY = Path.of(System.getProperty("user.dir"), "file-data-map", User.class.getSimpleName());
+        if (!Files.exists(DIRECTORY)) {
+            try {
+                Files.createDirectories(DIRECTORY);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
+private Path resolvePath(UUID id) { return DIRECTORY.resolve(id.toString() + EXTENSION);}
 
     @Override
     public User save(User user) {
-        userMap.put(user.getId(), user);
-        saveToFile();
+        Path path = resolvePath(user.getId());
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(user);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return user;
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        return Optional.ofNullable(userMap.get(id));
-    }
-
-    @Override
-    public List<User> findAll() {
-        return new ArrayList<>(userMap.values());
-    }
-
-    @Override
-    public void delete(UUID id) {
-        userMap.remove(id);
-        saveToFile();
-
-    }
-
-    private Map<UUID, User> loadFromFile() {
-        File file = new File("user.ser");
-        if (!file.exists()) return new HashMap<>();
-        {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                return (Map<UUID, User>) ois.readObject();
+        User userNullable = null;
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                userNullable = (User) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
+        return Optional.ofNullable(userNullable);
     }
 
-    private void saveToFile() {
-                    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-                        oos.writeObject(userMap);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+    @Override
+    public List<User> findAll() {
+        try {
+            return Files.list(DIRECTORY)
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (User) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .toList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Override
+    public Boolean existsById(UUID id) {
+        Path path = resolvePath(id);
+        return Files.exists(path);
+    }
 
-                }
+    @Override
+    public void delete(UUID id) {
+        Path path = resolvePath(id);
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+    }
+}

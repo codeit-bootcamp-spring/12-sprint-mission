@@ -13,26 +13,40 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message create(Message message) {
+    public Message create(String content, String sender, String receiver) {
+        Message message = new Message(content, sender, receiver);
+        this.data.put(message.getId(), message);
         return message;
     }
 
     @Override
-    public Message read(UUID id, Message message) {
-        return data.get(id);
+    public Message read(UUID messageId) {
+        Message messageNullable = this.data.get(messageId);
+
+        return Optional.ofNullable(messageNullable)
+                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
     }
 
     @Override
     public List<Message> readAll() {
-        return new ArrayList<>(data.values());
+        return this.data.values().stream().toList();
     }
 
     @Override
-    public Message update(UUID id, Message updatedMessage) {
-        data.put(id, updatedMessage);
-        return updatedMessage;}
+    public Message update(UUID messageId, String newContent) {
+        Message messageNullable = this.data.get(messageId);
+        Message message = Optional.ofNullable(messageNullable)
+                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
+        message.update(newContent);
+
+        return message;
+    }
 
     @Override
-    public void delete(String message) { data.remove(message); }
-
+    public void delete(UUID messageId) {
+        if (!this.data.containsKey(messageId)) {
+            throw new NoSuchElementException("Message with id " + messageId + " not found");
+        }
+        this.data.remove(messageId);
     }
+}

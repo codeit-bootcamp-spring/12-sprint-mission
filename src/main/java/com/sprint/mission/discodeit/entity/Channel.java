@@ -1,86 +1,47 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Channel implements java.io.Serializable{
+public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
-    private String name;
-    private String category;
-    private String purpose;
+    private String Name;
     private String description;
-    private String accessToken;
+    private ChannelCategory category;
     private Long createdAt;
     private Long updatedAt;
 
-
-    public Channel() {
+    public Channel(ChannelCategory category, String name, String description) {
         this.id = UUID.randomUUID();
-        this.name = name;
         this.category = category;
-        this.purpose = purpose;
+        this.Name = name;
         this.description = description;
-        this.accessToken = accessToken;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdAt = System.currentTimeMillis();
     }
 
+    public UUID getId() { return id; }
+    public String getName() { return Name; }
+    public String getDescription() { return description; }
+    public ChannelCategory getCategory() { return category; }
+    public Long getCreatedAt() { return createdAt; }
+    public Long getUpdatedAt() { return updatedAt; }
 
-    public UUID getId() {
-        return id;
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.Name)) {
+            this.Name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
+        if (anyValueUpdated) {
+            this.updatedAt = System.currentTimeMillis();
+        }
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-
-    public void update(String name, String category, String purpose, String description, String accessToken) {
-        this.name = name;
-        this.category = category;
-        this.purpose = purpose;
-        this.description = description;
-        this.accessToken = accessToken;
-        updatedAt = System.currentTimeMillis();
-    }
-
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
-                ", purpose='" + purpose + '\'' +
-                ", description='" + description + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
-
 }
+
+
+

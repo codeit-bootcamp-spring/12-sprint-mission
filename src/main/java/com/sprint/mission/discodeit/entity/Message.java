@@ -1,8 +1,9 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Message implements java.io.Serializable {
+public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
     private String content;
@@ -20,35 +21,28 @@ public class Message implements java.io.Serializable {
         this.updatedAt = System.currentTimeMillis();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
+    public UUID getId() { return this.id; }
+    public String getContent() { return content; }
     public String getSender() {
-        return sender;
+        return this.sender;
     }
-
     public String getReceiver() {
-        return receiver;
+        return this.receiver;
+    }
+    public Long getCreatedAt() { return this.createdAt; }
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
-    public String getCreatedAt() {
-        return createdAt.toString();
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt.toString();
-    }
-
-    public void update(String content, String sender, String receiver) {
-        this.content = content;
-        this.sender = sender;
-        this.receiver = receiver;
-        updatedAt = System.currentTimeMillis();
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
+        if (anyValueUpdated) {
+            this.updatedAt = System.currentTimeMillis();
+        }
     }
 
     @Override

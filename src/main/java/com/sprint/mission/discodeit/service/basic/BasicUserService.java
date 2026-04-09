@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class BasicUserService implements UserService {
@@ -16,20 +17,15 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public User create(String username, String email, int password, String nickname) {
-        boolean exists = userRepository.findAll().stream()
-                .anyMatch(u -> u.getNickname().equals(nickname));
-        if (exists) {
-            throw new IllegalArgumentException("nickname already exists!");
-        }
+    public User create(String username, String email, String password, String nickname) {
         User user = new User(username, email, password, nickname);
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
-    public User find(UUID id) {
-        return userRepository.findById(id).orElse(null);
+    public User find(UUID userId) {
+        return userRepository.findById(userId).
+                orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
     }
 
     @Override
@@ -37,8 +33,20 @@ public class BasicUserService implements UserService {
         return new ArrayList<>(userRepository.findAll());
     }
 
+   @Override
+    public User update(UUID userId, String newUsername, String newEmail, String newPassword, String newNickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+        user.update(newUsername, newEmail, newPassword, newNickname);
+        return userRepository.save(user);
+    }
+
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID userid) {
+        if (!userRepository.existsById(userid)) {
+            throw new NoSuchElementException("User with id " + userid + " not found");
+        }
+        userRepository.delete(userid);
     }
 }
 

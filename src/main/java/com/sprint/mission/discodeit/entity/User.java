@@ -1,18 +1,19 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User implements java.io.Serializable {
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
     private String username;
     private String email;
-    private int password;
+    private String password;
     private String nickname;
     private Long createdAt;
     private Long updatedAt;
 
-    public User(String username, String email, int password, String nickname) {
+    public User(String username, String email, String password, String nickname) {
         id = UUID.randomUUID();
         this.username = username;
         this.email = email;
@@ -34,7 +35,7 @@ public class User implements java.io.Serializable {
         return email;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -51,12 +52,23 @@ public class User implements java.io.Serializable {
     }
 
 
-    public void update(String username, String email, int password, String nickname){
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        updatedAt = System.currentTimeMillis();
+    public void update(String newUsername, String newEmail, String newPassword, String newNickname) {
+        boolean anyValueUpdated = false;
+        if (newUsername != null && !newUsername.equals(this.username)) {
+            this.username = newUsername;
+            anyValueUpdated = true;
+            if (newEmail != null && !newEmail.equals(this.email)) {
+                this.email = newEmail;
+                anyValueUpdated = true;
+            }
+            if (newPassword != null && !newPassword.equals(this.password)) {
+                this.password = newPassword;
+                anyValueUpdated = true;
+            }
+            if (anyValueUpdated) {
+                this.updatedAt = System.currentTimeMillis();
+            }
+        }
     }
 
     @Override
