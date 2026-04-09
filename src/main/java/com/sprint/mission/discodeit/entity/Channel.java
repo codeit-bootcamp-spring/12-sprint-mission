@@ -9,12 +9,14 @@ public class Channel implements Serializable, Comparable<Channel> {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
+    private ChannelType type;
     private String title;
     private Long createdAt;
     private Long updatedAt;
 
-    public Channel(String title) {
+    public Channel(ChannelType type, String title) {
         id = UUID.randomUUID();
+        this.type = type;
         this.title = title;
         createdAt = System.currentTimeMillis();
         updatedAt = System.currentTimeMillis();
@@ -22,6 +24,10 @@ public class Channel implements Serializable, Comparable<Channel> {
 
     public UUID getId() {
         return id;
+    }
+
+    public ChannelType getType() {
+        return type;
     }
 
     public String getTitle() {
@@ -45,6 +51,7 @@ public class Channel implements Serializable, Comparable<Channel> {
     public String toString() {
         return "Channel {" +
                 "\n id        = " + id +
+                "\n type      = " + type +
                 "\n title     = " + title +
                 "\n createdAt = " + createdAt +
                 "\n updatedAt = " + updatedAt +

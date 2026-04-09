@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -72,7 +73,7 @@ public class JavaApplication {
 
         // 채널 저장 및 전체 조회
         System.out.println("===== 채널 저장 및 전체 조회 =====");
-        Channel channel = new Channel("공지방");
+        Channel channel = new Channel(ChannelType.PRIVATE, "공지방");
         channelService.save(channel);
         System.out.println(channelService.findAll());
 
