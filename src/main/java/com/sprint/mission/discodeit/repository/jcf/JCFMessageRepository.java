@@ -27,7 +27,7 @@ public class JCFMessageRepository implements MessageRepository {
     @Override
     public Message update(Message message) {
         if (!data.containsKey(message.getId())) {
-            return null;
+            throw new NoSuchElementException("Message not found: " + message.getId());
         }
 
         data.put(message.getId(), message);

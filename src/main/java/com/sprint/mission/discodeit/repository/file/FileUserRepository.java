@@ -48,7 +48,7 @@ public class FileUserRepository implements UserRepository {
     @Override
     public User update(UUID id, User user) {
         if (!data.containsKey(id)) {
-            return null;
+            throw new NoSuchElementException("User not found: " + id);
         }
 
         data.put(id, user);

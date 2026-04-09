@@ -50,7 +50,7 @@ public class FileUserService implements UserService {
         User existing = data.get(id);
 
         if (existing == null) {
-            return null;
+            throw new NoSuchElementException("User not found: " + id);
         }
         existing.update(
                 user.getUsername(),

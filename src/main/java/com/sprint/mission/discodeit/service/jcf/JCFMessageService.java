@@ -20,10 +20,10 @@ public class JCFMessageService implements MessageService {
     @Override
     public Message create(Message message) {
         if (channelService.findById(message.getChannelId()).isEmpty()) {
-            return null;
+            throw new NoSuchElementException("Channel not found: " + message.getChannelId());
         }
         if (userService.findById(message.getUserId()).isEmpty()) {
-            return null;
+            throw new NoSuchElementException("User not found: " + message.getUserId());
         }
         data.put(message.getId(), message);
         return message;
@@ -42,7 +42,7 @@ public class JCFMessageService implements MessageService {
     @Override
     public Message update(Message message) {
         if (!data.containsKey(message.getId())) {
-            return null;
+            throw new NoSuchElementException("Message not found: " + message.getId());
         }
         data.put(message.getId(), message);
         return message;

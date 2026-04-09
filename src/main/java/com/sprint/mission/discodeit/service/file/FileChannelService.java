@@ -49,7 +49,7 @@ public class FileChannelService implements ChannelService {
         Channel existing = data.get(channel.getId());
 
         if (existing == null) {
-            return null;
+            throw new NoSuchElementException("Channel not found: " + channel.getId());
         }
         existing.update(
                 channel.getName()

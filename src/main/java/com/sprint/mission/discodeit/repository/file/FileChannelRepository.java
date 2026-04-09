@@ -48,7 +48,7 @@ public class FileChannelRepository implements ChannelRepository {
     @Override
     public Channel update(Channel channel) {
         if (!data.containsKey(channel.getId())) {
-            return null;
+            throw new NoSuchElementException("Channel not found: " + channel.getId());
         }
 
         data.put(channel.getId(), channel);

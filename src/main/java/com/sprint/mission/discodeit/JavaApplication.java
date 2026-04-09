@@ -25,6 +25,8 @@ import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
+import java.util.NoSuchElementException;
+
 public class JavaApplication {
 
     static User setupUser(UserService userService) {
@@ -143,22 +145,22 @@ public class JavaApplication {
         System.out.println("======================= 심화 테스트 =======================");
         System.out.println("---------------------- 성공 ----------------------");
         Message vMsg = new Message("valid msg", ch2.getId(), user2.getId());
-        Message result1 = messageService.create(vMsg);
 
-        if (result1 == null) {
-            System.out.println("메세지 생성 실패");
-        } else {
+        try {
+            Message result1 = messageService.create(vMsg);
             System.out.println("메세지 생성내용: " + result1);
+        } catch (NoSuchElementException e) {
+            System.out.println("메세지 생성 실패: " + e.getMessage());
         }
 
         System.out.println("---------------------- 실패 ----------------------");
         Message vMsg2 = new Message("valid msg", ch2.getId(), user1.getId()); // 삭제된 user1
-        Message result2 = messageService.create(vMsg2);
 
-        if (result2 == null) {
-            System.out.println("메세지 생성 실패");
-        } else {
+        try {
+            Message result2 = messageService.create(vMsg2);
             System.out.println("메세지 생성내용: " + result2);
+        } catch (NoSuchElementException e) {
+            System.out.println("메세지 생성 실패: " + e.getMessage());
         }
 
 
@@ -250,22 +252,22 @@ public class JavaApplication {
         System.out.println("======================= File 심화 테스트 =======================");
         System.out.println("---------------------- 성공 ----------------------");
         Message fileValidMsg = new Message("file valid msg", fCh2.getId(), fUser2.getId());
-        Message fileResult1 = fileMessageService.create(fileValidMsg);
 
-        if (fileResult1 == null) {
-            System.out.println("메세지 생성 실패");
-        } else {
+        try {
+            Message fileResult1 = fileMessageService.create(fileValidMsg);
             System.out.println("메세지 생성내용: " + fileResult1);
+        } catch (NoSuchElementException e) {
+            System.out.println("메세지 생성 실패: " + e.getMessage());
         }
 
         System.out.println("---------------------- 실패 ----------------------");
         Message fileInvalidMsg = new Message("file invalid msg", fCh2.getId(), fUser1.getId()); // 삭제된 user
-        Message fileResult2 = fileMessageService.create(fileInvalidMsg);
 
-        if (fileResult2 == null) {
-            System.out.println("메세지 생성 실패");
-        } else {
+        try {
+            Message fileResult2 = fileMessageService.create(fileInvalidMsg);
             System.out.println("메세지 생성내용: " + fileResult2);
+        } catch (NoSuchElementException e) {
+            System.out.println("메세지 생성 실패: " + e.getMessage());
         }
 
         System.out.println();

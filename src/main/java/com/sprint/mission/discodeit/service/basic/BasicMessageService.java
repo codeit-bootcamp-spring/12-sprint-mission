@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,11 +27,11 @@ public class BasicMessageService implements MessageService {
     @Override
     public Message create(Message message) {
         if (channelService.findById(message.getChannelId()).isEmpty()) {
-            return null;
+            throw new NoSuchElementException("Channel not found: " + message.getChannelId());
         }
 
         if (userService.findById(message.getUserId()).isEmpty()) {
-            return null;
+            throw new NoSuchElementException("User not found: " + message.getUserId());
         }
 
         return messageRepository.create(message);
@@ -48,6 +49,9 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public Message update(Message message) {
+        if (messageRepository.findById(message.getId()).isEmpty()) {
+            throw new NoSuchElementException("Message not found: " + message.getId());
+        }
         return messageRepository.update(message);
     }
 
