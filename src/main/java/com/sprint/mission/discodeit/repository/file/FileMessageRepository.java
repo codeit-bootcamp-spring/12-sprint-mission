@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class FileMessageRepository implements MessageRepository  {
+public class FileMessageRepository implements MessageRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
@@ -30,17 +30,14 @@ public class FileMessageRepository implements MessageRepository  {
     @Override
     public Message save(Message message) {
         Path path = makePath(message.getId());
-        try {
-            FileUtils.saveObject(path, message);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("메시지 저장 실패");
-        }
+        FileUtils.saveObject(path, message);
         return message;
     }
 
     @Override
     public Message findById(UUID messageId) {
-        return (Message) FileUtils.loadObject(makePath(messageId));
+        Path path = makePath(messageId);
+        return (Message) FileUtils.loadObject(path);
     }
 
     @Override
@@ -53,7 +50,7 @@ public class FileMessageRepository implements MessageRepository  {
                     .sorted()
                     .toList();
         } catch (IOException e) {
-            throw new NoSuchElementException("경로를 찾을 수 없음");
+            throw new RuntimeException("메시지 리스트 불러오기 실패", e);
         }
     }
 
@@ -65,15 +62,14 @@ public class FileMessageRepository implements MessageRepository  {
     @Override
     public void delete(UUID messageId) {
         Path path = makePath(messageId);
-
         if (!Files.exists(path)) {
-            return;
+            throw new NoSuchElementException("삭제할 메시지 없음: " + messageId);
         }
 
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new RuntimeException("메시지 삭제 실패");
+            throw new RuntimeException("메시지 삭제 실패: " + messageId, e);
         }
     }
 }

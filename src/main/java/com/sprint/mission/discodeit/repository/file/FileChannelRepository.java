@@ -29,17 +29,14 @@ public class FileChannelRepository implements ChannelRepository {
     @Override
     public Channel save(Channel channel) {
         Path path = makePath(channel.getId());
-        try {
-            FileUtils.saveObject(path, channel);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("채널 저장 실패");
-        }
+        FileUtils.saveObject(path, channel);
         return channel;
     }
 
     @Override
     public Channel findById(UUID channelId) {
-        return (Channel) FileUtils.loadObject(makePath(channelId));
+        Path path = makePath(channelId);
+        return (Channel) FileUtils.loadObject(path);
     }
 
     @Override
@@ -52,7 +49,7 @@ public class FileChannelRepository implements ChannelRepository {
                     .sorted()
                     .toList();
         } catch (IOException e) {
-            throw new NoSuchElementException("경로를 찾을 수 없음");
+            throw new RuntimeException("채널 리스트 불러오기 실패", e);
         }
     }
 
@@ -64,15 +61,14 @@ public class FileChannelRepository implements ChannelRepository {
     @Override
     public void delete(UUID channelId) {
         Path path = makePath(channelId);
-
         if (!Files.exists(path)) {
-            return;
+            throw new NoSuchElementException("삭제할 채널 없음: " + channelId);
         }
 
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new RuntimeException("채널 삭제 실패");
+            throw new RuntimeException("채널 삭제 실패: " + channelId, e);
         }
     }
 }

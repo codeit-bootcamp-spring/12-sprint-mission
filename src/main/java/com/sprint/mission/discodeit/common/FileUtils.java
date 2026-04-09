@@ -10,7 +10,7 @@ public class FileUtils {
             try {
                 Files.createDirectories(directory);
             } catch (IOException e) {
-                throw new RuntimeException("디렉토리 생성 실패");
+                throw new RuntimeException("디렉토리 생성 실패: " + directory, e);
             }
         }
     }
@@ -20,7 +20,7 @@ public class FileUtils {
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(obj);
         } catch (IOException e) {
-            throw new RuntimeException("객체 저장 실패");
+            throw new RuntimeException("객체 저장 실패: " + path, e);
         }
     }
 
@@ -33,7 +33,7 @@ public class FileUtils {
              ObjectInputStream ois = new ObjectInputStream(fis)) {
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("객체 불러오기 실패");
+            throw new RuntimeException("객체 불러오기 실패: " + path, e);
         }
     }
 }

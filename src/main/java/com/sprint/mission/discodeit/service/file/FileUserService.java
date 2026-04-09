@@ -22,7 +22,11 @@ public class FileUserService implements UserService {
 
     @Override
     public User findById(UUID userId) {
-        return userRepository.findById(userId);
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            throw new NoSuchElementException("존재하지 않는 사용자: " + userId);
+        }
+        return user;
     }
 
     @Override
@@ -32,10 +36,7 @@ public class FileUserService implements UserService {
 
     @Override
     public void update(UUID userId, String username, String email, String password, String nickname) {
-        User user = userRepository.findById(userId);
-        if (user == null) {
-            throw new NoSuchElementException("존재하지 않는 사용자");
-        }
+        User user = findById(userId);
         user.update(username, email, password, nickname);
         userRepository.update(user);
     }

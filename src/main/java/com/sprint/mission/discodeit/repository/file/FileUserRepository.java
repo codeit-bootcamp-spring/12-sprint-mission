@@ -29,17 +29,14 @@ public class FileUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         Path path = makePath(user.getId());
-        try {
-            FileUtils.saveObject(path, user);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("사용자 저장 실패");
-        }
+        FileUtils.saveObject(path, user);
         return user;
     }
 
     @Override
     public User findById(UUID userId) {
-        return (User) FileUtils.loadObject(makePath(userId));
+        Path path = makePath(userId);
+        return (User) FileUtils.loadObject(path);
     }
 
     @Override
@@ -52,7 +49,7 @@ public class FileUserRepository implements UserRepository {
                     .sorted()
                     .toList();
         } catch (IOException e) {
-            throw new NoSuchElementException("경로를 찾을 수 없음");
+            throw new RuntimeException("사용자 리스트 불러오기 실패");
         }
     }
 
@@ -64,15 +61,14 @@ public class FileUserRepository implements UserRepository {
     @Override
     public void delete(UUID userId) {
         Path path = makePath(userId);
-
         if (!Files.exists(path)) {
-            return;
+            throw new NoSuchElementException("삭제할 사용자 없음: " + userId);
         }
 
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new RuntimeException("사용자 삭제 실패");
+            throw new NoSuchElementException("사용자 삭제 실패: " + userId, e);
         }
     }
 }

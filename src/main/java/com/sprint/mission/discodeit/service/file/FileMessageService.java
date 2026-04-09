@@ -23,19 +23,18 @@ public class FileMessageService implements MessageService {
 
     @Override
     public Message save(Message message) {
-        if (userService.findById(message.getUserId()) == null) {
-            throw new NoSuchElementException("존재하지 않는 사용자");
-        }
-        if (channelService.findById(message.getChannelId()) == null) {
-            throw new NoSuchElementException("존재하지 않는 채널");
-        }
-
+        userService.findById(message.getUserId());
+        channelService.findById(message.getChannelId());
         return messageRepository.save(message);
     }
 
     @Override
     public Message findById(UUID messageId) {
-        return messageRepository.findById(messageId);
+        Message message = messageRepository.findById(messageId);
+        if (message == null) {
+            throw new NoSuchElementException("존재하지 않는 메시지: " + messageId);
+        }
+        return message;
     }
 
     @Override
@@ -45,10 +44,7 @@ public class FileMessageService implements MessageService {
 
     @Override
     public void update(UUID messageId, String content) {
-        Message message = messageRepository.findById(messageId);
-        if (message == null) {
-            throw new NoSuchElementException("존재하지 않는 메시지");
-        }
+        Message message = findById(messageId);
         message.update(content);
         messageRepository.update(message);
     }
