@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserStatusRepository {
-    User save(UserStatus userStatus);
+    UserStatus save(UserStatus userStatus);
 
     UserStatus findByUserId(UUID userId);
 

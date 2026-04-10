@@ -111,7 +111,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public ChannelResponse update(ChannelUpdateRequest request) {
         Channel channel = channelRepository.findById(request.id()).
-                orElseThrow(() -> new NoSuchElementException("해당 재널이 존재하지 않습니다"));
+                orElseThrow(() -> new NoSuchElementException("해당 채널이 존재하지 않습니다"));
 
         if (channel.getType() == ChannelType.PRIVATE) {
             throw new IllegalStateException("PRIVATE 채널은 수정할 수 없습니다.");
