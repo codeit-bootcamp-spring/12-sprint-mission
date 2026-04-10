@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.basic;
+package com.sprint.mission.discodeit.service.Impl;
 
 import com.sprint.mission.discodeit.dto.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.MessageResponse;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service("messageService")
 @RequiredArgsConstructor
-public class BasicMessageService implements MessageService {
+public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;

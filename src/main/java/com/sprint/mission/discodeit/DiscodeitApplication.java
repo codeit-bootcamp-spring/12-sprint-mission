@@ -1,21 +1,26 @@
 package com.sprint.mission.discodeit;
 
-import com.sprint.mission.discodeit.dto.*;
-import com.sprint.mission.discodeit.entity.*;
-import com.sprint.mission.discodeit.repository.*;
-import com.sprint.mission.discodeit.repository.file.*;
-import com.sprint.mission.discodeit.service.*;
-import com.sprint.mission.discodeit.service.Impl.*;
+import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
+import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class JavaApplication {
+@SpringBootApplication
+public class DiscodeitApplication {
+
     public static class ServiceTestRunner {
         private final UserService userService;
         private final ChannelService channelService;
         private final MessageService messageService;
-
         public ServiceTestRunner(UserService userService, ChannelService channelService, MessageService messageService) {
             this.userService = userService;
             this.channelService = channelService;
@@ -32,9 +37,9 @@ public class JavaApplication {
         private void createInitialData() {
             System.out.println("======= [1] 초기 데이터 생성 =======");
             for (int i = 1; i <= 4; i++) {
-                UserResponse u = userService.create(new UserCreateRequest("User" + i, "u" + i + "@test.com", "Nick" + i, "password" + i,null,null));
-                ChannelResponse c = channelService.createPublicChannel(new ChannelCreateRequest("Channel" + i, u, "Category" + i));
-                messageService.create(new MessageCreateRequest(c.id(), u.id(), "Title" + i, "Content" + i,null));
+                User u = userService.create(new User("User" + i, "u" + i + "@test.com", "Nick" + i, "password" + i));
+                Channel c = channelService.create(new Channel("Channel" + i, u, "Category" + i));
+                messageService.create(new Message(c, u, "Title" + i, "Content" + i));
             }
             System.out.println("데이터 생성 완료.\n");
         }
@@ -122,48 +127,24 @@ public class JavaApplication {
     }
 
     public static void main(String[] args) {
-        /*System.out.println("--------------- JCFU 기반 Service 테스트 ---------------");
-        UserService userService = new JCFUserService();
-        ChannelService channelService = new JCFChannelService(userService);
-        MessageService messageService = new JCFMessageService(channelService, userService);
+        ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
+        System.out.println("http://localhost:8080/");
 
-        ServiceTestRunner runner = new ServiceTestRunner(userService, channelService, messageService);
-        runner.runAllTests();
-        System.out.println();*/
+        System.out.println(Instant.now().toString());
 
-        /*System.out.println("--------------- File 기반 Service 테스트 ---------------");
-        userService = new FileUserService();
-        channelService = new FileChannelService(userService);
-        messageService = new FileMessageService(channelService, userService);
-
-        runner = new ServiceTestRunner(userService, channelService, messageService);
-        runner.runAllTests();
-        System.out.println();*/
-
-        /*System.out.println("--------------- JCFU 기반 Repository 테스트 ---------------");
-        UserRepository userRepository = new JCFUserRepository();
-        ChannelRepository channelRepository = new JCFChannelRepository();
-        MessageRepository messageRepository = new JCFMessageRepository();
-
-        userService = new BasicUserService(userRepository);
-        channelService = new BasicChannelService(channelRepository, userService);
-        messageService = new BasicMessageService(messageRepository, userService, channelService);
-
-        runner = new ServiceTestRunner(userService, channelService, messageService);
-        runner.runAllTests();
-        System.out.println();*/
-
-        System.out.println("--------------- File 기반 Repository 테스트 ---------------");
-        UserRepository userRepository = new FileUserRepository();
-        ChannelRepository channelRepository = new FileChannelRepository();
-        MessageRepository messageRepository = new FileMessageRepository();
-
-        UserService userService = new UserServiceImpl(userRepository);
-        ChannelService channelService = new ChannelServiceImpl(channelRepository, userService);
-        MessageService messageService = new MessageServiceImpl(messageRepository, userService, channelService);
-
-        ServiceTestRunner runner = new ServiceTestRunner(userService, channelService, messageService);
-        runner.runAllTests();
-        System.out.println();
+//        UserService userService;
+//        ChannelService channelService;
+//        MessageService messageService;
+//
+//        UserRepository userRepository;
+//        ChannelRepository channelRepository;
+//        MessageRepository messageRepository;
+//
+//        BinaryContent binaryContent;
+//
+//        JavaApplication.ServiceTestRunner runner = new JavaApplication.ServiceTestRunner(userService, channelService, messageService);
+//        runner.runAllTests();
+//        System.out.println();
     }
+
 }

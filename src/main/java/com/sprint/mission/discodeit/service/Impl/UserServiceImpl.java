@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.basic;
+package com.sprint.mission.discodeit.service.Impl;
 
 import com.sprint.mission.discodeit.dto.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.UserResponse;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service("userService")
 @RequiredArgsConstructor
-public class BasicUserService implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserStatusRepository userStatusRepository;
     private final BinaryContentRepository binaryContentRepository;

@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.basic;
+package com.sprint.mission.discodeit.service.Impl;
 
 import com.sprint.mission.discodeit.dto.ChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.ChannelResponse;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service("channelService")
 @RequiredArgsConstructor
-public class BasicChannelService implements ChannelService {
+public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
     private final ReadStatusRepository readStatusRepository;
     private final MessageRepository messageRepository;
