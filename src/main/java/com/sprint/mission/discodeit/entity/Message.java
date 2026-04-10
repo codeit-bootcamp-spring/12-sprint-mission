@@ -53,4 +53,5 @@ public class Message implements Serializable, Comparable<Message> {
 	public int compareTo(Message o) {
 		return this.createdAt.compareTo(o.getCreatedAt());
 	}
+
 }

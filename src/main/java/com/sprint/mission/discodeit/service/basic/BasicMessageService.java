@@ -1,13 +1,16 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequestDto;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequestDto;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequestDto;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -27,15 +30,28 @@ public class BasicMessageService implements MessageService {
 	private final BinaryContentRepository binaryContentRepository;
 
 	@Override
-	public Message create(MessageCreateRequestDto dto) {
+	public Message create(MessageCreateRequestDto dto, List<BinaryContentCreateRequestDto> binaryContentDtos) {
 		if (!channelRepository.existsById(dto.channelId())) {
 			throw new NoSuchElementException("Channel not found with id " + dto.channelId());
 		}
 		if (!userRepository.existsById(dto.authorId())) {
 			throw new NoSuchElementException("Author not found with id " + dto.authorId());
 		}
+		if (dto.content() == null && binaryContentDtos == null) {
+			throw new IllegalArgumentException("Message must have either content or binary content");
+		}
+		List<UUID> binaryContents = new ArrayList<>();
+		if (binaryContentDtos != null){
+			for(BinaryContentCreateRequestDto binaryContent : binaryContentDtos){
+				BinaryContent binary = new BinaryContent(binaryContent.content());
+				binaryContentRepository.save(binary);
+				binaryContents.add(binary.getId());
+			}
+		}else {
+			binaryContents = null;
+		}
 
-		Message message = new Message(dto.content(), dto.channelId(), dto.authorId(), null);
+		Message message = new Message(dto.content(), dto.channelId(), dto.authorId(), binaryContents);
 		return messageRepository.save(message);
 	}
 
