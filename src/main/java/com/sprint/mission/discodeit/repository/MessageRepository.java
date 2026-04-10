@@ -7,7 +7,14 @@ import java.util.UUID;
 
 public interface MessageRepository {
     Message save(Message message);
+
     Message findById(UUID id);
-    List<Message> findAll ();
-    void delete (UUID id);
+
+    List<Message> findAll();
+
+    List<Message> findByChannelId(UUID id);
+
+    boolean existsById (UUID id);
+
+    void delete(UUID id);
 }
