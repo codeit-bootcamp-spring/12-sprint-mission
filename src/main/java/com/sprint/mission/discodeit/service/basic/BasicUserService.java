@@ -1,75 +1,112 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.UserResponse;
+import com.sprint.mission.discodeit.dto.UserUpdateRequest;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Service("userService")
+@RequiredArgsConstructor
 public class BasicUserService implements UserService {
     private final UserRepository userRepository;
-
-    public BasicUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserStatusRepository userStatusRepository;
+    private final BinaryContentRepository binaryContentRepository;
 
     @Override
-    public User save(User user) {
-        if (userRepository.findById(user.getId()) != null)
-            throw new IllegalStateException("이미 동일한 id의 user가 존재합니다.");
-        validateUser(user);
-        if (user.getNickname() == null || user.getNickname().isBlank()) {
-            user.update(new User(null, null, user.getName(), null));
+    public UserResponse create(UserCreateRequest request) {
+        if (userRepository.existsByEmail(request.email()))
+            throw new IllegalStateException("이미 가입된 email 입니다.");
+
+        if (userRepository.existsByNickname(request.nickname()))
+            throw new IllegalStateException("이미 사용중인 닉네임 입니다.");
+
+        BinaryContent profile = null;
+        if (request.profileUrl() != null) {
+            profile = new BinaryContent(request.profileFileName(), request.profileUrl());
+            binaryContentRepository.save(profile);
         }
-        return userRepository.save(user);
+
+        User user = new User(profile, request.name(), request.email(), request.nickname(), request.password());
+        UserStatus status = new UserStatus(user.getId());
+
+        userRepository.save(user);
+        userStatusRepository.save(status);
+
+        return convertToResponse(user, status);
     }
 
-    private void validateUser(User user) {
-        if (user.getName() == null || user.getName().isBlank())
-            throw new IllegalArgumentException("이름은 필수 입력 항목 입니다.");
-        if (user.getName().length() < 2 || user.getName().length() > 10)
-            throw new IllegalArgumentException("이름은 2자 이상 10자 이하로 입력해주세요.");
-
-        if (user.getEmail() == null || user.getEmail().isBlank())
-            throw new IllegalArgumentException("이메일은 필수 입력 항목 입니다.");
-        if (!user.getEmail().contains("@"))
-            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
-
-        if (user.getPassword() == null || user.getPassword().isBlank())
-            throw new IllegalArgumentException("비밀번호는 필수 입력 항목 입니다.");
-        if (user.getPassword().length() < 8)
-            throw new IllegalArgumentException("비밀번호는 최소 8자 이상 입력해주세요.");
+    private UserResponse convertToResponse(User user, UserStatus status) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getNickname(),
+                user.getProfileId(),
+                status.isOnline()
+        );
     }
 
     @Override
-    public User findById(UUID id) {
+    public UserResponse findById(UUID id) {
         User user = userRepository.findById(id);
+        if (user == null) throw new NoSuchElementException("유저를 찾을 수 없습니다.");
+        UserStatus status = userStatusRepository.findByUserId(id);
+        if (status == null) throw new NoSuchElementException("상태 정보를 찾을 수 없습니다.");
+        return convertToResponse(user, status);
+    }
+
+    @Override
+    public List<UserResponse> findAll() {
+        List<UserStatus> statuses = userStatusRepository.findAll();
+        Map<UUID, UserStatus> statusMap = statuses.stream()
+                .collect(Collectors.toMap(UserStatus::getUserId,status -> status));
+
+        return userRepository.findAll().stream()
+                .map(user ->{
+                    UserStatus status = statusMap.get(user.getId());
+                    return convertToResponse(user,status);
+                })
+                .toList();
+    }
+
+    @Override
+    public UserResponse update(UserUpdateRequest request) {
+        User user = userRepository.findById(request.id());
         if (user == null) throw new NoSuchElementException("해당 User가 존재하지 않습니다.");
-        return user;
-    }
+        user.update(
+                request.nickname(),
+                request.profileId(),
+                request.password()
+        );
 
-    @Override
-    public List<User> findAll() {
-        List<User> users = userRepository.findAll();
-        System.out.println("현재 등록 User : " + users.size() + "명");
-        return users;
-    }
-
-    @Override
-    public User update(User user) {
-        User updateUser = userRepository.findById(user.getId());
-        if (updateUser == null) throw new NoSuchElementException("해당 User가 존재하지 않습니다.");
-        updateUser.update(user);
-        userRepository.save(updateUser);
-        return updateUser;
+        userRepository.save(user);
+        return findById(request.id());
     }
 
     @Override
     public void delete(UUID id) {
-        if (userRepository.findById(id) == null) throw new NoSuchElementException("해당 User가 존재하지 않습니다.");
-        userRepository.delete(id);
+        User user = userRepository.findById(id);
+        if(user == null){
+            throw new NoSuchElementException("해당 유저를 찾을 수 없습니다.");
+        }
+
+        userStatusRepository.deleteByUserId(id);
+
+        if (user.getProfileId() != null) {
+            binaryContentRepository.deleteById(user.getProfileId());
+        }
+        userRepository.deleteById(id);
     }
 }
 
