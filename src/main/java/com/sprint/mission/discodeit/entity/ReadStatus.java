@@ -1,0 +1,27 @@
+package com.sprint.mission.discodeit.entity;
+
+import lombok.Getter;
+
+import java.time.Instant;
+import java.util.UUID;
+
+@Getter
+public class ReadStatus { // 메시지를 읽었는지 여부
+    private final UUID id;
+    private final UUID userId;
+    private final UUID channelId;
+    private final Instant createdAt;
+    private Instant updatedAt;
+
+    public ReadStatus(UUID userId, UUID channelId) {
+        this.id = UUID.randomUUID();
+        this.userId = userId;
+        this.channelId = channelId;
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    public void updateReadTime(){
+        this.updatedAt = Instant.now();
+    }
+}

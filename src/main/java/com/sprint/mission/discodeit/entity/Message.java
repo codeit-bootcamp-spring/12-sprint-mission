@@ -1,71 +1,57 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
+import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class Message implements Serializable,Comparable<Message> {
+@Getter
+public class Message implements Serializable {
     private final UUID id;
-    private final Channel ch;
-    private final User author;
+    private final UUID channelId;
+    private final UUID userId;
     private String title;
     private String content;
-    private final Long createdAt;
-    private Long updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
+    private final List<UUID> attachmentIds;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    public Message(Channel ch, User author, String title, String content) {
+    public Message(UUID channelId, UUID userId, String title, String content, List<UUID> attachmentIds) {
         id = UUID.randomUUID();
-        this.ch = ch;
-        this.author = author;
+        this.channelId = channelId;
+        this.userId = userId;
         this.title = title;
         this.content = content;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.attachmentIds = attachmentIds == null ? new ArrayList<>() : attachmentIds;
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
     }
 
-    public UUID getId() {
-        return id;
+    public void addContents(BinaryContent binaryContent){
+        attachmentIds.add(binaryContent.getId());
     }
 
-    public Channel getCh() {
-        return ch;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void update(Message message){
+    public void update(String title, String content){
         boolean isUpdated = false;
 
-        if(message.getTitle() != null){
-            this.title = message.getTitle();
+        if(title != null){
+            this.title = title;
             isUpdated = true;
         }
-        if(message.getContent() != null){
-            this.content = message.getContent();
+        if(content != null){
+            this.content = content;
             isUpdated = true;
         }
 
         if(isUpdated){
-            this.updatedAt = System.currentTimeMillis();
+            this.updatedAt = Instant.now();
         }
     }
 
@@ -73,17 +59,12 @@ public class Message implements Serializable,Comparable<Message> {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", ch=" + ch.getTitle() +
-                ", author=" + author.getName() +
+                ", channel=" + channelId +
+                ", user=" + userId +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}'+"\n";
-    }
-
-    @Override
-    public int compareTo(Message o) {
-        return o.ch.compareTo(ch);
     }
 }

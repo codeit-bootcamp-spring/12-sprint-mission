@@ -1,65 +1,49 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
+import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-public class Channel implements Serializable,Comparable<Channel> {
+@Getter
+public class Channel implements Serializable {
     private final UUID id;
-    private final User author;
+    private final UUID userId;
     private String title;
-    private String category;
-    private final Long createdAt;
-    private Long updatedAt;
+    private String description;
+    private final ChannelType type;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    public Channel(String title, User author, String type) {
+    public Channel(ChannelType type, String title, UUID userId, String description) {
         id = UUID.randomUUID();
         this.title = title;
-        this.author = author;
-        this.category = type;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.userId = userId;
+        this.description = description;
+        this.type = type;
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void update(Channel channel){
+    public void update(String title, String description){
         boolean isUpdated = false;
 
-        if(channel.getTitle() != null){
-            this.title = channel.getTitle();
+        if(title != null){
+            this.title = title;
             isUpdated = true;
         }
-        if(channel.getCategory() != null){
-            this.category = channel.getCategory();
+        if(description != null){
+            this.description = description;
             isUpdated = true;
         }
 
         if(isUpdated){
-            this.updatedAt = System.currentTimeMillis();
+            this.updatedAt = Instant.now();
         }
     }
 
@@ -67,15 +51,11 @@ public class Channel implements Serializable,Comparable<Channel> {
     public String toString() {
         return "Channel{" +
                 "id=" + id +
-                ", author=" + author.getName() +
+                ", user=" + userId +
                 ", title='" + title + '\'' +
-                ", category='" + category + '\'' +
+                ", category='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}'+"\n";
-    }
-
-    public int compareTo(Channel o) {
-        return o.category.compareTo(category);
     }
 }
