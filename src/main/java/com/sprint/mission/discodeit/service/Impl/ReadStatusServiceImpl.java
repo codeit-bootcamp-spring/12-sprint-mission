@@ -79,9 +79,9 @@ public class ReadStatusServiceImpl implements ReadStatusService {
 
     @Override
     public void delete(UUID id) {
-        ReadStatus status = readStatusRepository.findById(id)
-                .orElseThrow(()-> new NoSuchElementException("참여 상태를 찾을 수 없습니다."));
-
+        if (readStatusRepository.findById(id).isEmpty()) {
+            throw new NoSuchElementException("참여 상태를 찾을 수 없습니다.");
+        }
         readStatusRepository.delete(id);
     }
 }

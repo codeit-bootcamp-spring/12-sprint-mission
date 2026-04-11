@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         return convertToResponse(user, status);
     }
 
-    private UserResponse convertToResponse(User user, UserStatus status) {
+    public UserResponse convertToResponse(User user, UserStatus status) {
         return new UserResponse(
                 user.getId(),
                 user.getName(),
@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
     public UserResponse findById(UUID id) {
         User user = userRepository.findById(id);
         if (user == null) throw new NoSuchElementException("유저를 찾을 수 없습니다.");
-        UserStatus status = userStatusRepository.findByUserId(id);
-        if (status == null) throw new NoSuchElementException("상태 정보를 찾을 수 없습니다.");
+        UserStatus status = userStatusRepository.findByUserId(id)
+                .orElseThrow(()-> new NoSuchElementException("상태 정보를 찾을 수 없습니다."));
         return convertToResponse(user, status);
     }
 
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException("해당 유저를 찾을 수 없습니다.");
         }
 
-        userStatusRepository.deleteByUserId(id);
+        userStatusRepository.delete(id);
 
         if (user.getProfileId() != null) {
             binaryContentRepository.deleteById(user.getProfileId());

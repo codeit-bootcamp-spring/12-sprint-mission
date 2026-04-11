@@ -24,7 +24,7 @@ public class AuthServiceImpl implements AuthService{
         return convertToResponse(user);
     }
 
-    private LoginResponse convertToResponse(User user) {
+    public LoginResponse convertToResponse(User user) {
         return new LoginResponse(
                 user.getId(),
                 Instant.now()
