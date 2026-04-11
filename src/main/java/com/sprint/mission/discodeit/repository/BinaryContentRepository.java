@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface BinaryContentRepository {
-    void save(BinaryContent content);
+    BinaryContent save(BinaryContent content);
 
-    List<BinaryContent> findAll();
+    List<BinaryContent> findAllByIdIn(List<UUID> ids);
 
     Optional<BinaryContent> findById(UUID id);
 

@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(request.id());
         if (user == null) throw new NoSuchElementException("해당 User가 존재하지 않습니다.");
         user.update(
-                request.nickname(),
+                request.name(),
                 request.profileId(),
                 request.password()
         );

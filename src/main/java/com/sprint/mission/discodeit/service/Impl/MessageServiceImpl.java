@@ -28,10 +28,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageResponse create(MessageCreateRequest request) {
 
-        if(channelRepository.existsById(request.channelId())){
+        if(!channelRepository.existsById(request.channelId())){
             throw new NoSuchElementException("존재하지 않는 채널에 메시지를 작성할 수 없습니다.");
         }
-        if(userRepository.existsById(request.userId())){
+        if(!userRepository.existsById(request.userId())){
             throw new NoSuchElementException("존재하지 않는 채널에 메시지를 작성할 수 없습니다.");
         }
         Message message = new Message(

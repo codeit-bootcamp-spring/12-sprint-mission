@@ -11,9 +11,9 @@ import java.util.UUID;
 public class User implements Serializable {
     private final UUID id;
     private UUID profileId;
-    private final String name;
+    private  String name;
     private final String email;
-    private String nickname;
+    private final String nickname;
     private transient String password;
     private final Instant createdAt;
     private Instant updatedAt;
@@ -32,7 +32,7 @@ public class User implements Serializable {
         updatedAt = Instant.now();
     }
 
-    public void update(String nickname,
+    public void update(String name,
                        UUID profileId,
                        String password ){
         boolean isUpdated = false;
@@ -42,8 +42,8 @@ public class User implements Serializable {
             isUpdated = true;
         }
 
-        if(nickname != null){
-            this.nickname = nickname;
+        if(name != null){
+            this.name = name;
             isUpdated = true;
         }
 

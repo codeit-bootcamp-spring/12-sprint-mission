@@ -12,7 +12,7 @@ public class BinaryContent {
     private final String url;
     private final Instant createdAt;
 
-    public BinaryContent(String fileName, String url) {
+    public BinaryContent( String fileName, String url) {
         this.id = UUID.randomUUID();
         this.fileName = fileName;
         this.url = url;

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record UserUpdateRequest(
         UUID id,
-        String nickname,
+        String name,
         UUID profileId,
         String password
 ) {
