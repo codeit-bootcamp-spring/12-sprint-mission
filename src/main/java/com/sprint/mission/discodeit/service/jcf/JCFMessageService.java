@@ -4,7 +4,7 @@ import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,12 +15,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class JCFMessageService implements MessageService {
 
     private final Map<UUID, Message> data = new HashMap<>();
     private final ChannelService channelService;
     private final UserService userService;
+
+    public JCFMessageService(
+            @Qualifier("basicChannelService") ChannelService channelService,
+            @Qualifier("basicUserService") UserService userService) {
+        this.channelService = channelService;
+        this.userService = userService;
+    }
 
     @Override
     public Message create(String content, UUID channelId, UUID authorId) {

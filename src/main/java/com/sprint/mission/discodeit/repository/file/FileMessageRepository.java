@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.exception.FileStorageException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ public class FileMessageRepository implements MessageRepository {
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 데이터 디렉토리 생성 실패", e);
         }
     }
 
@@ -36,7 +37,7 @@ public class FileMessageRepository implements MessageRepository {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(message);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 데이터 파일 저장 실패", e);
         }
         return message;
     }
@@ -48,7 +49,7 @@ public class FileMessageRepository implements MessageRepository {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                 return Optional.ofNullable((Message) ois.readObject());
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new FileStorageException("메세지 데이터 파일 읽기 실패", e);
             }
         }
         return Optional.empty();
@@ -62,11 +63,11 @@ public class FileMessageRepository implements MessageRepository {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     messages.add((Message) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new FileStorageException("메세지 데이터 파일 읽기 실패", e);
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 데이터 디렉토리 읽기 실패", e);
         }
         return messages;
     }
@@ -81,7 +82,7 @@ public class FileMessageRepository implements MessageRepository {
         try {
             Files.deleteIfExists(resolvePath(id));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 데이터 파일 삭제 실패", e);
         }
     }
 }

@@ -11,11 +11,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class JCFChannelService implements ChannelService {
 
-    private final Map<UUID, Channel> data = new HashMap<>();
+    private final Map<UUID, Channel> data = new ConcurrentHashMap<>();
 
     @Override
     public Channel create(ChannelType type, String name, String description) {

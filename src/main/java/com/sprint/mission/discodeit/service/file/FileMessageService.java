@@ -4,7 +4,8 @@ import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
-import lombok.RequiredArgsConstructor;
+import com.sprint.mission.discodeit.exception.FileStorageException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -13,7 +14,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service
-@RequiredArgsConstructor
 public class FileMessageService implements MessageService {
 
     private final Path DIRECTORY;
@@ -21,14 +21,16 @@ public class FileMessageService implements MessageService {
     private final ChannelService channelService;
     private final UserService userService;
 
-    public FileMessageService(ChannelService channelService, UserService userService) {
+    public FileMessageService(
+            @Qualifier("basicChannelService") ChannelService channelService,
+            @Qualifier("basicUserService") UserService userService) {
         this.channelService = channelService;
         this.userService = userService;
         this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", Message.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 서비스 디렉토리 생성 실패", e);
         }
     }
 
@@ -46,7 +48,7 @@ public class FileMessageService implements MessageService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(message);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 생성 중 파일 저장 실패", e);
         }
         return message;
     }
@@ -58,7 +60,7 @@ public class FileMessageService implements MessageService {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                 return (Message) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new FileStorageException("메세지 조회 중 파일 읽기 실패", e);
             }
         }
         throw new NoSuchElementException("Message with id " + id + " not found");
@@ -72,11 +74,11 @@ public class FileMessageService implements MessageService {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     messages.add((Message) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new FileStorageException("메세지 목록 조회 중 파일 읽기 실패", e);
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 디렉토리 접근 실패", e);
         }
         return messages;
     }
@@ -89,7 +91,7 @@ public class FileMessageService implements MessageService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(message);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 업데이트 중 파일 저장 실패", e);
         }
         return message;
     }
@@ -103,7 +105,7 @@ public class FileMessageService implements MessageService {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("메세지 삭제 중 파일 삭제 실패", e);
         }
     }
 }

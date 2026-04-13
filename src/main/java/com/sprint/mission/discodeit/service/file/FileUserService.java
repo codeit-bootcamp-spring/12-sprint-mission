@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.exception.FileStorageException;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -20,7 +21,7 @@ public class FileUserService implements UserService {
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 서비스 디렉토리 생성 실패", e);
         }
     }
 
@@ -35,7 +36,7 @@ public class FileUserService implements UserService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(user);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 생성 중 파일 저장 실패", e);
         }
         return user;
     }
@@ -47,7 +48,7 @@ public class FileUserService implements UserService {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                 return (User) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new FileStorageException("유저 조회 중 파일 읽기 실패", e);
             }
         }
         throw new NoSuchElementException("User with id " + id + " not found");
@@ -61,11 +62,11 @@ public class FileUserService implements UserService {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     users.add((User) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new FileStorageException("유저 목록 조회 중 파일 읽기 실패", e);
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 디렉토리 접근 실패", e);
         }
         return users;
     }
@@ -78,7 +79,7 @@ public class FileUserService implements UserService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(user);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 업데이트 중 파일 저장 실패", e);
         }
         return user;
     }
@@ -92,7 +93,7 @@ public class FileUserService implements UserService {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 삭제 중 파일 삭제 실패", e);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
+import com.sprint.mission.discodeit.exception.FileStorageException;
 import com.sprint.mission.discodeit.service.ChannelService;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class FileChannelService implements ChannelService {
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 서비스 디렉토리 생성 실패", e);
         }
     }
 
@@ -36,7 +37,7 @@ public class FileChannelService implements ChannelService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(channel);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 생성 중 파일 저장 실패", e);
         }
         return channel;
     }
@@ -48,7 +49,7 @@ public class FileChannelService implements ChannelService {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                 return (Channel) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new FileStorageException("채널 조회 중 파일 읽기 실패", e);
             }
         }
         throw new NoSuchElementException("Channel with id " + id + " not found");
@@ -62,11 +63,11 @@ public class FileChannelService implements ChannelService {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     channels.add((Channel) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new FileStorageException("채널 목록 조회 중 파일 읽기 실패", e);
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 디렉토리 접근 실패", e);
         }
         return channels;
     }
@@ -79,7 +80,7 @@ public class FileChannelService implements ChannelService {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(channel);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 업데이트 중 파일 저장 실패", e);
         }
         return channel;
     }
@@ -93,7 +94,7 @@ public class FileChannelService implements ChannelService {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 삭제 중 파일 삭제 실패", e);
         }
     }
 }

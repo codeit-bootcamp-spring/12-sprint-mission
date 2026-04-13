@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.exception.FileStorageException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ public class FileChannelRepository implements ChannelRepository {
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 데이터 디렉토리 생성 실패", e);
         }
     }
 
@@ -36,7 +37,7 @@ public class FileChannelRepository implements ChannelRepository {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(channel);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 데이터 파일 저장 실패", e);
         }
         return channel;
     }
@@ -48,7 +49,7 @@ public class FileChannelRepository implements ChannelRepository {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                 return Optional.ofNullable((Channel) ois.readObject());
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new FileStorageException("채널 데이터 파일 읽기 실패", e);
             }
         }
         return Optional.empty();
@@ -62,11 +63,11 @@ public class FileChannelRepository implements ChannelRepository {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     channels.add((Channel) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new FileStorageException("채널 데이터 파일 읽기 실패", e);
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 데이터 디렉토리 읽기 실패", e);
         }
         return channels;
     }
@@ -81,7 +82,7 @@ public class FileChannelRepository implements ChannelRepository {
         try {
             Files.deleteIfExists(resolvePath(id));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("채널 데이터 파일 삭제 실패", e);
         }
     }
 }

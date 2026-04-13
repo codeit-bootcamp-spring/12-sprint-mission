@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Builder
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements Serializable {
@@ -21,7 +21,7 @@ public class User implements Serializable {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public User(String username, String email, String password, String nickname) {
+    public User(String username, String email, String password) {
         id = UUID.randomUUID();
         this.username = username;
         this.email = email;

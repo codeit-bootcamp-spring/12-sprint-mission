@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.exception.FileStorageException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ public class FileUserRepository implements UserRepository {
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 데이터 디렉토리 생성 실패", e);
         }
     }
 
@@ -36,7 +37,7 @@ public class FileUserRepository implements UserRepository {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             oos.writeObject(user);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 데이터 파일 저장 실패", e);
         }
         return user;
     }
@@ -48,7 +49,7 @@ public class FileUserRepository implements UserRepository {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                 return Optional.ofNullable((User) ois.readObject());
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw new FileStorageException("유저 데이터 파일 읽기 실패", e);
             }
         }
         return Optional.empty();
@@ -69,11 +70,11 @@ public class FileUserRepository implements UserRepository {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()))) {
                     users.add((User) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new FileStorageException("유저 데이터 파일 읽기 실패", e);
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 데이터 디렉토리 읽기 실패", e);
         }
         return users;
     }
@@ -88,7 +89,7 @@ public class FileUserRepository implements UserRepository {
         try {
             Files.deleteIfExists(resolvePath(id));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileStorageException("유저 데이터 파일 삭제 실패", e);
         }
     }
 }
