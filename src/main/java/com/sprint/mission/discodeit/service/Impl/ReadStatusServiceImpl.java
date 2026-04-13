@@ -31,11 +31,8 @@ public class ReadStatusServiceImpl implements ReadStatusService {
             throw new NoSuchElementException("존재하지 않는 채널입니다.");
         }
 
-        ReadStatus isExist = readStatusRepository.findByChannelIdAndUserId(request.channelId(),request.userId());
-
-        if(isExist !=null){
-            throw new IllegalStateException("이미 해당 채널에 참여중인 유저입니다.");
-        }
+        readStatusRepository.findByChannelIdAndUserId(request.channelId(),request.userId())
+                .orElseThrow(()-> new IllegalStateException("이미 해당 채널에 참여중인 유저입니다."));
 
         ReadStatus readStatus = new ReadStatus(request.userId(), request.channelId());
         ReadStatus savedReadStatus = readStatusRepository.save(readStatus);

@@ -1,3 +1,6 @@
 spring:
   application:
     name : discodeit
+
+  service:
+      type : jcf #jcf | file

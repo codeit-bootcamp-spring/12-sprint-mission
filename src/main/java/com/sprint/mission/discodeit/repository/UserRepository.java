@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface UserRepository {
     User save(User user);
 
-    User findById(UUID id);
+    Optional<User> findById(UUID id);
 
     List<User> findAll();
 
