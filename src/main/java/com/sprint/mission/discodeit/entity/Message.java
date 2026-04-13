@@ -4,6 +4,8 @@ import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -15,21 +17,23 @@ public class Message implements Serializable, Comparable<Message> {
     private UUID userId;
     private UUID channelId;
     private String content;
-    private Long createdAt;
-    private Long updatedAt;
+    private List<UUID> attachmentIds;
+    private Instant createdAt;
+    private Instant updatedAt;
 
-    public Message(UUID userId, UUID channelId, String content) {
-        id = UUID.randomUUID();
+    public Message(UUID userId, UUID channelId, String content, List<UUID> attachmentIds) {
+        this.id = UUID.randomUUID();
         this.userId = userId;
         this.channelId = channelId;
         this.content = content;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.attachmentIds = attachmentIds;
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     public void update(String content) {
         this.content = content;
-        updatedAt = System.currentTimeMillis();
+        this.updatedAt = Instant.now();
     }
 
     @Override

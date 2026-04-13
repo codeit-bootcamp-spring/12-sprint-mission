@@ -8,42 +8,40 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-public class Channel implements Serializable, Comparable<Channel> {
+public class UserStatus implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private ChannelType type;
-    private String title;
+    private UUID userId;
+    private Instant lastActiveAt;
     private Instant createdAt;
     private Instant updatedAt;
 
-    public Channel(ChannelType type, String title) {
+    public UserStatus(UUID userId) {
         this.id = UUID.randomUUID();
-        this.type = type;
-        this.title = title;
+        this.userId = userId;
+        this.lastActiveAt = Instant.now();
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
     }
 
-    public void update(String title) {
-        this.title = title;
+    public void update() {
+        this.lastActiveAt = Instant.now();
         this.updatedAt = Instant.now();
+    }
+
+    public boolean isOnline() {
+        return lastActiveAt.isAfter(Instant.now().minusSeconds(300));
     }
 
     @Override
     public String toString() {
-        return "Channel {" +
+        return "UserStatus {" +
                 "\n id        = " + id +
-                "\n type      = " + type +
-                "\n title     = " + title +
+                "\n userId    = " + userId +
                 "\n createdAt = " + createdAt +
                 "\n updatedAt = " + updatedAt +
                 "\n}\n";
-    }
-
-    @Override
-    public int compareTo(Channel o) {
-        return this.title.compareTo(o.title);
     }
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -16,25 +17,28 @@ public class User implements Serializable, Comparable<User> {
     private String email;
     private String password;
     private String nickname;
-    private Long createdAt;
-    private Long updatedAt;
+    private UUID profileId;
+    private Instant createdAt;
+    private Instant updatedAt;
 
-    public User(String username, String email, String password, String nickname) {
-        id = UUID.randomUUID();
+    public User(String username, String email, String password, String nickname, UUID profileId) {
+        this.id = UUID.randomUUID();
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.profileId = profileId;
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
-    public void update(String username, String email, String password, String nickname) {
+    public void update(String username, String email, String password, String nickname, UUID profileId) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        updatedAt = System.currentTimeMillis();
+        this.profileId = profileId;
+        this.updatedAt = Instant.now();
     }
 
     @Override
@@ -45,6 +49,7 @@ public class User implements Serializable, Comparable<User> {
                 "\n email     = " + email +
                 "\n password  = " + password +
                 "\n nickname  = " + nickname +
+                "\n profileId = " + profileId +
                 "\n createdAt = " + createdAt +
                 "\n updatedAt = " + updatedAt +
                 "\n}\n";
