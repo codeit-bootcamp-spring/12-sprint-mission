@@ -49,8 +49,6 @@ public class BasicMessageService implements MessageService {
         Message message = new Message(request.authorId(), request.channelId(), request.content(), attachmentIds);
         messageRepository.save(message);
 
-        binaryContentRepository.save(new BinaryContent("", ""));
-
         return message;
     }
 
