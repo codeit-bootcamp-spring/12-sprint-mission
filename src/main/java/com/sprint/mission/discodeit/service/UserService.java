@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
-    User create(User user);
-    Optional<User> findById(UUID id);
+    User create(String username, String email, String password);
+    User find(UUID userId);
     List<User> findAll();
-    User update(UUID id, User user);
-    void delete(UUID id);
+    User update(UUID userId, String newUsername, String newEmail, String newPassword);
+    void delete(UUID userId);
 }

@@ -10,81 +10,89 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class FileChannelRepository implements ChannelRepository {
-    private final Map<UUID, Channel> data;
-    private final Path filePath;
+    private final Path DIRECTORY;
+    private final String EXTENSION = ".ser";
 
     public FileChannelRepository() {
-        Path directory = Paths.get(System.getProperty("user.dir"), "data");
-
-        if (!Files.exists(directory)) {
+        DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", Channel.class.getSimpleName());
+        if (Files.notExists(DIRECTORY)) {
             try {
-                Files.createDirectories(directory);
+                Files.createDirectories(DIRECTORY);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
 
-        this.filePath = directory.resolve("channels.ser");
-        this.data = load();
+    private Path resolvePath(UUID id) {
+        return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
-    public Channel create(Channel channel) {
-        data.put(channel.getId(), channel);
-        save();
+    public Channel save(Channel channel) {
+        Path path = resolvePath(channel.getId());
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(channel);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return channel;
     }
 
     @Override
     public Optional<Channel> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
+        Channel channelNullable = null;
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                channelNullable = (Channel) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Optional.ofNullable(channelNullable);
     }
 
     @Override
     public List<Channel> findAll() {
-        return new ArrayList<>(data.values());
-    }
-
-    @Override
-    public Channel update(Channel channel) {
-        if (!data.containsKey(channel.getId())) {
-            throw new NoSuchElementException("Channel not found: " + channel.getId());
-        }
-
-        data.put(channel.getId(), channel);
-        save();
-        return channel;
-    }
-
-    @Override
-    public void delete(UUID id) {
-        data.remove(id);
-        save();
-    }
-
-    private void save() {
-        try (
-                FileOutputStream fos = new FileOutputStream(filePath.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos)
-        ) {
-            oos.writeObject(data);
+        try {
+            return Files.list(DIRECTORY)
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (Channel) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Map<UUID, Channel> load() {
-        if (Files.exists(filePath)) {
-            try (
-                    FileInputStream fis = new FileInputStream(filePath.toFile());
-                    ObjectInputStream ois = new ObjectInputStream(fis)
-            ) {
-                return (Map<UUID, Channel>) ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    @Override
+    public boolean existsById(UUID id) {
+        Path path = resolvePath(id);
+        return Files.exists(path);
+    }
 
-        return new HashMap<>();
+    @Override
+    public void deleteById(UUID id) {
+        Path path = resolvePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -10,25 +10,24 @@ public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
-    private String name;
     private final Long createdAt;
     private Long updatedAt;
 
-    public Channel(String name) {
-        long now = System.currentTimeMillis();
+    private ChannelType type;
+    private String name;
+    private String description;
 
+    public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
+
+        this.type = type;
         this.name = name;
-        createdAt = now;
-        updatedAt = now;
+        this.description = description;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Long getCreatedAt() {
@@ -39,9 +38,32 @@ public class Channel implements Serializable {
         return updatedAt;
     }
 
-    public void update(String name){
-        this.name = name;
-        updatedAt = System.currentTimeMillis();
+    public ChannelType getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().toEpochMilli();
+        }
     }
 
     @Override

@@ -10,87 +10,119 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class FileUserService implements UserService {
-    private final Map<UUID, User> data;
-    private final Path filePath;
+    private final Path DIRECTORY;
+    private final String EXTENSION = ".ser";
 
     public FileUserService() {
-        Path directory = Paths.get(System.getProperty("user.dir"), "data");
-
-        // 저장할 경로의 파일 초기화
-        if (!Files.exists(directory)) {
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", User.class.getSimpleName());
+        if (Files.notExists(DIRECTORY)) {
             try {
-                Files.createDirectories(directory);
+                Files.createDirectories(DIRECTORY);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        this.filePath = directory.resolve("users.ser");
-        this.data = load();
+    }
+
+    private Path resolvePath(UUID id) {
+        return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
-    public User create(User user) {
-        data.put(user.getId(), user);
-        save();
+    public User create(String username, String email, String password) {
+        User user = new User(username, email, password);
+        Path path = resolvePath(user.getId());
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+        ) {
+            oos.writeObject(user);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return user;
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
+    public User find(UUID userId) {
+        User userNullable = null;
+        Path path = resolvePath(userId);
+        if (Files.exists(path)) {
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+            ) {
+                userNullable = (User) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Optional.ofNullable(userNullable)
+                .orElseThrow(() -> new NoSuchElementException("User with id + " + userId + " not found"));
     }
 
     @Override
     public List<User> findAll() {
-        return new ArrayList<>(data.values());
-    }
-
-    @Override
-    public User update(UUID id, User user) {
-        User existing = data.get(id);
-
-        if (existing == null) {
-            throw new NoSuchElementException("User not found: " + id);
-        }
-        existing.update(
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getNickname()
-        );
-        save();
-        return existing;
-    }
-
-    @Override
-    public void delete(UUID id) {
-        data.remove(id);
-        save();
-    }
-
-    private void save() {
-        try (
-                FileOutputStream fos = new FileOutputStream(filePath.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-        ) {
-            oos.writeObject(data);
+        try {
+            return Files.list(DIRECTORY)
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (User) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Map<UUID, User> load() {
-        if (Files.exists(filePath)) {
+    @Override
+    public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
+        User userNullable = null;
+        Path path = resolvePath(userId);
+        if (Files.exists(path)) {
             try (
-                    FileInputStream fis = new FileInputStream(filePath.toFile());
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    ) {
-                return (Map<UUID, User>) ois.readObject();
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                userNullable = (User) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-        } else {
-            return new HashMap<>();
+        }
+
+        User user = Optional.ofNullable(userNullable)
+                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+        user.update(newUsername, newEmail, newPassword);
+
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(user);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return user;
+    }
+
+    @Override
+    public void delete(UUID userId) {
+        Path path = resolvePath(userId);
+        if (Files.notExists(path)) {
+            throw new NoSuchElementException("User with id " + userId + " not found");
+        }
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

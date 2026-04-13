@@ -10,30 +10,25 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
-    private String content;
     private final Long createdAt;
     private Long updatedAt;
 
+    private String content;
     private final UUID channelId;
-    private final UUID userId;
+    private final UUID authorId;
 
-    public Message(String content, UUID channelId, UUID userId) {
-        long now = System.currentTimeMillis();
-
+    public Message(String content, UUID channelId, UUID authorId) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
+
         this.content = content;
         this.channelId = channelId;
-        this.userId = userId;
-        this.createdAt = now;
-        this.updatedAt = now;
+        this.authorId = authorId;
+
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public String getContent() {
-        return content;
     }
 
     public Long getCreatedAt() {
@@ -44,17 +39,28 @@ public class Message implements Serializable {
         return updatedAt;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public UUID getChannelId() {
         return channelId;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getAuthorId() {
+        return authorId;
     }
 
-    public void update(String content){
-        this.content = content;
-        updatedAt = System.currentTimeMillis();
+    public void update(String newContent){
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = System.currentTimeMillis();
+        }
     }
 
     @Override
@@ -71,6 +77,6 @@ public class Message implements Serializable {
                 "createdAt: " + createdAtStr + "\n" +
                 "updatedAt: " + updatedAtStr + "\n" +
                 "channelId: " + channelId + "\n" +
-                "userId: " + userId + "\n";
+                "authorId: " + authorId + "\n";
     }
 }
