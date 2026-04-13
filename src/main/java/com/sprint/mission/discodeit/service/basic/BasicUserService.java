@@ -37,8 +37,8 @@ public class BasicUserService implements UserService {
     @Override
     public void update(UUID userId, String username, String email, String password, String nickname) {
         User user = findById(userId);
-        user.update(username, email, password, nickname);
-        userRepository.update(user);
+        user.update(username, email, password, nickname, null);
+        userRepository.save(user);
     }
 
     @Override

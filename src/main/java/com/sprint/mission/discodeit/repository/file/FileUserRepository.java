@@ -56,11 +56,6 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public void update(User user) {
-        save(user);
-    }
-
-    @Override
     public void delete(UUID userId) {
         Path path = makePath(userId);
         if (!Files.exists(path)) {

@@ -38,7 +38,7 @@ public class BasicChannelService implements ChannelService {
     public void update(UUID channelId, String title) {
         Channel channel = findById(channelId);
         channel.update(title);
-        channelRepository.update(channel);
+        channelRepository.save(channel);
     }
 
     @Override

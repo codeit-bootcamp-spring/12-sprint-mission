@@ -56,11 +56,6 @@ public class FileChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public void update(Channel channel) {
-        save(channel);
-    }
-
-    @Override
     public void delete(UUID channelId) {
         Path path = makePath(channelId);
         if (!Files.exists(path)) {

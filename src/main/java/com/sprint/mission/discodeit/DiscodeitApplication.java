@@ -41,7 +41,7 @@ public class DiscodeitApplication {
 	}
 
 	static User setupUser(UserService userService) {
-		User user = new User("setupUser", "setupUser@email.com", "12345678", "setupUser");
+		User user = new User("setupUser", "setupUser@email.com", "12345678", "setupUser", null);
 		userService.save(user);
 		return user;
 	}
@@ -84,13 +84,13 @@ public class DiscodeitApplication {
 	static void messageTest(MessageService messageService, User user, Channel channel) {
 		System.out.println("\n-----------------메시지 테스트 시작-----------------");
 
-		Message message = new Message(user.getId(), channel.getId(), "안녕하세요!");
+		Message message = new Message(user.getId(), channel.getId(), "안녕하세요!", null);
 		messageService.save(message);
 
 		System.out.println("===== 존재하지 않는 사용자 메시지 저장 테스트 =====");
 		try {
 			UUID fakeId = UUID.randomUUID();	// 아이디 랜덤 생성
-			Message messageNotUser = new Message(fakeId, channel.getId(), "안뇽");
+			Message messageNotUser = new Message(fakeId, channel.getId(), "안뇽", null);
 			messageService.save(messageNotUser);
 			System.out.println("실패: 예외가 발생해야 하는 케이스");
 		} catch (NoSuchElementException e) {

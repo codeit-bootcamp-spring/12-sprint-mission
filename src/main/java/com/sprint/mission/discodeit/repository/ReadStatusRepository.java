@@ -12,7 +12,5 @@ public interface ReadStatusRepository {
 
     List<ReadStatus> findAll();
 
-    void update(ReadStatus readStatus);
-
     void delete(UUID readStatusId);
 }

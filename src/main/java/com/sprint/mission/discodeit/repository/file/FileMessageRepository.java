@@ -57,11 +57,6 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public void update(Message message) {
-        save(message);
-    }
-
-    @Override
     public void delete(UUID messageId) {
         Path path = makePath(messageId);
         if (!Files.exists(path)) {
