@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -13,15 +13,16 @@ import java.util.stream.Stream;
 
 @Repository
 @ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
-public class FileUserRepository implements UserRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "users");
+public class FileUserStatusRepository implements UserStatusRepository {
+    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "UserStatuses");
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
-    public FileUserRepository() {
+
+    public FileUserStatusRepository() {
         createDirectory(DIRECTORY);
     }
 
@@ -36,49 +37,57 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
-        if (user == null) throw new NoSuchElementException("채널 객체를 찾을 수 없습니다.");
-        if (user.getId() == null) throw new IllegalArgumentException("User ID를 찾을 수 없습니다.");
+    public UserStatus save(UserStatus userStatus) {
+        if (userStatus.getId() == null) throw new NoSuchElementException("UserStatus 객체를 찾을 수 없습니다.");
+        if (userStatus.getUserId() == null) throw new IllegalArgumentException("UserStatus의 유저 정보가 누락되었습니다.");
 
-        Path path = makePath(user.getId());
+        Path path = makePath(userStatus.getId());
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
              ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
-            oos.writeObject(user);
-            return user;
+            oos.writeObject(userStatus);
+            return userStatus;
         } catch (IOException e) {
             return null;
         }
     }
 
-    public User loadUser(Path path) {
+    public UserStatus loadUserStatus(Path path) {
         if (Files.notExists(path) || Files.isDirectory(path)) return null;
 
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)
         ) {
             Object obj = ois.readObject();
-            if (!(obj instanceof User)) {
-                throw new IllegalArgumentException("파일 내용이 User가 아닙니다.: " + path);
+            if (!(obj instanceof UserStatus)) {
+                throw new IllegalArgumentException("파일 내용이 UserStatus가 아닙니다 : " + path);
             }
-            return (User) obj;
+            return (UserStatus) obj;
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("파일 입출력 에러");
         }
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
-        return Optional.ofNullable(loadUser(makePath(id)));
+    public Optional<UserStatus> findById(UUID id) {
+        return Optional.ofNullable(loadUserStatus(makePath(id)));
     }
 
     @Override
-    public List<User> findAll() {
-        if (Files.notExists(DIRECTORY)) return Collections.emptyList();
-        try (Stream<Path> stream = Files.list(DIRECTORY)) {
+    public Optional<UserStatus> findByUserId(UUID userId) {
+        return findAll().stream()
+                .filter(status -> status.getUserId().equals(userId))
+                .findFirst();
+    }
+
+    @Override
+    public List<UserStatus> findAll() {
+        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+
+        try (Stream<Path> stream = Files.list(DIRECTORY)){
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(this::loadUser)
+                    .map(this::loadUserStatus)
                     .sorted()
                     .toList();
         } catch (IOException e) {
@@ -87,34 +96,10 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean existsByNickname(String nickname) {
-        return findAll().stream()
-                .anyMatch(user -> user.getNickname().equals(nickname));
-    }
-
-    @Override
-    public boolean existsById(UUID id) {
-        return loadUser(makePath(id)) != null;
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return findAll().stream()
-                .anyMatch(user -> user.getEmail().equals(email));
-    }
-
-    @Override
-    public Optional<User> findByNameAndPassword(String name, String password) {
-        return findAll().stream()
-                .filter(user -> user.getName().equals(name) && user.getPassword().equals(password))
-                .findFirst();
-    }
-
-    @Override
-    public void deleteById(UUID id) {
-        try {
+    public void delete(UUID id) {
+        try{
             boolean deleted = Files.deleteIfExists(makePath(id));
-            if (!deleted) {
+            if(!deleted){
                 System.out.println("삭제 실패 : 해당 ID의 파일이 존재하지 않습니다.");
             }
         } catch (IOException e) {
