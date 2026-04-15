@@ -1,104 +1,115 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.message.Message;
+import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
-import com.sprint.mission.discodeit.util.FileSerialization;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 
-@Repository
 @ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
+@Repository
 public class FileMessageRepository implements MessageRepository {
-    private static final String FILE_PATH = "Message.ser";
+    private final Path DIRECTORY;
+    private final String EXTENSION = ".ser";
 
-    private final Map<UUID, Message> data;
-
-    public FileMessageRepository() {
-        this.data = new HashMap<>();
-
-        List<Message> messageList = FileSerialization.loadData(FILE_PATH);
-        for (Message msg : messageList) {
-            data.put(msg.getId(), msg);
+    public FileMessageRepository(
+            @Value("${discodeit.repository.file-directory:data}") String fileDirectory
+    ) {
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), fileDirectory, Message.class.getSimpleName());
+        if (Files.notExists(DIRECTORY)) {
+            try {
+                Files.createDirectories(DIRECTORY);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+    }
+
+    private Path resolvePath(UUID id) {
+        return DIRECTORY.resolve(id + EXTENSION);
     }
 
     @Override
     public Message save(Message message) {
-        data.put(message.getId(), message);
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
+        Path path = resolvePath(message.getId());
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return message;
     }
 
     @Override
     public Optional<Message> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
-    }
-
-    @Override
-    public Optional<Message> findByContent(String content) {
-        for (Message message : data.values()) {
-            if (message.getContent().equals(content)) {
-                return Optional.of(message);
+        Message messageNullable = null;
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                messageNullable = (Message) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
-
-        return Optional.empty();
+        return Optional.ofNullable(messageNullable);
     }
 
     @Override
     public List<Message> findAllByChannelId(UUID channelId) {
-        List<Message> result = new ArrayList<>();
-
-        for (Message message : data.values()) {
-            if (message.getChannelId().equals(channelId)) {
-                result.add(message);
-            }
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            return paths
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (Message) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .filter(message -> message.getChannelId().equals(channelId))
+                    .toList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        return result;
     }
 
     @Override
-    public List<Message> findAll() {
-        return new ArrayList<>(data.values());
+    public boolean existsById(UUID id) {
+        Path path = resolvePath(id);
+        return Files.exists(path);
     }
 
     @Override
-    public Message deleteById(UUID id) {
-        Message removed = data.remove(id);
-
-        if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 Message 없음.");
+    public void deleteById(UUID id) {
+        Path path = resolvePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
-        return removed;
     }
 
     @Override
-    public List<Message> deleteAllByChannelId(UUID channelId) {
-        List<UUID> targetIdList = new ArrayList<>();
-        List<Message> deletedMessageList = new ArrayList<>();
-
-        for (Message msg : data.values()) {
-            if (msg.getChannelId().equals(channelId)) {
-                targetIdList.add(msg.getId());
-            }
-        }
-
-        for (UUID id : targetIdList) {
-            Message removed = data.remove(id);
-            if (removed != null) {
-                deletedMessageList.add(removed);
-            }
-        }
-
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
-        return deletedMessageList;
+    public void deleteAllByChannelId(UUID channelId) {
+        this.findAllByChannelId(channelId)
+                .forEach(message -> this.deleteById(message.getId()));
     }
 }

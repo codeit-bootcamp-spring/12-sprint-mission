@@ -1,19 +1,14 @@
 package com.sprint.mission.discodeit.repository.jcf;
 
-import com.sprint.mission.discodeit.entity.channel.Channel;
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 @Repository
-@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf")
 public class JCFChannelRepository implements ChannelRepository {
     private final Map<UUID, Channel> data;
 
@@ -23,41 +18,27 @@ public class JCFChannelRepository implements ChannelRepository {
 
     @Override
     public Channel save(Channel channel) {
-        data.put(channel.getId(), channel);
+        this.data.put(channel.getId(), channel);
         return channel;
     }
 
     @Override
     public Optional<Channel> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
-    }
-
-    @Override
-    public Optional<Channel> findByName(String name) {
-        for (Channel ch : data.values()) {
-            if (ch.getName().equals(name)) {
-                return Optional.of(ch);
-            }
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(this.data.get(id));
     }
 
     @Override
     public List<Channel> findAll() {
-        return new ArrayList<>(data.values());
+        return this.data.values().stream().toList();
     }
 
     @Override
-    public Channel deleteById(UUID id) {
-        Channel removed = data.remove(id);
+    public boolean existsById(UUID id) {
+        return this.data.containsKey(id);
+    }
 
-        if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 채널 없음.");
-        }
-
-        return removed;
+    @Override
+    public void deleteById(UUID id) {
+        this.data.remove(id);
     }
 }
-
-
