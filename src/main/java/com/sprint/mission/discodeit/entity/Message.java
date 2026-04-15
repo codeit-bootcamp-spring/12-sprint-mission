@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -13,16 +14,18 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
-    private final Long createdAt;
-    private Long updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
     private String content;
     private final UUID channelId;
     private final UUID authorId;
 
+    private List<UUID> attachmentIds;
+
     public Message(String content, UUID channelId, UUID authorId) {
         this.id = UUID.randomUUID();
-        this.createdAt = Instant.now().getEpochSecond();
+        this.createdAt = Instant.now();
 
         this.content = content;
         this.channelId = channelId;
@@ -38,7 +41,7 @@ public class Message implements Serializable {
         }
 
         if (anyValueUpdated) {
-            this.updatedAt = System.currentTimeMillis();
+            this.updatedAt = Instant.now();
         }
     }
 
@@ -48,8 +51,8 @@ public class Message implements Serializable {
                 .ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
 
-        String createdAtStr = formatter.format(Instant.ofEpochMilli(createdAt));
-        String updatedAtStr = formatter.format(Instant.ofEpochMilli(updatedAt));
+        String createdAtStr = formatter.format(createdAt);
+        String updatedAtStr = formatter.format(updatedAt);
 
         return "id: " + id + "\n" +
                 "content: " + content + "\n" +

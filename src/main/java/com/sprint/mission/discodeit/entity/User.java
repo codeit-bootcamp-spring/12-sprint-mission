@@ -13,8 +13,9 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private Long createdAt;
-    private Long updatedAt;
+    private UUID profileId;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     private String username;
     private String email;
@@ -22,7 +23,7 @@ public class User implements Serializable {
 
     public User(String username, String email, String password) {
         this.id = UUID.randomUUID();
-        this.createdAt = Instant.now().toEpochMilli();
+        this.createdAt = Instant.now();
 
         this.username = username;
         this.email = email;
@@ -45,7 +46,7 @@ public class User implements Serializable {
         }
 
         if (anyValueUpdated) {
-            this.updatedAt = Instant.now().toEpochMilli();
+            this.updatedAt = Instant.now();
         }
     }
 
@@ -55,10 +56,11 @@ public class User implements Serializable {
                 .ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
 
-        String createdAtStr = formatter.format(Instant.ofEpochMilli(createdAt));
-        String updatedAtStr = formatter.format(Instant.ofEpochMilli(updatedAt));
+        String createdAtStr = formatter.format(createdAt);
+        String updatedAtStr = formatter.format(updatedAt);
 
         return "id: " + id + "\n" +
+                "profileId: " + profileId + "\n" +
                 "username: " + username + "\n" +
                 "email: " + email + "\n" +
                 "password: " + password + "\n" +
