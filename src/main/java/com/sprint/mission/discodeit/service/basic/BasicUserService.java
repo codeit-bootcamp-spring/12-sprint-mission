@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequestDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
@@ -27,30 +28,30 @@ public class BasicUserService implements UserService {
 	private final UserStatusRepository userStatusRepository;
 
 	@Override
-	public User create(String username, String email, String password, byte[] profileImage) {
+	public User create(UserCreateRequest dto) {
 
-		if (username == null) {
+		if (dto.username() == null) {
 			throw new IllegalArgumentException("Username cannot be null");
-		} else if (email == null) {
+		} else if (dto.email() == null) {
 			throw new IllegalArgumentException("Email cannot be null");
-		} else if (password == null) {
+		} else if (dto.password() == null) {
 			throw new IllegalArgumentException("Password cannot be null");
 		}
-		if (userRepository.findByUsername(username).isPresent()) {
+		if (userRepository.findByUsername(dto.username()).isPresent()) {
 			throw new IllegalArgumentException("Username already exists");
 		}
-		if (userRepository.findByEmail(email).isPresent()) {
+		if (userRepository.findByEmail(dto.email()).isPresent()) {
 			throw new IllegalArgumentException("Email already exists");
 		}
-		UUID profileId = Optional.ofNullable(profileImage)
+		UUID profileId = Optional.ofNullable(dto.profileImage())
 			.map(p -> BinaryContent.builder().content(p).build())
 			.map(binaryContentRepository::save)
 			.map(BinaryContent::getId)
 			.orElse(null);
 		User user = User.builder()
-			.username(username)
-			.email(email)
-			.password(password)
+			.username(dto.username())
+			.email(dto.email())
+			.password(dto.password())
 			.profileId(profileId)
 			.build();
 		userStatusRepository.save(UserStatus.builder().userId(user.getId()).build());

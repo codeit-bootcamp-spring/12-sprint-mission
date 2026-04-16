@@ -9,8 +9,12 @@ import com.sprint.mission.discodeit.entity.ReadStatus;
 
 public interface ReadStatusService {
 	ReadStatus create(ReadStatusCreateRequestDto dto);
+
 	ReadStatus find(UUID id);
+
 	List<ReadStatus> findAllByUserId(UUID userId);
+
 	ReadStatus update(ReadStatusUpdateRequestDto dto);
+
 	void delete(UUID id);
 }

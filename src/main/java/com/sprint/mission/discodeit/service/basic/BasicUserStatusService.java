@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class BasicUserStatusService implements UserStatusService {
 	private final UserStatusRepository userStatusRepository;
 	private final UserRepository userRepository;
+
 	@Override
 	public UserStatus create(UserStatusCreateRequestDto dto) {
 		if (userRepository.existsById(dto.userId())) {
@@ -29,9 +30,9 @@ public class BasicUserStatusService implements UserStatusService {
 			throw new IllegalArgumentException("UserStatus already exists for user with id " + dto.userId());
 		}
 		return userStatusRepository.save(UserStatus.builder()
-				.userId(dto.userId())
-				.lastLogin(dto.lastOnlineTime())
-				.build());
+			.userId(dto.userId())
+			.lastLogin(dto.lastOnlineTime())
+			.build());
 	}
 
 	@Override

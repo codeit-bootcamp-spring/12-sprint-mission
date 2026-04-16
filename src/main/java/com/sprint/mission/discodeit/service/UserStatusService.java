@@ -9,9 +9,14 @@ import com.sprint.mission.discodeit.entity.UserStatus;
 
 public interface UserStatusService {
 	UserStatus create(UserStatusCreateRequestDto dto);
+
 	UserStatus find(UUID id);
+
 	List<UserStatus> findAll();
+
 	UserStatus update(UUID id, UserStatusUpdateRequestDto dto);
+
 	UserStatus updateByUserId(UUID userId);
+
 	void delete(UUID id);
 }
