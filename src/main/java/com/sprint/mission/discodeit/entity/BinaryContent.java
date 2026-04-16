@@ -10,13 +10,15 @@ public class BinaryContent {
     private UUID id;
     private Instant createdAt;
 
-    private UUID userId;
-    private UUID messageId;
+    private String fileName;
+    private String contentType;
+    private byte[] bytes;
 
-    public BinaryContent(UUID id, UUID userId, UUID messageId) {
+    public BinaryContent(UUID id, String fileName, String contentType, byte[] bytes) {
         this.id = id;
         this.createdAt = Instant.now();
-        this.userId = userId;
-        this.messageId = messageId;
+        this.fileName = fileName;
+        this.contentType = contentType;
+        this.bytes = bytes;
     }
 }

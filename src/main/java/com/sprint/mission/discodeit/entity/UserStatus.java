@@ -18,6 +18,7 @@ public class UserStatus {
         this.id = id;
         this.userId = userId;
         this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
     }
 
     public void update(){
@@ -25,9 +26,6 @@ public class UserStatus {
     }
 
     public boolean isOnline() {
-        if (updatedAt == null) {
-            return false;
-        }
         return Duration.between(updatedAt, Instant.now()).toMillis() < 1000 * 60 * 5;
     }
 }
