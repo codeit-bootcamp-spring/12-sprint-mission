@@ -1,6 +1,5 @@
 package com.sprint.mission.discodeit.service.file;
 
-import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -10,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FileUserService implements UserService {
@@ -47,14 +47,14 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User findById(UUID id) {
+    public Optional<User> findById(UUID id) {
         Path targetPath = makePath(id);
         if (!Files.exists(targetPath)) {
             return null;
         }
         try (FileInputStream fis = new FileInputStream(targetPath.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            return (User) ois.readObject();
+            return Optional.ofNullable((User) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -89,10 +89,10 @@ public class FileUserService implements UserService {
 
     @Override
     public User update(UUID id, User user) {
-        User found = findById(id);
-        if (found != null) {
-            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
-            return save(found);
+        Optional<User> found = findById(id);
+        if (found.isPresent()) {
+            found.get().update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
+            return save(found.orElse(null));
         }
         return null;
     }

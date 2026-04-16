@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class JCFMessageService implements MessageService {
@@ -36,9 +37,9 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message findById(UUID id) {
+    public Optional<Message> findById(UUID id) {
         for(Message message : data) {
-            if(message.getId().equals(id)) return message;
+            if(message.getId().equals(id)) return Optional.of(message);
         }
         return null;
     }
@@ -50,10 +51,10 @@ public class JCFMessageService implements MessageService {
 
     @Override
     public Message update(UUID id, Message message) {
-        Message found = findById(id);
-        if (found != null) {
-            found.update(message.getContent());
-            return found;
+        Optional<Message> found = findById(id);
+        if (found.isPresent()) {
+            found.get().update(message.getContent());
+            return found.orElse(null);
         }
         return null;
     }

@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FileChannelService implements ChannelService {
@@ -46,14 +47,14 @@ public class FileChannelService implements ChannelService {
     }
 
     @Override
-    public Channel findById(UUID id) {
+    public Optional<Channel> findById(UUID id) {
         Path targetPath = makePath(id);
         if (!Files.exists(targetPath)) {
             return null;
         }
         try (FileInputStream fis = new FileInputStream(targetPath.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            return (Channel) ois.readObject();
+            return Optional.ofNullable((Channel) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -88,10 +89,10 @@ public class FileChannelService implements ChannelService {
 
     @Override
     public Channel update(UUID id, Channel channel) {
-        Channel found = findById(id);
-        if (found != null) {
-            found.update(channel.getName(), channel.getIsPrivate());
-            return save(found);
+        Optional<Channel> found = findById(id);
+        if (found.isPresent()) {
+            found.get().update(channel.getName(), channel.getIsPrivate());
+            return save(found.orElse(null));
         }
         return null;
     }

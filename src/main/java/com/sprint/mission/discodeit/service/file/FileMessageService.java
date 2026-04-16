@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.service.file;
 
 
-import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
@@ -13,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FileMessageService implements MessageService {
@@ -63,14 +63,14 @@ public class FileMessageService implements MessageService {
     }
 
     @Override
-    public Message findById(UUID id) {
+    public Optional<Message> findById(UUID id) {
         Path targetPath = makePath(id);
         if (!Files.exists(targetPath)) {
             return null;
         }
         try (FileInputStream fis = new FileInputStream(targetPath.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            return (Message) ois.readObject();
+            return Optional.ofNullable((Message) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -105,10 +105,10 @@ public class FileMessageService implements MessageService {
 
     @Override
     public Message update(UUID id, Message message) {
-        Message found = findById(id);
-        if (found != null) {
-            found.update(message.getContent());
-            return save(found);
+        Optional<Message> found = findById(id);
+        if (found.isPresent()) {
+            found.get().update(message.getContent());
+            return save(found.orElse(null));
         }
         return null;
     }
