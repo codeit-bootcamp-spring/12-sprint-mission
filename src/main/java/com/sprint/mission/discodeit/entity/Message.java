@@ -9,7 +9,7 @@ public class Message implements Serializable {
 
     private final UUID id;
     private final UUID channelId;
-    private final UUID serverId;
+//    private final UUID serverId;
     private final UUID memberId;
 
     private final Long createdAt;
@@ -19,14 +19,14 @@ public class Message implements Serializable {
 
     private boolean isEdited;
 
-    public Message(UUID channelId, UUID serverId, UUID memberId, String content) {
+    public Message(UUID channelId /*, serverId*/, UUID memberId, String content) {
         this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = this.createdAt;
         this.isEdited = false;
 
         this.channelId = channelId;
-        this.serverId = serverId;
+//        this.serverId = serverId;
         this.memberId = memberId;
         this.content = content;
     }
@@ -39,9 +39,9 @@ public class Message implements Serializable {
         return channelId;
     }
 
-    public UUID getServerId() {
-        return serverId;
-    }
+//    public UUID getServerId() {
+//        return serverId;
+//    }
 
     public UUID getMemberId() {
         return memberId;
@@ -74,7 +74,7 @@ public class Message implements Serializable {
         return new StringJoiner(", ", Message.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("channelId=" + channelId)
-                .add("serverId=" + serverId)
+                /*.add("serverId=" + serverId)*/
                 .add("memberId=" + memberId)
                 .add("createdAt=" + createdAt)
                 .add("updatedAt=" + updatedAt)
