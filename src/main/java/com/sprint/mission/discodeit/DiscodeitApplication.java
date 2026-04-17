@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -142,62 +143,64 @@ public class DiscodeitApplication {
 		channelService.delete(privateChannel.getId());
 	}
 
-//	static void messageCRUDTest(MessageService messageService) {
-//		// 생성
-//		UUID channelId = UUID.randomUUID();
-//		UUID authorId = UUID.randomUUID();
-//		Message message = messageService.create("안녕하세요.", channelId, authorId);
-//		System.out.println("메시지 생성: " + message.getId());
-//
-//		// 조회
-//		Message foundMessage = messageService.find(message.getId());
-//		System.out.println("메시지 조회(단건): " + foundMessage.getId());
-//		List<Message> foundMessages = messageService.findAll();
-//		System.out.println("메시지 조회(다건): " + foundMessages.size());
-//
-//		// 수정
-//		Message updatedMessage = messageService.update(message.getId(), "반갑습니다.");
-//		System.out.println("메시지 수정: " + updatedMessage.getContent());
-//
-//		// 삭제
-//		messageService.delete(message.getId());
-//		List<Message> foundMessagesAfterDelete = messageService.findAll();
-//		System.out.println("메시지 삭제: " + foundMessagesAfterDelete.size());
-//	}
+	static void messageCRUDTest(MessageService messageService,
+	                            ChannelService channelService,
+	                            UserService userService) {
 
-	static UserDto setupUser(UserService userService, String username, String email) {
-		return userService.create(
+		// ✅ 여기서 생성 (이게 정답)
+		UserDto user = userService.create(
 				new CreateUserRequest(
-						username,
-						email,
+						"messageUser",
+						"messageUser@test.com",
 						"password1234",
 						null
 				)
 		);
-	}
 
-	static Channel setupPublicChannel(
-			ChannelService channelService,
-			String name,
-			String description
-	) {
-		return channelService.createPublic(
-				new CreatePublicChannelRequest(name, description)
+		Channel channel = channelService.createPublic(
+				new CreatePublicChannelRequest(
+						"메시지 채널",
+						"메시지 테스트 채널"
+				)
 		);
-	}
 
-	static Channel setupPrivateChannel(
-			ChannelService channelService,
-			List<UUID> userIds
-	) {
-		return channelService.createPrivate(
-				new CreatePrivateChannelRequest(userIds)
+		UUID channelId = channel.getId();
+		UUID authorId = user.id();
+
+		// =====================
+		// 생성
+		// =====================
+		CreateMessageRequest createRequest = new CreateMessageRequest(
+				"안녕하세요.",
+				channelId,
+				authorId,
+				List.of()
 		);
-	}
 
-	static void messageCreateTest(MessageService messageService, Channel channel, User author) {
-		Message message = messageService.create("안녕하세요.", channel.getId(), author.getId());
+		Message message = messageService.create(createRequest);
 		System.out.println("메시지 생성: " + message.getId());
+
+		// 조회
+		Message foundMessage = messageService.find(message.getId());
+		System.out.println("메시지 조회(단건): " + foundMessage.getId());
+
+		List<Message> foundMessages = messageService.findAllByChannelId(channelId);
+		System.out.println("메시지 조회(다건): " + foundMessages.size());
+
+		// 수정
+		UpdateMessageRequest updateRequest = new UpdateMessageRequest(
+				message.getId(),
+				"반갑습니다."
+		);
+
+		Message updatedMessage = messageService.update(updateRequest);
+		System.out.println("메시지 수정: " + updatedMessage.getContent());
+
+		// 삭제
+		messageService.delete(message.getId());
+
+		List<Message> afterDelete = messageService.findAllByChannelId(channelId);
+		System.out.println("메시지 삭제: " + afterDelete.size());
 	}
 
 	public static void main(String[] args) {
@@ -206,13 +209,14 @@ public class DiscodeitApplication {
 		// 서비스 초기화
 		UserService userService = context.getBean(UserService.class);
 		ChannelService channelService = context.getBean(ChannelService.class);
-//		MessageService messageService = context.getBean(MessageService.class);
+		MessageService messageService = context.getBean(MessageService.class);
 
 
 		// 테스트
 		userCRUDTest(userService);
 		publicChannelCRUDTest(channelService, userService);
 		privateChannelCRUDTest(channelService, userService);
+		messageCRUDTest(messageService, channelService, userService);
 	}
 
 }

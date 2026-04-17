@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class Message implements Serializable {
     private final UUID channelId;
     private final UUID authorId;
 
-    private List<UUID> attachmentIds;
+    private final List<UUID> attachmentIds;
 
     public Message(String content, UUID channelId, UUID authorId) {
         this.id = UUID.randomUUID();
@@ -30,6 +31,7 @@ public class Message implements Serializable {
         this.content = content;
         this.channelId = channelId;
         this.authorId = authorId;
+        this.attachmentIds = new ArrayList<>();
 
     }
 
@@ -43,6 +45,14 @@ public class Message implements Serializable {
         if (anyValueUpdated) {
             this.updatedAt = Instant.now();
         }
+    }
+
+    public void addAttachment(UUID attachmentId) {
+        if (attachmentId == null) {
+            return;
+        }
+        this.attachmentIds.add(attachmentId);
+        this.updatedAt = Instant.now();
     }
 
     @Override
@@ -59,6 +69,7 @@ public class Message implements Serializable {
                 "createdAt: " + createdAtStr + "\n" +
                 "updatedAt: " + updatedAtStr + "\n" +
                 "channelId: " + channelId + "\n" +
-                "authorId: " + authorId + "\n";
+                "authorId: " + authorId + "\n" +
+                "attachmentIds: " + attachmentIds + "\n";
     }
 }
