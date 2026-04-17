@@ -1,34 +1,40 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
-public class ReadStatus extends BaseEntity implements Comparable<ReadStatus> {
-	private final UUID userId;
-	private final UUID channelId;
-	private Instant lastReadAt;
+public class ReadStatus implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
+    private UUID userId;
+    private UUID channelId;
+    private Instant lastReadAt;
 
-	@Builder
-	public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
-		super();
-		this.userId = userId;
-		this.channelId = channelId;
-		this.lastReadAt = lastReadAt;
-	}
+    public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.userId = userId;
+        this.channelId = channelId;
+        this.lastReadAt = lastReadAt;
+    }
 
-	public void update(Instant lastReadAt) {
-		this.lastReadAt = lastReadAt;
-		updateAtUpdate();
-	}
+    public void update(Instant newLastReadAt) {
+        boolean anyValueUpdated = false;
+        if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
+            this.lastReadAt = newLastReadAt;
+            anyValueUpdated = true;
+        }
 
-	@Override
-	public int compareTo(ReadStatus o) {
-		return this.getCreatedAt().compareTo(o.getCreatedAt());
-	}
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
+    }
 }

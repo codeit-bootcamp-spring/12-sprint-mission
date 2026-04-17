@@ -1,44 +1,45 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
-public class Message extends BaseEntity implements Comparable<Message> {
-	private final UUID channelId;
-	private final UUID authorId;
-	private String content;
-	private final List<UUID> attachmentIds;
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	@Builder
-	public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
-		super();
-		this.content = content;
-		this.channelId = channelId;
-		this.authorId = authorId;
-		this.attachmentIds = attachmentIds;
-	}
+    private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
+    private String content;
+    //
+    private UUID channelId;
+    private UUID authorId;
+    private List<UUID> attachmentIds;
 
-	public void update(String newContent) {
-		boolean anyValueUpdated = false;
-		if (newContent != null && !newContent.equals(this.content)) {
-			this.content = newContent;
-			anyValueUpdated = true;
-		}
+    public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.content = content;
+        this.channelId = channelId;
+        this.authorId = authorId;
+        this.attachmentIds = attachmentIds;
+    }
 
-		if (anyValueUpdated) {
-			updateAtUpdate();
-		}
-	}
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
 
-	@Override
-	public int compareTo(Message o) {
-		return this.getCreatedAt().compareTo(o.getCreatedAt());
-	}
-
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
+    }
 }

@@ -1,37 +1,45 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
-public class UserStatus extends BaseEntity implements Comparable<UserStatus> {
-	private final UUID userId;
-	private Instant lastOnlineTime;
+public class UserStatus implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
+    private UUID userId;
+    private Instant lastActiveAt;
 
-	@Builder
-	public UserStatus(UUID userId, Instant lastLogin) {
-		super();
-		this.userId = userId;
-		this.lastOnlineTime = lastLogin;
-	}
+    public UserStatus(UUID userId, Instant lastActiveAt) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.userId = userId;
+        this.lastActiveAt = lastActiveAt;
+    }
 
-	public void update(Instant lastLogin) {
-		this.lastOnlineTime = lastLogin;
-		updateAtUpdate();
-	}
+    public void update(Instant lastActiveAt) {
+        boolean anyValueUpdated = false;
+        if (lastActiveAt != null && !lastActiveAt.equals(this.lastActiveAt)) {
+            this.lastActiveAt = lastActiveAt;
+            anyValueUpdated = true;
+        }
 
-	public boolean isOnline() {
-		return Instant.now().isBefore(this.lastOnlineTime.plus(5, ChronoUnit.MINUTES));
-	}
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
+    }
 
-	@Override
-	public int compareTo(UserStatus o) {
-		return this.getCreatedAt().compareTo(o.getCreatedAt());
-	}
+    public Boolean isOnline() {
+        Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
+
+        return lastActiveAt.isAfter(instantFiveMinutesAgo);
+    }
 }
