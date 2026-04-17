@@ -4,19 +4,12 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class JCFBinaryContentRepository implements BinaryContentRepository {
 
-    private final Map<UUID, BinaryContent> data;
-
-    public JCFBinaryContentRepository() {
-        this.data = new HashMap<>();
-    }
+    private final Map<UUID, BinaryContent> data = new HashMap<>();
 
     @Override
     public BinaryContent save(BinaryContent binaryContent) {
@@ -27,6 +20,14 @@ public class JCFBinaryContentRepository implements BinaryContentRepository {
     @Override
     public Optional<BinaryContent> findById(UUID id) {
         return Optional.ofNullable(data.get(id));
+    }
+
+    @Override
+    public List<BinaryContent> findAllByIdIn(List<UUID> ids) {
+        return ids.stream()
+                .map(data::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override

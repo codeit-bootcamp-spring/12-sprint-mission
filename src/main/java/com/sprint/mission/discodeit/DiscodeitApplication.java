@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit;
 
 import com.sprint.mission.discodeit.dto.*;
+import com.sprint.mission.discodeit.dto.binaryContent.CreateBinaryContentRequest;
 import com.sprint.mission.discodeit.dto.channel.ChannelDto;
 import com.sprint.mission.discodeit.dto.channel.CreatePrivateChannelRequest;
 import com.sprint.mission.discodeit.dto.channel.CreatePublicChannelRequest;
@@ -312,6 +313,48 @@ public class DiscodeitApplication {
 		}
 	}
 
+	static void binaryContentCRUDTest(BinaryContentService binaryContentService) {
+
+		// 생성
+		BinaryContent binaryContent1 = binaryContentService.create(
+				new CreateBinaryContentRequest(
+						"test1.txt",
+						"text/plain",
+						"hello".getBytes()
+				)
+		);
+		System.out.println("BinaryContent 생성1: " + binaryContent1.getId());
+
+		BinaryContent binaryContent2 = binaryContentService.create(
+				new CreateBinaryContentRequest(
+						"test2.txt",
+						"text/plain",
+						"world".getBytes()
+				)
+		);
+		System.out.println("BinaryContent 생성2: " + binaryContent2.getId());
+
+		// 조회(단건)
+		BinaryContent foundBinaryContent = binaryContentService.find(binaryContent1.getId());
+		System.out.println("BinaryContent 조회(단건): " + foundBinaryContent.getId());
+
+		// 조회(다건)
+		List<BinaryContent> foundBinaryContents = binaryContentService.findAllByIdIn(
+				List.of(binaryContent1.getId(), binaryContent2.getId())
+		);
+		System.out.println("BinaryContent 조회(다건): " + foundBinaryContents.size());
+
+		// 삭제
+		binaryContentService.delete(binaryContent1.getId());
+
+		try {
+			binaryContentService.find(binaryContent1.getId());
+			System.out.println("삭제 실패");
+		} catch (Exception e) {
+			System.out.println("BinaryContent 삭제 완료");
+		}
+	}
+
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
 
@@ -322,6 +365,7 @@ public class DiscodeitApplication {
 		ReadStatusService readStatusService = context.getBean(ReadStatusService.class);
 		UserStatusService userStatusService = context.getBean(UserStatusService.class);
 		UserStatusRepository userStatusRepository = context.getBean(UserStatusRepository.class);
+		BinaryContentService binaryContentService = context.getBean(BinaryContentService.class);
 
 
 		// 테스트
@@ -331,6 +375,7 @@ public class DiscodeitApplication {
 		messageCRUDTest(messageService, channelService, userService);
 		readStatusCRUDTest(readStatusService, channelService, userService);
 		userStatusCRUDTest(userStatusService, userStatusRepository, userService);
+		binaryContentCRUDTest(binaryContentService);
 	}
 
 }
