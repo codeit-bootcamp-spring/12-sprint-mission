@@ -9,14 +9,11 @@ import com.sprint.mission.discodeit.dto.message.CreateMessageRequest;
 import com.sprint.mission.discodeit.dto.message.UpdateMessageRequest;
 import com.sprint.mission.discodeit.dto.readStatus.CreateReadStatusRequest;
 import com.sprint.mission.discodeit.dto.readStatus.UpdateReadStatusRequest;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.ReadStatus;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.service.ChannelService;
-import com.sprint.mission.discodeit.service.MessageService;
-import com.sprint.mission.discodeit.service.ReadStatusService;
-import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.dto.userStatus.CreateUserStatusRequest;
+import com.sprint.mission.discodeit.dto.userStatus.UpdateUserStatusRequest;
+import com.sprint.mission.discodeit.entity.*;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
+import com.sprint.mission.discodeit.service.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -262,6 +259,59 @@ public class DiscodeitApplication {
 		}
 	}
 
+	static void userStatusCRUDTest(
+			UserStatusService userStatusService,
+			UserStatusRepository userStatusRepository,
+			UserService userService
+	) {
+
+		// User 생성
+		UserDto user = userService.create(
+				new CreateUserRequest(
+						"statusUser",
+						"status@test.com",
+						"password1234",
+						null
+				)
+		);
+
+		// BasicUserService.create()에서 자동 생성했을 가능성 있으므로 제거
+		userStatusRepository.deleteByUserId(user.id());
+
+		// 생성
+		UserStatus userStatus = userStatusService.create(
+				new CreateUserStatusRequest(user.id())
+		);
+		System.out.println("UserStatus 생성: " + userStatus.getId());
+
+		// 조회(단건)
+		UserStatus foundUserStatus = userStatusService.find(userStatus.getId());
+		System.out.println("UserStatus 조회(단건): " + foundUserStatus.getId());
+
+		// 조회(다건)
+		List<UserStatus> foundUserStatuses = userStatusService.findAll();
+		System.out.println("UserStatus 조회(다건): " + foundUserStatuses.size());
+
+		// 수정
+		UserStatus updatedUserStatus = userStatusService.update(
+				new UpdateUserStatusRequest(userStatus.getId())
+		);
+		System.out.println("UserStatus 수정(updatedAt): " + updatedUserStatus.getUpdatedAt());
+
+		UserStatus updatedByUserId = userStatusService.updateByUserId(user.id());
+		System.out.println("UserStatus userId로 수정(updatedAt): " + updatedByUserId.getUpdatedAt());
+
+		// 삭제
+		userStatusService.delete(userStatus.getId());
+
+		try {
+			userStatusService.find(userStatus.getId());
+			System.out.println("삭제 실패");
+		} catch (Exception e) {
+			System.out.println("UserStatus 삭제 완료");
+		}
+	}
+
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
 
@@ -270,6 +320,9 @@ public class DiscodeitApplication {
 		ChannelService channelService = context.getBean(ChannelService.class);
 		MessageService messageService = context.getBean(MessageService.class);
 		ReadStatusService readStatusService = context.getBean(ReadStatusService.class);
+		UserStatusService userStatusService = context.getBean(UserStatusService.class);
+		UserStatusRepository userStatusRepository = context.getBean(UserStatusRepository.class);
+
 
 		// 테스트
 		userCRUDTest(userService);
@@ -277,6 +330,7 @@ public class DiscodeitApplication {
 		privateChannelCRUDTest(channelService, userService);
 		messageCRUDTest(messageService, channelService, userService);
 		readStatusCRUDTest(readStatusService, channelService, userService);
+		userStatusCRUDTest(userStatusService, userStatusRepository, userService);
 	}
 
 }

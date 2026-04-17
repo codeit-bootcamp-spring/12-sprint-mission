@@ -4,10 +4,7 @@ import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class JCFUserStatusRepository implements UserStatusRepository {
@@ -25,10 +22,25 @@ public class JCFUserStatusRepository implements UserStatusRepository {
     }
 
     @Override
+    public Optional<UserStatus> findById(UUID id) {
+        return Optional.ofNullable(this.data.get(id));
+    }
+
+    @Override
     public Optional<UserStatus> findByUserId(UUID userId) {
         return data.values().stream()
                 .filter(status -> status.getUserId().equals(userId))
                 .findFirst();
+    }
+
+    @Override
+    public List<UserStatus> findAll() {
+        return new ArrayList<>(data.values());
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        data.remove(id);
     }
 
     @Override
