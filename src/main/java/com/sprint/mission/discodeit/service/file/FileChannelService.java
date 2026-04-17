@@ -91,7 +91,7 @@ public class FileChannelService implements ChannelService {
     public Channel update(UUID id, Channel channel) {
         Optional<Channel> found = findById(id);
         if (found.isPresent()) {
-            found.get().update(channel.getName(), channel.getIsPrivate());
+            found.get().update(channel.getName(), channel.isPrivate());
             return save(found.orElse(null));
         }
         return null;

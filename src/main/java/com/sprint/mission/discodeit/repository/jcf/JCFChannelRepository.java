@@ -37,7 +37,7 @@ public class JCFChannelRepository implements ChannelRepository {
         Optional<Channel> OptionalChannel = findById(id);
         if (OptionalChannel.isPresent()) {
             Channel found = OptionalChannel.get();
-            found.update(channel.getName(), channel.getIsPrivate());
+            found.update(channel.getName(), channel.isPrivate());
             return found;
         }
         return null;
