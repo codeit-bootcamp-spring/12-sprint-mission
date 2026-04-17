@@ -93,6 +93,27 @@ public class FileMessageRepository implements MessageRepository {
 	}
 
 	@Override
+	public List<Message> findAllByChannelId(UUID channelId) {
+		try (Stream<Path> pathStream = Files.list(DIRECTORY)) {
+			return pathStream.filter(path -> path.toString().endsWith(EXTENSION))
+				.map(path -> {
+					try (
+						FileInputStream fis = new FileInputStream(path.toFile());
+						ObjectInputStream ois = new ObjectInputStream(fis)
+					) {
+						return (Message)ois.readObject();
+					} catch (IOException | ClassNotFoundException e) {
+						throw new RuntimeException(e);
+					}
+				})
+				.filter(message -> message.getChannelId().equals(channelId))
+				.toList();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
 	public boolean existsById(UUID id) {
 		Path path = resolvePath(id);
 		return Files.exists(path);
