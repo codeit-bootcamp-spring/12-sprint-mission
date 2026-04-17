@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 @Repository
 @ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileUserStatusRepository implements UserStatusRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "UserStatuses");
+    private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
@@ -22,7 +23,8 @@ public class FileUserStatusRepository implements UserStatusRepository {
     }
 
 
-    public FileUserStatusRepository() {
+    public FileUserStatusRepository(@Value("${storage.location}") String storageLocation) {
+        DIRECTORY = Path.of(storageLocation,"UserStatuses");
         createDirectory(DIRECTORY);
     }
 
@@ -64,7 +66,8 @@ public class FileUserStatusRepository implements UserStatusRepository {
             }
             return (UserStatus) obj;
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("파일 입출력 에러");
+            System.err.println("UserStatus 파일 로드 실패 : " + path);
+            return null;
         }
     }
 
@@ -82,16 +85,17 @@ public class FileUserStatusRepository implements UserStatusRepository {
 
     @Override
     public List<UserStatus> findAll() {
-        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+        if(!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
 
         try (Stream<Path> stream = Files.list(DIRECTORY)){
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
                     .map(this::loadUserStatus)
-                    .sorted()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(UserStatus::getUpdatedAt))
                     .toList();
         } catch (IOException e) {
-            throw new NoSuchElementException("경로를 찾을 수 없습니다.");
+            return Collections.emptyList();
         }
     }
 
@@ -100,7 +104,7 @@ public class FileUserStatusRepository implements UserStatusRepository {
         try{
             boolean deleted = Files.deleteIfExists(makePath(id));
             if(!deleted){
-                System.out.println("삭제 실패 : 해당 ID의 파일이 존재하지 않습니다.");
+                System.out.println("삭제 실패 : 해당 ID의 UserStatus 파일이 존재하지 않습니다.");
             }
         } catch (IOException e) {
             throw new RuntimeException("파일 삭제 중 오류 발생", e);

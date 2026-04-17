@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -14,14 +15,15 @@ import java.util.stream.Stream;
 @Repository
 @ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileMessageRepository implements MessageRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "Messages");
+    private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
-    public FileMessageRepository() {
+    public FileMessageRepository(@Value("${storage.location}") String storageLocation) {
+        DIRECTORY = Path.of(storageLocation,"Messages");
         createDirectory(DIRECTORY);
     }
 
@@ -65,7 +67,8 @@ public class FileMessageRepository implements MessageRepository {
             }
             return (Message) obj;
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("파일 입출력 에러");
+            System.err.println("Message 파일 로드 실패 : " + path);
+            return null;
         }
     }
 
@@ -76,12 +79,13 @@ public class FileMessageRepository implements MessageRepository {
 
     @Override
     public List<Message> findAll() {
-        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+        if(!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
         try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
                     .map(this::loadMessage)
-                    .sorted()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(Message::getUpdatedAt))
                     .toList();
         } catch (IOException e) {
             throw new NoSuchElementException("경로를 찾을 수 없습니다.");

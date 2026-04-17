@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 @Repository
 @ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileReadStatusRepository implements ReadStatusRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "UserStatuses");
+    private final Path DIRECTORY ;
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
@@ -22,7 +23,8 @@ public class FileReadStatusRepository implements ReadStatusRepository {
     }
 
 
-    public FileReadStatusRepository() {
+    public FileReadStatusRepository(@Value("${storage.location}") String storageLocation) {
+        DIRECTORY = Path.of(storageLocation,"ReadStatuses");
         createDirectory(DIRECTORY);
     }
 
@@ -65,18 +67,20 @@ public class FileReadStatusRepository implements ReadStatusRepository {
             }
             return (ReadStatus) obj;
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("파일 입출력 에러");
+            System.err.println("ReadStatus 파일 로드 실패 : " + path);
+            return null;
         }
     }
 
     @Override
     public List<ReadStatus> findAll() {
-        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+        if(!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
         try (Stream<Path> stream = Files.list(DIRECTORY)){
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
                     .map(this::loadReadStatus)
-                    .sorted()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(ReadStatus::getUpdatedAt))
                     .toList();
         } catch (IOException e) {
             throw new NoSuchElementException("경로를 찾을 수 없습니다.");

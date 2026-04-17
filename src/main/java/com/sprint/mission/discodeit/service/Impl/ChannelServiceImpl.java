@@ -109,6 +109,14 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    public List<ChannelResponse> findAll() {
+        List<Channel> list = channelRepository.findAll();
+        return list.stream()
+                .map(channel -> convertToResponse(channel,null))
+                .toList();
+    }
+
+    @Override
     public ChannelResponse update(ChannelUpdateRequest request) {
         Channel channel = channelRepository.findById(request.id()).
                 orElseThrow(() -> new NoSuchElementException("해당 채널이 존재하지 않습니다"));

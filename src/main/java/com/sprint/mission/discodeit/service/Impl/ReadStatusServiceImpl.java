@@ -11,6 +11,7 @@ import com.sprint.mission.discodeit.service.ReadStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -59,6 +60,8 @@ public class ReadStatusServiceImpl implements ReadStatusService {
     @Override
     public List<ReadStatusResponse> finAllByUserId(UUID userId) {
         List<ReadStatus> statuses = readStatusRepository.findByUserId(userId);
+        if(statuses.isEmpty()) return Collections.emptyList();
+
 
         return statuses.stream()
                 .map(this::convertToResponse)

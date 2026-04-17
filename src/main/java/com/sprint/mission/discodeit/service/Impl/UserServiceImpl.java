@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse findById(UUID id) {
-        User user = userRepository.findById(id);
-        if (user == null) throw new NoSuchElementException("유저를 찾을 수 없습니다.");
+        User user = userRepository.findById(id)
+                .orElseThrow(()->new NoSuchElementException("유저를 찾을 수 없습니다."));
         UserStatus status = userStatusRepository.findByUserId(id)
                 .orElseThrow(()-> new NoSuchElementException("상태 정보를 찾을 수 없습니다."));
         return convertToResponse(user, status);
@@ -69,6 +69,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAll() {
         List<UserStatus> statuses = userStatusRepository.findAll();
+        if(statuses.isEmpty()) return Collections.emptyList();
+
         Map<UUID, UserStatus> statusMap = statuses.stream()
                 .collect(Collectors.toMap(UserStatus::getUserId,status -> status));
 
@@ -82,8 +84,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse update(UserUpdateRequest request) {
-        User user = userRepository.findById(request.id());
-        if (user == null) throw new NoSuchElementException("해당 User가 존재하지 않습니다.");
+        User user = userRepository.findById(request.id())
+                .orElseThrow(()-> new NoSuchElementException("해당 User가 존재하지 않습니다."));
         user.update(
                 request.name(),
                 request.profileId(),
@@ -96,12 +98,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(UUID id) {
-        User user = userRepository.findById(id);
-        if(user == null){
-            throw new NoSuchElementException("해당 유저를 찾을 수 없습니다.");
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
 
-        userStatusRepository.delete(id);
+        UserStatus status = userStatusRepository.findByUserId(id)
+                .orElseThrow(()-> new NoSuchElementException("해당 User Status를 찾을 수 없습니다."));
+        userStatusRepository.delete(status.getId());
 
         if (user.getProfileId() != null) {
             binaryContentRepository.deleteById(user.getProfileId());

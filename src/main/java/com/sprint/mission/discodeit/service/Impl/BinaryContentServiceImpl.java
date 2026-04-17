@@ -49,6 +49,7 @@ public class BinaryContentServiceImpl implements BinaryContentService {
             return Collections.emptyList();
         }
         List<BinaryContent> contents = binaryContentRepository.findAllByIdIn(ids);
+        if(contents.isEmpty()) return Collections.emptyList();
 
         if(contents.size() != ids.size()){
             throw new NoSuchElementException("요청한 ID 중 일부를 찾을 수 없습니다.");

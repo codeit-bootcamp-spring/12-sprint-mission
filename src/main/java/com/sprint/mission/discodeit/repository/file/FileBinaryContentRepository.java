@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -14,14 +15,15 @@ import java.util.stream.Stream;
 @Repository
 @ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileBinaryContentRepository implements BinaryContentRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "BinaryContents");
+    private final Path DIRECTORY ;
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
-    public FileBinaryContentRepository() {
+    public FileBinaryContentRepository(@Value("${storage.location}") String storageLocation) {
+        DIRECTORY = Path.of(storageLocation,"BinaryContents");
         createDirectory(DIRECTORY);
     }
 
@@ -45,6 +47,7 @@ public class FileBinaryContentRepository implements BinaryContentRepository {
              ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
             oos.writeObject(content);
+            oos.close();
             return content;
         } catch (IOException e) {
             return null;
@@ -63,13 +66,14 @@ public class FileBinaryContentRepository implements BinaryContentRepository {
             }
             return (BinaryContent) obj;
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("파일 입출력 에러");
+            System.err.println("Message 파일 로드 실패 : " + path);
+            return null;
         }
     }
 
     @Override
     public List<BinaryContent> findAllByIdIn(List<UUID> ids) {
-        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+        if(!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
         Map<UUID,BinaryContent> contentMap = new HashMap<>();
         try (Stream<Path> stream = Files.list(DIRECTORY)){
             stream.filter(path -> path.getFileName().toString().endsWith(EXTENSION))
@@ -84,6 +88,7 @@ public class FileBinaryContentRepository implements BinaryContentRepository {
         return ids.stream()
                 .map(contentMap::get)
                 .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(BinaryContent::getFileName))
                 .toList();
     }
 

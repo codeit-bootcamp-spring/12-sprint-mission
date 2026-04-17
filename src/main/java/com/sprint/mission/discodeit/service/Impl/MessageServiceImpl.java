@@ -12,10 +12,7 @@ import com.sprint.mission.discodeit.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Service("messageService")
 @RequiredArgsConstructor
@@ -46,6 +43,7 @@ public class MessageServiceImpl implements MessageService {
 
     public MessageResponse convertToResponse(Message message){
         return new MessageResponse(
+                message.getId(),
                 message.getChannelId(),
                 message.getUserId(),
                 message.getTitle(),
@@ -57,9 +55,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<MessageResponse> findByChannelId(UUID id) {
         List<Message> messages = messageRepository.findByChannelId(id);
-        if (messages == null || messages.isEmpty()) {
-            throw new NoSuchElementException("해당 Message가 존재하지 않습니다.");
-        }
+        if(messages.isEmpty()) return Collections.emptyList();
+
         List<MessageResponse> messageResponses = new ArrayList<>();
         messages.forEach(message -> messageResponses.add(convertToResponse(message)));
 
@@ -68,8 +65,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageResponse update(MessageUpdateRequest request) {
-        Message message = messageRepository.findById(request.id());
-        if (message == null) throw new NoSuchElementException("해당 Message가 존재하지 않습니다.");
+        Message message = messageRepository.findById(request.id())
+                .orElseThrow(() -> new NoSuchElementException("해당 Message가 존재하지 않습니다."));
 
         message.update(
                 request.title(),
@@ -84,8 +81,10 @@ public class MessageServiceImpl implements MessageService {
         if (messageRepository.existsById(id)){
             throw new NoSuchElementException("해당 메시지가 존재하지 않습니다.");
         }
-
-        List<UUID> attachmentIds = messageRepository.findById(id).getAttachmentIds();
+        List<UUID> attachmentIds = messageRepository.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchElementException("해당 Message가 존재하지 않습니다."))
+                .getAttachmentIds();
         attachmentIds.forEach(binaryContentRepository::deleteById);
 
         messageRepository.delete(id);

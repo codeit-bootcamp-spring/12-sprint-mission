@@ -10,6 +10,7 @@ import com.sprint.mission.discodeit.service.UserStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -22,9 +23,8 @@ public class UserStatusServiceImpl implements UserStatusService {
 
     @Override
     public UserStatusResponse create(UserStatusCreateRequest request) {
-        if (userRepository.findById(request.userId()) == null) {
-            throw new NoSuchElementException("존재하지 않는 유저입니다.");
-        }
+        userRepository.findById(request.userId())
+                .orElseThrow(()-> new NoSuchElementException("존재하지 않는 유저입니다."));
 
         if (userStatusRepository.findByUserId(request.userId()).isPresent()) {
             throw new IllegalStateException("이미 해당 유저의 상태정보가 존재합니다.");
@@ -53,6 +53,8 @@ public class UserStatusServiceImpl implements UserStatusService {
     @Override
     public List<UserStatusResponse> findAll() {
         List<UserStatus> statuses = userStatusRepository.findAll();
+        if(statuses.isEmpty()) return Collections.emptyList();
+
 
         return statuses.stream()
                 .map(this::convertToResponse)
