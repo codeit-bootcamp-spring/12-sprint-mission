@@ -29,6 +29,15 @@ public class Channel implements Serializable {
         this.description = description;
     }
 
+    public Channel(ChannelType type) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
+        this.type = type;
+        this.name = null;
+        this.description = null;
+    }
+
     public void update(String newName, String newDescription) {
         boolean anyValueUpdated = false;
         if (newName != null && !newName.equals(this.name)) {
@@ -52,7 +61,7 @@ public class Channel implements Serializable {
                 .withZone(ZoneId.systemDefault());
 
         String createdAtStr = formatter.format(createdAt);
-        String updatedAtStr = formatter.format(updatedAt);
+        String updatedAtStr = updatedAt == null ? "null" : formatter.format(updatedAt);
 
         return  "id: " + id + "\n" +
                 "name: " + name + "\n" +

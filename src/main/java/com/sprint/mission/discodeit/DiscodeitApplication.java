@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit;
 
+import com.sprint.mission.discodeit.dto.*;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
@@ -21,77 +22,177 @@ public class DiscodeitApplication {
 
 	static void userCRUDTest (UserService userService) {
 		// 생성
-		User user = userService.create("woody", "woody@codeit.com", "woody1234");
-		System.out.println("유저 생성: " + user.getId());
+		UserDto user = userService.create(
+				new CreateUserRequest(
+						"Woody",
+						"woody@codeit.com",
+						"woody1234",
+						null
+				)
+		);
+		System.out.println("유저 생성: " + user.id());
 
 		// 조회
-		User foundUser = userService.find(user.getId());
-		System.out.println("유저 조회(단건): " + foundUser.getId());
-		List<User> foundUsers = userService.findAll();
+		UserDto foundUser = userService.find(user.id());
+		System.out.println("유저 조회(단건): " + foundUser.id());
+
+		List<UserDto> foundUsers = userService.findAll();
 		System.out.println("유저 조회(다건): " + foundUsers.size());
 
 		// 수정
-		User updatedUser = userService.update(user.getId(), null, null, "woody5678");
-		System.out.println("유저 수정: " + String.join("/", updatedUser.getUsername(), updatedUser.getEmail(), updatedUser.getPassword()));
+		UserDto updatedUser = userService.update(
+				user.id(),
+				new UpdateUserRequest(
+						"newWoody",
+						"newWoody@codeit.com",
+						"newWoody1234",
+						null
+				));
+		System.out.println("유저 수정: " + String.join("/", updatedUser.username(), updatedUser.email(), String.valueOf(updatedUser.online())));
 
 		// 삭제
-		userService.delete(user.getId());
-		List<User> foundUsersAfterDelete = userService.findAll();
+		userService.delete(user.id());
+		List<UserDto> foundUsersAfterDelete = userService.findAll();
 		System.out.println("유저 삭제: " + foundUsersAfterDelete.size());
 	}
 
-	static void channelCRUDTest(ChannelService channelService) {
-		// 생성
-		Channel channel = channelService.create(ChannelType.PUBLIC, "공지", "공지 채널입니다.");
-		System.out.println("채널 생성: " + channel.getId());
+	static void publicChannelCRUDTest(ChannelService channelService, UserService userService) {
 
-		// 조회
-		Channel foundChannel = channelService.find(channel.getId());
-		System.out.println("채널 조회(단건): " + foundChannel.getId());
-		List<Channel> foundChannels = channelService.findAll();
+		// 조회용 유저 생성
+		UserDto viewer = userService.create(
+				new CreateUserRequest("viewer", "viewer@codeit.com", "viewer1234", null)
+		);
+
+		// 생성
+		Channel channel = channelService.createPublic(
+				new CreatePublicChannelRequest("공지", "공지 채널입니다.")
+		);
+		System.out.println("PUBLIC 채널 생성: " + channel.getId());
+
+		// 조회(단건)
+		ChannelDto foundChannel = channelService.find(channel.getId());
+		System.out.println("채널 조회(단건): " + foundChannel.id());
+
+		// 조회(다건)
+		List<ChannelDto> foundChannels = channelService.findAllByUserId(viewer.id());
 		System.out.println("채널 조회(다건): " + foundChannels.size());
 
 		// 수정
-		Channel updatedChannel = channelService.update(channel.getId(), "공지사항", null);
-		System.out.println("채널 수정: " + String.join("/", updatedChannel.getName(), updatedChannel.getDescription()));
+		Channel updatedChannel = channelService.update(
+				new UpdateChannelRequest(channel.getId(), "공지사항", "수정된 공지")
+		);
+		System.out.println("채널 수정: " + updatedChannel.getName());
 
 		// 삭제
 		channelService.delete(channel.getId());
-		List<Channel> foundChannelsAfterDelete = channelService.findAll();
-		System.out.println("채널 삭제: " + foundChannelsAfterDelete.size());
+
+		List<ChannelDto> afterDelete = channelService.findAllByUserId(viewer.id());
+		boolean existsAfterDelete = afterDelete.stream()
+				.anyMatch(c -> c.id().equals(channel.getId()));
+		System.out.println("삭제 후 존재 여부: " + existsAfterDelete);
 	}
 
-	static void messageCRUDTest(MessageService messageService) {
+	static void privateChannelCRUDTest(ChannelService channelService, UserService userService) {
+
+		// 유저 생성 (DTO 기반)
+		UserDto user1 = userService.create(
+				new CreateUserRequest("buzz", "buzz@codeit.com", "buzz1234", null)
+		);
+		UserDto user2 = userService.create(
+				new CreateUserRequest("jessie", "jessie@codeit.com", "jessie1234", null)
+		);
+		UserDto outsider = userService.create(
+				new CreateUserRequest("rex", "rex@codeit.com", "rex1234", null)
+		);
+
 		// 생성
-		UUID channelId = UUID.randomUUID();
-		UUID authorId = UUID.randomUUID();
-		Message message = messageService.create("안녕하세요.", channelId, authorId);
-		System.out.println("메시지 생성: " + message.getId());
+		Channel privateChannel = channelService.createPrivate(
+				new CreatePrivateChannelRequest(List.of(user1.id(), user2.id()))
+		);
+		System.out.println("PRIVATE 채널 생성: " + privateChannel.getId());
 
-		// 조회
-		Message foundMessage = messageService.find(message.getId());
-		System.out.println("메시지 조회(단건): " + foundMessage.getId());
-		List<Message> foundMessages = messageService.findAll();
-		System.out.println("메시지 조회(다건): " + foundMessages.size());
+		// 조회(단건)
+		ChannelDto foundPrivateChannel = channelService.find(privateChannel.getId());
+		System.out.println("PRIVATE 채널 조회(단건): " + foundPrivateChannel.id());
+		System.out.println("PRIVATE 참여자 목록: " + foundPrivateChannel.userIds());
 
-		// 수정
-		Message updatedMessage = messageService.update(message.getId(), "반갑습니다.");
-		System.out.println("메시지 수정: " + updatedMessage.getContent());
+		// 조회(다건)
+		List<ChannelDto> user1Channels = channelService.findAllByUserId(user1.id());
+		System.out.println("user1 채널 수: " + user1Channels.size());
 
-		// 삭재
-		messageService.delete(message.getId());
-		List<Message> foundMessagesAfterDelete = messageService.findAll();
-		System.out.println("메시지 삭제: " + foundMessagesAfterDelete.size());
+		List<ChannelDto> user2Channels = channelService.findAllByUserId(user2.id());
+		System.out.println("user2 채널 수: " + user2Channels.size());
+
+		List<ChannelDto> outsiderChannels = channelService.findAllByUserId(outsider.id());
+		boolean outsiderCanSee = outsiderChannels.stream()
+				.anyMatch(c -> c.id().equals(privateChannel.getId()));
+		System.out.println("비참여자 접근 가능 여부: " + outsiderCanSee);
+
+		// 수정 불가
+		try {
+			channelService.update(
+					new UpdateChannelRequest(privateChannel.getId(), "수정", "수정")
+			);
+			System.out.println("수정됨 X");
+		} catch (Exception e) {
+			System.out.println("수정 불가 ✔️");
+		}
+
+		// 삭제
+		channelService.delete(privateChannel.getId());
 	}
 
-	static User setupUser(UserService userService) {
-		User user = userService.create("woody", "woody@codeit.com", "woody1234");
-		return user;
+//	static void messageCRUDTest(MessageService messageService) {
+//		// 생성
+//		UUID channelId = UUID.randomUUID();
+//		UUID authorId = UUID.randomUUID();
+//		Message message = messageService.create("안녕하세요.", channelId, authorId);
+//		System.out.println("메시지 생성: " + message.getId());
+//
+//		// 조회
+//		Message foundMessage = messageService.find(message.getId());
+//		System.out.println("메시지 조회(단건): " + foundMessage.getId());
+//		List<Message> foundMessages = messageService.findAll();
+//		System.out.println("메시지 조회(다건): " + foundMessages.size());
+//
+//		// 수정
+//		Message updatedMessage = messageService.update(message.getId(), "반갑습니다.");
+//		System.out.println("메시지 수정: " + updatedMessage.getContent());
+//
+//		// 삭제
+//		messageService.delete(message.getId());
+//		List<Message> foundMessagesAfterDelete = messageService.findAll();
+//		System.out.println("메시지 삭제: " + foundMessagesAfterDelete.size());
+//	}
+
+	static UserDto setupUser(UserService userService, String username, String email) {
+		return userService.create(
+				new CreateUserRequest(
+						username,
+						email,
+						"password1234",
+						null
+				)
+		);
 	}
 
-	static Channel setupChannel(ChannelService channelService) {
-		Channel channel = channelService.create(ChannelType.PUBLIC, "공지", "공지 채널입니다.");
-		return channel;
+	static Channel setupPublicChannel(
+			ChannelService channelService,
+			String name,
+			String description
+	) {
+		return channelService.createPublic(
+				new CreatePublicChannelRequest(name, description)
+		);
+	}
+
+	static Channel setupPrivateChannel(
+			ChannelService channelService,
+			List<UUID> userIds
+	) {
+		return channelService.createPrivate(
+				new CreatePrivateChannelRequest(userIds)
+		);
 	}
 
 	static void messageCreateTest(MessageService messageService, Channel channel, User author) {
@@ -105,14 +206,13 @@ public class DiscodeitApplication {
 		// 서비스 초기화
 		UserService userService = context.getBean(UserService.class);
 		ChannelService channelService = context.getBean(ChannelService.class);
-		MessageService messageService = context.getBean(MessageService.class);
+//		MessageService messageService = context.getBean(MessageService.class);
 
-		// 셋업
-		User user = setupUser(userService);
-		Channel channel = setupChannel(channelService);
 
 		// 테스트
-		messageCreateTest(messageService, channel, user);
+		userCRUDTest(userService);
+		publicChannelCRUDTest(channelService, userService);
+		privateChannelCRUDTest(channelService, userService);
 	}
 
 }
