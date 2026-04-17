@@ -32,6 +32,9 @@ public class BasicChannelService implements ChannelService {
 
 	@Override
 	public Channel create(ChannelCreatePrivateRequestDto dto) {
+		if (dto.users() == null || dto.users().isEmpty()){
+			throw new IllegalArgumentException("users cannot be empty");
+		}
 		Channel channel = new Channel(ChannelType.PRIVATE, null, null);
 		dto.users().forEach(u -> readStatusRepository.save(new ReadStatus(u.getId(), channel.getId(), Instant.now())));
 		return channelRepository.save(channel);

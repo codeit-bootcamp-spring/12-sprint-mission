@@ -6,6 +6,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import com.sprint.mission.discodeit.dto.request.ChannelCreatePublicRequestDto;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequestDto;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 public class DiscodeitApplication {
 	static User setupUser(UserService userService) {
-		User user = userService.create("woody", "woody@codeit.com", "woody1234", null);
+		User user = userService.create(new UserCreateRequest("woody", "woody@codeit.com", "woody1234", null));
 		System.out.println("유저 생성: " + user.toString());
 		return user;
 	}
