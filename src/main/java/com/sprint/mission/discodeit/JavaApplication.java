@@ -36,8 +36,8 @@ public class JavaApplication {
         Channel textChannel = new Channel("텍스트 채널", ChannelType.TEXT , true);
         Channel voiceChannel = new Channel("음성 채널", ChannelType.VOICE, false);
 
-        Message message1 = new Message(textChannel.getId(), user1.getId(), "메세지 테스트 1");
-        Message message2 = new Message(textChannel.getId(), user2.getId(), "메세지 테스트 2");
+        Message message1 = new Message(textChannel.getId(), user1.getId(), "메세지 테스트 1", null);
+        Message message2 = new Message(textChannel.getId(), user2.getId(), "메세지 테스트 2", null);
 
         System.out.println("====JCF SERVICE 시작====\n");
         testJCFService(user1, user2, textChannel, voiceChannel, message1, message2);
@@ -124,9 +124,9 @@ public class JavaApplication {
         messageService.findAll().forEach(msg -> System.out.println(msg));
 
         System.out.println("\n====Message update====");
-        Message changeMessage = new Message(msg1.getId(), msg1.getMemberId(), "바뀐 메세지");
+        Message changeMessage = new Message(msg1.getId(), msg1.getMemberId(), "바뀐 메세지", null);
                 //UUID channelId, UUID memberId, String content
-        System.out.println(messageService.update(msg1.getId(), changeMessage));
+        System.out.println(messageService.update(msg1.getId(), changeMessage, null));
         System.out.println("====변경 완료!====");
         messageService.findAll().forEach(msg -> System.out.println(msg));
 
