@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.entity;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -16,12 +17,12 @@ public class User implements Serializable {
     private String email;
     private String nickName;
 
-    private final Long createdAt;
-    private Long updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
     public User(String userName, String password, String email, String nickName) {
         this.id = UUID.randomUUID();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
 
         this.userName = userName;
@@ -34,7 +35,7 @@ public class User implements Serializable {
         this.userName = newUserName;
         this.password = newPassword;
         this.email = newEmail;
-        this.updatedAt = System.currentTimeMillis();
+        this.updatedAt = Instant.now();
         this.nickName = newNickName;
     }
 
