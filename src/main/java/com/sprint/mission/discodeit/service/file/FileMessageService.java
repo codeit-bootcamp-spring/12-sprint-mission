@@ -104,10 +104,10 @@ public class FileMessageService implements MessageService {
     }
 
     @Override
-    public Message update(UUID id, Message message) {
+    public Message update(UUID id, Message message, List<UUID> attachmentIds) {
         Optional<Message> found = findById(id);
         if (found.isPresent()) {
-            found.get().update(message.getContent());
+            found.get().update(message.getContent(), attachmentIds);
             return save(found.orElse(null));
         }
         return null;

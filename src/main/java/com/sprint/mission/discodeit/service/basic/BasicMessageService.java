@@ -35,8 +35,8 @@ public class BasicMessageService implements MessageService {
     }
 
     @Override
-    public Message update(UUID id, Message message) {
-        return messageRepository.update(id, message);
+    public Message update(UUID id, Message message, List<UUID> attachmentIds) {
+        return messageRepository.update(id, message, attachmentIds);
     }
 
     @Override

@@ -10,6 +10,6 @@ public interface MessageRepository {
     Message save(Message message);
     Optional<Message> findById(UUID id);
     List<Message> findAll();
-    Message update(UUID id, Message message);
+    Message update(UUID id, Message message, List<UUID> attachmentIds);
     boolean delete(UUID id);
 }

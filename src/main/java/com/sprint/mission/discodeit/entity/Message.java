@@ -3,6 +3,8 @@ package com.sprint.mission.discodeit.entity;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -12,32 +14,33 @@ public class Message implements Serializable {
 
     private final UUID id;
     private final UUID channelId;
-//    private final UUID serverId;
     private final UUID memberId;
 
-    private final Long createdAt;
-    private Long updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
     private String content;
+    private List<UUID> attachmentIds;
 
     private boolean isEdited;
 
-    public Message(UUID channelId /*, serverId*/, UUID memberId, String content) {
+    public Message(UUID channelId /*, serverId*/, UUID memberId, String content, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
         this.isEdited = false;
 
         this.channelId = channelId;
-//        this.serverId = serverId;
         this.memberId = memberId;
         this.content = content;
+        this.attachmentIds = attachmentIds;
     }
 
-    public void update(String newContent) {
+    public void update(String newContent, List<UUID> attachmentIds) {
         this.content = newContent;
         this.isEdited = true;
-        this.updatedAt = System.currentTimeMillis();
+        this.updatedAt = Instant.now();
+        this.attachmentIds = attachmentIds;
     }
 
     @Override
