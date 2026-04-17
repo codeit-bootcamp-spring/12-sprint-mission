@@ -5,16 +5,12 @@ import com.sprint.mission.discodeit.repository.UserRepository;
 
 import java.util.*;
 
-import static java.util.Optional.ofNullable;
-
-
 public class JCFUserRepository implements UserRepository {
     private final Map<UUID, User> data;
 
     public JCFUserRepository() {
         this.data = new HashMap<>();
     }
-
 
     @Override
     public User save(User user) {
@@ -33,16 +29,12 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public Boolean existsById(UUID id) {
+    public boolean existsById(UUID id) {
         return this.data.containsKey(id);
     }
 
     @Override
-    public void delete(UUID id) {
+    public void deleteById(UUID id) {
         this.data.remove(id);
     }
 }
-
-
-
-

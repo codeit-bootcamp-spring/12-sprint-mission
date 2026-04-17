@@ -1,37 +1,52 @@
 package com.sprint.mission.discodeit.entity;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
+
     private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
     private String content;
-    private String sender;
-    private String receiver;
-    private Long createdAt;
-    private Long updatedAt;
+    //
+    private UUID channelId;
+    private UUID authorId;
 
-    public Message(String content, String sender, String receiver) {
+    public Message(String content, UUID channelId, UUID authorId) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.ofEpochSecond(Instant.now().getEpochSecond());
+        //
         this.content = content;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+        this.channelId = channelId;
+        this.authorId = authorId;
     }
 
-    public UUID getId() { return this.id; }
-    public String getContent() { return content; }
-    public String getSender() {
-        return this.sender;
+    public UUID getId() {
+        return id;
     }
-    public String getReceiver() {
-        return this.receiver;
+
+    public Instant getCreatedAt() {
+        return createdAt;
     }
-    public Long getCreatedAt() { return this.createdAt; }
-    public Long getUpdatedAt() {
+
+    public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public UUID getChannelId() {
+        return channelId;
+    }
+
+    public UUID getAuthorId() {
+        return authorId;
     }
 
     public void update(String newContent) {
@@ -40,23 +55,9 @@ public class Message implements Serializable {
             this.content = newContent;
             anyValueUpdated = true;
         }
+
         if (anyValueUpdated) {
-            this.updatedAt = System.currentTimeMillis();
+            this.updatedAt = Instant.ofEpochSecond(Instant.now().getEpochSecond());
         }
     }
-
-    @Override
-    public String toString() {
-        return "MessageService{" +
-                "id=" + id +
-                ", content='" + content + '\'' +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }
-
-
-

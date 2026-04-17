@@ -2,19 +2,25 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
 
 public class FileMessageRepository implements MessageRepository {
     private final Path DIRECTORY;
-    private final String EXTENSION = "message.ser";
+    private final String EXTENSION = ".ser";
 
     public FileMessageRepository() {
-        this.DIRECTORY = Path.of(System.getProperty("user.dir"), "file-data-map", Message.class.getSimpleName());
-        if (!Files.exists(DIRECTORY)) {
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", Message.class.getSimpleName());
+        if (Files.notExists(DIRECTORY)) {
             try {
                 Files.createDirectories(DIRECTORY);
             } catch (IOException e) {
@@ -24,8 +30,9 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     private Path resolvePath(UUID id) {
-        return DIRECTORY.resolve(id.toString() + "." + EXTENSION);
+        return DIRECTORY.resolve(id + EXTENSION);
     }
+
     @Override
     public Message save(Message message) {
         Path path = resolvePath(message.getId());
@@ -54,8 +61,8 @@ public class FileMessageRepository implements MessageRepository {
                 throw new RuntimeException(e);
             }
         }
-            return Optional.ofNullable(messageNullable);
-        }
+        return Optional.ofNullable(messageNullable);
+    }
 
     @Override
     public List<Message> findAll() {
@@ -68,7 +75,7 @@ public class FileMessageRepository implements MessageRepository {
                                 ObjectInputStream ois = new ObjectInputStream(fis)
                         ) {
                             return (Message) ois.readObject();
-                        } catch(IOException | ClassNotFoundException e){
+                        } catch (IOException | ClassNotFoundException e) {
                             throw new RuntimeException(e);
                         }
                     })
@@ -85,7 +92,7 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void deleteById(UUID id) {
         Path path = resolvePath(id);
         try {
             Files.delete(path);
@@ -94,5 +101,3 @@ public class FileMessageRepository implements MessageRepository {
         }
     }
 }
-
-

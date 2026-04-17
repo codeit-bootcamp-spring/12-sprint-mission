@@ -5,10 +5,9 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 
 import java.util.*;
 
-import static java.util.Optional.ofNullable;
-
 public class JCFChannelRepository implements ChannelRepository {
     private final Map<UUID, Channel> data;
+
     public JCFChannelRepository() {
         this.data = new HashMap<>();
     }
@@ -35,11 +34,7 @@ public class JCFChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void deleteById(UUID id) {
         this.data.remove(id);
-
     }
 }
-
-
-

@@ -6,43 +6,43 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+@Service
+@RequiredArgsConstructor
 
 public class BasicMessageService implements MessageService {
     private final MessageRepository messageRepository;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
 
-    public BasicMessageService(MessageRepository messageRepository, ChannelRepository channelRepository, UserRepository userRepository) {
-        this.messageRepository = messageRepository;
-        this.channelRepository = channelRepository;
-        this.userRepository = userRepository;
-    }
-
     @Override
-    public Message create(String content, String sender, String receiver) {
-        if (!channelRepository.existsById(UUID.fromString(sender))) {
-            throw new NoSuchElementException("Channel with id " + sender);
+    public Message create(String content, UUID channelId, UUID authorId) {
+        if (!channelRepository.existsById(channelId)) {
+            throw new NoSuchElementException("Channel not found with id " + channelId);
         }
-        if (!userRepository.existsById(UUID.fromString(receiver))) {
-            throw new NoSuchElementException("User with id " + receiver);
+        if (!userRepository.existsById(authorId)) {
+            throw new NoSuchElementException("Author not found with id " + authorId);
         }
-        Message message = new Message(content, sender, receiver);
+
+        Message message = new Message(content, channelId, authorId);
         return messageRepository.save(message);
     }
 
     @Override
-    public Message read(UUID messageId) {
+    public Message find(UUID messageId) {
         return messageRepository.findById(messageId)
                 .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
     }
 
     @Override
-    public List<Message> readAll() {
-        return new ArrayList<>(messageRepository.findAll());
+    public List<Message> findAll() {
+        return messageRepository.findAll();
     }
 
     @Override
@@ -58,7 +58,6 @@ public class BasicMessageService implements MessageService {
         if (!messageRepository.existsById(messageId)) {
             throw new NoSuchElementException("Message with id " + messageId + " not found");
         }
-        messageRepository.delete(messageId);
-        }
+        messageRepository.deleteById(messageId);
     }
-
+}
