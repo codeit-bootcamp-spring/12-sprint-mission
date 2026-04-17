@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.data.LoginRequest;
-import com.sprint.mission.discodeit.dto.data.UserResponse;
+import com.sprint.mission.discodeit.dto.data.auth.LoginRequest;
+import com.sprint.mission.discodeit.dto.data.user.UserResponse;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;

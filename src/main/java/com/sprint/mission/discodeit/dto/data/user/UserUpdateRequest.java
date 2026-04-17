@@ -1,6 +1,6 @@
-package com.sprint.mission.discodeit.dto.data;
+package com.sprint.mission.discodeit.dto.data.user;
 
-public record UserCreateRequest(
+public record UserUpdateRequest(
         String username,
         String email,
         String password,

@@ -1,8 +1,8 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.data.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.UserResponse;
-import com.sprint.mission.discodeit.dto.data.UserUpdateRequest;
+import com.sprint.mission.discodeit.dto.data.user.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.data.user.UserResponse;
+import com.sprint.mission.discodeit.dto.data.user.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
@@ -30,7 +30,6 @@ public class BasicUserService implements UserService {
 
     @Override
     public UserResponse create(UserCreateRequest request) {
-        // 🔥 record Getter 적용: getUsername() -> username()
         boolean isDuplicate = userRepository.findAll().stream()
                 .anyMatch(u -> u.getUsername().equals(request.username()) || u.getEmail().equals(request.email()));
         if (isDuplicate) {
@@ -88,7 +87,6 @@ public class BasicUserService implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        // 🔥 record Getter 적용
         boolean isDuplicate = userRepository.findAll().stream()
                 .anyMatch(u -> !u.getId().equals(id) &&
                         (u.getUsername().equals(request.username()) || u.getEmail().equals(request.email())));
