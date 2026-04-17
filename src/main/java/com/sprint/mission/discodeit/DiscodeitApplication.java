@@ -1,18 +1,26 @@
 package com.sprint.mission.discodeit;
 
 import com.sprint.mission.discodeit.dto.*;
+import com.sprint.mission.discodeit.dto.channel.ChannelDto;
+import com.sprint.mission.discodeit.dto.channel.CreatePrivateChannelRequest;
+import com.sprint.mission.discodeit.dto.channel.CreatePublicChannelRequest;
+import com.sprint.mission.discodeit.dto.channel.UpdateChannelRequest;
+import com.sprint.mission.discodeit.dto.message.CreateMessageRequest;
+import com.sprint.mission.discodeit.dto.message.UpdateMessageRequest;
+import com.sprint.mission.discodeit.dto.readStatus.CreateReadStatusRequest;
+import com.sprint.mission.discodeit.dto.readStatus.UpdateReadStatusRequest;
 import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.ReadStatusService;
 import com.sprint.mission.discodeit.service.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -147,7 +155,6 @@ public class DiscodeitApplication {
 	                            ChannelService channelService,
 	                            UserService userService) {
 
-		// ✅ 여기서 생성 (이게 정답)
 		UserDto user = userService.create(
 				new CreateUserRequest(
 						"messageUser",
@@ -167,9 +174,7 @@ public class DiscodeitApplication {
 		UUID channelId = channel.getId();
 		UUID authorId = user.id();
 
-		// =====================
 		// 생성
-		// =====================
 		CreateMessageRequest createRequest = new CreateMessageRequest(
 				"안녕하세요.",
 				channelId,
@@ -203,6 +208,60 @@ public class DiscodeitApplication {
 		System.out.println("메시지 삭제: " + afterDelete.size());
 	}
 
+
+	static void readStatusCRUDTest(
+			ReadStatusService readStatusService,
+			ChannelService channelService,
+			UserService userService
+	) {
+
+		UserDto user = userService.create(
+				new CreateUserRequest(
+						"readStatusUser",
+						"readstatus@test.com",
+						"password1234",
+						null
+				)
+		);
+
+		Channel channel = channelService.createPublic(
+				new CreatePublicChannelRequest(
+						"읽음 상태 채널",
+						"ReadStatus 테스트 채널"
+				)
+		);
+
+		// 생성
+		ReadStatus readStatus = readStatusService.create(
+				new CreateReadStatusRequest(user.id(), channel.getId(), null)
+		);
+		System.out.println("ReadStatus 생성: " + readStatus.getId());
+
+		// 조회(단건)
+		ReadStatus foundReadStatus = readStatusService.find(readStatus.getId());
+		System.out.println("ReadStatus 조회(단건): " + foundReadStatus.getId());
+
+		// 조회(다건)
+		List<ReadStatus> foundReadStatuses = readStatusService.findAllByUserId(user.id());
+		System.out.println("ReadStatus 조회(다건): " + foundReadStatuses.size());
+
+		// 수정
+		ReadStatus updatedReadStatus = readStatusService.update(
+				new UpdateReadStatusRequest(readStatus.getId(), null)
+		);
+		System.out.println("ReadStatus 수정: " + updatedReadStatus.getUpdatedAt());
+
+		// 삭제
+		readStatusService.delete(readStatus.getId());
+
+		try {
+			readStatusService.find(readStatus.getId());
+			System.out.println("삭제 실패");
+		} catch (Exception e) {
+			System.out.println("ReadStatus 삭제 완료");
+		}
+	}
+
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
 
@@ -210,13 +269,14 @@ public class DiscodeitApplication {
 		UserService userService = context.getBean(UserService.class);
 		ChannelService channelService = context.getBean(ChannelService.class);
 		MessageService messageService = context.getBean(MessageService.class);
-
+		ReadStatusService readStatusService = context.getBean(ReadStatusService.class);
 
 		// 테스트
 		userCRUDTest(userService);
 		publicChannelCRUDTest(channelService, userService);
 		privateChannelCRUDTest(channelService, userService);
 		messageCRUDTest(messageService, channelService, userService);
+		readStatusCRUDTest(readStatusService, channelService, userService);
 	}
 
 }
