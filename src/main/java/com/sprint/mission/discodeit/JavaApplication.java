@@ -57,7 +57,7 @@ public class JavaApplication {
 
         ChannelService channelService = new BasicChannelService(channelRepository);
         UserService userService = new BasicUserService(userRepository);
-        MessageService messageService = new BasicMessageService(messageRepository, channelRepository, userRepository);
+        MessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
 
         System.out.println("========= JCF 초기 세팅 완료 =========\n");
 
@@ -75,7 +75,7 @@ public class JavaApplication {
 
         ChannelService channelService = new BasicChannelService(channelRepository);
         UserService userService = new BasicUserService(userRepository);
-        MessageService messageService = new BasicMessageService(messageRepository, channelRepository, userRepository);
+        MessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
 
         System.out.println("========= FILE 초기 세팅 완료 =========\n");
 
