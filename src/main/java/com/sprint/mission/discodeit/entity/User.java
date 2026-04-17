@@ -3,9 +3,7 @@ package com.sprint.mission.discodeit.entity;
 import lombok.*;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 
 @Builder
@@ -14,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User implements Serializable {
     private UUID id;
+    private UUID profileId;
     private String username;
     private String email;
     private String password;
@@ -31,7 +30,6 @@ public class User implements Serializable {
         this.updatedAt = Instant.now();
     }
 
-
     public void update(String username, String email, String password){
         this.username = username;
         this.email = email;
@@ -40,5 +38,8 @@ public class User implements Serializable {
         this.updatedAt = Instant.now();
     }
 
-
+    public void updateProfileId(UUID profileId) {
+        this.profileId = profileId;
+        this.updatedAt = Instant.now();
+    }
 }

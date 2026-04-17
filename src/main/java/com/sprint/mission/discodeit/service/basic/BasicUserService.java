@@ -1,7 +1,14 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.data.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.UserResponse;
+import com.sprint.mission.discodeit.dto.data.UserUpdateRequest;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -10,45 +17,136 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Primary
 @Service
+@Primary
 @RequiredArgsConstructor
 public class BasicUserService implements UserService {
 
     private final UserRepository userRepository;
+    private final BinaryContentRepository binaryContentRepository;
+    private final UserStatusRepository userStatusRepository;
 
     @Override
-    public User create(String username, String email, String password) {
-        User user = new User(username, email, password);
-        return userRepository.save(user);
+    public UserResponse create(UserCreateRequest request) {
+        // 🔥 record Getter 적용: getUsername() -> username()
+        boolean isDuplicate = userRepository.findAll().stream()
+                .anyMatch(u -> u.getUsername().equals(request.username()) || u.getEmail().equals(request.email()));
+        if (isDuplicate) {
+            throw new IllegalArgumentException("이미 사용 중인 username 또는 email 입니다.");
+        }
+
+        User user = new User(request.username(), request.email(), request.password());
+
+        if (request.profileImageBytes() != null) {
+            BinaryContent profileImage = new BinaryContent(
+                    request.profileImageBytes(),
+                    request.profileImageName(),
+                    request.profileImageContentType()
+            );
+            binaryContentRepository.save(profileImage);
+            user.updateProfileId(profileImage.getId());
+        }
+
+        userRepository.save(user);
+
+        UserStatus userStatus = new UserStatus(user.getId());
+        userStatusRepository.save(userStatus);
+
+        return toResponse(user, userStatus);
     }
 
     @Override
-    public User find(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User with id " + id + " not found"));
-    }
-
-    @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User update(UUID id, String username, String email, String password) {
+    public UserResponse find(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User with id " + id + " not found"));
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        user.update(username, email, password);
-        return userRepository.save(user);
+        UserStatus userStatus = userStatusRepository.findAll().stream()
+                .filter(us -> us.getUserId().equals(user.getId()))
+                .findFirst()
+                .orElse(null);
+
+        return toResponse(user, userStatus);
+    }
+
+    @Override
+    public List<UserResponse> findAll() {
+        return userRepository.findAll().stream()
+                .map(user -> {
+                    UserStatus userStatus = userStatusRepository.findAll().stream()
+                            .filter(us -> us.getUserId().equals(user.getId()))
+                            .findFirst()
+                            .orElse(null);
+                    return toResponse(user, userStatus);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponse update(UUID id, UserUpdateRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        // 🔥 record Getter 적용
+        boolean isDuplicate = userRepository.findAll().stream()
+                .anyMatch(u -> !u.getId().equals(id) &&
+                        (u.getUsername().equals(request.username()) || u.getEmail().equals(request.email())));
+        if (isDuplicate) {
+            throw new IllegalArgumentException("이미 사용 중인 username 또는 email 입니다.");
+        }
+
+        user.update(request.username(), request.email(), request.password());
+
+        if (request.profileImageBytes() != null) {
+            if (user.getProfileId() != null) {
+                binaryContentRepository.deleteById(user.getProfileId());
+            }
+            BinaryContent newImage = new BinaryContent(
+                    request.profileImageBytes(),
+                    request.profileImageName(),
+                    request.profileImageContentType()
+            );
+            binaryContentRepository.save(newImage);
+            user.updateProfileId(newImage.getId());
+        }
+
+        userRepository.save(user);
+
+        UserStatus userStatus = userStatusRepository.findAll().stream()
+                .filter(us -> us.getUserId().equals(user.getId()))
+                .findFirst()
+                .orElse(null);
+
+        return toResponse(user, userStatus);
     }
 
     @Override
     public void delete(UUID id) {
-        if (!userRepository.existsById(id)) {
-            throw new NoSuchElementException("User with id " + id + " not found");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        if (user.getProfileId() != null) {
+            binaryContentRepository.deleteById(user.getProfileId());
         }
+
+        userStatusRepository.findAll().stream()
+                .filter(us -> us.getUserId().equals(user.getId()))
+                .findFirst()
+                .ifPresent(us -> userStatusRepository.deleteById(us.getId()));
+
         userRepository.deleteById(id);
+    }
+
+    private UserResponse toResponse(User user, UserStatus userStatus) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .profileId(user.getProfileId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .isOnline(userStatus != null && userStatus.isOnline())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
     }
 }
