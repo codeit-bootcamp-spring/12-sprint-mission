@@ -12,48 +12,38 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.MessageService;
+import lombok.Locked;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
-
+@Primary
 @Service
 @RequiredArgsConstructor
-
-public class BasicChannelService implements ChannelService {
+public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
     private final ReadStatusRepository readStatusRepository;
     private final MessageRepository messageRepository;
 
     @Override
     public ChannelDto createPublic(PublicChannelCreateRequest request) {
-        Channel channel = new Channel(ChannelCategory.PRIVATE, null, null);
+        Channel channel = new Channel(ChannelCategory.PUBLIC, request.getName(), request.getDescription());
         channelRepository.save(channel);
-
-        // 참여 User별 ReadStatus 생성
-        request.getParticipantIds().forEach(userId -> {
-            ReadStatus readStatus = new ReadStatus(
-                    UUID.randomUUID(),
-                    (UUID) userId,
-                    channel.getId(),
-                    Instant.now()
-            );
-            readStatusRepository.save(readStatus);
-        });
-
         return toDto(channel);
     }
+
+
     @Override
     public ChannelDto createPrivate(PrivateChannelCreateRequest request) {
         Channel channel = new Channel(ChannelCategory.PRIVATE, null, null);
         channelRepository.save(channel);
 
-        // Create ReadStatus per User
         request.getParticipantIds().forEach(userId -> {
             ReadStatus readStatus = new ReadStatus(
                     UUID.randomUUID(),
@@ -66,7 +56,6 @@ public class BasicChannelService implements ChannelService {
 
         return toDto(channel);
     }
-
 
     @Override
     public ChannelDto find(UUID channelId) {
@@ -81,6 +70,7 @@ public class BasicChannelService implements ChannelService {
                 .stream()
                 .map(ReadStatus::getChannelId)
                 .toList();
+
         return channelRepository.findAll().stream()
                 .filter(channel ->
                         channel.getCategory() == ChannelCategory.PUBLIC
@@ -94,7 +84,6 @@ public class BasicChannelService implements ChannelService {
     public ChannelDto update(UUID channelId, ChannelUpdateRequest request) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new NoSuchElementException("Channel을 찾을 수 없습니다: " + channelId));
-
         if (channel.getCategory() == ChannelCategory.PRIVATE) {
             throw new IllegalArgumentException("PRIVATE 채널은 수정할 수 없습니다.");
         }
@@ -108,13 +97,11 @@ public class BasicChannelService implements ChannelService {
     public void delete(UUID channelId) {
         channelRepository.findById(channelId)
                 .orElseThrow(() -> new NoSuchElementException("Channel을 찾을 수 없습니다: " + channelId));
-
-        // Delete Related Message
+        // Deleting Related Message
         messageRepository.findAll().stream()
                 .filter(m -> m.getChannelId().equals(channelId))
                 .forEach(m -> messageRepository.deleteById(m.getId()));
-
-        // Delete Related ReadStatus
+        // Deleting Related ReadStatus
         readStatusRepository.findAll().stream()
                 .filter(rs -> rs.getChannelId().equals(channelId))
                 .forEach(rs -> readStatusRepository.deleteById(rs.getId()));

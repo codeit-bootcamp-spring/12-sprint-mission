@@ -5,24 +5,23 @@ import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
-import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
-import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.UUID;
+
+@Primary
 @Service
 @RequiredArgsConstructor
+public class MessageServiceImpl implements MessageService {
 
-public class BasicMessageService implements MessageService {
     private final MessageRepository messageRepository;
     private final BinaryContentRepository binaryContentRepository;
 
@@ -31,30 +30,29 @@ public class BasicMessageService implements MessageService {
         Message message = new Message(request.getContent(), request.getChannelId(), request.getAuthorId());
         messageRepository.save(message);
 
-        // Save Attachment files ( Optional )
+    // Saving Attachment files ( Optional )
         if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
-            request.getAttachments().forEach(attachment -> {
-                BinaryContent binaryContent = new BinaryContent(
-                        UUID.randomUUID().toString(),
-                        attachment.getBytes(),
-                        attachment.getFileName(),
-                        attachment.getContentType(),
-                        Instant.now(),
-                        null,
-                        message.getId().toString()
-                );
-                binaryContentRepository.save(binaryContent);
-            });
-        }
-
-        return message;
+        request.getAttachments().forEach(attachment -> {
+            BinaryContent binaryContent = new BinaryContent(
+                    UUID.randomUUID().toString(),
+                    attachment.getBytes(),
+                    attachment.getFileName(),
+                    attachment.getContentType(),
+                    Instant.now(),
+                    null,
+                    message.getId().toString()
+            );
+            binaryContentRepository.save(binaryContent);
+        });
     }
 
+        return message;
+}
 
-    @Override
+@Override
     public Message find(UUID messageId) {
         return messageRepository.findById(messageId)
-                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
+            .orElseThrow(() -> new NoSuchElementException("Message를 찾을 수 없습니다: " + messageId));
     }
 
     @Override
@@ -63,7 +61,6 @@ public class BasicMessageService implements MessageService {
                 .filter(m -> m.getChannelId().equals(channelId))
                 .toList();
     }
-
     @Override
     public Message update(UUID messageId, MessageUpdateRequest request) {
         Message message = messageRepository.findById(messageId)
@@ -77,7 +74,7 @@ public class BasicMessageService implements MessageService {
         messageRepository.findById(messageId)
                 .orElseThrow(() -> new NoSuchElementException("Message를 찾을 수 없습니다: " + messageId));
 
-        // Delete Attached File (BinaryContent)
+        // Deleting 첨부파일(BinaryContent)
         binaryContentRepository.findAll().stream()
                 .filter(bc -> messageId.toString().equals(bc.getMessageId()))
                 .forEach(bc -> binaryContentRepository.deleteById(UUID.fromString(bc.getId())));
@@ -90,6 +87,5 @@ public class BasicMessageService implements MessageService {
         return null;
     }
 }
-
 
 

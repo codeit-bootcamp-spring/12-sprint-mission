@@ -2,8 +2,12 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
+@Primary
+@Repository
 
 public class JCFChannelRepository implements ChannelRepository {
     private final Map<UUID, Channel> data;

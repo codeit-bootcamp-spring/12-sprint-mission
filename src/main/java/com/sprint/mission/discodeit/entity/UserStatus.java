@@ -2,11 +2,13 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 
 @Getter
-public class UserStatus {
+public class UserStatus implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String userId;
     private Instant lastSeenAt;

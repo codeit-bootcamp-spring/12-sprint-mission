@@ -5,6 +5,6 @@ public enum ChannelCategory {
         Notice,
         Introduction,
         CareerAdvice,
-        Assignments
+        PUBLIC, PRIVATE, Assignments
 
 }

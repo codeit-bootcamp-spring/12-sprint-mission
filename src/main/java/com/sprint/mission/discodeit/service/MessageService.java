@@ -1,17 +1,19 @@
 package com.sprint.mission.discodeit.service;
 
+import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
+import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.entity.Message;
-import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
-
 public interface MessageService {
-    Message create(String content, UUID channelId, UUID authorId);
+    Message create(MessageCreateRequest request);
     Message find(UUID messageId);
-    List<Message> findAll();
-    Message update(UUID messageId, String newContent);
+    List<Message> findAllByChannelId(UUID channelId);
+    Message update(UUID messageId, MessageUpdateRequest request);
     void delete(UUID messageId);
+
+    Message create(String s, UUID id, UUID id1);
 }

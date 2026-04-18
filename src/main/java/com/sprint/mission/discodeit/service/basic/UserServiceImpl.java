@@ -11,46 +11,40 @@ import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
-
+@Primary
 @Service
 @RequiredArgsConstructor
 
+public class UserServiceImpl implements UserService {
 
-public class BasicUserService implements UserService {
     private final UserRepository userRepository;
     private final UserStatusRepository userStatusRepository;
     private final BinaryContentRepository binaryContentRepository;
 
     @Override
     public UserDto create(UserCreateRequest request) {
-        // username duplicate check
         boolean usernameDuplicated = userRepository.findAll().stream()
                 .anyMatch(u -> u.getUsername().equals(request.getUsername()));
         if (usernameDuplicated) {
             throw new IllegalArgumentException("이미 사용 중인 username입니다: " + request.getUsername());
         }
-
-        // email duplicate check
         boolean emailDuplicated = userRepository.findAll().stream()
                 .anyMatch(u -> u.getEmail().equals(request.getEmail()));
         if (emailDuplicated) {
             throw new IllegalArgumentException("이미 사용 중인 email입니다: " + request.getEmail());
         }
-
-        // Create User
         User user = new User(request.getUsername(), request.getEmail(), request.getPassword());
         userRepository.save(user);
 
-        // Save Profile Image ( Optional )
         if (request.getProfileImage() != null) {
             BinaryContentCreateRequest imageRequest = request.getProfileImage();
             BinaryContent profileImage = new BinaryContent(
@@ -65,7 +59,6 @@ public class BasicUserService implements UserService {
             binaryContentRepository.save(profileImage);
         }
 
-        // Create UserStatus
         UserStatus userStatus = new UserStatus(
                 UUID.randomUUID().toString(),
                 user.getId().toString(),
@@ -75,7 +68,6 @@ public class BasicUserService implements UserService {
 
         return toDto(user, userStatus);
     }
-
 
     @Override
     public UserDto find(UUID userId) {
@@ -97,13 +89,11 @@ public class BasicUserService implements UserService {
                 .toList();
     }
 
-
     @Override
     public UserDto update(UUID userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User를 찾을 수 없습니다: " + userId));
 
-        // username duplicate check
         if (request.getNewUsername() != null) {
             boolean usernameDuplicated = userRepository.findAll().stream()
                     .filter(u -> !u.getId().equals(userId))
@@ -112,8 +102,6 @@ public class BasicUserService implements UserService {
                 throw new IllegalArgumentException("이미 사용 중인 username입니다: " + request.getNewUsername());
             }
         }
-
-        // email duplicate check
         if (request.getNewEmail() != null) {
             boolean emailDuplicated = userRepository.findAll().stream()
                     .filter(u -> !u.getId().equals(userId))
@@ -126,14 +114,10 @@ public class BasicUserService implements UserService {
         user.update(request.getNewUsername(), request.getNewEmail(), request.getNewPassword());
         userRepository.save(user);
 
-        // substitute profile image
         if (request.getProfileImage() != null) {
-            // delete old profile image
-            binaryContentRepository.findAll().stream()
-                    .filter(bc -> userId.toString().equals(bc.getUserId()))
+            binaryContentRepository.findAllById(List.of())
                     .forEach(bc -> binaryContentRepository.deleteById(UUID.fromString(bc.getId())));
 
-            // save new profile image
             BinaryContentCreateRequest imageRequest = request.getProfileImage();
             BinaryContent newProfile = new BinaryContent(
                     UUID.randomUUID().toString(),
@@ -153,18 +137,15 @@ public class BasicUserService implements UserService {
         return toDto(user, userStatus);
     }
 
-
     @Override
-            public void delete (UUID userId){
-        userRepository.findById(userId)
+    public void delete(UUID userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User를 찾을 수 없습니다: " + userId));
 
-        // Delete BinaryContent
-        binaryContentRepository.findAll().stream()
+        binaryContentRepository.findAllById(List.of()).stream()
                 .filter(bc -> userId.toString().equals(bc.getUserId()))
                 .forEach(bc -> binaryContentRepository.deleteById(UUID.fromString(bc.getId())));
 
-        // Delete UserStatus
         userStatusRepository.findByUserId(userId)
                 .ifPresent(status -> userStatusRepository.deleteById(UUID.fromString(status.getId())));
 
@@ -187,3 +168,4 @@ public class BasicUserService implements UserService {
         );
     }
 }
+

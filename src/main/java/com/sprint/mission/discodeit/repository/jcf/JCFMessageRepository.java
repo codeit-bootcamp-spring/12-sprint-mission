@@ -2,9 +2,12 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
-
+@Primary
+@Repository
 public class JCFMessageRepository implements MessageRepository {
     private final Map<UUID, Message> data;
 
@@ -14,7 +17,7 @@ public class JCFMessageRepository implements MessageRepository {
 
     @Override
     public Message save(Message message) {
-        this.data.put(message.getId(), message);
+        data.put(message.getId(), message);
         return message;
     }
 
@@ -35,6 +38,6 @@ public class JCFMessageRepository implements MessageRepository {
 
     @Override
     public void deleteById(UUID id) {
-        this.data.remove(id);
+        data.remove(id);
     }
 }
