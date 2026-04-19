@@ -8,6 +8,6 @@ import java.util.UUID;
 public interface UserStatusRepository {
     UserStatus create(UserStatus userStatus);
     Optional<UserStatus> findById(UUID id);
-    UserStatus update(UserStatus userStatus);
+    UserStatus update(UUID id, UserStatus userStatus);
     boolean delete(UUID id);
 }

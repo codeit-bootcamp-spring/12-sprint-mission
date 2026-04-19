@@ -16,8 +16,8 @@ public class UserStatus implements Serializable {
     private final Instant createdAt;
     private Instant updatedAt;
 
-    public UserStatus(UUID id, UUID userId) {
-        this.id = id;
+    public UserStatus(UUID userId) {
+        this.id = userId;
         this.userId = userId;
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();

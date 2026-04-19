@@ -30,6 +30,16 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         return List.copyOf(data);
     }

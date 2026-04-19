@@ -10,6 +10,8 @@ public interface UserRepository {
     User create(User user);
     Optional<User> findById(UUID id);
     List<User> findAll();
+    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     User update(UUID id, User user);
     boolean delete(UUID id);
 }

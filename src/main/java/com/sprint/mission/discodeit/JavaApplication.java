@@ -4,12 +4,8 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.repository.ChannelRepository;
-import com.sprint.mission.discodeit.repository.MessageRepository;
-import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
-import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
-import com.sprint.mission.discodeit.repository.file.FileUserRepository;
+import com.sprint.mission.discodeit.repository.*;
+import com.sprint.mission.discodeit.repository.file.*;
 import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
@@ -34,7 +30,7 @@ public class JavaApplication {
         Message message2 = new Message(textChannel.getId(), user2.getId(), "메세지 테스트 2", null);
 
         System.out.println("====JCF SERVICE 시작====\n");
-        testJCFService(user1, user2, textChannel, voiceChannel, message1, message2);
+//        testJCFService(user1, user2, textChannel, voiceChannel, message1, message2);
         System.out.println("\n====JCF SERVICE 끝====");
 
         System.out.println("====FILE SERVICE 시작====\n");
@@ -43,32 +39,17 @@ public class JavaApplication {
 
 
     }
-    private static void testJCFService(User user1, User user2, Channel channel1, Channel channel2, Message message1, Message message2) {
-        System.out.println("========= JCF 세팅 시작 =========");
-        ChannelRepository channelRepository = new JCFChannelRepository();
-        UserRepository userRepository = new JCFUserRepository();
-        MessageRepository messageRepository = new JCFMessageRepository();
-
-        ChannelService channelService = new BasicChannelService(channelRepository);
-        UserService userService = new BasicUserService(userRepository);
-        MessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
-
-        System.out.println("========= JCF 초기 세팅 완료 =========\n");
-
-        testUser(user1, user2, userService);
-        testChannel(channel1, channel2, channelService);
-        testMessage(message1, message2, messageService);
-
-    }
 
     private static void testFileService(User user1, User user2, Channel channel1, Channel channel2, Message message1, Message message2) {
         System.out.println("========= FILE 세팅 시작 =========");
         ChannelRepository channelRepository = new FileChannelRepository();
         UserRepository userRepository = new FileUserRepository();
         MessageRepository messageRepository = new FileMessageRepository();
+        UserStatusRepository userStatusRepository = new FileUserStatusRepository();
+        BinaryContentRepository binaryContentRepository = new FileBinaryContentRepository();
 
         ChannelService channelService = new BasicChannelService(channelRepository);
-        UserService userService = new BasicUserService(userRepository);
+        UserService userService = new BasicUserService(userRepository, userStatusRepository, binaryContentRepository);
         MessageService messageService = new BasicMessageService(messageRepository, userRepository, channelRepository);
 
         System.out.println("========= FILE 초기 세팅 완료 =========\n");
