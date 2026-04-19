@@ -10,10 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class FileMessageService implements MessageService {
     private final UserService userService;
@@ -43,12 +40,10 @@ public class FileMessageService implements MessageService {
     @Override
     public Message save(Message message) {
         if (userService.findById(message.getMemberId()) == null) {
-            System.out.println("존재하지 않는 유저 ID 입니다.");
-            return null;
+            throw new NoSuchElementException("존재하지 않는 유저 ID 입니다.");
         }
         if (channelService.findById(message.getChannelId()) == null) {
-            System.out.println("존재하지 않는 채널 ID 입니다.");
-            return null;
+            throw new NoSuchElementException("존재하지 않는 채널 ID 입니다.");
         }
         Path targetPath = makePath(message.getId());
         try(
