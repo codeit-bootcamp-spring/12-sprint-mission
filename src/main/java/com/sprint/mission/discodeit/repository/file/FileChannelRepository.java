@@ -3,6 +3,8 @@ package com.sprint.mission.discodeit.repository.file;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.exception.FileStorageException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -12,14 +14,14 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Repository
-@Primary
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FileChannelRepository implements ChannelRepository {
 
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public FileChannelRepository() {
-        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), "file-data-map", Channel.class.getSimpleName());
+    public FileChannelRepository(@Value("${discodeit.repository.file-directory}") String baseDir) {
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, Channel.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);
         } catch (IOException e) {
