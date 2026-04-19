@@ -2,11 +2,12 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-public class ReadStatus {
+public class ReadStatus implements Serializable {
     private UUID id;
     private UUID userId;
     private UUID channelId;

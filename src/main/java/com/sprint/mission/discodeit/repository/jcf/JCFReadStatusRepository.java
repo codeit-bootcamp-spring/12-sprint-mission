@@ -24,7 +24,7 @@ public class JCFReadStatusRepository implements ReadStatusRepository {
 
     @Override
     public List<ReadStatus> findAll() {
-        return List.of();
+        return new ArrayList<>(data.values());
     }
 
     @Override

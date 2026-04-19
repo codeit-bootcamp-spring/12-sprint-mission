@@ -1,24 +1,29 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Repository
 @Primary
-public class FileUserRepository implements UserRepository {
+public class FileUserStatusRepository implements UserStatusRepository {
+
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public FileUserRepository() {
-        this.DIRECTORY= Paths.get(System.getProperty("user.dir"), "file-data-map", User.class.getSimpleName());
+    public FileUserStatusRepository() {
+        this.DIRECTORY = Paths.get(
+                System.getProperty("user.dir"),
+                "file-data-map",
+                UserStatus.class.getSimpleName()
+        );
+
         if (!Files.exists(DIRECTORY)) {
             try {
                 Files.createDirectories(DIRECTORY);
@@ -33,47 +38,57 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
-        Path path = resolvePath(user.getId());
+    public UserStatus save(UserStatus userStatus) {
+        Path path = resolvePath(userStatus.getId());
+
         try (
                 FileOutputStream fos = new FileOutputStream(path.toFile());
                 ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
-            oos.writeObject(user);
+            oos.writeObject(userStatus);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return user;
+
+        return userStatus;
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
-        User userNullable = null;
+    public Optional<UserStatus> findById(UUID id) {
         Path path = resolvePath(id);
-        if (Files.exists(path)) {
-            try (
-                    FileInputStream fis = new FileInputStream(path.toFile());
-                    ObjectInputStream ois = new ObjectInputStream(fis)
-            ) {
-                userNullable = (User) ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+
+        if (!Files.exists(path)) {
+            return Optional.empty();
         }
-        return Optional.ofNullable(userNullable);
+
+        try (
+                FileInputStream fis = new FileInputStream(path.toFile());
+                ObjectInputStream ois = new ObjectInputStream(fis)
+        ) {
+            return Optional.of((UserStatus) ois.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<User> findAll() {
-        try {
-            return Files.list(DIRECTORY)
+    public Optional<UserStatus> findByUserId(UUID userId) {
+        return findAll().stream()
+                .filter(status -> status.getUserId().equals(userId))
+                .findFirst();
+    }
+
+    @Override
+    public List<UserStatus> findAll() {
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            return paths
                     .filter(path -> path.toString().endsWith(EXTENSION))
                     .map(path -> {
                         try (
                                 FileInputStream fis = new FileInputStream(path.toFile());
                                 ObjectInputStream ois = new ObjectInputStream(fis)
                         ) {
-                            return (User) ois.readObject();
+                            return (UserStatus) ois.readObject();
                         } catch (IOException | ClassNotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -85,30 +100,17 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean existsById(UUID id) {
-       Path path = resolvePath(id);
-       return Files.exists(path);
-    }
-
-    @Override
     public void deleteById(UUID id) {
-        Path path = resolvePath(id);
         try {
-            Files.delete(path);
+            Files.deleteIfExists(resolvePath(id));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public boolean existsByUsername(String username) {
-        return findAll().stream()
-                .anyMatch(user -> user.getUsername().equals(username));
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return findAll().stream()
-                .anyMatch(user -> user.getEmail().equals(email));
+    public void deleteByUserId(UUID userId) {
+        findByUserId(userId)
+                .ifPresent(status -> deleteById(status.getId()));
     }
 }

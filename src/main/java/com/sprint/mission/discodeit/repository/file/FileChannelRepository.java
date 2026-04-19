@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -11,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 @Repository
+@Primary
 public class FileChannelRepository implements ChannelRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
@@ -92,7 +94,7 @@ public class FileChannelRepository implements ChannelRepository {
     public void deleteById(UUID id) {
         Path path = resolvePath(id);
         try {
-            Files.delete(path);
+            Files.deleteIfExists(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
