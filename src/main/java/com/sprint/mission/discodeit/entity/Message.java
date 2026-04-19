@@ -53,6 +53,7 @@ public class Message implements Serializable {
                 .add("updatedAt=" + updatedAt)
                 .add("content='" + content + "'")
                 .add("isEdited=" + isEdited)
+                .add("attachmentIds=" + attachmentIds)
                 .toString();
     }
 }
