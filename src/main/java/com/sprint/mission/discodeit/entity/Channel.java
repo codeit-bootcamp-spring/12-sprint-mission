@@ -1,56 +1,68 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.UUID;
 
-public class Channel extends BaseEntity {
+public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
+    private UUID id;
+    private Long createdAt;
+    private Long updatedAt;
+    //
+    private ChannelType type;
+    private String name;
+    private String description;
 
-    private String channelName;
-    private List<User> participants;
-
-    public Channel(String channelName, List<User> participants) {
-        super();
-        this.channelName = channelName;
-        this.participants = new ArrayList<>(participants);
+    public Channel(ChannelType type, String name, String description) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
+        //
+        this.type = type;
+        this.name = name;
+        this.description = description;
     }
 
-    public String getChannelName() {
-        return channelName;
+    public UUID getId() {
+        return id;
     }
 
-    public List<User> getParticipants() {
-        return participants;
+    public Long getCreatedAt() {
+        return createdAt;
     }
 
-
-    public void updateChannelName(String channelName) {
-        this.channelName = channelName;
-        touch();
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void addParticipant(User user) {
-        this.participants.add(user);
-        touch();
+    public ChannelType getType() {
+        return type;
     }
 
-    public void removeParticipant(User user) {
-        this.participants.remove(user);
-        touch();
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id=" + getId() +
-                ", createdAt=" + getCreatedAt() +
-                ", updatedAt=" + getUpdatedAt() +
-                ", channelName='" + channelName + '\'' +
-                ", participantsCount=" + participants.size() +
-                '}';
+    public String getDescription() {
+        return description;
     }
 
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
 
-
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
+    }
 
 }
+
+

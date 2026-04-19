@@ -1,54 +1,63 @@
 package com.sprint.mission.discodeit.entity;
 
-public class Message extends BaseEntity {
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.UUID;
+
+public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private UUID id;
+    private Long createdAt;
+    private Long updatedAt;
+    //
     private String content;
-    private User sender;
-    private Channel channel;
+    //
+    private UUID channelId;
+    private UUID authorId;
 
-    public Message(String content, User sender, Channel channel) {
-        super();
+    public Message(String content, UUID channelId, UUID authorId) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
+        //
         this.content = content;
-        this.sender = sender;
-        this.channel = channel;
+        this.channelId = channelId;
+        this.authorId = authorId;
     }
 
-    public void updateContent(String content) {
-        this.content = content;
-        touch();
+    public UUID getId() {
+        return id;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
     public String getContent() {
         return content;
     }
 
-    public User getSender() {
-        return sender;
+    public UUID getChannelId() {
+        return channelId;
     }
 
-    public Channel getChannel() {
-        return channel;
+    public UUID getAuthorId() {
+        return authorId;
     }
 
-    public String getDisplayMessage() {
-        return sender.getUsername() + " : " + content;
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
-
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + getId() +
-                ", createdAt=" + getCreatedAt() +
-                ", updatedAt=" + getUpdatedAt() +
-                ", content='" + content + '\'' +
-                ", sender=" + sender.getUsername() +
-                ", channelName=" + channel.getChannelName() +
-                '}';
-    }
-
-
-
-
 }
