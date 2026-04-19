@@ -24,7 +24,7 @@ public class Message implements Serializable {
 
     private boolean isEdited;
 
-    public Message(UUID channelId /*, serverId*/, UUID memberId, String content, List<UUID> attachmentIds) {
+    public Message(UUID channelId, UUID memberId, String content, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
@@ -48,7 +48,6 @@ public class Message implements Serializable {
         return new StringJoiner(", ", Message.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("channelId=" + channelId)
-                /*.add("serverId=" + serverId)*/
                 .add("memberId=" + memberId)
                 .add("createdAt=" + createdAt)
                 .add("updatedAt=" + updatedAt)
