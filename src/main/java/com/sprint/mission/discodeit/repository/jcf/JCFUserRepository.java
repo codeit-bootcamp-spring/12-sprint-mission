@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.repository.UserRepository;
 
 import java.util.*;
 
+
 public class JCFUserRepository implements UserRepository {
     private final Map<UUID, User> data;
 
