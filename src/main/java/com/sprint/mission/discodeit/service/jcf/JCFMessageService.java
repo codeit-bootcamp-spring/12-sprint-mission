@@ -5,10 +5,7 @@ import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class JCFMessageService implements MessageService {
     private final UserService userService;
@@ -24,13 +21,11 @@ public class JCFMessageService implements MessageService {
 
     @Override
     public Message save(Message message) {
-        if (userService.findById(message.getMemberId()) == null) {
-            System.out.println("존재하지 않는 유저 ID 입니다.");
-            return null;
+        if (userService.findById(message.getMemberId()).isEmpty()) {
+            throw new NoSuchElementException("존재하지 않는 유저 ID 입니다.");
         }
-        if (channelService.findById(message.getChannelId()) == null) {
-            System.out.println("존재하지 않는 채널 ID 입니다.");
-            return null;
+        if (channelService.findById(message.getChannelId()).isEmpty()) {
+            throw new NoSuchElementException("존재하지 않는 채널 ID 입니다.");
         }
         data.add(message);
         return message;
