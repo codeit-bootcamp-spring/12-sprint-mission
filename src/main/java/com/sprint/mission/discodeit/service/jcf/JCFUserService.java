@@ -50,7 +50,7 @@ public class JCFUserService implements UserService {
     public User update(UUID id, User user) {
         Optional<User> found = findById(id);
         if (found.isPresent()) {
-            found.get().update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
+            found.get().update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName(), user.getProfileId());
             return found.orElse(null);
         }
         return null;

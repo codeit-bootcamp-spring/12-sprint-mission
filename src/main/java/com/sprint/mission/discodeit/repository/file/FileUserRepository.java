@@ -95,7 +95,7 @@ public class FileUserRepository implements UserRepository {
         Optional<User> OptionalUser = findById(id);
         if (OptionalUser.isPresent()) {
             User found = OptionalUser.get();
-            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
+            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName(), user.getProfileId());
             return save(found);
         }
         return null;

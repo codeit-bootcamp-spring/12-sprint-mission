@@ -37,8 +37,8 @@ public class DiscodeitApplication {
 		UserService userService = context.getBean(UserService.class);
 		MessageService messageService = context.getBean(MessageService.class);
 
-		User user1 = new User("test.com", "1234", "kim", "kk");
-		User user2 = new User("test2.com", "1234", "lee", "ll");
+		User user1 = new User("test.com", "1234", "kim", "kk", UUID.randomUUID());
+		User user2 = new User("test2.com", "1234", "lee", "ll", UUID.randomUUID());
 
 		Channel textChannel = new Channel("텍스트 채널", ChannelType.TEXT , true);
 		Channel voiceChannel = new Channel("음성 채널", ChannelType.VOICE, false);
@@ -69,7 +69,7 @@ public class DiscodeitApplication {
 		userService.findAll().forEach(user -> System.out.println(user));
 
 		System.out.println("\n====User update====");
-		User changeUser = new User("바뀐 이름", "바뀐 비밀번호", "바뀐 이메일", "바뀐 닉네임");
+		User changeUser = new User("바뀐 이름", "바뀐 비밀번호", "바뀐 이메일", "바뀐 닉네임", UUID.randomUUID());
 		//String userName, String password, String email, String nickName
 		System.out.println(userService.update(user1.getId(), changeUser));
 		System.out.println("====변경 완료!====");

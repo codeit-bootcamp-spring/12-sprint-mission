@@ -11,6 +11,7 @@ public record UserDto (
         String password,
         String email,
         String nickName,
+        UUID profileId,
 
         Instant createdAt,
         Instant updatedAt
@@ -21,6 +22,7 @@ public record UserDto (
                 user.getPassword(), // 추후 보안 보완 필요
                 user.getEmail(),
                 user.getNickName(),
+                user.getProfileId(),
                 user.getCreatedAt(),
                 user.getUpdatedAt());
     }
