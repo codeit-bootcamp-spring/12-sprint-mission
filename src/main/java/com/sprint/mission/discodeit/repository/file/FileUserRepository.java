@@ -35,7 +35,7 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
         Path targetPath = makePath(user.getId());
         try(
                 FileOutputStream fos = new FileOutputStream(targetPath.toFile());
@@ -96,7 +96,7 @@ public class FileUserRepository implements UserRepository {
         if (OptionalUser.isPresent()) {
             User found = OptionalUser.get();
             found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName(), user.getProfileId());
-            return save(found);
+            return create(found);
         }
         return null;
     }
