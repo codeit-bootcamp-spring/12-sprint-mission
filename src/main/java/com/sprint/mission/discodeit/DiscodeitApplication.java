@@ -4,25 +4,12 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.repository.ChannelRepository;
-import com.sprint.mission.discodeit.repository.MessageRepository;
-import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
-import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
-import com.sprint.mission.discodeit.repository.file.FileUserRepository;
-import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
-import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
-import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.basic.BasicChannelService;
-import com.sprint.mission.discodeit.service.basic.BasicMessageService;
-import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
@@ -58,8 +45,8 @@ public class DiscodeitApplication {
 
 	private static void testUser(User user1, User user2, UserService userService){
 		System.out.println("====User save====");
-		userService.save(user1);
-		userService.save(user2);
+		userService.create(user1);
+		userService.create(user2);
 
 		System.out.println("\n====User findById====");
 		System.out.println(userService.findById(user1.getId()));
@@ -84,8 +71,8 @@ public class DiscodeitApplication {
 
 	private static void testMessage(Message msg1, Message msg2, MessageService messageService){
 		System.out.println("====Message save====");
-		messageService.save(msg1);
-		messageService.save(msg2);
+		messageService.create(msg1);
+		messageService.create(msg2);
 
 		System.out.println("\n====Message findById====");
 		System.out.println(messageService.findById(msg1.getId()));
@@ -110,8 +97,8 @@ public class DiscodeitApplication {
 
 	private static void testChannel(Channel channel1, Channel channel2, ChannelService channelService){
 		System.out.println("====Channel save====");
-		channelService.save(channel1);
-		channelService.save(channel2);
+		channelService.create(channel1);
+		channelService.create(channel2);
 
 		System.out.println("\n====Channel findById====");
 		System.out.println(channelService.findById(channel1.getId()));

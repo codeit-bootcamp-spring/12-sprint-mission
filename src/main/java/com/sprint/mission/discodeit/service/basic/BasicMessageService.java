@@ -20,7 +20,7 @@ public class BasicMessageService implements MessageService {
     private final ChannelRepository channelRepository;
 
     @Override
-    public Message save(Message message) {
+    public Message create(Message message) {
         return messageRepository.save(message);
     }
 

@@ -16,7 +16,14 @@ public class BasicUserService implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
+        if (userRepository.findByUsername(user.getUserName()).isPresent()) {
+            throw new IllegalStateException("사용중인 username 입니다.");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalStateException("사용중인 Email 입니다.");
+        }
+
         return userRepository.create(user);
     }
 

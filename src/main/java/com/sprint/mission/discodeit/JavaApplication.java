@@ -19,12 +19,6 @@ import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.basic.BasicChannelService;
 import com.sprint.mission.discodeit.service.basic.BasicMessageService;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
-import com.sprint.mission.discodeit.service.file.FileChannelService;
-import com.sprint.mission.discodeit.service.file.FileMessageService;
-import com.sprint.mission.discodeit.service.file.FileUserService;
-import com.sprint.mission.discodeit.service.jcf.JCFUserService;
-import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
-import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 
 import java.util.UUID;
 
@@ -87,8 +81,8 @@ public class JavaApplication {
 
     private static void testUser(User user1, User user2, UserService userService){
         System.out.println("====User save====");
-        userService.save(user1);
-        userService.save(user2);
+        userService.create(user1);
+        userService.create(user2);
 
         System.out.println("\n====User findById====");
         System.out.println(userService.findById(user1.getId()));
@@ -113,8 +107,8 @@ public class JavaApplication {
 
     private static void testMessage(Message msg1, Message msg2, MessageService messageService){
         System.out.println("====Message save====");
-        messageService.save(msg1);
-        messageService.save(msg2);
+        messageService.create(msg1);
+        messageService.create(msg2);
 
         System.out.println("\n====Message findById====");
         System.out.println(messageService.findById(msg1.getId()));
@@ -139,8 +133,8 @@ public class JavaApplication {
 
     private static void testChannel(Channel channel1, Channel channel2, ChannelService channelService){
         System.out.println("====Channel save====");
-        channelService.save(channel1);
-        channelService.save(channel2);
+        channelService.create(channel1);
+        channelService.create(channel2);
 
         System.out.println("\n====Channel findById====");
         System.out.println(channelService.findById(channel1.getId()));

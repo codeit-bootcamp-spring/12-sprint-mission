@@ -33,7 +33,7 @@ public class FileChannelService implements ChannelService {
     }
 
     @Override
-    public Channel save(Channel channel) {
+    public Channel create(Channel channel) {
         Path targetPath = makePath(channel.getId());
         try(
                 FileOutputStream fos = new FileOutputStream(targetPath.toFile());
@@ -92,7 +92,7 @@ public class FileChannelService implements ChannelService {
         Optional<Channel> found = findById(id);
         if (found.isPresent()) {
             found.get().update(channel.getName(), channel.isPrivate());
-            return save(found.orElse(null));
+            return create(found.orElse(null));
         }
         return null;
     }

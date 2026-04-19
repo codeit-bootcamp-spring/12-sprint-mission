@@ -33,7 +33,7 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
         Path targetPath = makePath(user.getId());
         try(
                 FileOutputStream fos = new FileOutputStream(targetPath.toFile());
@@ -92,7 +92,7 @@ public class FileUserService implements UserService {
         Optional<User> found = findById(id);
         if (found.isPresent()) {
             found.get().update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName(), user.getProfileId());
-            return save(found.orElse(null));
+            return create(found.orElse(null));
         }
         return null;
     }

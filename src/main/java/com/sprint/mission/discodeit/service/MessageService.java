@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MessageService {
-    Message save(Message message);
+    Message create(Message message);
     Optional<Message> findById(UUID id);
     List<Message> findAll();
     Message update(UUID id, Message message, List<UUID> attachmentIds);

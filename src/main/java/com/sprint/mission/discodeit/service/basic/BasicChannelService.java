@@ -16,7 +16,7 @@ public class BasicChannelService implements ChannelService {
     private final ChannelRepository channelRepository;
 
     @Override
-    public Channel save(Channel channel) {
+    public Channel create(Channel channel) {
         return channelRepository.save(channel);
     }
 

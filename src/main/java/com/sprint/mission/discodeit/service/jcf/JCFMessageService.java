@@ -20,7 +20,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message save(Message message) {
+    public Message create(Message message) {
         if (userService.findById(message.getMemberId()).isEmpty()) {
             throw new NoSuchElementException("존재하지 않는 유저 ID 입니다.");
         }

@@ -16,7 +16,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel save(Channel channel) {
+    public Channel create(Channel channel) {
         data.add(channel);
         return channel;
     }

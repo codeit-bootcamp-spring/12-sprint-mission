@@ -38,7 +38,7 @@ public class FileMessageService implements MessageService {
     }
 
     @Override
-    public Message save(Message message) {
+    public Message create(Message message) {
         if (userService.findById(message.getMemberId()).isEmpty()) {
             throw new NoSuchElementException("존재하지 않는 유저 ID 입니다.");
         }
@@ -103,7 +103,7 @@ public class FileMessageService implements MessageService {
         Optional<Message> found = findById(id);
         if (found.isPresent()) {
             found.get().update(message.getContent(), attachmentIds);
-            return save(found.orElse(null));
+            return create(found.orElse(null));
         }
         return null;
     }
