@@ -17,10 +17,11 @@ import java.util.UUID;
 public class FileChannelRepository implements ChannelRepository {
     private final Path DIRECTORYPATH;
     private final String EXTENSION = ".ser";
+    private final String CURRENTDIR = "user.dir";
 
 
     public FileChannelRepository() {
-        this.DIRECTORYPATH = Paths.get(System.getProperty("user.dir"), "data", "Channel");
+        this.DIRECTORYPATH = Paths.get(System.getProperty(CURRENTDIR), "data", "Channel");
         if (!Files.exists(DIRECTORYPATH)) {
             try {
                 Files.createDirectories(DIRECTORYPATH);

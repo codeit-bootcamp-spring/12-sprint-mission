@@ -19,9 +19,10 @@ import java.util.UUID;
 public class FileMessageRepository implements MessageRepository {
     private final Path DIRECTORYPATH;
     private final String EXTENSION = ".ser";
+    private final String CURRENTDIR = "user.dir";
 
     public FileMessageRepository(){
-        this.DIRECTORYPATH = Paths.get(System.getProperty("user.dir"), "data", "Message");
+        this.DIRECTORYPATH = Paths.get(System.getProperty(CURRENTDIR), "data", "Message");
         if (!Files.exists(DIRECTORYPATH)) {
             try {
                 Files.createDirectories(DIRECTORYPATH);

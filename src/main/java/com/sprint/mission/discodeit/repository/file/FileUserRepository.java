@@ -17,10 +17,11 @@ import java.util.UUID;
 public class FileUserRepository implements UserRepository {
     private final Path DIRECTORYPATH;
     private final String EXTENSION = ".ser";
+    private final String CURRENTDIR = "user.dir";
 
 
     public FileUserRepository() {
-        this.DIRECTORYPATH = Paths.get(System.getProperty("user.dir"), "data", "User");
+        this.DIRECTORYPATH = Paths.get(System.getProperty(CURRENTDIR), "data", "User");
         if (!Files.exists(DIRECTORYPATH)) {
             try {
                 Files.createDirectories(DIRECTORYPATH);
@@ -61,6 +62,20 @@ public class FileUserRepository implements UserRepository {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return findAll().stream()
+                .filter(user -> user.getUserName().equals(username))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return findAll().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
     }
 
     @Override
