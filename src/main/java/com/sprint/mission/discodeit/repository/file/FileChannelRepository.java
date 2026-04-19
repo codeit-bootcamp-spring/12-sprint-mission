@@ -8,11 +8,13 @@ import java.util.*;
 
 public class FileChannelRepository implements ChannelRepository {
 
-    private final String filePath = "channels.dat";
+    private final String filePath;
     private Map<UUID, Channel> data;
 
-    public FileChannelRepository() {
-        data = loadFromFile();
+    public FileChannelRepository(String directory) {
+        new File(directory).mkdirs();
+        this.filePath = directory + "/channels.dat";
+        this.data = loadFromFile();
     }
 
     private Map<UUID, Channel> loadFromFile() {

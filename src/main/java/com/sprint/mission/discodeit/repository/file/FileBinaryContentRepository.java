@@ -1,25 +1,25 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 
 import java.io.*;
 import java.util.*;
 
-public class FileMessageRepository implements MessageRepository {
+public class FileBinaryContentRepository implements BinaryContentRepository {
 
     private final String filePath;
-    private Map<UUID, Message> data;
+    private Map<UUID, BinaryContent> data;
 
-    public FileMessageRepository(String directory) {
+    public FileBinaryContentRepository(String directory) {
         new File(directory).mkdirs();
-        this.filePath = directory + "/messages.dat";
+        this.filePath = directory + "/binary-content.dat";
         this.data = loadFromFile();
     }
 
-    private Map<UUID, Message> loadFromFile() {
+    private Map<UUID, BinaryContent> loadFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            return (Map<UUID, Message>) ois.readObject();
+            return (Map<UUID, BinaryContent>) ois.readObject();
         } catch (Exception e) {
             return new HashMap<>();
         }
@@ -34,19 +34,22 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public void save(Message message) {
-        data.put(message.getId(), message);
+    public void save(BinaryContent content) {
+        data.put(content.getId(), content);
         saveToFile();
     }
 
     @Override
-    public Message findById(UUID id) {
+    public BinaryContent findById(UUID id) {
         return data.get(id);
     }
 
     @Override
-    public List<Message> findAll() {
-        return new ArrayList<>(data.values());
+    public List<BinaryContent> findAllByIdIn(List<UUID> ids) {
+        return ids.stream()
+                .map(data::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override

@@ -8,11 +8,13 @@ import java.util.*;
 
 public class FileUserRepository implements UserRepository {
 
-    private final String filePath = "users.dat";
+    private final String filePath;
     private Map<UUID, User> data;
 
-    public FileUserRepository() {
-        data = loadFromFile();
+    public FileUserRepository(String directory) {
+        new File(directory).mkdirs();
+        this.filePath = directory + "/users.dat";
+        this.data = loadFromFile();
     }
 
     private Map<UUID, User> loadFromFile() {
