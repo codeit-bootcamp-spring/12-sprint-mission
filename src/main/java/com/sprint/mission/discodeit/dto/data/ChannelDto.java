@@ -7,11 +7,11 @@ import java.util.UUID;
 import com.sprint.mission.discodeit.entity.ChannelType;
 
 public record ChannelDto(
-        UUID id,
-        ChannelType type,
-        String name,
-        String description,
-        List<UUID> participantIds,
-        Instant lastMessageAt
+	UUID id,
+	ChannelType type,
+	String name,
+	String description,
+	List<UUID> participantIds,
+	Instant lastMessageAt
 ) {
 }

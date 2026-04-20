@@ -90,6 +90,7 @@ public class FileMessageRepository implements MessageRepository {
                         }
                     })
                     .filter(message -> message.getChannelId().equals(channelId))
+                    .sorted(Message::compareTo)
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
