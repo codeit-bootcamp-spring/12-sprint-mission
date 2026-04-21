@@ -1,25 +1,25 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
 
 import java.io.*;
 import java.util.*;
 
-public class FileMessageRepository implements MessageRepository {
+public class FileUserStatusRepository implements UserStatusRepository {
 
     private final String filePath;
-    private Map<UUID, Message> data;
+    private Map<UUID, UserStatus> data;
 
-    public FileMessageRepository(String directory) {
+    public FileUserStatusRepository(String directory) {
         new File(directory).mkdirs();
-        this.filePath = directory + "/messages.dat";
+        this.filePath = directory + "/user-status.dat";
         this.data = loadFromFile();
     }
 
-    private Map<UUID, Message> loadFromFile() {
+    private Map<UUID, UserStatus> loadFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            return (Map<UUID, Message>) ois.readObject();
+            return (Map<UUID, UserStatus>) ois.readObject();
         } catch (Exception e) {
             return new HashMap<>();
         }
@@ -34,19 +34,27 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public void save(Message message) {
-        data.put(message.getId(), message);
+    public void save(UserStatus userStatus) {
+        data.put(userStatus.getId(), userStatus);
         saveToFile();
     }
 
     @Override
-    public Message findById(UUID id) {
+    public UserStatus findById(UUID id) {
         return data.get(id);
     }
 
     @Override
-    public List<Message> findAll() {
+    public List<UserStatus> findAll() {
         return new ArrayList<>(data.values());
+    }
+
+    @Override
+    public UserStatus findByUserId(UUID userId) {
+        return data.values().stream()
+                .filter(status -> status.getUserId().equals(userId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
