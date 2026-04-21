@@ -1,8 +1,8 @@
 package com.sprint.mission.discodeit.service.Impl;
 
-import com.sprint.mission.discodeit.dto.ReadStatusResponse;
-import com.sprint.mission.discodeit.dto.ReadStatusUpdateRequest;
-import com.sprint.mission.discodeit.dto.ReadStatuscreateRequest;
+import com.sprint.mission.discodeit.dto.status.ReadStatusResponse;
+import com.sprint.mission.discodeit.dto.status.ReadStatusUpdateRequest;
+import com.sprint.mission.discodeit.dto.status.ReadStatuscreateRequest;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-@Service("readStatusService")
+@Service
 @RequiredArgsConstructor
 public class ReadStatusServiceImpl implements ReadStatusService {
     private final ReadStatusRepository readStatusRepository;
@@ -58,7 +58,7 @@ public class ReadStatusServiceImpl implements ReadStatusService {
     }
 
     @Override
-    public List<ReadStatusResponse> finAllByUserId(UUID userId) {
+    public List<ReadStatusResponse> findAllByUserId(UUID userId) {
         List<ReadStatus> statuses = readStatusRepository.findByUserId(userId);
         if(statuses.isEmpty()) return Collections.emptyList();
 

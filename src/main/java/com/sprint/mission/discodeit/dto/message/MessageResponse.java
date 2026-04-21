@@ -1,9 +1,10 @@
-package com.sprint.mission.discodeit.dto;
+package com.sprint.mission.discodeit.dto.message;
 
 import java.util.List;
 import java.util.UUID;
 
-public record MessageCreateRequest(
+public record MessageResponse(
+        UUID id,
         UUID channelId,
         UUID userId,
         String title,

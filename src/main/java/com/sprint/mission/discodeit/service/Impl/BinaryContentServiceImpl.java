@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.service.Impl;
 
-import com.sprint.mission.discodeit.dto.BinaryContentRequest;
-import com.sprint.mission.discodeit.dto.BinaryContentResponse;
+import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentRequest;
+import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.service.BinaryContentService;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-@Service("BinaryContentService")
+@Service
 @RequiredArgsConstructor
 public class BinaryContentServiceImpl implements BinaryContentService {
     private final BinaryContentRepository binaryContentRepository;

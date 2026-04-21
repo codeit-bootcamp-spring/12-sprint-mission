@@ -1,8 +1,8 @@
 package com.sprint.mission.discodeit.service.Impl;
 
-import com.sprint.mission.discodeit.dto.UserStatusCreateRequest;
-import com.sprint.mission.discodeit.dto.UserStatusResponse;
-import com.sprint.mission.discodeit.dto.UserStatusUpdateRequest;
+import com.sprint.mission.discodeit.dto.status.UserStatusCreateRequest;
+import com.sprint.mission.discodeit.dto.status.UserStatusResponse;
+import com.sprint.mission.discodeit.dto.status.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-@Service("userStatusService")
+@Service
 @RequiredArgsConstructor
 public class UserStatusServiceImpl implements UserStatusService {
     private final UserStatusRepository userStatusRepository;

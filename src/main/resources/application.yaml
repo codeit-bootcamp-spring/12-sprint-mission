@@ -3,7 +3,7 @@ spring:
     name : discodeit
 
   service:
-      type : file #jcf | file
+      type : jcf #jcf | file
 
 storage:
   location: ./data

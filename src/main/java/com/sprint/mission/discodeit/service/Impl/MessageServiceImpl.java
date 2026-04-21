@@ -1,8 +1,8 @@
 package com.sprint.mission.discodeit.service.Impl;
 
-import com.sprint.mission.discodeit.dto.MessageCreateRequest;
-import com.sprint.mission.discodeit.dto.MessageResponse;
-import com.sprint.mission.discodeit.dto.MessageUpdateRequest;
+import com.sprint.mission.discodeit.dto.message.MessageCreateRequest;
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
+import com.sprint.mission.discodeit.dto.message.MessageUpdateRequest;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service("messageService")
+@Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
@@ -78,7 +78,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void delete(UUID id) {
-        if (messageRepository.existsById(id)){
+        if (!messageRepository.existsById(id)){
             throw new NoSuchElementException("해당 메시지가 존재하지 않습니다.");
         }
         List<UUID> attachmentIds = messageRepository.findById(id)
