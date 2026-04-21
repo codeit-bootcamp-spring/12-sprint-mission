@@ -2,73 +2,133 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class FileUserRepository implements UserRepository {
-    private final String BASEPATH = "./persistentfiles/users";
+    private final Path DIRECTORY;
+    private final String EXTENSION = ".ser";
 
-    public FileUserRepository() {
-        File file = new File(BASEPATH);
-        if (!file.exists()) {
-            file.mkdirs();
+    public FileUserRepository(String path) {
+        this.DIRECTORY = Paths.get(path + "/User");
+        if (Files.notExists(DIRECTORY)) {
+            try {
+                Files.createDirectories(DIRECTORY);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+    private Path resolvePath(UUID id) {
+        return DIRECTORY.resolve(id + EXTENSION);
+    }
+
     @Override
-    public void save(User user) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(BASEPATH + "/" + user.getId().toString()))) {
+    public User save(User user) {
+        Path path = resolvePath(user.getId());
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
             oos.writeObject(user);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return user;
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        File file = new File(BASEPATH + "/" + id.toString());
-        if (!file.exists()) {
-            return Optional.empty();
+        User userNullable = null;
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                userNullable = (User) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            return Optional.of((User) ois.readObject());
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        return Optional.ofNullable(userNullable);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<User> findAll() {
+        try {
+            return Files.list(DIRECTORY)
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (User) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .toList();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Optional<List<User>> findAll() {
-        List<User> list = new ArrayList<>();
-        File dir = new File(BASEPATH);
-        File[] files = dir.listFiles();
-        if (files == null) {
-            return Optional.empty();
-        }
-        for (File file : files) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                list.add((User) ois.readObject());
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
+    public boolean existsById(UUID id) {
+        Path path = resolvePath(id);
+        return Files.exists(path);
+    }
+
+    @Override
+    public boolean existByEmail(String email) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return true;
             }
         }
-        return Optional.of(list);
+        return false;
+    }
+
+    @Override
+    public boolean existByUsername(String username) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void deleteById(UUID id) {
-        File file = new File(BASEPATH + "/" + id.toString());
-        if (!file.exists()) {
-            System.out.println(file.toPath() + " 파일이 없으므로 삭제할 수 없습니다");
-            return;
+        Path path = resolvePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        file.delete();
     }
 }
