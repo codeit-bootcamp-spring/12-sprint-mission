@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: discodeit
+
+descodeit:
+  repository:
+    type: file
+    file-directory: .descodeit
+

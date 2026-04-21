@@ -1,53 +1,39 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
+@Getter
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private long createdAt;
-    private long updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     private String content;
     private UUID channelId;
     private UUID authorId;
+    private final List<UUID> attachmentIds;
 
-    public Message() {
-        id = UUID.randomUUID();
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
-    }
-    public Message(String content, UUID channelId, UUID authorId) {
-        this();
+    public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
         this.content = content;
         this.channelId = channelId;
         this.authorId = authorId;
+        this.attachmentIds = attachmentIds == null ? List.of() : List.copyOf(attachmentIds);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public UUID getChannelId() {
-        return channelId;
-    }
-
-    public UUID getAuthorId() {
-        return authorId;
+    public void update(String newContent) {
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            this.updatedAt = Instant.now();
+        }
     }
 
     @Override
@@ -60,10 +46,5 @@ public class Message implements Serializable {
                 ", channelId=" + channelId +
                 ", authorId=" + authorId +
                 '}';
-    }
-
-    public void update(String content) {
-        this.content = content;
-        updatedAt = System.currentTimeMillis();
     }
 }
