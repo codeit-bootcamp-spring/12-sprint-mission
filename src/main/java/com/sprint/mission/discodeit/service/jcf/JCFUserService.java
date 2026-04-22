@@ -1,6 +1,5 @@
 package com.sprint.mission.discodeit.service.jcf;
 
-import com.sprint.mission.discodeit.dto.UserUpdateDto;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class JCFUserService implements UserService {
+public class JCFUserService /*implements UserService*/ {
     private final List<User> data;
 
 
@@ -16,14 +15,14 @@ public class JCFUserService implements UserService {
         data = new ArrayList<>();
     }
 
-    @Override
+    //@Override
     public User create(String username, String email, String password) {
         User user = new User(username, email, password);
         data.add(user);
         return user;
     }
 
-    @Override
+    //@Override
     public User find(UUID id) {
         for (User user : data) {
             if (user.getId().equals(id)) {
@@ -33,19 +32,19 @@ public class JCFUserService implements UserService {
         throw new RuntimeException("findById 해당 id가 없습니다.");
     }
 
-    @Override
+    //@Override
     public List<User> findAll() {
         return data;
     }
 
-    @Override
+    //@Override
     public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
         User user = find(userId);
         user.update(newUsername, newEmail, newPassword);
         return user;
     }
 
-    @Override
+    //@Override
     public void delete(UUID id) {
         User user = find(id);
         data.removeIf(u -> u.getId().equals(id));

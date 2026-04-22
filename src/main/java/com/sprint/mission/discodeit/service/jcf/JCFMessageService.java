@@ -1,20 +1,18 @@
 package com.sprint.mission.discodeit.service.jcf;
 
-import com.sprint.mission.discodeit.dto.MessageUpdateDto;
 import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.service.MessageService;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class JCFMessageService implements MessageService {
+public class JCFMessageService /*implements MessageService*/ {
     private final List<Message> data;
 
     public JCFMessageService() {
         data = new ArrayList<>();
     }
 
-    @Override
+    //@Override
     public Message create(String content, UUID channelId, UUID authorId) {
         Message message = new Message(content, channelId, authorId);
         boolean isAlreadyExists = data.stream()
@@ -28,7 +26,7 @@ public class JCFMessageService implements MessageService {
         return message;
     }
 
-    @Override
+    //@Override
     public Message find(UUID messageId) {
         return data.stream()
                 .filter(msg -> msg.getId().equals(messageId))
@@ -36,20 +34,20 @@ public class JCFMessageService implements MessageService {
                 .orElseThrow(() -> new NoSuchElementException("해당하는 messageId가 없습니다 id : " + messageId ));
     }
 
-    @Override
+    //@Override
     public List<Message> findAll() {
          return data.stream().sorted(Comparator.comparing(Message::getCreatedAt))
                 .collect(Collectors.toList());
     }
 
-    @Override
+    //@Override
     public Message update(UUID messageId, String newContent) {
         Message message = find(messageId);
         message.update(newContent);
         return message;
     }
 
-    @Override
+    //@Override
     public void delete(UUID id) {
         data.removeIf(m -> m.getId().equals(id));
     }

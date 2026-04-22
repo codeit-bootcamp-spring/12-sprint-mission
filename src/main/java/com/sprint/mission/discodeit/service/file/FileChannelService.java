@@ -1,10 +1,8 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.common.FileUtils;
-import com.sprint.mission.discodeit.dto.ChannelUpdateDto;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class FileChannelService implements ChannelService {
+public class FileChannelService /*implements ChannelService*/ {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
@@ -27,7 +25,7 @@ public class FileChannelService implements ChannelService {
     }
 
 
-    @Override
+    //@Override
     public Channel create(ChannelType type, String name, String description) {
         Channel channel = new Channel(type, name, description);
         Path path = makePath(channel.getId());
@@ -38,23 +36,23 @@ public class FileChannelService implements ChannelService {
         return channel;
     }
 
-    @Override
+    //@Override
     public Channel find(UUID channelId) {
         return (Channel)FileUtils.loadObject(makePath(channelId));
     }
 
-    @Override
+    //@Override
     public List<Channel> findAll() {
         return FileUtils.load(DIRECTORY);
     }
 
-    @Override
+    //@Override
     public Channel update(UUID channelId, String newName, String newDescription) {
         return null;
     }
 
 
-    @Override
+    //@Override
     public void delete(UUID id) {
         Path path = makePath(id);
         if(!Files.exists(path)){

@@ -1,20 +1,16 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.common.FileUtils;
-import com.sprint.mission.discodeit.dto.MessageUpdateDto;
 import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.service.MessageService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class FileMessageService implements MessageService {
+public class FileMessageService /*implements MessageService*/ {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
@@ -28,7 +24,7 @@ public class FileMessageService implements MessageService {
     }
 
 
-    @Override
+    //@Override
     public Message create(String content, UUID channelId, UUID authorId) {
         Message message = new Message(content, channelId, authorId);
         Path path = makePath(message.getId());
@@ -39,23 +35,23 @@ public class FileMessageService implements MessageService {
         return message;
     }
 
-     @Override
+    //@Override
     public Message find(UUID messageId) {
          return (Message)FileUtils.loadObject(makePath(messageId));
     }
 
-    @Override
+    //@Override
     public List<Message> findAll() {
         return FileUtils.load(DIRECTORY);
     }
 
-    @Override
+    //@Override
     public Message update(UUID messageId, String newContent) {
         return null;
     }
 
 
-    @Override
+    //@Override
     public void delete(UUID id) {
         Path path = makePath(id);
         if(!Files.exists(path)){

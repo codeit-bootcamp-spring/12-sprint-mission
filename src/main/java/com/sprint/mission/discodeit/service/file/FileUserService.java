@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.common.FileUtils;
-import com.sprint.mission.discodeit.dto.UserUpdateDto;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class FileUserService implements UserService {
+public class FileUserService /*implements UserService*/ {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
@@ -26,7 +25,7 @@ public class FileUserService implements UserService {
     }
 
 
-    @Override
+    //@Override
     public User create(String username, String email, String password) {
         User user = new User(username, email, password);
         Path path = makePath(user.getId());
@@ -37,22 +36,22 @@ public class FileUserService implements UserService {
         return user;
     }
 
-    @Override
+    //@Override
     public User find(UUID userId) {
         return (User)FileUtils.loadObject(makePath(userId));
     }
 
-    @Override
+    //@Override
     public List<User> findAll() {
         return FileUtils.load(DIRECTORY);
     }
 
-    @Override
+    //@Override
     public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
         return null;
     }
 
-    @Override
+    //@Override
     public void delete(UUID id) {
         Path path = makePath(id);
         if(!Files.exists(path)){

@@ -3,7 +3,6 @@ package com.sprint.mission.discodeit.repository.file;
 import com.sprint.mission.discodeit.common.FileUtils;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository("fileUserRepository")
+//@Repository("fileUserRepository")
 public class FileUserRepository implements UserRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
@@ -43,6 +42,17 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         return FileUtils.load(DIRECTORY);
     }
@@ -52,7 +62,21 @@ public class FileUserRepository implements UserRepository {
         Path path = makePath(id);
         return Files.exists(path);
     }
+    @Override
+    public boolean existsByUsername(String username) {
+        return findByUsername(username).isPresent();
+    }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public void deleteById(UUID id) {
         Path path = makePath(id);
