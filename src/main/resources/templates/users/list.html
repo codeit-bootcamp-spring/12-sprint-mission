@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h1>회원 목록</h1>
+<a class="btn" th:href="@{/users/new}">회원 등록</a>
+<br/><br/>
+
+<!-- username 검색 폼 -->
+<form th:action="@{/users}" method="get" style="display:inline-flex; gap:8px; margin-bottom:16px;">
+    <input type="text" name="username" th:value="${keyword}" placeholder="아이디로 검색"/>
+    <button type="submit">검색</button>
+    <a class="btn" th:href="@{/users}" th:if="${keyword}">전체보기</a>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>아이디</th>
+        <th>이름</th>
+        <th>가입일</th>
+        <th>상세</th>
+        <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+        <td><a th:href="@{'/users/' + ${user.id}}">상세보기</a></td>
+        <td>
+            <form th:action="@{'/users/' + ${user.id} + '/delete'}" method="post">
+                <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(users)}">
+        <td colspan="5" style="text-align:center">등록된 회원이 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

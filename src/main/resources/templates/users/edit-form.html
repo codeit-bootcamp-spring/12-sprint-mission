@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 수정</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h1>회원 정보 수정</h1>
+
+<form class="myform" th:action="@{'/users/' + ${user.id} + '/edit'}" method="post">
+    <label>아이디: <input type="text" value="" th:value="${user.username}" disabled/></label><br/><br/>
+    <label>비밀번호: <input type="password" name="password" placeholder="변경할 비밀번호 (미입력시 유지)"/></label><br/><br/>
+    <label>이름: <input type="text" name="name" th:value="${user.name}" required/></label><br/><br/>
+    <button type="submit">수정</button>
+    <a class="btn" th:href="@{'/users/' + ${user.id}}">취소</a>
+</form>
+
+</body>
+</html>

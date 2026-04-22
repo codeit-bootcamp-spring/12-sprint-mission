@@ -1,0 +1,590 @@
+{
+  "info": {
+    "_postman_id": "d043437c-10bc-4fbe-9bbf-2175b17829fa",
+    "name": "스프린트 미션 포스트맨",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53194394",
+    "_collection_link": "https://go.postman.co/collection/53194394-d043437c-10bc-4fbe-9bbf-2175b17829fa?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "유저 전체 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/findAll",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "findAll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "유저 생성",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jessie\",\n  \"email\": \"jessie@test.com\",\n  \"password\": \"1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "유저 업데이트",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profile",
+                  "type": "file",
+                  "uuid": "096dadaa-7477-4caf-bdab-23e3758dc4dd",
+                  "contentType": "",
+                  "src": "/Users/yun-yeongju/Library/Mobile Documents/com~apple~CloudDocs/PNG 이미지.png"
+                },
+                {
+                  "key": "request",
+                  "value": "{\"newUsername\":\"jessie-updated\",\"newEmail\":\"jessie-updated@test.com\",\"newPassword\":\"5678\"}",
+                  "type": "text",
+                  "uuid": "19ef4d48-99e6-4065-846a-b92f1d72b6be",
+                  "contentType": "application/json"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/update/ff8d3148-6294-462b-b366-6b332335c328",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "update",
+                "ff8d3148-6294-462b-b366-6b332335c328"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "온라인 갱신",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newLastActiveAt\": \"2026-04-16T04:40:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/online/{userId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "online",
+                "{userId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "유저 삭제",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/delete/{userId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "delete",
+                "{userId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "channel",
+      "item": [
+        {
+          "name": "공개 채널 생성",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"general\",\n  \"description\": \"public channel\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/channel/public/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "public",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "비공개 채널 생성",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userIds\": [\n    \"ff8d3148-6294-462b-b366-6b332335c328\",\n    \"6a129b6f-a44e-4ef8-bb05-e05351751e17\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/channel/private/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "private",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "공개 채널 수정",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newName\": \"general-updated\",\n  \"newDescription\": \"updated public channel\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/channel/public/update/{channelId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "public",
+                "update",
+                "{channelId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "채널 삭제",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channel/delete/{channelId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "delete",
+                "{channelId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "특정 사용자 채널 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channel/find/{userId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "find",
+                "{userId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "item": [
+        {
+          "name": "메시지 전송",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"hello message\",\n  \"channelId\": \"3c12c0dc-1aca-48cb-8fa6-75b211904f20\",\n  \"authorId\": \"ff8d3148-6294-462b-b366-6b332335c328\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/message/send",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "채널 메시지 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/message/findAll/{channelId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "findAll",
+                "{channelId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "메시지 수정",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newContent\": \"hello message updated\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/message/update/{messageId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "update",
+                "{messageId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "메시지 삭제",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/message/delete/{messageId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "delete",
+                "{messageId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "로그인",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jessie-updated\",\n  \"password\": \"5678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "binarycontent",
+      "item": [
+        {
+          "name": "유저 바이너리컨텐츠 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/binaryContent/find?binaryContentId=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "binaryContent",
+                "find"
+              ],
+              "query": [
+                {
+                  "key": "binaryContentId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "메시지 바이너리컨텐츠 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/binaryContent/findAll?ids=&ids=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "binaryContent",
+                "findAll"
+              ],
+              "query": [
+                {
+                  "key": "ids",
+                  "value": ""
+                },
+                {
+                  "key": "ids",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "readstatus",
+      "item": [
+        {
+          "name": "수신 정보 생성",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"ff8d3148-6294-462b-b366-6b332335c328\",\n  \"channelId\": \"3c12c0dc-1aca-48cb-8fa6-75b211904f20\",\n  \"lastReadAt\": \"2026-04-16T05:00:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/readStatus/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "readStatus",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "유저의 채널 메시지 수신 기록",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/readStatus/findAll/{userId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "readStatus",
+                "findAll",
+                "{userId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "수신 시간 업데이트",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newReadAt\": \"2026-04-16T05:10:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/readStatus/update/{readStatusId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "readStatus",
+                "update",
+                "{readStatusId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

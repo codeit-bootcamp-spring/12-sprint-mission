@@ -1,0 +1,28 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 상세</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h1>회원 상세 정보</h1>
+
+<table>
+    <tr><th>ID</th>       <td th:text="${user.id}"></td></tr>
+    <tr><th>아이디</th>    <td th:text="${user.username}"></td></tr>
+    <tr><th>이름</th>      <td th:text="${user.name}"></td></tr>
+    <tr><th>가입일</th>    <td th:text="${user.createdAt}"></td></tr>
+    <tr><th>수정일</th>    <td th:text="${user.updatedAt}"></td></tr>
+</table>
+
+<br/>
+<a class="btn" th:href="@{/users}">목록으로</a>
+<a class="btn" th:href="@{'/users/' + ${user.id} + '/edit'}">수정</a>
+<form th:action="@{'/users/' + ${user.id} + '/delete'}" method="post" style="display:inline">
+    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+</form>
+
+</body>
+</html>

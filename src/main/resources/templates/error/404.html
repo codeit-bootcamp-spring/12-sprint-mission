@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>오류</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>오류가 발생했습니다</h1>
+<p th:if="${message}" th:text="${message}"></p>
+<p th:unless="${message}">요청을 처리할 수 없습니다.</p>
+<a class="btn" th:href="@{/users}">목록으로 돌아가기</a>
+</body>
+</html>
