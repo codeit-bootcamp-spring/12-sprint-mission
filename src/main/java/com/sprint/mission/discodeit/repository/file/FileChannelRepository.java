@@ -9,102 +9,100 @@ import org.springframework.stereotype.Repository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 @Repository
-@ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileChannelRepository implements ChannelRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public Path makePath(UUID id) {
-        return DIRECTORY.resolve(id + EXTENSION);
-    }
-
-    public FileChannelRepository(@Value("${storage.location}") String storageLocation) {
-        DIRECTORY = Path.of(storageLocation,"Channels");
-        createDirectory(DIRECTORY);
-    }
-
-    public void createDirectory(Path path) {
-        if (Files.notExists(path)) {
+    public FileChannelRepository(
+            @Value("${discodeit.repository.file-directory:data}") String fileDirectory
+    ) {
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), fileDirectory, Channel.class.getSimpleName());
+        if (Files.notExists(DIRECTORY)) {
             try {
-                Files.createDirectories(path);
+                Files.createDirectories(DIRECTORY);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    @Override
-    public Channel save(Channel channel) {
-        if (channel == null) throw new NoSuchElementException("채널 객체를 찾을 수 없습니다.");
-        if (channel.getId() == null) throw new IllegalArgumentException("Channel ID를 찾을 수 없습니다.");
-        if (channel.getUserId() == null) throw new IllegalArgumentException("Channel의 작성자 정보가 누락되었습니다.");
-
-        Path path = makePath(channel.getId());
-        try (FileOutputStream fos = new FileOutputStream(path.toFile());
-             ObjectOutputStream oos = new ObjectOutputStream(fos)
-        ) {
-            oos.writeObject(channel);
-            return channel;
-        } catch (IOException e) {
-            return null;
-        }
+    private Path resolvePath(UUID id) {
+        return DIRECTORY.resolve(id + EXTENSION);
     }
 
-    public Channel loadChannel(Path path) {
-        if (Files.notExists(path) || Files.isDirectory(path)) return null;
-
-        try (FileInputStream fis = new FileInputStream(path.toFile());
-             ObjectInputStream ois = new ObjectInputStream(fis)
+    @Override
+    public Channel save(Channel channel) {
+        Path path = resolvePath(channel.getId());
+        try (
+                FileOutputStream fos = new FileOutputStream(path.toFile());
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
-            Object obj = ois.readObject();
-            if (!(obj instanceof Channel)) {
-                throw new IllegalArgumentException("파일 내용이 Channel이 아닙니다.: " + path);
-            }
-            return (Channel) obj;
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Message 파일 로드 실패 : " + path.getFileName() + ": "+e.getMessage());
-            return null;
+            oos.writeObject(channel);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        return channel;
     }
 
     @Override
     public Optional<Channel> findById(UUID id) {
-        return Optional.ofNullable(loadChannel(makePath(id)));
+        Channel channelNullable = null;
+        Path path = resolvePath(id);
+        if (Files.exists(path)) {
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                channelNullable = (Channel) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Optional.ofNullable(channelNullable);
     }
 
     @Override
     public List<Channel> findAll() {
-        if (!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
-        try (Stream<Path> stream = Files.list(DIRECTORY)) {
-            return stream
-                    .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(this::loadChannel)
-                    .filter(Objects::nonNull)
-                    .sorted(Comparator.comparing(Channel::getTitle))
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            return paths
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (Channel) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
                     .toList();
         } catch (IOException e) {
-            throw new NoSuchElementException("경로를 찾을 수 없습니다.");
-        }
-    }
-
-    @Override
-    public void delete(UUID id) {
-        try {
-            boolean deleted = Files.deleteIfExists(makePath(id));
-            if (!deleted) {
-                System.out.println("삭제 실패 : 해당 ID의 파일이 존재하지 않습니다.");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("파일 삭제 중 오류 발생", e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public boolean existsById(UUID id) {
-        return loadChannel(makePath(id)) != null;
+        Path path = resolvePath(id);
+        return Files.exists(path);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        Path path = resolvePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
