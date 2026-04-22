@@ -19,7 +19,7 @@ public class User implements Serializable {
 
     private String username;
     private String email;
-    private transient String password;
+    private String password;
 
 
     public User(String username, String email, String password, UUID profileId) {

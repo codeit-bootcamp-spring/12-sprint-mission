@@ -143,7 +143,7 @@ public class BasicChannelService implements ChannelService {
         }
 
         channel.update(request.name(), request.description());
-        return channel;
+        return channelRepository.save(channel);
     }
 
     @Override
