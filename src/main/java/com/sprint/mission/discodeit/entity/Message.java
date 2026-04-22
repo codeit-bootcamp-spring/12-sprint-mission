@@ -1,71 +1,44 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.util.List;
 import java.util.UUID;
 
-public class Message implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final UUID id;
-	private final UUID userId;
-	private final UUID channelId;
-	private String content;
-	private final Long createdAt;
-	private Long updatedAt;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-	public Message(UUID userId, UUID channelId, String content) {
-		id = UUID.randomUUID();
-		this.userId = userId;
+@Getter
+@ToString(callSuper = true)
+public class Message extends BaseEntity implements Comparable<Message> {
+	private final UUID channelId;
+	private final UUID authorId;
+	private String content;
+	private final List<UUID> attachmentIds;
+
+	@Builder
+	public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
+		super();
 		this.content = content;
 		this.channelId = channelId;
-		createdAt = System.currentTimeMillis();
-		updatedAt = System.currentTimeMillis();
+		this.authorId = authorId;
+		this.attachmentIds = attachmentIds;
 	}
 
-	public void update(String content) {
-		this.content = content;
-		updatedAt = System.currentTimeMillis();
-	}
+	public void update(String newContent) {
+		boolean anyValueUpdated = false;
+		if (newContent != null && !newContent.equals(this.content)) {
+			this.content = newContent;
+			anyValueUpdated = true;
+		}
 
-	public UUID getId() {
-		return id;
-	}
-
-	public UUID getUserId() {
-		return userId;
-	}
-
-	public UUID getChannelId() {
-		return channelId;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public Long getCreatedAt() {
-		return createdAt;
-	}
-
-	public Long getUpdatedAt() {
-		return updatedAt;
+		if (anyValueUpdated) {
+			updateAtUpdate();
+		}
 	}
 
 	@Override
-	public String toString() {
-
-		ZoneId zonedId = ZoneId.of("Asia/Seoul");
-		String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
-		String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
-
-		return "Message{" +
-			"id=" + id +
-			", userId=" + userId +
-			", channelId=" + channelId +
-			", content='" + content + '\'' +
-			", createdAt=" + created +
-			", updatedAt=" + updated +
-			'}';
+	public int compareTo(Message o) {
+		return this.getCreatedAt().compareTo(o.getCreatedAt());
 	}
+
 }

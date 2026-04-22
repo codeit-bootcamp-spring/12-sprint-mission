@@ -1,106 +1,55 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.UUID;
 
-public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final UUID id;
-	private final String username;
-	private String email;
-	private transient String password;
-	private String nickname;
-	private String phoneNumber;
-	private String icon;
-	private final Long createdAt;
-	private Long updatedAt;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-	public User(String username, String email, String password, String nickname, String phoneNumber, String icon) {
-		id = UUID.randomUUID();
+@Getter
+@ToString(callSuper = true)
+public class User extends BaseEntity implements Comparable<User> {
+	private UUID profileId;
+	private String username;
+	private String email;
+	private String password;
+
+	@Builder
+	public User(String username, String email, String password, UUID profileId) {
+		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.nickname = nickname;
-		this.phoneNumber = phoneNumber;
-		this.icon = icon;
-		createdAt = System.currentTimeMillis();
-		updatedAt = System.currentTimeMillis();
+		this.profileId = profileId;
 	}
 
-	public UUID getId() {
-		return id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public Long getCreatedAt() {
-		return createdAt;
-	}
-
-	public Long getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void update(String email, String password, String nickname, String phoneNumber,
-		String icon) {
-		if (email != null) {
-			this.email = email;
+	public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
+		boolean anyValueUpdated = false;
+		if (newUsername != null && !newUsername.equals(this.username)) {
+			this.username = newUsername;
+			anyValueUpdated = true;
 		}
-		if (password != null) {
-			this.password = password;
+		if (newEmail != null && !newEmail.equals(this.email)) {
+			this.email = newEmail;
+			anyValueUpdated = true;
 		}
-		if (nickname != null) {
-			this.nickname = nickname;
+		if (newPassword != null && !newPassword.equals(this.password)) {
+			this.password = newPassword;
+			anyValueUpdated = true;
 		}
-		if (phoneNumber != null) {
-			this.phoneNumber = phoneNumber;
+
+		if (newProfileId != null && !newProfileId.equals(this.profileId)) {
+			this.profileId = newProfileId;
+			anyValueUpdated = true;
 		}
-		if (icon != null) {
-			this.icon = icon;
+
+		if (anyValueUpdated) {
+			updateAtUpdate();
 		}
-		updatedAt = System.currentTimeMillis();
 	}
 
 	@Override
-	public String toString() {
-
-			ZoneId zonedId = ZoneId.of("Asia/Seoul");
-			String created = Instant.ofEpochMilli(createdAt).atZone(zonedId).toString();
-			String updated = Instant.ofEpochMilli(updatedAt).atZone(zonedId).toString();
-		return "User{" +
-			"id=" + id +
-			", username='" + username + '\'' +
-			", email='" + email + '\'' +
-			", password='" + password + '\'' +
-			", nickname='" + nickname + '\'' +
-			", phoneNumber='" + phoneNumber + '\'' +
-			", icon='" + icon + '\'' +
-			", createdAt=" + created +
-			", updatedAt=" + updated +
-			'}';
+	public int compareTo(User o) {
+		return this.getCreatedAt().compareTo(o.getCreatedAt());
 	}
 }

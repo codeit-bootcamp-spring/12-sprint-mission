@@ -8,9 +8,14 @@ import com.sprint.mission.discodeit.entity.Message;
 
 public interface MessageRepository {
 	Message save(Message message);
+
 	Optional<Message> findById(UUID id);
+
 	List<Message> findAll();
-	Long count();
-	void delete(UUID id);
+
+	List<Message> findAllByChannelId(UUID channelId);
+
 	boolean existsById(UUID id);
+
+	void deleteById(UUID id);
 }

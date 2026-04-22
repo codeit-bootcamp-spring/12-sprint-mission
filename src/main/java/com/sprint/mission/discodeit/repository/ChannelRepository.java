@@ -13,9 +13,7 @@ public interface ChannelRepository {
 
 	List<Channel> findAll();
 
-	Long count();
-
-	void delete(UUID id);
-
 	boolean existsById(UUID id);
+
+	void deleteById(UUID id);
 }

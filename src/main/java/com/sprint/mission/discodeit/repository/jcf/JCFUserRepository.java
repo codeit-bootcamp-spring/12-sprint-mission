@@ -6,44 +6,54 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
+
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 
+@Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 public class JCFUserRepository implements UserRepository {
 	private final Map<UUID, User> data;
 
 	public JCFUserRepository() {
-		data = new HashMap<>();
+		this.data = new HashMap<>();
 	}
 
 	@Override
 	public User save(User user) {
-		data.put(user.getId(), user);
+		this.data.put(user.getId(), user);
 		return user;
 	}
 
 	@Override
 	public Optional<User> findById(UUID id) {
-		return Optional.ofNullable(data.get(id));
+		return Optional.ofNullable(this.data.get(id));
+	}
+
+	@Override
+	public Optional<User> findByUsername(String username) {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return Optional.empty();
 	}
 
 	@Override
 	public List<User> findAll() {
-		return data.values().stream().toList();
-	}
-
-	@Override
-	public Long count() {
-		return (long)data.size();
-	}
-
-	@Override
-	public void delete(UUID id) {
-		data.remove(id);
+		return this.data.values().stream().toList();
 	}
 
 	@Override
 	public boolean existsById(UUID id) {
-		return data.containsKey(id);
+		return this.data.containsKey(id);
+	}
+
+	@Override
+	public void deleteById(UUID id) {
+		this.data.remove(id);
 	}
 }
