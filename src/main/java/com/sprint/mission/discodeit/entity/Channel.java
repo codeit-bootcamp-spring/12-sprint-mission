@@ -1,47 +1,57 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Getter
 public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
+    private final Instant createdAt;
+    private Instant updatedAt;
+
+    private ChannelType type;
     private String name;
-    private final Long createdAt;
-    private Long updatedAt;
+    private String description;
 
-    public Channel(String name) {
-        long now = System.currentTimeMillis();
-
+    public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+
+        this.type = type;
         this.name = name;
-        createdAt = now;
-        updatedAt = now;
+        this.description = description;
     }
 
-    public UUID getId() {
-        return id;
+    public Channel(ChannelType type) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
+        this.type = type;
+        this.name = null;
+        this.description = null;
     }
 
-    public String getName() {
-        return name;
-    }
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
 
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void update(String name){
-        this.name = name;
-        updatedAt = System.currentTimeMillis();
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 
     @Override
@@ -50,8 +60,8 @@ public class Channel implements Serializable {
                 .ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
 
-        String createdAtStr = formatter.format(Instant.ofEpochMilli(createdAt));
-        String updatedAtStr = formatter.format(Instant.ofEpochMilli(updatedAt));
+        String createdAtStr = formatter.format(createdAt);
+        String updatedAtStr = updatedAt == null ? "null" : formatter.format(updatedAt);
 
         return  "id: " + id + "\n" +
                 "name: " + name + "\n" +

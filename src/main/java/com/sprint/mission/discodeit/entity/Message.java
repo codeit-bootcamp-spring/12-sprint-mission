@@ -1,60 +1,58 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Getter
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
+    private final Instant createdAt;
+    private Instant updatedAt;
+
     private String content;
-    private final Long createdAt;
-    private Long updatedAt;
-
     private final UUID channelId;
-    private final UUID userId;
+    private final UUID authorId;
 
-    public Message(String content, UUID channelId, UUID userId) {
-        long now = System.currentTimeMillis();
+    private final List<UUID> attachmentIds;
 
+    public Message(String content, UUID channelId, UUID authorId) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+
         this.content = content;
         this.channelId = channelId;
-        this.userId = userId;
-        this.createdAt = now;
-        this.updatedAt = now;
+        this.authorId = authorId;
+        this.attachmentIds = new ArrayList<>();
+
     }
 
-    public UUID getId() {
-        return id;
+    public void update(String newContent){
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public UUID getChannelId() {
-        return channelId;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void update(String content){
-        this.content = content;
-        updatedAt = System.currentTimeMillis();
+    public void addAttachment(UUID attachmentId) {
+        if (attachmentId == null) {
+            return;
+        }
+        this.attachmentIds.add(attachmentId);
+        this.updatedAt = Instant.now();
     }
 
     @Override
@@ -63,14 +61,15 @@ public class Message implements Serializable {
                 .ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
 
-        String createdAtStr = formatter.format(Instant.ofEpochMilli(createdAt));
-        String updatedAtStr = formatter.format(Instant.ofEpochMilli(updatedAt));
+        String createdAtStr = formatter.format(createdAt);
+        String updatedAtStr = formatter.format(updatedAt);
 
         return "id: " + id + "\n" +
                 "content: " + content + "\n" +
                 "createdAt: " + createdAtStr + "\n" +
                 "updatedAt: " + updatedAtStr + "\n" +
                 "channelId: " + channelId + "\n" +
-                "userId: " + userId + "\n";
+                "authorId: " + authorId + "\n" +
+                "attachmentIds: " + attachmentIds + "\n";
     }
 }
