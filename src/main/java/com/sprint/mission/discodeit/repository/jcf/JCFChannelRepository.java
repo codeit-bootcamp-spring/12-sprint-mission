@@ -15,36 +15,23 @@ public class JCFChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public Channel findById(UUID id) {
-        if(channels.containsKey(id)){
-            return channels.get(id);
-        }
-        return null;
+    public Optional<Channel> findById(UUID id) {
+        return Optional.ofNullable(channels.get(id));
     }
 
     @Override
     public List<Channel> findAll() {
-        List<Channel> findChannel= new ArrayList<>();
-        for(Channel channel : channels.values()){
+        List<Channel> findChannel = new ArrayList<>();
+        for (Channel channel : channels.values()) {
             findChannel.add(channel);
         }
         return findChannel;
 //        return channels.values().stream().toList();
     }
 
-    @Override
-    public Channel update(Channel channel) {
-        if(channels.containsKey(channel.getId())){
-            channels.put(channel.getId(), channel);
-            return channel;
-        }
-        return null;
-    }
 
     @Override
-    public Channel delete(UUID id) {
-        Channel channel = channels.get(id);
+    public void delete(UUID id) {
         channels.remove(id);
-        return channel;
     }
 }

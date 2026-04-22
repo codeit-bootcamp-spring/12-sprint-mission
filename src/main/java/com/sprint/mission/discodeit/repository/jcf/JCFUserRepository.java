@@ -15,11 +15,28 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public User findById(UUID id) {
-        if (users.containsKey(id)) {
-            return users.get(id);
+    public Optional<User> findById(UUID id) {
+        return Optional.ofNullable(users.get(id));
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        for (User user : users.values()) {
+            if (user.getUsername().equals(username)) {
+                return Optional.of(user);
+            }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        for (User user : users.values()) {
+            if (user.getEmail().equals(email)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -32,19 +49,12 @@ public class JCFUserRepository implements UserRepository {
 //        return users.values().stream().toList();
     }
 
-    @Override
-    public User update(User user) {
-        if(users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            return users.get(user.getId());
-        }
-        return null;
-    }
 
     @Override
-    public User delete(UUID id) {
-        User user = users.get(id);
+    public void delete(UUID id) {
         users.remove(id);
-        return user;
     }
 }
+
+
+

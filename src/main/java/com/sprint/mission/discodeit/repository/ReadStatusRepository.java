@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.repository;
 
 import com.sprint.mission.discodeit.entity.ReadStatus;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,8 @@ import java.util.UUID;
 // 수정 대상 객체의 id 파라미터, 수정할 값 파라미터
 // delete
 // [ ] id로 삭제합니다.
+
+@Repository
 public interface ReadStatusRepository {
     ReadStatus save(ReadStatus readStatus);
 
@@ -29,7 +32,7 @@ public interface ReadStatusRepository {
 
     List<ReadStatus> findAllByUserId(UUID id);
 
-    Optional<ReadStatus> update(ReadStatus readStatus);
+    List<ReadStatus> findAllByChannelId(UUID id);
 
-    ReadStatus delete(UUID id);
+    void delete(UUID id);
 }

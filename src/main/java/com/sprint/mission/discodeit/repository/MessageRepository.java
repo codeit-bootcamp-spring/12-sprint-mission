@@ -1,11 +1,13 @@
 package com.sprint.mission.discodeit.repository;
 
 import com.sprint.mission.discodeit.entity.Message;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface MessageRepository {
     Message save(Message message);
 
@@ -14,8 +16,6 @@ public interface MessageRepository {
     List<Message> findAll();
 
     List<Message> findAllByChannelId(UUID channelId);
-
-    Optional<Message> update(Message message);
 
     void delete(UUID id);
 }
