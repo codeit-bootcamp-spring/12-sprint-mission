@@ -2,6 +2,9 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -9,15 +12,18 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
+@Repository
+@ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileChannelRepository implements ChannelRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "channels");
+    private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
-    public FileChannelRepository() {
+    public FileChannelRepository(@Value("${storage.location}") String storageLocation) {
+        DIRECTORY = Path.of(storageLocation,"Channels");
         createDirectory(DIRECTORY);
     }
 
@@ -33,9 +39,9 @@ public class FileChannelRepository implements ChannelRepository {
 
     @Override
     public Channel save(Channel channel) {
-        if (channel == null) throw new NullPointerException("Channel 객체가 비어있습니다.");
+        if (channel == null) throw new NoSuchElementException("채널 객체를 찾을 수 없습니다.");
         if (channel.getId() == null) throw new IllegalArgumentException("Channel ID를 찾을 수 없습니다.");
-        if (channel.getAuthor() == null) throw new IllegalArgumentException("Channel의 작성자 정보가 누락되었습니다.");
+        if (channel.getUserId() == null) throw new IllegalArgumentException("Channel의 작성자 정보가 누락되었습니다.");
 
         Path path = makePath(channel.getId());
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
@@ -43,13 +49,12 @@ public class FileChannelRepository implements ChannelRepository {
         ) {
             oos.writeObject(channel);
             return channel;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             return null;
         }
     }
 
-    public Channel loadChannels(Path path) {
+    public Channel loadChannel(Path path) {
         if (Files.notExists(path) || Files.isDirectory(path)) return null;
 
         try (FileInputStream fis = new FileInputStream(path.toFile());
@@ -61,24 +66,25 @@ public class FileChannelRepository implements ChannelRepository {
             }
             return (Channel) obj;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException("파일 입출력 에러");
+            System.err.println("Message 파일 로드 실패 : " + path.getFileName() + ": "+e.getMessage());
+            return null;
         }
     }
 
     @Override
-    public Channel findById(UUID id) {
-        return loadChannels(makePath(id));
+    public Optional<Channel> findById(UUID id) {
+        return Optional.ofNullable(loadChannel(makePath(id)));
     }
 
     @Override
     public List<Channel> findAll() {
-        if (Files.notExists(DIRECTORY)) return Collections.emptyList();
+        if (!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
         try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(this::loadChannels)
-                    .sorted()
+                    .map(this::loadChannel)
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(Channel::getTitle))
                     .toList();
         } catch (IOException e) {
             throw new NoSuchElementException("경로를 찾을 수 없습니다.");
@@ -95,5 +101,10 @@ public class FileChannelRepository implements ChannelRepository {
         } catch (IOException e) {
             throw new RuntimeException("파일 삭제 중 오류 발생", e);
         }
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return loadChannel(makePath(id)) != null;
     }
 }

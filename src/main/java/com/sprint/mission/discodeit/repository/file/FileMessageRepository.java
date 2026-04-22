@@ -2,6 +2,9 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -9,15 +12,18 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
+@Repository
+@ConditionalOnProperty(name = "spring.service.type", havingValue = "file")
 public class FileMessageRepository implements MessageRepository {
-    private final Path DIRECTORY = Path.of(System.getProperty("user.dir"), "data", "Messages");
+    private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public Path makePath(UUID id) {
         return DIRECTORY.resolve(id + EXTENSION);
     }
 
-    public FileMessageRepository() {
+    public FileMessageRepository(@Value("${storage.location}") String storageLocation) {
+        DIRECTORY = Path.of(storageLocation,"Messages");
         createDirectory(DIRECTORY);
     }
 
@@ -33,10 +39,10 @@ public class FileMessageRepository implements MessageRepository {
 
     @Override
     public Message save(Message message) {
-        if (message == null) throw new NullPointerException("Message 객체가 비어있습니다.");
+        if (message == null) throw new NoSuchElementException("Message 객체가 비어있습니다.");
         if (message.getId() == null) throw new IllegalArgumentException("Message ID를 찾을 수 없습니다.");
-        if (message.getAuthor() == null) throw new IllegalArgumentException("Message의 작성자 정보가 누락되었습니다.");
-        if (message.getCh() == null) throw new IllegalArgumentException("Message의 채널 정보가 누락되었습니다.");
+        if (message.getUserId() == null) throw new IllegalArgumentException("Message의 작성자 정보가 누락되었습니다.");
+        if (message.getChannelId() == null) throw new IllegalArgumentException("Message의 채널 정보가 누락되었습니다.");
 
         Path path = makePath(message.getId());
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
@@ -44,13 +50,12 @@ public class FileMessageRepository implements MessageRepository {
         ) {
             oos.writeObject(message);
             return message;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             return null;
         }
     }
 
-    public Message loadMessages(Path path) {
+    public Message loadMessage(Path path) {
         if (Files.notExists(path) || Files.isDirectory(path)) return null;
 
         try (FileInputStream fis = new FileInputStream(path.toFile());
@@ -62,28 +67,41 @@ public class FileMessageRepository implements MessageRepository {
             }
             return (Message) obj;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException("파일 입출력 에러");
+            System.err.println("Message 파일 로드 실패 : " + path);
+            return null;
         }
     }
 
     @Override
-    public Message findById(UUID id) {
-        return loadMessages(makePath(id));
+    public Optional<Message> findById(UUID id) {
+        return Optional.ofNullable(loadMessage(makePath(id)));
     }
 
     @Override
     public List<Message> findAll() {
-        if(Files.notExists(DIRECTORY)) return Collections.emptyList();
+        if(!Files.isDirectory(DIRECTORY)) return Collections.emptyList();
         try (Stream<Path> stream = Files.list(DIRECTORY)) {
             return stream
                     .filter(path -> path.getFileName().toString().endsWith(EXTENSION))
-                    .map(this::loadMessages)
-                    .sorted()
+                    .map(this::loadMessage)
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(Message::getUpdatedAt))
                     .toList();
         } catch (IOException e) {
             throw new NoSuchElementException("경로를 찾을 수 없습니다.");
         }
+    }
+
+    @Override
+    public List<Message> findByChannelId(UUID id) {
+        return findAll().stream()
+                .filter(message -> message.getChannelId().equals(id))
+                .toList();
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return loadMessage(makePath(id)) != null;
     }
 
     @Override
