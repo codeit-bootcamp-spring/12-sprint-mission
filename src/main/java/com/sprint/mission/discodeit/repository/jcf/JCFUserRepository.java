@@ -2,37 +2,43 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
-
-import static java.util.Optional.ofNullable;
-
+@Primary
+@Repository
 
 public class JCFUserRepository implements UserRepository {
+    private final Map<UUID, User> data;
 
-    private final Map<UUID, User> store = new HashMap<>();
+    public JCFUserRepository() {
+        this.data = new HashMap<>();
+    }
 
     @Override
     public User save(User user) {
-        store.put(user.getId(), user);
+        this.data.put(user.getId(), user);
         return user;
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        return ofNullable(store.get(id));
+        return Optional.ofNullable(this.data.get(id));
     }
 
     @Override
     public List<User> findAll() {
-        return new ArrayList<>(store.values());
+        return this.data.values().stream().toList();
     }
 
     @Override
-    public void delete(UUID id) {
-        store.remove(id);
+    public boolean existsById(UUID id) {
+        return this.data.containsKey(id);
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        this.data.remove(id);
+    }
 }
-
-

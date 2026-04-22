@@ -2,33 +2,42 @@ package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
-
+@Primary
+@Repository
 public class JCFMessageRepository implements MessageRepository {
-        private final Map<UUID, Message> store = new HashMap<>();
+    private final Map<UUID, Message> data;
+
+    public JCFMessageRepository() {
+        this.data = new HashMap<>();
+    }
 
     @Override
     public Message save(Message message) {
-        store.put(message.getId(), message);
+        data.put(message.getId(), message);
         return message;
     }
 
     @Override
     public Optional<Message> findById(UUID id) {
-        return Optional.ofNullable(store.get(id));
+        return Optional.ofNullable(this.data.get(id));
     }
 
     @Override
     public List<Message> findAll() {
-        return new ArrayList<>(store.values());
+        return this.data.values().stream().toList();
     }
 
     @Override
-    public void delete(UUID id) {
-        store.remove(id);
-
+    public boolean existsById(UUID id) {
+        return this.data.containsKey(id);
     }
 
-
+    @Override
+    public void deleteById(UUID id) {
+        data.remove(id);
+    }
 }

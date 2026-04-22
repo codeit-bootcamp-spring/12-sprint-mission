@@ -1,87 +1,47 @@
 package com.sprint.mission.discodeit;
 
 import com.sprint.mission.discodeit.entity.*;
-import com.sprint.mission.discodeit.service.*;
-import com.sprint.mission.discodeit.service.jcf.*;
-
-import java.util.List;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
+import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
+import com.sprint.mission.discodeit.repository.file.FileUserRepository;
+import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 
 public class JavaApplication {
+    static User setupUser(UserService userService) {
+        User user = userService.create("woody", "woody@codeit.com", "woody1234");
+        return user;
+    }
+
+    static Channel setupChannel(ChannelService channelService) {
+        Channel channel = channelService.create("General", "공지",ChannelCategory.General);
+        return channel;
+    }
+
+    static void messageCreateTest(MessageService messageService, Channel channel, User author) {
+        Message message = messageService.create("안녕하세요.", channel.getId(), author.getId());
+        System.out.println("메시지 생성: " + message.getId());
+    }
+
     public static void main(String[] args) {
+        // 레포지토리 초기화
+        UserRepository userRepository = new FileUserRepository();
+        ChannelRepository channelRepository = new FileChannelRepository();
+        MessageRepository messageRepository = new FileMessageRepository();
 
+//        // 서비스 초기화
+//        UserService userService = new BasicUserService(userRepository);
+//        ChannelService channelService = new BasicChannelService(channelRepository);
+//        MessageService messageService = new BasicMessageService(messageRepository, channelRepository, userRepository);
 
-
-//        System.out.println("----user test initiates-----");
-//        UserService userService = new JCFUserService();
-//        User user = new User("JaneDoe", "Janedoe@gmail.com",9876,"JD1");
-//        userService.create(String User);
-//        System.out.println("Created: " + user.getUsername());
-//        userService.find(user.getId(), user);
-//        System.out.println("Read: " + user.getUsername());
-//        userService.findAll();
-//        System.out.println("Read All: " + user.getUsername());
-//        User updatedUser = new User("JaneDoe Updated", "Janedoe123@gmail.com",9876,"JD1");
-//        ((JCFUserService) userService).update(user.getId(), updatedUser);
-//        System.out.println("Updated user");
-//        userService.find(user.getId(), user);
-//        System.out.println("After update: " + updatedUser.getUsername());
-//        userService.delete(user.getId());
-//        System.out.println("Deleted user");
-//        User deletedUser = userService.find(user.getId(), user);
-//        System.out.println("After delete: " + (deletedUser == null ? "confirmed deleted" : "Still exists"));
-//        System.out.println("----user test ends-----");
-//
-//        System.out.println("----message test initiates-----");
-//        MessageService messageService = new JCFMessageService();
-//        Message message = new Message("Inquiry", "JaneDoe","Admin");
-//        messageService.create(message);
-//        System.out.println("Created: " + message.getContent());
-//        messageService.read(message.getId(), message);
-//        System.out.println("Read: " + message.getContent());
-//        messageService.readAll();
-//        System.out.println("Read All: " + message.getContent());
-//        Message updatedMessage = new Message("General Inquiry", "JaneDoe Updated","Admin");
-//        messageService.update(message.getId(), updatedMessage);
-//        System.out.println("Updated Message");
-//        messageService.read(user.getId(),message);
-//        System.out.println("After update: " + updatedMessage.getContent());
-//        messageService.delete(message.getContent());
-//        System.out.println("Deleted Message");
-//        Message deletedMessage = messageService.read(user.getId(),message);
-//        System.out.println((("After delete: " + deletedMessage) == null) ? "confirmed deleted" : "Still exists");
-//        System.out.println("----message test ends-----");
-//
-//        System.out.println("----channel test initiates-----");
-//        ChannelService channelService = new JCFChannelService();
-//        Channel channel = new Channel();
-//        channelService.create(channel);
-//        System.out.println("Created: " + channel.getName());
-//        channelService.read(channel.getName());
-//        System.out.println("Read: " + channel.getName());
-//        List<Channel> allChannels = channelService.readAll();
-//        System.out.println("Read All: " + allChannels.size() + " channels");
-//        Channel updatedChannel = new Channel();
-//        channelService.update(channel.getName(), updatedChannel);
-//        System.out.println("Updated Channel");
-//        channelService.read(channel.getName());
-//        System.out.println("After update: " + updatedChannel.getName());
-//        channelService.delete(channel.getName());
-//        System.out.println("Deleted Channel");
-//        Channel deletedChannel = channelService.read(channel.getName());
-//        System.out.println("After delete: " + (deletedChannel == null ? "confirmed deleted" : "Still exists"));
-//        System.out.println("----channel test ends-----");
-//
-//
-
-
-
-
-
-
-
-
-
-
-
+//        // 셋업
+//        User user = setupUser(userService);
+//        Channel channel = setupChannel(channelService);
+//        // 테스트
+//        messageCreateTest(messageService, channel, user);
     }
 }

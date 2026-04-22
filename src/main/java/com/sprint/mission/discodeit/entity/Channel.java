@@ -1,86 +1,66 @@
 package com.sprint.mission.discodeit.entity;
 
+
+import lombok.Getter;
+
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-public class Channel implements java.io.Serializable{
+@Getter
+public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String name;
-    private String category;
-    private String purpose;
     private String description;
-    private String accessToken;
-    private Long createdAt;
-    private Long updatedAt;
+    private ChannelCategory category;
 
-
-    public Channel() {
+    public Channel(ChannelCategory category, String name, String description) {
         this.id = UUID.randomUUID();
-        this.name = name;
+        this.createdAt = Instant.ofEpochSecond(Instant.now().getEpochSecond());
         this.category = category;
-        this.purpose = purpose;
+        this.name = name;
         this.description = description;
-        this.accessToken = accessToken;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
-
-
     public UUID getId() {
         return id;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public ChannelCategory getCategory() {
+        return category;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
+
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.ofEpochSecond(Instant.now().getEpochSecond());
+        }
     }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-
-    public void update(String name, String category, String purpose, String description, String accessToken) {
-        this.name = name;
-        this.category = category;
-        this.purpose = purpose;
-        this.description = description;
-        this.accessToken = accessToken;
-        updatedAt = System.currentTimeMillis();
-    }
-
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
-                ", purpose='" + purpose + '\'' +
-                ", description='" + description + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
-
 }

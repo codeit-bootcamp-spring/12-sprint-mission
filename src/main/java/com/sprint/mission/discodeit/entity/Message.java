@@ -1,68 +1,63 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-public class Message implements java.io.Serializable {
+public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
-    private UUID id;
-    private String content;
-    private String sender;
-    private String receiver;
-    private Long createdAt;
-    private Long updatedAt;
 
-    public Message(String content, String sender, String receiver) {
+    private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
+    private String content;
+    //
+    private UUID channelId;
+    private UUID authorId;
+
+    public Message(String content, UUID channelId, UUID authorId) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.ofEpochSecond(Instant.now().getEpochSecond());
+        //
         this.content = content;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+        this.channelId = channelId;
+        this.authorId = authorId;
     }
 
     public UUID getId() {
         return id;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
     public String getContent() {
         return content;
     }
 
-    public String getSender() {
-        return sender;
+    public UUID getChannelId() {
+        return channelId;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public UUID getAuthorId() {
+        return authorId;
     }
 
-    public String getCreatedAt() {
-        return createdAt.toString();
-    }
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
 
-    public String getUpdatedAt() {
-        return updatedAt.toString();
-    }
-
-    public void update(String content, String sender, String receiver) {
-        this.content = content;
-        this.sender = sender;
-        this.receiver = receiver;
-        updatedAt = System.currentTimeMillis();
-    }
-
-    @Override
-    public String toString() {
-        return "MessageService{" +
-                "id=" + id +
-                ", content='" + content + '\'' +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.ofEpochSecond(Instant.now().getEpochSecond());
+        }
     }
 }
-
-
-
