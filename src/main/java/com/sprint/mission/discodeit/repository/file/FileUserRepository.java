@@ -1,14 +1,17 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.user.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.util.FileSerialization;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-
+@Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FileUserRepository implements UserRepository {
-    private static final String FILE_PATH = "user.ser";
+    private static final String FILE_PATH = "User.ser";
 
     private final Map<UUID, User> data;
 
@@ -35,9 +38,9 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByNickname(String nickname) {
+    public Optional<User> findByUsername(String username) {
         for (User user : data.values()) {
-            if (user.getNickname().equals(nickname)) {
+            if (user.getUsername().equals(username)) {
                 return Optional.of(user);
             }
         }
@@ -62,15 +65,15 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public User delete(UUID id) {
-        User user = data.remove(id);
+    public User deleteById(UUID id) {
+        User removed = data.remove(id);
 
-        if (user == null) {
-            throw new IllegalArgumentException("유저 없음.");
+        if (removed == null) {
+            throw new IllegalArgumentException("해당 id를 가진 User 없음.");
         }
 
         FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
 
-        return user;
+        return removed;
     }
 }

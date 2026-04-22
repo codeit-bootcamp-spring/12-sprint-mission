@@ -1,13 +1,17 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.channel.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.util.FileSerialization;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FileChannelRepository implements ChannelRepository {
-    private static final String FILE_PATH  = "channel.ser";
+    private static final String FILE_PATH  = "Channel.ser";
 
     private final Map<UUID, Channel> data;
 
@@ -50,11 +54,11 @@ public class FileChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public Channel delete(UUID id) {
+    public Channel deleteById(UUID id) {
         Channel removed = data.remove(id);
 
         if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 채널 없음.");
+            throw new IllegalArgumentException("해당 id를 가진 Channel 없음.");
         }
 
         FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
