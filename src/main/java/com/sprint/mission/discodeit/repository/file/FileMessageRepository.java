@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.UserService;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,12 +15,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class FileMessageRepository implements MessageRepository {
     private final Path DIRECTORYPATH;
     private final String EXTENSION = ".ser";
+    private final String CURRENTDIR = "user.dir";
 
     public FileMessageRepository(){
-        this.DIRECTORYPATH = Paths.get(System.getProperty("user.dir"), "data", "Message");
+        this.DIRECTORYPATH = Paths.get(System.getProperty(CURRENTDIR), "data", "Message");
         if (!Files.exists(DIRECTORYPATH)) {
             try {
                 Files.createDirectories(DIRECTORYPATH);
@@ -90,11 +93,11 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public Message update(UUID id, Message message) {
+    public Message update(UUID id, Message message, List<UUID> attachmentIds) {
         Optional<Message> OptionalMessage = findById(id);
         if (OptionalMessage.isPresent()) {
             Message found = OptionalMessage.get();
-            found.update(message.getContent());
+            found.update(message.getContent(), attachmentIds);
             return save(found);
         }
         return null;

@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,13 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class FileChannelRepository implements ChannelRepository {
     private final Path DIRECTORYPATH;
     private final String EXTENSION = ".ser";
+    private final String CURRENTDIR = "user.dir";
 
 
     public FileChannelRepository() {
-        this.DIRECTORYPATH = Paths.get(System.getProperty("user.dir"), "data", "Channel");
+        this.DIRECTORYPATH = Paths.get(System.getProperty(CURRENTDIR), "data", "Channel");
         if (!Files.exists(DIRECTORYPATH)) {
             try {
                 Files.createDirectories(DIRECTORYPATH);
@@ -93,7 +96,7 @@ public class FileChannelRepository implements ChannelRepository {
         Optional<Channel> OptionalChannel = findById(id);
         if (OptionalChannel.isPresent()) {
             Channel found = OptionalChannel.get();
-            found.update(channel.getName(), channel.getIsPrivate());
+            found.update(channel.getName(), channel.isPrivate());
             return save(found);
         }
         return null;

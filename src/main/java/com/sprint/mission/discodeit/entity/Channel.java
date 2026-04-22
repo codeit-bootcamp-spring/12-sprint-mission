@@ -1,28 +1,26 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+@Getter
 public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
-    public enum ChannelType {
-        TEXT, VOICE, FORUM
-    }
 
     private final UUID id;
-
-    private final Long createdAt;
-    private Long updatedAt;
-
+    private final Instant createdAt;
+    private Instant updatedAt;
     private String name;
-
     private final ChannelType type;
     private boolean isPrivate;
 
     public Channel(String name, ChannelType type, boolean isPrivate) {
         this.id = UUID.randomUUID();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
 
         this.name = name;
@@ -30,33 +28,9 @@ public class Channel implements Serializable {
         this.isPrivate = isPrivate;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ChannelType getType() {
-        return type;
-    }
-
-    public boolean getIsPrivate() {
-        return isPrivate;
-    }
-
     public void update(String newName, boolean newPrivate) {
         this.name = newName;
-        this.updatedAt = System.currentTimeMillis();
+        this.updatedAt = Instant.now();
         this.isPrivate = newPrivate;
     }
 

@@ -1,72 +1,46 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+@Getter
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final UUID id;
     private final UUID channelId;
-    private final UUID serverId;
     private final UUID memberId;
 
-    private final Long createdAt;
-    private Long updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
     private String content;
+    private List<UUID> attachmentIds;
 
     private boolean isEdited;
 
-    public Message(UUID channelId, UUID serverId, UUID memberId, String content) {
+    public Message(UUID channelId, UUID memberId, String content, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
         this.isEdited = false;
 
         this.channelId = channelId;
-        this.serverId = serverId;
         this.memberId = memberId;
         this.content = content;
+        this.attachmentIds = attachmentIds;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getChannelId() {
-        return channelId;
-    }
-
-    public UUID getServerId() {
-        return serverId;
-    }
-
-    public UUID getMemberId() {
-        return memberId;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public boolean isEdited() {
-        return isEdited;
-    }
-
-    public void update(String newContent) {
+    public void update(String newContent, List<UUID> attachmentIds) {
         this.content = newContent;
         this.isEdited = true;
-        this.updatedAt = System.currentTimeMillis();
+        this.updatedAt = Instant.now();
+        this.attachmentIds = attachmentIds;
     }
 
     @Override
@@ -74,12 +48,12 @@ public class Message implements Serializable {
         return new StringJoiner(", ", Message.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("channelId=" + channelId)
-                .add("serverId=" + serverId)
                 .add("memberId=" + memberId)
                 .add("createdAt=" + createdAt)
                 .add("updatedAt=" + updatedAt)
                 .add("content='" + content + "'")
                 .add("isEdited=" + isEdited)
+                .add("attachmentIds=" + attachmentIds)
                 .toString();
     }
 }

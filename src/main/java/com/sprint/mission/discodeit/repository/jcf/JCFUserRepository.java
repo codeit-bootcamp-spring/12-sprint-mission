@@ -16,7 +16,7 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
         data.add(user);
         return user;
     }
@@ -26,6 +26,16 @@ public class JCFUserRepository implements UserRepository {
         for(User user : data) {
             if(user.getId().equals(id)) return Optional.of(user);
         }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
         return Optional.empty();
     }
 
@@ -50,7 +60,7 @@ public class JCFUserRepository implements UserRepository {
         Optional<User> OptionalUser = findById(id);
         if (OptionalUser.isPresent()) {
             User found = OptionalUser.get();
-            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
+            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName(), user.getProfileId());
             return found;
         }
         return null;

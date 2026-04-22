@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,13 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class FileUserRepository implements UserRepository {
     private final Path DIRECTORYPATH;
     private final String EXTENSION = ".ser";
+    private final String CURRENTDIR = "user.dir";
 
 
     public FileUserRepository() {
-        this.DIRECTORYPATH = Paths.get(System.getProperty("user.dir"), "data", "User");
+        this.DIRECTORYPATH = Paths.get(System.getProperty(CURRENTDIR), "data", "User");
         if (!Files.exists(DIRECTORYPATH)) {
             try {
                 Files.createDirectories(DIRECTORYPATH);
@@ -33,7 +36,7 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
         Path targetPath = makePath(user.getId());
         try(
                 FileOutputStream fos = new FileOutputStream(targetPath.toFile());
@@ -59,6 +62,20 @@ public class FileUserRepository implements UserRepository {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return findAll().stream()
+                .filter(user -> user.getUserName().equals(username))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return findAll().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
     }
 
     @Override
@@ -93,8 +110,8 @@ public class FileUserRepository implements UserRepository {
         Optional<User> OptionalUser = findById(id);
         if (OptionalUser.isPresent()) {
             User found = OptionalUser.get();
-            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName());
-            return save(found);
+            found.update(user.getUserName(), user.getPassword(), user.getEmail(), user.getNickName(), user.getProfileId());
+            return create(found);
         }
         return null;
     }
