@@ -21,7 +21,7 @@ import java.util.UUID;
 public class DiscodeitApplication {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
-		
+
 	}
 
 }

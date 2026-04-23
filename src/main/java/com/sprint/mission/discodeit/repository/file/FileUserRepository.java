@@ -114,12 +114,12 @@ public class FileUserRepository implements UserRepository {
     @Override
     public boolean existsByEmail(String email) {
         return findAll().stream()
-                .anyMatch(user -> user.getEmail().equals(email));
+                .anyMatch(user -> email.equals(user.getEmail()));
     }
 
     @Override
     public boolean existsByUsername(String username) {
         return findAll().stream()
-                .anyMatch(user -> user.getUsername().equals(username));
+                .anyMatch(user -> username.equals(user.getUsername()));
     }
 }
