@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,5 +40,16 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<UserDto> deleteUser(@PathVariable UUID id) {
+        UserDto user = userService.find(id);
+        userService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<List<UserDto>> findAll() {
+        List<UserDto> userList = userService.findAll();
+        return ResponseEntity.ok(userList);
+        }
 }
