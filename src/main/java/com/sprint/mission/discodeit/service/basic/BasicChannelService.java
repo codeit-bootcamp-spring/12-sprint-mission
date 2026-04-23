@@ -62,7 +62,7 @@ public class BasicChannelService implements ChannelService {
 
         return channelRepository.findAll().stream()
                 .filter(channel ->
-                        channel.getType().equals(ChannelType.PUBLIC)
+                        Objects.equals(channel.getType(), ChannelType.PUBLIC)
                                 || mySubscribedChannelIds.contains(channel.getId())
                 )
                 .map(this::toDto)
@@ -75,7 +75,7 @@ public class BasicChannelService implements ChannelService {
         String newDescription = request.newDescription();
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new NoSuchElementException("Channel with id " + channelId + " not found"));
-        if (channel.getType().equals(ChannelType.PRIVATE)) {
+        if (Objects.equals(channel.getType(), ChannelType.PRIVATE)) {
             throw new IllegalArgumentException("Private channel cannot be updated");
         }
         channel.update(newName, newDescription);
@@ -103,7 +103,7 @@ public class BasicChannelService implements ChannelService {
                 .orElse(Instant.MIN);
 
         List<UUID> participantIds = new ArrayList<>();
-        if (channel.getType().equals(ChannelType.PRIVATE)) {
+        if (Objects.equals(channel.getType(), ChannelType.PRIVATE)) {
             readStatusRepository.findAllByChannelId(channel.getId())
                     .stream()
                     .map(ReadStatus::getUserId)

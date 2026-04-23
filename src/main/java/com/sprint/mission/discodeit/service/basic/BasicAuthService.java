@@ -7,6 +7,8 @@ import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class BasicAuthService implements AuthService {
@@ -21,7 +23,7 @@ public class BasicAuthService implements AuthService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User with username " + username + " not found"));
 
-        if (!user.getPassword().equals(password)) {
+        if (!Objects.equals(user.getPassword(), password)) {
             throw new IllegalArgumentException("Wrong password");
         }
         return user;

@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -72,7 +73,7 @@ public class FileUserStatusRepository implements UserStatusRepository {
     @Override
     public Optional<UserStatus> findByUserId(UUID userId) {
         return findAll().stream()
-                .filter(userStatus -> userStatus.getUserId().equals(userId))
+                .filter(userStatus -> Objects.equals(userStatus.getUserId(), userId))
                 .findFirst();
     }
 

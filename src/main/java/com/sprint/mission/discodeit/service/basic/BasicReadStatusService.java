@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class BasicReadStatusService implements ReadStatusService {
             throw new NoSuchElementException("Channel with id " + channelId + " does not exist");
         }
         if (readStatusRepository.findAllByUserId(userId).stream()
-                .anyMatch(readStatus -> readStatus.getChannelId().equals(channelId))) {
+                .anyMatch(readStatus -> Objects.equals(readStatus.getChannelId(), channelId))) {
             throw new IllegalArgumentException("ReadStatus with userId " + userId + " and channelId " + channelId + " already exists");
         }
 

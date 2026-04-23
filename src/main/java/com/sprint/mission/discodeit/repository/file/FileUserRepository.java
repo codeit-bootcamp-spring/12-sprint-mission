@@ -70,7 +70,7 @@ public class FileUserRepository implements UserRepository {
     @Override
     public Optional<User> findByUsername(String username) {
         return this.findAll().stream()
-                .filter(user -> user.getUsername().equals(username))
+                .filter(user -> Objects.equals(user.getUsername(), username))
                 .findFirst();
     }
 
@@ -114,12 +114,12 @@ public class FileUserRepository implements UserRepository {
     @Override
     public boolean existsByEmail(String email) {
         return findAll().stream()
-                .anyMatch(user -> email.equals(user.getEmail()));
+                .anyMatch(user -> Objects.equals(user.getEmail(), email));
     }
 
     @Override
     public boolean existsByUsername(String username) {
         return findAll().stream()
-                .anyMatch(user -> username.equals(user.getUsername()));
+                .anyMatch(user -> Objects.equals(user.getUsername(), username));
     }
 }
