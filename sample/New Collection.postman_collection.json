@@ -556,32 +556,18 @@
       "item": [
         {
           "name": "find",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "GET",
             "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "binaryContentId",
-                  "value": "1403e619-d83a-48e8-b3fc-ef9b9b0fcabb",
-                  "type": "text",
-                  "uuid": "691ea34d-2d43-4b4d-b3f9-be3e5c7adea5"
-                }
-              ]
-            },
             "url": {
-              "raw": "{{baseURL}}/api/binaryContent/find",
+              "raw": "{{baseURL}}/api/binaryContent/1403e619-d83a-48e8-b3fc-ef9b9b0fcabb",
               "host": [
                 "{{baseURL}}"
               ],
               "path": [
                 "api",
                 "binaryContent",
-                "find"
+                "1403e619-d83a-48e8-b3fc-ef9b9b0fcabb"
               ]
             }
           },
@@ -597,30 +583,22 @@
             "header": [],
             "body": {
               "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "binaryContentIds",
-                  "value": "1403e619-d83a-48e8-b3fc-ef9b9b0fcabb",
-                  "type": "text",
-                  "uuid": "1f0b9ee6-6818-422f-9b12-a37b34be0ba5"
-                },
-                {
-                  "key": "binaryContentIds",
-                  "value": "b599d395-e26b-48b9-ae40-9026a1ebfd46",
-                  "type": "text",
-                  "uuid": "ae2b7c80-63cc-439f-9a07-9df5bfd941d3"
-                }
-              ]
+              "formdata": []
             },
             "url": {
-              "raw": "{{baseURL}}/api/binaryContent/findAll",
+              "raw": "{{baseURL}}/api/binaryContent?binaryContentIds=1403e619-d83a-48e8-b3fc-ef9b9b0fcabb,b599d395-e26b-48b9-ae40-9026a1ebfd46",
               "host": [
                 "{{baseURL}}"
               ],
               "path": [
                 "api",
-                "binaryContent",
-                "findAll"
+                "binaryContent"
+              ],
+              "query": [
+                {
+                  "key": "binaryContentIds",
+                  "value": "1403e619-d83a-48e8-b3fc-ef9b9b0fcabb,b599d395-e26b-48b9-ae40-9026a1ebfd46"
+                }
               ]
             }
           },

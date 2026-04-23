@@ -16,9 +16,8 @@ public class BinaryContentController {
 
     private final BinaryContentService binaryContentService;
 
-    @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public ResponseEntity<BinaryContent> find(@RequestParam UUID binaryContentId) {
-
+    @RequestMapping(value = "/{binaryContentId}", method = RequestMethod.GET)
+    public ResponseEntity<BinaryContent> find(@PathVariable UUID binaryContentId) {
         BinaryContent binaryContent = binaryContentService.find(binaryContentId);
         if (binaryContent == null) {
             return ResponseEntity.notFound().build();
@@ -27,8 +26,8 @@ public class BinaryContentController {
         return ResponseEntity.status(HttpStatus.OK).body(binaryContent);
     }
 
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public ResponseEntity<List<BinaryContent>> findAll(@RequestParam List<UUID> binaryContentIds) {
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<List<BinaryContent>> findAll(@RequestParam(name = "binaryContentIds") List<UUID> binaryContentIds) {
         return ResponseEntity.status(HttpStatus.OK).body(binaryContentService.findAllByIdIn(binaryContentIds));
     }
 }
