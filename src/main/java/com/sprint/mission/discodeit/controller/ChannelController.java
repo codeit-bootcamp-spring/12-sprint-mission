@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,5 +49,11 @@ public class ChannelController {
         ChannelDto channel = channelService.find(id);
         channelService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(channel);
+    }
+
+    @RequestMapping(value = "/users/{userId}")
+    public ResponseEntity<List<ChannelDto>> findAllByUserId(@PathVariable UUID userId) {
+        List<ChannelDto> channelList = channelService.findAllByUserId(userId);
+        return ResponseEntity.ok(channelList);
     }
 }
