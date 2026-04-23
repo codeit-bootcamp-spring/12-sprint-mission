@@ -11,25 +11,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "file"
-)
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FileChannelRepository implements ChannelRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public FileChannelRepository(
-            @Value("${discodeit.repository.file-directory:.discodeit}")
-            String baseDir
+            @Value("${discodeit.repository.file-directory:.discodeit}") String baseDir
     ) {
-        DIRECTORY = Paths.get(
-                System.getProperty("user.dir"),
-                baseDir,
-                Channel.class.getSimpleName()
-        );
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, Channel.class.getSimpleName());
         if (Files.notExists(DIRECTORY)) {
             try {
                 Files.createDirectories(DIRECTORY);
@@ -76,8 +69,8 @@ public class FileChannelRepository implements ChannelRepository {
 
     @Override
     public List<Channel> findAll() {
-        try {
-            return Files.list(DIRECTORY)
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            return paths
                     .filter(path -> path.toString().endsWith(EXTENSION))
                     .map(path -> {
                         try (

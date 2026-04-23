@@ -11,24 +11,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "file"
-)
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FileMessageRepository implements MessageRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
     public FileMessageRepository(
-            @Value("${discodeit.repository.file-directory:.discodeit}")
-            String baseDir
+            @Value("${discodeit.repository.file-directory:.discodeit}") String baseDir
     ) {
-        this.DIRECTORY = Paths.get(
-                System.getProperty("user.dir"),
-                baseDir,
-                Message.class.getSimpleName());
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, Message.class.getSimpleName());
         if (Files.notExists(DIRECTORY)) {
             try {
                 Files.createDirectories(DIRECTORY);
@@ -74,9 +68,10 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public List<Message> findAll() {
-        try {
-            return Files.list(DIRECTORY)
+    public List<Message> findAllByChannelId(UUID channelId) {
+        try (Stream<Path> paths = Files.list(DIRECTORY))
+        {
+            return paths
                     .filter(path -> path.toString().endsWith(EXTENSION))
                     .map(path -> {
                         try (
@@ -88,6 +83,7 @@ public class FileMessageRepository implements MessageRepository {
                             throw new RuntimeException(e);
                         }
                     })
+                    .filter(message -> message.getChannelId().equals(channelId))
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -108,5 +104,11 @@ public class FileMessageRepository implements MessageRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void deleteAllByChannelId(UUID channelId) {
+        this.findAllByChannelId(channelId)
+                .forEach(message -> this.deleteById(message.getId()));
     }
 }
