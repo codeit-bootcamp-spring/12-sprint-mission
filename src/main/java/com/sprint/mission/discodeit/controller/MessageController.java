@@ -55,4 +55,16 @@ public class MessageController {
         Message message = messageService.update(id, request);
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteMessage(@PathVariable UUID id) {
+        messageService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/channels/{channelId}", method = RequestMethod.GET)
+    public ResponseEntity<List<Message>> findAllByChannelId(@PathVariable UUID channelId) {
+        List<Message> messageList = messageService.findAllByChannelId(channelId);
+        return ResponseEntity.ok(messageList);
+    }
 }
