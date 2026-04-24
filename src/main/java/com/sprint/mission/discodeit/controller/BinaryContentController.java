@@ -12,23 +12,18 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/binary-contents")
+@RequestMapping("/api/binaryContent")
 @AllArgsConstructor
 public class BinaryContentController {
 
     private final BinaryContentService binaryContentService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> download(@PathVariable UUID id) {
-        BinaryContent binaryContent = binaryContentService.find(id);
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    public ResponseEntity<BinaryContent> download(@RequestParam UUID binaryContentId) {
+        BinaryContent binaryContent =
+                binaryContentService.find(binaryContentId);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(binaryContent.getContentType()))
-                .header(
-                        HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + binaryContent.getFileName() + "\""
-                )
-                .body(binaryContent.getBytes());
+        return ResponseEntity.ok(binaryContent);
     }
 
     @RequestMapping(method = RequestMethod.GET)
