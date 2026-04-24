@@ -1,55 +1,130 @@
 <!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>사용자 목록</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            body { font-family: Noto Sans KR, sans-serif; }
-            table { width: 600px; margin: 30px auto; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-            th { background: #040303; }
-            .online { color: #4a5d81; font-weight: bold; }
-            .offline { color: gray; }
-            img { width: 40px; border-radius: 50%}}
-        </style>
+            background: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: #111;
+        }
+
+        .user-list {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .user-row:last-child {
+            border-bottom: none;
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ddd;
+            flex-shrink: 0;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            flex: 1;
+            margin-left: 16px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .badge {
+            background: #2ecc71;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 999px;
+        }
+    </style>
+</head>
 <body>
-<h2 style="text-align:center;">사용자 목록</h2>
-<table>
-    <thead>
-    <tr>
-        <th>프로필</th>
-        <th>이름</th>
-        <th>이메일</th>
-        <th>상태</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td><img src="jessie.jpeg"/></td>
-        <td>jessie</td>
-        <td>jessie@codeit.com</td>
-        <td class="online">온라인</td>
-    </tr>
-    <tr>
-        <td><img src="rex.jpg"/></td>
-        <td>rex</td>
-        <td>rex@codeit.com</td>
-        <td class="online">온라인</td>
-    </tr>
-    <tr>
-        <td><img src="buzz.jpeg"/></td>
-        <td>buzz</td>
-        <td>buzz@codeit.com</td>
-        <td class="online">온라인</td>
-    </tr>
-    <tr>
-        <td><img src="woody.jpeg"/></td>
-        <td>woody</td>
-        <td>woody@codeit.com</td>
-        <td class="online">온라인</td>
-    </tr>
-    </tbody>
-</table>
+
+<h1>사용자 목록</h1>
+
+<div class="user-list">
+
+    <div class="user-row">
+        <img class="avatar" src="jessie2.png" alt="jessie">
+        <div class="user-info">
+            <div class="user-name">jessie</div>
+            <div class="user-email">jessie@codeit.com</div>
+        </div>
+        <span class="badge">온라인</span>
+    </div>
+
+
+    <div class="user-row">
+        <img class="avatar" src="rex2.jpg" alt="rex">
+        <div class="user-info">
+            <div class="user-name">rex</div>
+            <div class="user-email">rex@codeit.com</div>
+        </div>
+        <span class="badge">온라인</span>
+    </div>
+
+    <div class="user-row">
+        <img class="avatar" src="buzz.jpeg" alt="buzz">
+        <div class="user-info">
+            <div class="user-name">buzz</div>
+            <div class="user-email">buzz@codeit.com</div>
+        </div>
+        <span class="badge">온라인</span>
+    </div>
+
+    <div class="user-row">
+        <img class="avatar" src="woody1.png" alt="woody">
+        <div class="user-info">
+            <div class="user-name">woody</div>
+            <div class="user-email">woody@codeit.com</div>
+        </div>
+        <span class="badge">온라인</span>
+    </div>
+
+</div>
+
 </body>
 </html>
