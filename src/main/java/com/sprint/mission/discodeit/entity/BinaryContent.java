@@ -1,31 +1,29 @@
 package com.sprint.mission.discodeit.entity;
 
-import jakarta.websocket.Decoder;
 import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 public class BinaryContent implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String id;
-    private final byte[] content;
-    private final String fileName;
-    private final String contentType;
-    private final Instant createdAt;
+    private UUID id;
+    private Instant createdAt;
+    //
+    private String fileName;
+    private Long size;
+    private String contentType;
+    private byte[] bytes;
 
-    private final String userId;
-    private final String messageId;
-
-    public BinaryContent(String id, byte[] content, String fileName, String contentType, Instant createdAt,String userId,String messageId) {
-        this.id = id;
-        this.content = content;
+    public BinaryContent(String fileName, Long size, String contentType, byte[] bytes) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
         this.fileName = fileName;
+        this.size = size;
         this.contentType = contentType;
-        this.createdAt = createdAt;
-        this.userId = userId;
-        this.messageId = messageId;
+        this.bytes = bytes;
     }
 }
-
