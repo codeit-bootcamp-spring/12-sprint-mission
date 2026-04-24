@@ -66,6 +66,20 @@ public class BasicReadStatusService implements ReadStatusService {
     }
 
     @Override
+    public ReadStatus updateByChannelId(UUID channelId, UUID readStatusId, ReadStatusUpdateRequest request) {
+        ReadStatus readStatus = readStatusRepository.findById(readStatusId)
+                .orElseThrow(() -> new NoSuchElementException("ReadStatus with id " + readStatusId + " not found"));
+
+        if (!Objects.equals(readStatus.getChannelId(), channelId)) {
+            throw new IllegalArgumentException("ReadStatus does not belong to this channel");
+        }
+
+        readStatus.update(request.newLastReadAt());
+
+        return readStatusRepository.save(readStatus);
+    }
+
+    @Override
     public void delete(UUID readStatusId) {
         if (!readStatusRepository.existsById(readStatusId)) {
             throw new NoSuchElementException("ReadStatus with id " + readStatusId + " not found");
