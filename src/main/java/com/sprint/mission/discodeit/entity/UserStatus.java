@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public class UserStatus implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final int MINUTES = 5;
 	private final UUID id;
 	private final Instant createdAt;
 	private Instant updatedAt;
@@ -38,7 +39,7 @@ public class UserStatus implements Serializable {
 	}
 
 	public Boolean isOnline() {
-		Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
+		Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(MINUTES));
 
 		return lastActiveAt.isAfter(instantFiveMinutesAgo);
 	}

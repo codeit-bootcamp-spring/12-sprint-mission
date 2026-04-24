@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class BinaryContentController {
 	private final BinaryContentService binaryContentService;
 
-	@RequestMapping(path = "/find", method = RequestMethod.GET)
-	public ResponseEntity<BinaryContent> findByIds(@RequestParam(value = "id") UUID binaryContentId) {
+	@RequestMapping(path = "/find/{binaryContentId}", method = RequestMethod.GET)
+	public ResponseEntity<BinaryContent> findByIds(@PathVariable UUID binaryContentId) {
 		BinaryContent binaryContents = binaryContentService.find(binaryContentId);
 		return ResponseEntity.ok(binaryContents);
 	}
