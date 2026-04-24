@@ -1,0 +1,634 @@
+{
+  "info": {
+    "_postman_id": "48a262e9-1b79-4322-ad20-24ae95c1acd5",
+    "name": "New Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9584648",
+    "_collection_link": "https://go.postman.co/collection/9584648-48a262e9-1b79-4322-ad20-24ae95c1acd5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "4번캐릭",
+                  "type": "text",
+                  "uuid": "7c4c05f5-f665-4940-9306-09c0bffd4ba0"
+                },
+                {
+                  "key": "email",
+                  "value": "4@4.com",
+                  "type": "text",
+                  "uuid": "fa4f27f1-c53b-4acb-b25d-6b9223aed90a"
+                },
+                {
+                  "key": "password",
+                  "value": "4",
+                  "type": "text",
+                  "uuid": "8a863740-4acd-4225-906f-484be7c0f713"
+                },
+                {
+                  "key": "profile",
+                  "type": "file",
+                  "uuid": "6744efeb-796d-407c-9610-cb12e69aa893",
+                  "src": "/C:/Users/Sejong/Documents/Programing/Spring/12-sprint-mission/sample/avatar01.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/user",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "newUsername",
+                  "value": "gusdn67631",
+                  "type": "text",
+                  "uuid": "7c4c05f5-f665-4940-9306-09c0bffd4ba0"
+                },
+                {
+                  "key": "newEmail",
+                  "value": "gusdn6762@gmail.com",
+                  "type": "text",
+                  "uuid": "fa4f27f1-c53b-4acb-b25d-6b9223aed90a"
+                },
+                {
+                  "key": "newPassword",
+                  "value": "qweasd123",
+                  "type": "text",
+                  "uuid": "8a863740-4acd-4225-906f-484be7c0f713"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/user/1eb0e78a-bf60-4b6a-bd61-9911c612b9af",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "1eb0e78a-bf60-4b6a-bd61-9911c612b9af"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/user/1eb0e78a-bf60-4b6a-bd61-9911c612b9af",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "1eb0e78a-bf60-4b6a-bd61-9911c612b9af"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/user",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateStatus",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/user/updatestatus/1eb0e78a-bf60-4b6a-bd61-9911c612b9af",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "updatestatus",
+                "1eb0e78a-bf60-4b6a-bd61-9911c612b9af"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "로그인",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"4번캐릭\",\r\n    \"password\": \"4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Channel",
+      "item": [
+        {
+          "name": "Public",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "삭제할 거",
+                  "type": "text",
+                  "uuid": "384b42b1-603a-4efe-a9c4-61ca28a5e326"
+                },
+                {
+                  "key": "description",
+                  "value": "Public",
+                  "type": "text",
+                  "uuid": "00a3ba1a-6107-463b-ad6d-92a37b4b18c5"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/channel/public",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "public"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "private",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "participantIds",
+                  "value": "27d47afb-a28c-44f5-8160-63fc63470de3",
+                  "type": "text",
+                  "uuid": "372d51c9-c63d-4e2d-be6f-534f595a6b6a"
+                },
+                {
+                  "key": "participantIds",
+                  "value": "66d7bc19-d02e-47fc-a9a8-5288eb8fbd75",
+                  "type": "text",
+                  "uuid": "f74c944b-ec5a-4f47-8df5-a7ab688a9f96"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/channel/private",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "private"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/channel/770f468f-78bc-426a-92d0-03fabda52f78",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "770f468f-78bc-426a-92d0-03fabda52f78"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/channel/883e6d88-0d39-40ea-8b04-39d3439b0784",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "883e6d88-0d39-40ea-8b04-39d3439b0784"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "find",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/channel/users/505c4915-5fe6-4289-9ab1-07b49c8e4ef4",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "channel",
+                "users",
+                "505c4915-5fe6-4289-9ab1-07b49c8e4ef4"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Message",
+      "item": [
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "테스트메시지",
+                  "type": "text",
+                  "uuid": "51340ff9-8659-4af9-abfc-f429494dfc3d"
+                },
+                {
+                  "key": "channelId",
+                  "value": "505c4915-5fe6-4289-9ab1-07b49c8e4ef4",
+                  "type": "text",
+                  "uuid": "279d660c-13c6-4b9e-b390-89d0fb824dba"
+                },
+                {
+                  "key": "authorId",
+                  "value": "06f3f853-7f66-4bfd-9bad-7ed5f532d46c",
+                  "type": "text",
+                  "uuid": "16526e9a-b6f5-4c44-9377-5697cf01a052"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "4d5b80af-c5e3-49b5-8d68-af0380a613c5",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/message?",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "message"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "newContent",
+                  "value": "수정된 메시지",
+                  "type": "text",
+                  "uuid": "51340ff9-8659-4af9-abfc-f429494dfc3d"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/message/ff286553-d5c4-4b22-8525-8cb960eb5ab4",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "ff286553-d5c4-4b22-8525-8cb960eb5ab4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "newContent",
+                  "value": "수정된 메시지",
+                  "type": "text",
+                  "uuid": "51340ff9-8659-4af9-abfc-f429494dfc3d"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/message/ff286553-d5c4-4b22-8525-8cb960eb5ab4",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "ff286553-d5c4-4b22-8525-8cb960eb5ab4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findAll",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "newContent",
+                  "value": "수정된 메시지",
+                  "type": "text",
+                  "uuid": "51340ff9-8659-4af9-abfc-f429494dfc3d"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/message/ff286553-d5c4-4b22-8525-8cb960eb5ab4",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "message",
+                "ff286553-d5c4-4b22-8525-8cb960eb5ab4"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ReadStatus",
+      "item": [
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/readStatus",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "readStatus"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/readStatus",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "readStatus"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "find",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/readStatus",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "readStatus"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "BinaryContent",
+      "item": [
+        {
+          "name": "find",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/binaryContent/1403e619-d83a-48e8-b3fc-ef9b9b0fcabb",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "binaryContent",
+                "1403e619-d83a-48e8-b3fc-ef9b9b0fcabb"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findAll",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/binaryContent?binaryContentIds=256f01ab-d47a-46ec-a9ae-3e63e6c02e32",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "binaryContent"
+              ],
+              "query": [
+                {
+                  "key": "binaryContentIds",
+                  "value": "256f01ab-d47a-46ec-a9ae-3e63e6c02e32"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": ""
+    }
+  ]
+}
