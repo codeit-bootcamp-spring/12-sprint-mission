@@ -11,9 +11,12 @@ import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +29,31 @@ public class UserController {
     private final UserService userService;
     private final UserStatusService userStatusService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<UserDto> createUser (
-            @RequestBody UserCreateRequest request,
-            @RequestBody(required = false)BinaryContentCreateRequest profile) {
-        User user = userService.create(request, Optional.ofNullable(profile));
+    @RequestMapping(
+            value = "/create",
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<UserDto> createUser(
+            @RequestPart("request") UserCreateRequest request,
+            @RequestPart(value = "profile", required = false) MultipartFile profile
+    ) throws IOException {
+
+        BinaryContentCreateRequest profileRequest = null;
+
+        if (profile != null && !profile.isEmpty()) {
+            profileRequest = new BinaryContentCreateRequest(
+                    profile.getOriginalFilename(),
+                    profile.getContentType(),
+                    profile.getBytes()
+            );
+        }
+
+        User user = userService.create(
+                request,
+                Optional.ofNullable(profileRequest)
+        );
+
         UserDto savedUser = userService.find(user.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
