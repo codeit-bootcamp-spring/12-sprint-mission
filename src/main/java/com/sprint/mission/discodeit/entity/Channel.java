@@ -2,48 +2,43 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.Getter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-public class Channel implements Serializable, Comparable<Channel> {
-    @Serial
+public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private UUID id;
-    private ChannelType type;
-    private String title;
     private Instant createdAt;
     private Instant updatedAt;
+    //
+    private ChannelType type;
+    private String name;
+    private String description;
 
-    public Channel(ChannelType type, String title) {
+    public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
-        this.type = type;
-        this.title = title;
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+        //
+        this.type = type;
+        this.name = name;
+        this.description = description;
     }
 
-    public void update(String title) {
-        this.title = title;
-        this.updatedAt = Instant.now();
-    }
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
 
-    @Override
-    public String toString() {
-        return "Channel {" +
-                "\n id        = " + id +
-                "\n type      = " + type +
-                "\n title     = " + title +
-                "\n createdAt = " + createdAt +
-                "\n updatedAt = " + updatedAt +
-                "\n}\n";
-    }
-
-    @Override
-    public int compareTo(Channel o) {
-        return this.title.compareTo(o.title);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 }

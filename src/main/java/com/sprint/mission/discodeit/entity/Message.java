@@ -2,54 +2,44 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.Getter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class Message implements Serializable, Comparable<Message> {
-    @Serial
+public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private UUID userId;
-    private UUID channelId;
-    private String content;
-    private List<UUID> attachmentIds;
     private Instant createdAt;
     private Instant updatedAt;
+    //
+    private String content;
+    //
+    private UUID channelId;
+    private UUID authorId;
+    private List<UUID> attachmentIds;
 
-    public Message(UUID userId, UUID channelId, String content, List<UUID> attachmentIds) {
+    public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
-        this.userId = userId;
-        this.channelId = channelId;
-        this.content = content;
-        this.attachmentIds = attachmentIds;
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
-    }
-
-    public void update(String content) {
+        //
         this.content = content;
-        this.updatedAt = Instant.now();
+        this.channelId = channelId;
+        this.authorId = authorId;
+        this.attachmentIds = attachmentIds;
     }
 
-    @Override
-    public String toString() {
-        return "Message {" +
-                "\n id        = " + id +
-                "\n userId    = " + userId +
-                "\n channelId = " + channelId +
-                "\n content   = " + content +
-                "\n createdAt = " + createdAt +
-                "\n updatedAt = " + updatedAt +
-                "\n}\n";
-    }
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
 
-    @Override
-    public int compareTo(Message o) {
-        return this.createdAt.compareTo(o.createdAt);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 }
