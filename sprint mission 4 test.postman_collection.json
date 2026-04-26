@@ -47,14 +47,14 @@
                   "key": "user",
                   "type": "text",
                   "uuid": "27b070d2-0e1a-44d7-b824-da4401ff0dbb",
-                  "value": "{\"username\": \n\"뉴페이스\", \"email\": \"newface@example.com\",\n\"password\": \"password123\" \n}",
+                  "value": "{\"username\": \n\"시드\", \"email\": \"fishprince@example.com\",\n\"password\": \"password123\" \n}",
                   "contentType": "application/json"
                 },
                 {
-                  "key": "binaryContent",
+                  "key": "file",
                   "type": "file",
                   "uuid": "542ff14f-e34c-4c71-9bda-e8b8b9ce2c5e",
-                  "value": null
+                  "src": "/C:/dev_source/work_space_spring_codeit12/샘플 이미지/avatar/avatar05.jpg"
                 }
               ]
             },
@@ -119,13 +119,13 @@
               "raw": "{\r\n    \"name\": \"홍길동\",\r\n    \"email\": \"honggildong@example.com\",\r\n    \"nickname\": \"닉네임변경!\",\r\n    \"password\": \"password123\" \r\n}"
             },
             "url": {
-              "raw": "{{baseurl}}/users/9bd65a38-d015-4c42-8def-0c6253e9134d",
+              "raw": "{{baseurl}}/users/5e326c07-3906-4bd8-ac34-a8f3eb48240a",
               "host": [
                 "{{baseurl}}"
               ],
               "path": [
                 "users",
-                "9bd65a38-d015-4c42-8def-0c6253e9134d"
+                "5e326c07-3906-4bd8-ac34-a8f3eb48240a"
               ]
             },
             "description": "## 🗑️ 사용자 삭제 API\n\n특정 사용자의 정보를 시스템에서 영구적으로 삭제합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `DELETE`\n    \n- **Path:** `/users/{id}`\n    \n- **Content-Type:** `None`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **id** (UUID, 필수)\n    - 삭제하려는 사용자의 고유 UUID\n        \n\n### 📤 응답 예시\n\n#### 성공 (204 No Content)\n\n- 성공적으로 삭제되었으며, 반환되는 응답 본문(Body)은 없습니다.\n    \n\n``` json\n// No Content\n\n ```"
