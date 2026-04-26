@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    // [ ] 사용자는 로그인할 수 있다.
     @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity<User> login(@RequestBody LoginRequest login){
+    public ResponseEntity<User> login(
+            @RequestBody LoginRequest login
+    ){
         User result = authService.login(login);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

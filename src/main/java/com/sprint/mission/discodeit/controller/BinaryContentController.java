@@ -16,7 +16,6 @@ import java.util.UUID;
 public class BinaryContentController {
     private final BinaryContentService binaryContentService;
 
-    // [ ] 바이너리 파일을 1개 또는 여러 개 조회할 수 있다.
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity<List<BinaryContent>> find(
             @RequestParam(required = false) UUID id,

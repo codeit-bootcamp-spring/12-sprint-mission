@@ -1,0 +1,582 @@
+{
+  "info": {
+    "_postman_id": "7f8bf349-a304-49e7-99b7-212a26524bb8",
+    "name": "sprint mission 4 test",
+    "description": "Codeit Sprint Mission 4 Test File",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53973067",
+    "_collection_link": "https://go.postman.co/collection/53973067-7f8bf349-a304-49e7-99b7-212a26524bb8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "UserTest",
+      "item": [
+        {
+          "name": "1. createUser",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "user",
+                  "type": "text",
+                  "uuid": "27b070d2-0e1a-44d7-b824-da4401ff0dbb",
+                  "value": "{\"username\": \n\"뉴페이스\", \"email\": \"newface@example.com\",\n\"password\": \"password123\" \n}",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "binaryContent",
+                  "type": "file",
+                  "uuid": "542ff14f-e34c-4c71-9bda-e8b8b9ce2c5e",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseurl}}/users/",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            },
+            "description": "## 👤 사용자 등록 API\n\n새로운 사용자를 생성합니다. 사용자 정보와 함께 프로필 파일을 업로드할 수 있습니다.\n\n### 🚩 요청 정보\n\n- **Method:** `POST`\n    \n- **Path:** `/users/`\n    \n- **Content-Type:** `multipart/form-data`\n    \n\n### 📥 요청 파라미터 (form-data)\n\n1. **user** (application/json, 필수)\n    \n    - 사용자 정보를 담은 JSON 객체 ( UserCreateRequest )\n        \n    - 예시: `{\"username\": \"string\", \"email\": \"string\", \"password\": \"string\"}`\n        \n2. **file** (multipart/form-data, 선택)\n    \n    - 사용자의 프로필 바이너리 파일\n        \n\n### 📤 응답 예시\n\n#### 성공 (201 Created)\n\n``` json\n{\n    \"username\": \"String\",\n    \"email\": \"String (Email Format)\",\n    \"profileId\": \"UUID / Null\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n} \n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "2. updateUser",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "ebdd1b4b-558f-42bc-bff1-8fc97ad5c982",
+                  "src": "/C:/dev_source/work_space_spring_codeit12/샘플 이미지/avatar/avatar03.jpg"
+                },
+                {
+                  "key": "user",
+                  "value": "{}",
+                  "type": "text",
+                  "uuid": "1a115935-d828-4b50-9a0c-915e70dc33fb",
+                  "contentType": "application/json"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseurl}}/users/9bd65a38-d015-4c42-8def-0c6253e9134d",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "users",
+                "9bd65a38-d015-4c42-8def-0c6253e9134d"
+              ]
+            },
+            "description": "## 🔄 사용자 정보 수정 API\n\n기존 사용자의 정보를 수정합니다. 사용자 상세 정보(`user`)와 프로필 이미지(`file`)를 각각 또는 동시에 업데이트할 수 있습니다.\n\n### 🚩 요청 정보\n\n- **Method:** `PUT` / `PATCH`\n    \n- **Path:** `/users/{id}`\n    \n- **Content-Type:** `multipart/form-data`\n    \n\n### 📥 요청 파라미터 (form-data)\n\n1. **id** (Path Variable, 필수)\n    \n    - 수정할 사용자의 고유 UUID\n        \n2. **user** (application/json, 선택)\n    \n    - 수정할 사용자 상세 정보를 담은 JSON 객체 (`UserUpdateRequest`)\n        \n    - 예시: `{\"`newUsername`\": \"string\", \"`newEmail`\": \"string\", \"`newPassword`\": \"string\"}`\n        \n3. **file** (multipart/form-data, 선택)\n    \n    - 새롭게 등록하거나 변경할 프로필 바이너리 파일\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n{  \n\"username\": \"String\",  \n\"email\": \"String (Email Format)\",  \n\"profileId\": \"UUID / Null\",  \n\"id\": \"UUID (String)\",  \n\"createdAt\": \"DateTime (ISO8601)\",  \n\"updatedAt\": \"DateTime / Null\"  \n}  \n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "3. deleteUser",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"홍길동\",\r\n    \"email\": \"honggildong@example.com\",\r\n    \"nickname\": \"닉네임변경!\",\r\n    \"password\": \"password123\" \r\n}"
+            },
+            "url": {
+              "raw": "{{baseurl}}/users/9bd65a38-d015-4c42-8def-0c6253e9134d",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "users",
+                "9bd65a38-d015-4c42-8def-0c6253e9134d"
+              ]
+            },
+            "description": "## 🗑️ 사용자 삭제 API\n\n특정 사용자의 정보를 시스템에서 영구적으로 삭제합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `DELETE`\n    \n- **Path:** `/users/{id}`\n    \n- **Content-Type:** `None`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **id** (UUID, 필수)\n    - 삭제하려는 사용자의 고유 UUID\n        \n\n### 📤 응답 예시\n\n#### 성공 (204 No Content)\n\n- 성공적으로 삭제되었으며, 반환되는 응답 본문(Body)은 없습니다.\n    \n\n``` json\n// No Content\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "4. findAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurl}}/users/",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            },
+            "description": "## 📋 사용자 목록 조회 API\n\n시스템에 등록된 모든 사용자 정보를 리스트 형태로 조회합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `GET`\n    \n- **Path:** `/users/`\n    \n- **Content-Type:** `None`\n    \n\n### 📥 요청 파라미터\n\n- 별도의 요청 파라미터가 없습니다.\n    \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n[\n  {\n    \"id\": \"UUID (String)\",\n    \"username\": \"String\",\n    \"email\": \"String (Email Format)\",\n    \"profileId\": \"UUID / Null\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n    \"\n  },\n    {\n    \"id\": \"UUID (String)\",\n    \"username\": \"String\",\n    \"email\": \"String (Email Format)\",\n    \"profileId\": \"UUID / Null\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n  }\n]\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "5. updateUserStatus",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseurl}}/users/34dba97a-afe4-4d49-a281-40bc35ade034/isonline",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "users",
+                "34dba97a-afe4-4d49-a281-40bc35ade034",
+                "isonline"
+              ]
+            },
+            "description": "## 🟢 사용자 온라인 상태 업데이트 API\n\n사용자의 마지막 활동 시간을 현재 시간으로 갱신하고, 현재 온라인 여부를 반환합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `PUT` / `PATCH`\n    \n- **Path:** `/users/{userId}/isonline`\n    \n- **Content-Type:** `None`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **userId** (UUID, 필수)\n    - 상태를 업데이트할 사용자의 고유 UUID\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n응답 본문에는 온라인 여부를 나타내는 불리언(Boolean) 값이 반환됩니다.\n\n``` json\ntrue\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ChannelTest",
+      "item": [
+        {
+          "name": "1.1 createPublicChannel",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"공지\",\r\n    \"description\": \"공지 채널 입니다.\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}/channels/public",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "channels",
+                "public"
+              ]
+            },
+            "description": "## 📺 공공 채널 생성 API\n\n새로운 공공 채널을 생성합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `POST`\n    \n- **Path:** `/channels/public`\n    \n- **Content-Type:** `application/json`\n    \n\n### 📥 요청 파라미터 (Body)\n\n1. **channel** (application/json, 필수)\n    \n    - 생성할 채널의 정보(`name`, `description` 등)를 담은 JSON 객체 ( )\n        \n    - 예시: `{\"name\": \"string\", \"description\": \"string\"}`\n        \n\n### 📤 응답 예시\n\n#### 성공 (201 Created)\n\n``` json\n{\n    \"type\": \"String (PUBLIC)\",\n    \"name\": \"String\",\n    \"description\": \"String\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "1.2 createPrivateChannel",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"participantIds\": [\"4eb18ceb-1120-4e5e-9329-401229b8b3f3\",\"13b87aa2-f714-40df-931d-94218a1ed090\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}/channels/private",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "channels",
+                "private"
+              ]
+            },
+            "description": "## 🔒 비공개 채널 생성 API\n\n새로운 비공개 채널을 생성합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `POST`\n    \n- **Path:** `/channels/private`\n    \n- **Content-Type:** `application/json`\n    \n\n### 📥 요청 파라미터 (Body)\n\n1. **channel** (application/json, 필수)\n    \n    - 비공개 채널 생성 정보를 담은 JSON 객체\n        \n    - 예시: `{\"participantIds\": [\"string\" , \"string\", ...]}`\n        \n\n### 📤 응답 예시\n\n#### 성공 (201 Created)\n\n``` json\n{\n    \"type\": \"String (PRIVATE)\",\n    \"name\": \"String / Null\",\n    \"description\": \"String / Null\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "2. updateChannel",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"newDescription\": \"공지채널 업데이트\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}/channels/7c419a09-d02f-4a7b-81fe-005ab57abb4b",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "channels",
+                "7c419a09-d02f-4a7b-81fe-005ab57abb4b"
+              ]
+            },
+            "description": "## 🔄 채널 정보 수정 API\n\n기존 채널의 정보를 수정합니다. (PUT/PATCH 지원)\n\n### 🚩 요청 정보\n\n- **Method:** `PUT / PATCH`\n    \n- **Path:** `/channels/{id}`\n    \n- **Content-Type:** `application/json`\n    \n\n### 📥 요청 파라미터 (Body)\n\n1. **id** (Path Variable, 필수)\n    \n    - 수정할 채널의 고유 식별자 (UUID)\n        \n2. **channel** (application/json, 필수)\n    \n    - 수정할 채널 정보를 담은 JSON 객체\n        \n    - 예시: `{\"newName\": \"string\", \"newDescription\": \"string\"}`\n        \n\n### 📤 응답 예시\n\n#### 성공 (201 Created)\n\n``` json\n{\n    \"type\": \"String\",\n    \"name\": \"String\",\n    \"description\": \"String\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime (ISO8601)\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "3. deleteChannel",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"홍길동\",\r\n    \"email\": \"honggildong@example.com\",\r\n    \"nickname\": \"닉네임변경!\",\r\n    \"password\": \"password123\" \r\n}"
+            },
+            "url": {
+              "raw": "{{baseurl}}/channels/610231c0-283b-4ebe-9529-8f05f1dbae09",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "channels",
+                "610231c0-283b-4ebe-9529-8f05f1dbae09"
+              ]
+            },
+            "description": "## 🗑️ 채널 삭제 API\n\n기존 채널을 삭제합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `DELETE`\n    \n- **Path:** `/channels/{id}`\n    \n- **Content-Type:** `N/A`\n    \n\n### 📥 요청 파라미터(Path Variable)\n\n1. **id** (UUID, 필수)\n    \n    - 삭제할 채널의 고유 식별자\n        \n\n### 📤 응답 예시\n\n#### 성공 (204 No Content)\n\n``` json\n// No Content\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "4. findAllByUserId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurl}}/channels/4eb18ceb-1120-4e5e-9329-401229b8b3f3",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "channels",
+                "4eb18ceb-1120-4e5e-9329-401229b8b3f3"
+              ]
+            },
+            "description": "## 👤📺 사용자별 채널 목록 조회 API\n\n특정 사용자가 참여 중인 모든 채널 목록을 조회합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `GET`\n    \n- **Path:** `/channels/{userId}`\n    \n- **Content-Type:** `N/A`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **userId** (UUID, 필수)\n    \n    - 조회할 사용자의 고유 식별자\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n[\n    {\n        \"id\": \"UUID (String)\",\n        \"type\": \"String (PUBLIC / PRIVATE)\",\n        \"name\": \"String / Null\",\n        \"description\": \"String / Null\",\n        \"participantIds\": \"Array [UUID]\",\n        \"lastMessageAt\": \"DateTime (ISO8601)\"\n    }\n]\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MessageTest",
+      "item": [
+        {
+          "name": "1. createMessage",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "message",
+                  "value": "{\"content\":\"message 내용입니다22\",\n\"channelId\":\"7c419a09-d02f-4a7b-81fe-005ab57abb4b\",\n\"authorId\":\"4eb18ceb-1120-4e5e-9329-401229b8b3f3\"}",
+                  "type": "text",
+                  "uuid": "8318ae3f-ab99-4670-836e-04f0ceb6b360",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "c75be28b-c731-4177-9775-b3285d344d02",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseurl}}/messages/",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "messages",
+                ""
+              ]
+            },
+            "description": "## 💬 메시지 생성 API\n\n메시지를 작성하고 필요한 경우 파일을 함께 업로드합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `POST`\n    \n- **Path:** `/messages/`\n    \n- **Content-Type:** `multipart/form-data`\n    \n\n### 📥 요청 파라미터 (form-data)\n\n1. **message** (application/json, 필수)\n    \n    - 메시지 정보를 담은 JSON 객체 ( MessageCreateRequest )\n        \n    - 예시: `{\"content\": \"string\", \"channelId\": \"UUID\", \"authorId\": \"UUID\"}`\n        \n2. **files** (multipart/form-data, 선택)\n    \n    - 업로드할 첨부 파일 리스트 (여러 파일 가능)\n        \n\n### 📤 응답 예시\n\n#### 성공 (201 Created)\n\n``` json\n{\n    \"content\": \"String\",\n    \"channelId\": \"UUID (String)\",\n    \"authorId\": \"UUID (String)\",\n    \"attachmentIds\": \"Array [UUID]\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "2. updateMessage",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"newContent\" : \"Updated content for the message\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}/messages/96fd641c-d970-46ec-bd00-764ed6d924a8",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "messages",
+                "96fd641c-d970-46ec-bd00-764ed6d924a8"
+              ]
+            },
+            "description": "## 🔄 메시지 수정 API\n\n기존에 작성된 메시지의 내용을 수정합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `PUT / PATCH`\n    \n- **Path:** `/messages/{id}`\n    \n- **Content-Type:** `application/json`\n    \n\n### 📥 요청 파라미터 (Body)\n\n1. **id** (Path Variable, 필수)\n    \n    - 수정할 메시지의 고유 식별자 (UUID)\n        \n2. **message** (application/json, 선택)\n    \n    - 수정할 메시지 내용을 담은 JSON 객체 ( MessageUpdateRequest )\n        \n    - 예시: `{\"newContent\": \"string\"}`\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n{\n    \"content\": \"String\",\n    \"channelId\": \"UUID (String)\",\n    \"authorId\": \"UUID (String)\",\n    \"attachmentIds\": \"Array [UUID]\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime (ISO8601)\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "3. deleteMessage",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseurl}}/messages/dd4b8906-53ae-4879-8a1a-2e407cb38fc9",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "messages",
+                "dd4b8906-53ae-4879-8a1a-2e407cb38fc9"
+              ]
+            },
+            "description": "## 🗑️ 메시지 삭제 API\n\n기존에 작성된 메시지를 삭제합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `DELETE`\n    \n- **Path:** `/messages/{id}`\n    \n- **Content-Type:** `N/A`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **id** (UUID, 필수)\n    \n    - 삭제할 메시지의 고유 식별자\n        \n\n### 📤 응답 예시\n\n#### 성공 (204 No Content)\n\n``` json\n// No Content\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "4. findByChannelId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurl}}/messages/channel/7c419a09-d02f-4a7b-81fe-005ab57abb4b",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "messages",
+                "channel",
+                "7c419a09-d02f-4a7b-81fe-005ab57abb4b"
+              ]
+            },
+            "description": "## 📜 채널별 메시지 목록 조회 API\n\n특정 채널에 작성된 모든 메시지 목록을 조회합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `GET`\n    \n- **Path:** `/messages/channel/{channelId}`\n    \n- **Content-Type:** `N/A`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **channelId** (UUID, 필수)\n    \n    - 메시지를 조회할 채널의 고유 식별자\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n[\n    {\n        \"content\": \"String\",\n        \"channelId\": \"UUID (String)\",\n        \"authorId\": \"UUID (String)\",\n        \"attachmentIds\": \"Array [UUID]\",\n        \"id\": \"UUID (String)\",\n        \"createdAt\": \"DateTime (ISO8601)\",\n        \"updatedAt\": \"DateTime / Null\"\n    }\n    ,\n    ...\n]\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ReadStatusControlTest",
+      "item": [
+        {
+          "name": "1. createReadStatus",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userId\" : \"4eb18ceb-1120-4e5e-9329-401229b8b3f3\",\r\n    \"channelId\": \"7c419a09-d02f-4a7b-81fe-005ab57abb4b\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}/readstatuses/",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "readstatuses",
+                ""
+              ]
+            },
+            "description": "## 📖 읽음 상태 생성 API\n\n사용자의 채널별 마지막 메시지 읽음 시점 정보를 생성합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `POST`\n    \n- **Path:** `/readstatuses/`\n    \n- **Content-Type:** `application/json`\n    \n\n### 📥 요청 파라미터 (Body - ReadStatusCreateRequest)\n\n- **userId** (UUID, 필수): 사용자 고유 식별자\n    \n- **channelId** (UUID, 필수): 채널 고유 식별자\n    \n\n### 📤 응답 예시\n\n#### 성공 (201 Created)\n\n``` json\n{  \n\"userId\": \"UUID (String)\",  \n\"channelId\": \"UUID (String)\",  \n\"lastReadAt\": \"DateTime (ISO8601)\",  \n\"id\": \"UUID (String)\",  \n\"createdAt\": \"DateTime (ISO8601)\",  \n\"updatedAt\": \"DateTime / Null\"  \n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "2. updateReadStatus",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseurl}}/readstatuses/0f706515-e148-4e16-a90c-11476faca509",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "readstatuses",
+                "0f706515-e148-4e16-a90c-11476faca509"
+              ]
+            },
+            "description": "## ✅ 읽음 상태 업데이트 API\n\n사용자의 마지막 메시지 읽음 시점 정보를 현재 시간으로 업데이트합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `PUT`, `PATCH`\n    \n- **Path:** `/readstatuses/{id}`\n    \n- **Content-Type:** `N/A`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **id** (UUID, 필수)\n    - 업데이트할 읽음 상태의 고유 식별자\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n{\n    \"userId\": \"UUID (String)\",\n    \"channelId\": \"UUID (String)\",\n    \"lastReadAt\": \"DateTime (ISO8601)\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime (ISO8601)\"\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "3. findByUserId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurl}}/readstatuses/user/4eb18ceb-1120-4e5e-9329-401229b8b3f3",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "path": [
+                "readstatuses",
+                "user",
+                "4eb18ceb-1120-4e5e-9329-401229b8b3f3"
+              ]
+            },
+            "description": "## 👁️ 사용자별 읽음 상태 조회 API\n\n특정 사용자의 모든 채널별 읽음 상태 리스트를 조회합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `GET`\n    \n- **Path:** `/readstatuses/user/{userId}`\n    \n- **Content-Type:** `N/A`\n    \n\n### 📥 요청 파라미터 (Path Variable)\n\n1. **userId** (UUID, 필수)\n    - 조회를 원하는 사용자의 고유 식별자\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n[\n    {\n        \"userId\": \"UUID (String)\",\n        \"channelId\": \"UUID (String)\",\n        \"lastReadAt\": \"DateTime (ISO8601)\",\n        \"id\": \"UUID (String)\",\n        \"createdAt\": \"DateTime (ISO8601)\",\n        \"updatedAt\": \"DateTime / Null\"\n    }\n]\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "login Test",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\":\"뉴페이스\",\r\n    \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseurl}}/auth/",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "auth",
+            ""
+          ]
+        },
+        "description": "## 🔑 사용자 로그인 API\n\n사용자 인증을 진행하고 회원 정보를 반환합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `POST`\n    \n- **Path:** `/auth/`\n    \n- **Content-Type:** `application/json`\n    \n\n### 📥 요청 파라미터 (Body)\n\n1. **login** (application/json, 필수)\n    \n    - 로그인 인증 정보를 담은 JSON 객체\n        \n    - 예시: `{\"username\": \"string\", \"password\": \"string\"}`\n        \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n{\n    \"username\": \"String\",\n    \"email\": \"String (Email Format)\",\n    \"profileId\": \"UUID / Null\",\n    \"id\": \"UUID (String)\",\n    \"createdAt\": \"DateTime (ISO8601)\",\n    \"updatedAt\": \"DateTime / Null\"\n}\n\n ```"
+      },
+      "response": []
+    },
+    {
+      "name": "BinaryContent Test",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseurl}}/files/?id=aeb17549-88fa-4cad-92ca-94c2a37ea50f",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "files",
+            ""
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "aeb17549-88fa-4cad-92ca-94c2a37ea50f"
+            },
+            {
+              "key": "ids",
+              "value": "1c3ec7e5-b4f7-4826-9184-5f892207a6ee, 8ac7299e-b8d5-4467-8fd5-29782ffcd0e3",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "## 🖼️ 바이너리 컨텐츠 조회 API\n\n업로드된 파일의 상세 정보와 바이너리 데이터를 조회합니다.\n\n### 🚩 요청 정보\n\n- **Method:** `GET`\n    \n- **Path:** `/files/`\n    \n- **Query Params ( 반드시 하나 필수):**\n    \n    - `id` (선택) : 단일 파일 조회 시 사용\n        \n    - `ids` (선택) : 여러 파일 리스트 조회 시 사용\n        \n\n### 📥 요청 파라미터 (Query Params)\n\n- `id` 또는 `ids` 중 하나는 필수로 전달되어야 합니다. 모두 없을 경우 `204 No Content`를 반환합니다.\n    \n\n### 📤 응답 예시\n\n#### 성공 (200 OK)\n\n``` json\n[\n    {\n        \"fileName\": \"String\",\n        \"size\": \"Number (Bytes)\",\n        \"contentType\": \"String (MIME Type)\",\n        \"bytes\": \"String (Base64)\",\n        \"id\": \"UUID (String)\",\n        \"createdAt\": \"DateTime (ISO8601)\"\n    },\n    ... \n]\n\n ```"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseurl",
+      "value": ""
+    }
+  ]
+}

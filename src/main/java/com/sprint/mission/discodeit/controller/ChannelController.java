@@ -20,23 +20,22 @@ import java.util.UUID;
 public class ChannelController {
     private final ChannelService channelService;
 
-    // [ ] 공개 채널을 생성할 수 있다.
     @RequestMapping(path = "/public", method = RequestMethod.POST)
     public ResponseEntity<Channel> createPublic(
-            @RequestBody PublicChannelCreateRequest channel){
+            @RequestBody PublicChannelCreateRequest channel
+    ){
         Channel saveChannel = channelService.create(channel);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveChannel);
     }
 
-    // [ ] 비공개 채널을 생성할 수 있다.
     @RequestMapping(path = "/private", method = RequestMethod.POST)
     public ResponseEntity<Channel> createPrivate(
-            @RequestBody PrivateChannelCreateRequest channel){
+            @RequestBody PrivateChannelCreateRequest channel
+    ){
         Channel saveChannel = channelService.create(channel);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveChannel);
     }
 
-    // [ ] 공개 채널의 정보를 수정할 수 있다.
     @RequestMapping(path = "/{id}", method = {RequestMethod.PUT , RequestMethod.PATCH})
     public ResponseEntity<Channel> update(
             @PathVariable UUID id,
@@ -45,18 +44,19 @@ public class ChannelController {
         return ResponseEntity.status(HttpStatus.CREATED).body(updateChannel);
     }
 
-
-    // [ ] 채널을 삭제할 수 있다.
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable UUID id){
+    public ResponseEntity<Void> delete(
+            @PathVariable UUID id
+    ){
         channelService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // [ ] 특정 사용자가 볼 수 있는 모든 채널 목록을 조회할 수 있다.
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<List<ChannelDto>> findAllByUserId (@PathVariable UUID id){
-        List<ChannelDto> list = channelService.findAllByUserId(id);
+    @RequestMapping(path = "/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<List<ChannelDto>> findAllByUserId (
+            @PathVariable UUID userId
+    ){
+        List<ChannelDto> list = channelService.findAllByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 }

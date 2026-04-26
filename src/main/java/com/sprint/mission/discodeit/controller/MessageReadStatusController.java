@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,25 +19,32 @@ import java.util.UUID;
 public class MessageReadStatusController {
     private final ReadStatusService readStatusService;
 
-    // [ ] 특정 채널의 메시지 수신 정보를 생성할 수 있다.
     @RequestMapping(path = "/",method = RequestMethod.POST)
-    public ResponseEntity<ReadStatus> create(@RequestBody ReadStatusCreateRequest status){
-        ReadStatus savedReadStatus = readStatusService.create(status);
+    public ResponseEntity<ReadStatus> create(
+            @RequestBody ReadStatusCreateRequest status
+    ){
+        ReadStatusCreateRequest createStatus = new ReadStatusCreateRequest(
+                status.userId(),
+                status.channelId(),
+                Instant.now()
+        );
+        ReadStatus savedReadStatus = readStatusService.create(createStatus);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReadStatus);
     }
 
-    //[ ] 특정 채널의 메시지 수신 정보를 수정할 수 있다.
     @RequestMapping(path ="/{id}", method = {RequestMethod.PUT , RequestMethod.PATCH})
     public ResponseEntity<ReadStatus> update(
-            @PathVariable UUID id,
-            @RequestBody ReadStatusUpdateRequest status){
-        ReadStatus updateStatus = readStatusService.update(id,status);
+            @PathVariable UUID id){
+
+        ReadStatusUpdateRequest updateRequest = new ReadStatusUpdateRequest(Instant.now());
+        ReadStatus updateStatus = readStatusService.update(id,updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(updateStatus);
     }
 
-    //[ ] 특정 사용자의 메시지 수신 정보를 조회할 수 있다.
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<List<ReadStatus>> findByUserId(@PathVariable UUID userId){
+    public ResponseEntity<List<ReadStatus>> findByUserId(
+            @PathVariable UUID userId
+    ){
         List<ReadStatus> list = readStatusService.findAllByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
