@@ -30,6 +30,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui => Spring Boot 3.4.x → springdoc 2.7.x ~ 2.8.x
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    // 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0' => 종속성에서 발견된 취약점: CVE-2025-48924 문제로 끌고옴
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
 }
 
 tasks.named('test') {
