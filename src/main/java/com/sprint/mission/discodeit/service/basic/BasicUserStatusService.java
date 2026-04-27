@@ -72,7 +72,7 @@ public class BasicUserStatusService implements UserStatusService {
         UserStatus userStatus = userStatusRepository.findAll().stream()
                 .filter(us -> us.getUserId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("해당 유저의 상태 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("UserStatus not found"));
 
         userStatus.updateLastActiveAt();
         userStatusRepository.save(userStatus);

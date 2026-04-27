@@ -20,7 +20,7 @@ public class FileMessageRepository implements MessageRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public FileMessageRepository(@Value("${discodeit.repository.file-directory}") String baseDir) {
+    public FileMessageRepository(@Value("${discodeit.repository.file-directory:.discodeit}") String baseDir) {
         this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, Message.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);

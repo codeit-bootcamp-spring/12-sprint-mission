@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Getter
 public class UserStatus implements Serializable {
+    private static final int ONLINE_THRESHOLD_MINUTES = 5;
 
     private final UUID id;
     private final UUID userId;
@@ -32,6 +33,6 @@ public class UserStatus implements Serializable {
     // 5분 이내 접속 확인
     public boolean isOnline() {
         if (lastActiveAt == null) return false;
-        return lastActiveAt.plus(Duration.ofMinutes(5)).isAfter(Instant.now());
+        return lastActiveAt.plus(Duration.ofMinutes(ONLINE_THRESHOLD_MINUTES)).isAfter(Instant.now());
     }
 }

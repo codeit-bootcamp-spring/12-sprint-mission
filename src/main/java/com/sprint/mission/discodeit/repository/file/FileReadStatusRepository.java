@@ -20,7 +20,7 @@ public class FileReadStatusRepository implements ReadStatusRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public FileReadStatusRepository(@Value("${discodeit.repository.file-directory}") String baseDir) {
+    public FileReadStatusRepository(@Value("${discodeit.repository.file-directory:.discodeit}") String baseDir) {
         this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, ReadStatus.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);

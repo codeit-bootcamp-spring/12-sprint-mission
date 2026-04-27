@@ -20,7 +20,7 @@ public class FileUserStatusRepository implements UserStatusRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public FileUserStatusRepository(@Value("${discodeit.repository.file-directory}") String baseDir) {
+    public FileUserStatusRepository(@Value("${discodeit.repository.file-directory:.discodeit}") String baseDir) {
         this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, UserStatus.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);

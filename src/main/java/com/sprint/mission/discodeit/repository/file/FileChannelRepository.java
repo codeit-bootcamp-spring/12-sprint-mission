@@ -20,7 +20,7 @@ public class FileChannelRepository implements ChannelRepository {
     private final Path DIRECTORY;
     private final String EXTENSION = ".ser";
 
-    public FileChannelRepository(@Value("${discodeit.repository.file-directory}") String baseDir) {
+    public FileChannelRepository(@Value("${discodeit.repository.file-directory:.discodeit}") String baseDir) {
         this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, Channel.class.getSimpleName());
         try {
             Files.createDirectories(this.DIRECTORY);

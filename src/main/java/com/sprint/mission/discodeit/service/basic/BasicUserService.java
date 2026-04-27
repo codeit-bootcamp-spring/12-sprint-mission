@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.dto.data.user.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.exception.ResourceNotFoundException;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,34 +60,26 @@ public class BasicUserService implements UserService {
 
     @Override
     public UserResponse find(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        User user = findUserByIdOrThrow(id);
 
-        UserStatus userStatus = userStatusRepository.findAll().stream()
-                .filter(us -> us.getUserId().equals(user.getId()))
-                .findFirst()
-                .orElse(null);
+        UserStatus userStatus = userStatusRepository.findById(user.getId()).orElse(null);
 
         return toResponse(user, userStatus);
     }
 
     @Override
     public List<UserResponse> findAll() {
-        return userRepository.findAll().stream()
-                .map(user -> {
-                    UserStatus userStatus = userStatusRepository.findAll().stream()
-                            .filter(us -> us.getUserId().equals(user.getId()))
-                            .findFirst()
-                            .orElse(null);
-                    return toResponse(user, userStatus);
-                })
+        List<User> users = userRepository.findAll();
+        Map<UUID, UserStatus> statusMap = userStatusRepository.findAll().stream()
+                .collect(Collectors.toMap(UserStatus::getUserId, us -> us));
+        return users.stream()
+                .map(user -> toResponse(user, statusMap.get(user.getId())))
                 .collect(Collectors.toList());
     }
 
     @Override
     public UserResponse update(UUID id, UserUpdateRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        User user = findUserByIdOrThrow(id);
 
         boolean isDuplicate = userRepository.findAll().stream()
                 .anyMatch(u -> !u.getId().equals(id) &&
@@ -121,8 +115,7 @@ public class BasicUserService implements UserService {
 
     @Override
     public void delete(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        User user = findUserByIdOrThrow(id);
 
         if (user.getProfileId() != null) {
             binaryContentRepository.deleteById(user.getProfileId());
@@ -134,6 +127,11 @@ public class BasicUserService implements UserService {
                 .ifPresent(us -> userStatusRepository.deleteById(us.getId()));
 
         userRepository.deleteById(id);
+    }
+
+    private User findUserByIdOrThrow(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     private UserResponse toResponse(User user, UserStatus userStatus) {

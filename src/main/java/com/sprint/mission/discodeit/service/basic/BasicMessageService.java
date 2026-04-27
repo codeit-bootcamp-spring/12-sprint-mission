@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.data.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.data.message.MessageUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.exception.ResourceNotFoundException;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
@@ -60,8 +61,7 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public MessageResponse find(UUID id) {
-        Message message = messageRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("메세지를 찾을 수 없습니다."));
+        Message message = findMessageByIdOrThrow(id);
         return toResponse(message);
     }
 
@@ -75,8 +75,7 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public MessageResponse update(UUID id, MessageUpdateRequest request) {
-        Message message = messageRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("메세지를 찾을 수 없습니다."));
+        Message message = findMessageByIdOrThrow(id);
 
         message.update(request.content());
         messageRepository.save(message);
@@ -86,8 +85,7 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public void delete(UUID id) {
-        Message message = messageRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Message not found"));
+        Message message = findMessageByIdOrThrow(id);
 
         if (message.getAttachmentIds() != null && !message.getAttachmentIds().isEmpty()) {
             for (UUID attachmentId : message.getAttachmentIds()) {
@@ -95,6 +93,11 @@ public class BasicMessageService implements MessageService {
             }
         }
         messageRepository.deleteById(id);
+    }
+
+    private Message findMessageByIdOrThrow(UUID id) {
+        return messageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("메세지를 찾을 수 없습니다."));
     }
 
     private MessageResponse toResponse(Message message) {
