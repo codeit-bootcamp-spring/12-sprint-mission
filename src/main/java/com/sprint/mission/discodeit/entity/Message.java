@@ -4,53 +4,42 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 public class Message implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private UUID id;
-    private String content;
-    private User user;
-    private Channel channel;
-    private List<UUID> binaryContentIds;
     private Instant createdAt;
     private Instant updatedAt;
+    //
+    private String content;
+    //
+    private UUID channelId;
+    private UUID authorId;
+    private List<UUID> attachmentIds;
 
-    public Message(String content, User user, Channel channel, List<UUID> binaryContentIds) {
+    public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
-        this.content = content;
-        this.user = user;
-        this.channel = channel;
-        this.binaryContentIds = binaryContentIds != null ? binaryContentIds : new ArrayList<>();
         this.createdAt = Instant.now();
-        this.updatedAt = this.createdAt;
-    }
-
-    public void update(String content) {
+        //
         this.content = content;
-        this.updatedAt = Instant.now();
+        this.channelId = channelId;
+        this.authorId = authorId;
+        this.attachmentIds = attachmentIds;
     }
 
-    @Override
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
 
-        LocalDateTime created = LocalDateTime.ofInstant(createdAt, ZoneId.systemDefault());
-        LocalDateTime updated = LocalDateTime.ofInstant(updatedAt, ZoneId.systemDefault());
-
-        return "[Message]" +
-                "\n- ID: " + id +
-                "\n- Content: " + content +
-                "\n- User: " + user.getUsername() +
-                "\n- Channel: " + channel.getName() +
-                "\n- BinaryContentIds: " + binaryContentIds +
-                "\n- CreatedAt: " + created.format(formatter) +
-                "\n- UpdatedAt: " + updated.format(formatter) +
-                "\n";
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 }
