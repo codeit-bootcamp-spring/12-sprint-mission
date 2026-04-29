@@ -1,70 +1,45 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
-public class Message {
+@Getter
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private UUID id;
-    private User authorId; // 작성자(발신자)
-    private User receiverId; // 상대방(수신자)
-    private Channel channel; // 채널
-    private String content; // 채팅 내용
-    private Long createdAt;
-    private Long updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
+    private String content;
+    //
+    private UUID channelId;
+    private UUID authorId;
+    private List<UUID> attachmentIds;
 
-    public Message(User authorId, User receiverId, Channel channel, String content) {
+    public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.content = content;
+        this.channelId = channelId;
         this.authorId = authorId;
-        this.receiverId = receiverId;
-        this.channel = channel;
-        this.content = content;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+        this.attachmentIds = attachmentIds;
     }
 
-    public UUID getId() {
-        return id;
-    }
+    public void update(String newContent) {
+        boolean anyValueUpdated = false;
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+            anyValueUpdated = true;
+        }
 
-    public User getAuthorId() {
-        return authorId;
-    }
-
-    public User getReceiverId() {
-        return receiverId;
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    // 수정 update 함수
-    public void update(String content){
-        this.content = content;
-        this.updatedAt = System.currentTimeMillis();
-    }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", authorId=" + authorId +
-                ", receiverId=" + receiverId +
-                ", channel=" + channel +
-                ", content='" + content + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 }
