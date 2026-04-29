@@ -1,28 +1,31 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.LoginUserRequest;
+import com.sprint.mission.discodeit.dto.request.LoginRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
+@RequiredArgsConstructor
 public class BasicAuthService implements AuthService {
 
     private final UserRepository userRepository;
 
-    public BasicAuthService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
-    public User login(LoginUserRequest request) {
-        User user = userRepository.findAll().stream()
-                .filter(u -> u.getUsername().equals(request.username()))
-                .filter(u -> u.getPassword().equals(request.password()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("username or password wrong"));
+    public User login(LoginRequest loginRequest) {
+        String username = loginRequest.username();
+        String password = loginRequest.password();
 
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User with username " + username + " not found"));
+
+        if (!Objects.equals(user.getPassword(), password)) {
+            throw new IllegalArgumentException("Wrong password");
+        }
         return user;
     }
 }

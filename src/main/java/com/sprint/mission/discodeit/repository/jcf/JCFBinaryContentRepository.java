@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "jcf",
-        matchIfMissing = true
-)
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 public class JCFBinaryContentRepository implements BinaryContentRepository {
 
-    private final Map<UUID, BinaryContent> data = new HashMap<>();
+    private final Map<UUID, BinaryContent> data;
+
+    public JCFBinaryContentRepository() {
+        this.data = new HashMap<>();
+    }
 
     @Override
     public BinaryContent save(BinaryContent binaryContent) {
@@ -30,14 +30,18 @@ public class JCFBinaryContentRepository implements BinaryContentRepository {
 
     @Override
     public List<BinaryContent> findAllByIdIn(List<UUID> ids) {
-        return ids.stream()
-                .map(data::get)
-                .filter(Objects::nonNull)
+        return this.data.values().stream()
+                .filter(content -> ids.contains(content.getId()))
                 .toList();
     }
 
     @Override
+    public boolean existsById(UUID id) {
+        return this.data.containsKey(id);
+    }
+
+    @Override
     public void deleteById(UUID id) {
-        data.remove(id);
+        this.data.remove(id);
     }
 }

@@ -13,11 +13,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "file"
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file"
 )
 public class FileBinaryContentRepository implements BinaryContentRepository {
 
@@ -25,14 +24,9 @@ public class FileBinaryContentRepository implements BinaryContentRepository {
     private final String EXTENSION = ".ser";
 
     public FileBinaryContentRepository(
-            @Value("${discodeit.repository.file-directory:.discodeit}")
-            String baseDir
+            @Value("${discodeit.repository.file-directory:.discodeit}") String baseDir
     ) {
-        this.DIRECTORY = Paths.get(
-                System.getProperty("user.dir"),
-                baseDir,
-                BinaryContent.class.getSimpleName()
-        );
+        this.DIRECTORY = Paths.get(System.getProperty("user.dir"), baseDir, BinaryContent.class.getSimpleName());
 
         if (!Files.exists(DIRECTORY)) {
             try {
@@ -59,40 +53,60 @@ public class FileBinaryContentRepository implements BinaryContentRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return binaryContent;
     }
 
     @Override
     public Optional<BinaryContent> findById(UUID id) {
+        BinaryContent binaryContentNullable = null;
         Path path = resolvePath(id);
-
         if (!Files.exists(path)) {
-            return Optional.empty();
+            try (
+                    FileInputStream fis = new FileInputStream(path.toFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                binaryContentNullable = (BinaryContent) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return Optional.ofNullable(binaryContentNullable);
 
-        try (
-                FileInputStream fis = new FileInputStream(path.toFile());
-                ObjectInputStream ois = new ObjectInputStream(fis)
-        ) {
-            return Optional.of((BinaryContent) ois.readObject());
-        } catch (IOException | ClassNotFoundException e) {
+    }
+
+    @Override
+    public List<BinaryContent> findAllByIdIn(List<UUID> ids) {
+        try (Stream<Path> paths = Files.list(DIRECTORY)) {
+            return paths
+                    .filter(path -> path.toString().endsWith(EXTENSION))
+                    .map(path -> {
+                        try (
+                                FileInputStream fis = new FileInputStream(path.toFile());
+                                ObjectInputStream ois = new ObjectInputStream(fis)
+                        ) {
+                            return (BinaryContent) ois.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .filter(content -> ids.contains(content.getId()))
+                    .toList();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<BinaryContent> findAllByIdIn(List<UUID> ids) {
-        return ids.stream()
-                .map(this::findById)
-                .flatMap(Optional::stream)
-                .toList();
+    public boolean existsById(UUID id) {
+        Path path = resolvePath(id);
+        return Files.exists(path);
     }
 
     @Override
     public void deleteById(UUID id) {
+        Path path = resolvePath(id);
         try {
-            Files.deleteIfExists(resolvePath(id));
+            Files.delete(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

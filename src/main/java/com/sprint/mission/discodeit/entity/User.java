@@ -4,8 +4,6 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
@@ -13,14 +11,13 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private UUID profileId;
     private Instant createdAt;
     private Instant updatedAt;
 
     private String username;
     private String email;
-    private transient String password;
-
+    private String password;
+    private UUID profileId;     // BinaryContent
 
     public User(String username, String email, String password, UUID profileId) {
         this.id = UUID.randomUUID();
@@ -32,7 +29,7 @@ public class User implements Serializable {
         this.profileId = profileId;
     }
 
-    public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId){
+    public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
         boolean anyValueUpdated = false;
         if (newUsername != null && !newUsername.equals(this.username)) {
             this.username = newUsername;
@@ -46,7 +43,6 @@ public class User implements Serializable {
             this.password = newPassword;
             anyValueUpdated = true;
         }
-
         if (newProfileId != null && !newProfileId.equals(this.profileId)) {
             this.profileId = newProfileId;
             anyValueUpdated = true;
@@ -55,24 +51,5 @@ public class User implements Serializable {
         if (anyValueUpdated) {
             this.updatedAt = Instant.now();
         }
-    }
-
-    @Override
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern("yyyy-MM-dd HH:mm:ss")
-                .withZone(ZoneId.systemDefault());
-
-        String createdAtStr = formatter.format(createdAt);
-        String updatedAtStr = formatter.format(updatedAt);
-
-        return "id: " + id + "\n" +
-                "profileId: " + profileId + "\n" +
-                "username: " + username + "\n" +
-                "email: " + email + "\n" +
-                "password: " + password + "\n" +
-                "createdAt: " + createdAtStr + "\n" +
-                "updatedAt: " + updatedAtStr + "\n" +
-                "\n";
     }
 }

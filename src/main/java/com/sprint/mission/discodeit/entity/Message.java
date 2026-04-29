@@ -4,9 +4,6 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,28 +11,27 @@ import java.util.UUID;
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final UUID id;
-    private final Instant createdAt;
+    private UUID id;
+    private Instant createdAt;
     private Instant updatedAt;
 
     private String content;
-    private final UUID channelId;
-    private final UUID authorId;
 
-    private final List<UUID> attachmentIds;
+    private UUID channelId;
+    private UUID authorId;
+    private List<UUID> attachmentIds;
 
-    public Message(String content, UUID channelId, UUID authorId) {
+    public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
 
         this.content = content;
         this.channelId = channelId;
         this.authorId = authorId;
-        this.attachmentIds = new ArrayList<>();
-
+        this.attachmentIds = attachmentIds;
     }
 
-    public void update(String newContent){
+    public void update(String newContent) {
         boolean anyValueUpdated = false;
         if (newContent != null && !newContent.equals(this.content)) {
             this.content = newContent;
@@ -45,31 +41,5 @@ public class Message implements Serializable {
         if (anyValueUpdated) {
             this.updatedAt = Instant.now();
         }
-    }
-
-    public void addAttachment(UUID attachmentId) {
-        if (attachmentId == null) {
-            return;
-        }
-        this.attachmentIds.add(attachmentId);
-        this.updatedAt = Instant.now();
-    }
-
-    @Override
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern("yyyy-MM-dd HH:mm:ss")
-                .withZone(ZoneId.systemDefault());
-
-        String createdAtStr = formatter.format(createdAt);
-        String updatedAtStr = formatter.format(updatedAt);
-
-        return "id: " + id + "\n" +
-                "content: " + content + "\n" +
-                "createdAt: " + createdAtStr + "\n" +
-                "updatedAt: " + updatedAtStr + "\n" +
-                "channelId: " + channelId + "\n" +
-                "authorId: " + authorId + "\n" +
-                "attachmentIds: " + attachmentIds + "\n";
     }
 }

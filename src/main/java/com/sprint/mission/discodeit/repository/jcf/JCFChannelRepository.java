@@ -7,13 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "jcf",
-        matchIfMissing = true
-)
 public class JCFChannelRepository implements ChannelRepository {
+
     private final Map<UUID, Channel> data;
 
     public JCFChannelRepository() {

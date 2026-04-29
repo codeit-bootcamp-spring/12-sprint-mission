@@ -7,39 +7,53 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "jcf",
-        matchIfMissing = true
-)
 public class JCFReadStatusRepository implements ReadStatusRepository {
+    private final Map<UUID, ReadStatus> data;
 
-    private final Map<UUID, ReadStatus> data = new HashMap<>();
+    public JCFReadStatusRepository() {
+        this.data = new HashMap<>();
+    }
 
     @Override
     public ReadStatus save(ReadStatus readStatus) {
-        data.put(readStatus.getId(), readStatus);
+        this.data.put(readStatus.getId(), readStatus);
         return readStatus;
     }
 
     @Override
     public Optional<ReadStatus> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
+        return Optional.ofNullable(this.data.get(id));
     }
 
     @Override
-    public List<ReadStatus> findAll() {
-        return new ArrayList<>(data.values());
+    public List<ReadStatus> findAllByUserId(UUID userId) {
+        return this.data.values().stream()
+                .filter(readStatus -> Objects.equals(readStatus.getUserId(), userId))
+                .toList();
+    }
+
+    @Override
+    public List<ReadStatus> findAllByChannelId(UUID channelId) {
+        return this.data.values().stream()
+                .filter(readStatus -> Objects.equals(readStatus.getChannelId(), channelId))
+                .toList();
     }
 
     @Override
     public boolean existsById(UUID id) {
-        return data.containsKey(id);
+        return this.data.containsKey(id);
     }
 
     @Override
     public void deleteById(UUID id) {
-        data.remove(id);
+        this.data.remove(id);
+    }
+
+    @Override
+    public void deleteAllByChannelId(UUID channelId) {
+        this.findAllByChannelId(channelId)
+                .forEach(readStatus -> this.deleteById(readStatus.getId()));
     }
 }

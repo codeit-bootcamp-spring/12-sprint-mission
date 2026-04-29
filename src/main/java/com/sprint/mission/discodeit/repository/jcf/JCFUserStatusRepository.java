@@ -7,14 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 @Repository
-@ConditionalOnProperty(
-        name = "discodeit.repository.type",
-        havingValue = "jcf",
-        matchIfMissing = true
-)
 public class JCFUserStatusRepository implements UserStatusRepository {
-
     private final Map<UUID, UserStatus> data;
 
     public JCFUserStatusRepository() {
@@ -34,23 +29,29 @@ public class JCFUserStatusRepository implements UserStatusRepository {
 
     @Override
     public Optional<UserStatus> findByUserId(UUID userId) {
-        return data.values().stream()
-                .filter(status -> status.getUserId().equals(userId))
+        return this.findAll().stream()
+                .filter(userStatus -> Objects.equals(userStatus.getUserId(), userId))
                 .findFirst();
     }
 
     @Override
     public List<UserStatus> findAll() {
-        return new ArrayList<>(data.values());
+        return this.data.values().stream().toList();
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return this.data.containsKey(id);
     }
 
     @Override
     public void deleteById(UUID id) {
-        data.remove(id);
+        this.data.remove(id);
     }
 
     @Override
     public void deleteByUserId(UUID userId) {
-        data.values().removeIf(status -> status.getUserId().equals(userId));
+        this.findByUserId(userId)
+                .ifPresent(userStatus -> this.deleteByUserId(userStatus.getId()));
     }
 }
