@@ -21,15 +21,18 @@ public class ReadStatus implements Serializable {
     public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        this.updatedAt = this.createdAt;
         this.userId = userId;
         this.channelId = channelId;
         this.lastReadAt = lastReadAt == null ? Instant.now() : lastReadAt;
     }
 
-    public void updateLastReadAt(Instant newLastReadAt) {
+    public void update(Instant newLastReadAt) {
+        boolean anyValueUpdated = false;
         if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
             this.lastReadAt = newLastReadAt;
+            anyValueUpdated = true;
+        }
+        if (anyValueUpdated) {
             this.updatedAt = Instant.now();
         }
     }
