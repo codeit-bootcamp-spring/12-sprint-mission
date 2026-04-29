@@ -1,58 +1,44 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serial;
+import lombok.Getter;
+
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-public class Channel implements Serializable, Comparable<Channel> {
-    @Serial
+@Getter
+public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private UUID id;
-    private String title;
-    private Long createdAt;
-    private Long updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
+    private ChannelType type;
+    private String name;
+    private String description;
 
-    public Channel(String title) {
-        id = UUID.randomUUID();
-        this.title = title;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+    public Channel(ChannelType type, String name, String description) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
+        this.type = type;
+        this.name = name;
+        this.description = description;
     }
 
-    public UUID getId() {
-        return id;
-    }
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void update(String title) {
-        this.title = title;
-        updatedAt = System.currentTimeMillis();
-    }
-
-    @Override
-    public String toString() {
-        return "Channel {" +
-                "\n id        = " + id +
-                "\n title     = " + title +
-                "\n createdAt = " + createdAt +
-                "\n updatedAt = " + updatedAt +
-                "\n}\n";
-    }
-
-    @Override
-    public int compareTo(Channel o) {
-        return this.title.compareTo(o.title);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 }

@@ -1,82 +1,55 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serial;
+import lombok.Getter;
+
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-public class User implements Serializable, Comparable<User> {
-    @Serial
+@Getter
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
+    private Instant createdAt;
+    private Instant updatedAt;
+    //
     private String username;
     private String email;
     private String password;
-    private String nickname;
-    private Long createdAt;
-    private Long updatedAt;
+    private UUID profileId;     // BinaryContent
 
-    public User(String username, String email, String password, String nickname) {
-        id = UUID.randomUUID();
+    public User(String username, String email, String password, UUID profileId) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        //
         this.username = username;
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
-        createdAt = System.currentTimeMillis();
-        updatedAt = System.currentTimeMillis();
+        this.profileId = profileId;
     }
 
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
+    public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
+        boolean anyValueUpdated = false;
+        if (newUsername != null && !newUsername.equals(this.username)) {
+            this.username = newUsername;
+            anyValueUpdated = true;
+        }
+        if (newEmail != null && !newEmail.equals(this.email)) {
+            this.email = newEmail;
+            anyValueUpdated = true;
+        }
+        if (newPassword != null && !newPassword.equals(this.password)) {
+            this.password = newPassword;
+            anyValueUpdated = true;
+        }
+        if (newProfileId != null && !newProfileId.equals(this.profileId)) {
+            this.profileId = newProfileId;
+            anyValueUpdated = true;
+        }
 
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void update(String username, String email, String password, String nickname) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        updatedAt = System.currentTimeMillis();
-    }
-
-    @Override
-    public String toString() {
-        return "User {" +
-                "\n id        = " + id +
-                "\n username  = " + username +
-                "\n email     = " + email +
-                "\n password  = " + password +
-                "\n nickname  = " + nickname +
-                "\n createdAt = " + createdAt +
-                "\n updatedAt = " + updatedAt +
-                "\n}\n";
-    }
-
-    @Override
-    public int compareTo(User o) {
-        return this.username.compareTo(o.username);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now();
+        }
     }
 }
