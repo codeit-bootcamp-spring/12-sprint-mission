@@ -1,79 +1,78 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.user.User;
+import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.util.FileSerialization;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-
-@Repository
 @ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
+@Repository
 public class FileUserRepository implements UserRepository {
-    private static final String FILE_PATH = "User.ser";
 
-    private final Map<UUID, User> data;
+  private final Path directory;
+  private final FileLockProvider fileLockProvider;
 
-    public FileUserRepository() {
-        this.data = new HashMap<>();
+  public FileUserRepository(
+      @Value("${discodeit.repository.file-directory:data}") String fileDirectory,
+      FileLockProvider fileLockProvider
+  ) {
+    this.directory = Paths.get(System.getProperty("user.dir"), fileDirectory,
+        User.class.getSimpleName());
+    this.fileLockProvider = fileLockProvider;
+  }
 
-        List<User> UserList = FileSerialization.loadData(FILE_PATH);
-        for (User user : UserList) {
-            data.put(user.getId(), user);
-        }
-    }
+  private Path resolvePath(UUID id) {
+    return FileSerialization.resolvePath(directory, id);
+  }
 
-    @Override
-    public User save(User user) {
-        data.put(user.getId(), user);
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
+  @Override
+  public User save(User user) {
+    return FileSerialization.save(directory, resolvePath(user.getId()), user, fileLockProvider);
+  }
 
-        return user;
-    }
+  @Override
+  public Optional<User> findById(UUID id) {
+    return FileSerialization.findById(directory, resolvePath(id), fileLockProvider, User.class);
+  }
 
-    @Override
-    public Optional<User> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
-    }
+  @Override
+  public Optional<User> findByUsername(String username) {
+    return this.findAll().stream()
+        .filter(user -> user.getUsername().equals(username))
+        .findFirst();
+  }
 
-    @Override
-    public Optional<User> findByUsername(String username) {
-        for (User user : data.values()) {
-            if (user.getUsername().equals(username)) {
-                return Optional.of(user);
-            }
-        }
+  @Override
+  public List<User> findAll() {
+    return FileSerialization.findAll(directory, fileLockProvider, User.class);
+  }
 
-        return Optional.empty();
-    }
+  @Override
+  public boolean existsById(UUID id) {
+    return FileSerialization.exists(directory, resolvePath(id));
+  }
 
-    @Override
-    public Optional<User> findByEmail(String email) {
-        for (User user : data.values()) {
-            if (user.getEmail().equals(email)) {
-                return Optional.of(user);
-            }
-        }
+  @Override
+  public void deleteById(UUID id) {
+    FileSerialization.delete(directory, resolvePath(id), fileLockProvider);
+  }
 
-        return Optional.empty();
-    }
+  @Override
+  public boolean existsByEmail(String email) {
+    return this.findAll().stream()
+        .anyMatch(user -> user.getEmail().equals(email));
+  }
 
-    @Override
-    public List<User> findAll() {
-        return new ArrayList<>(data.values());
-    }
-
-    @Override
-    public User deleteById(UUID id) {
-        User removed = data.remove(id);
-
-        if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 User 없음.");
-        }
-
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
-        return removed;
-    }
+  @Override
+  public boolean existsByUsername(String username) {
+    return this.findAll().stream()
+        .anyMatch(user -> user.getUsername().equals(username));
+  }
 }

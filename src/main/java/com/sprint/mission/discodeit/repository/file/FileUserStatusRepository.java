@@ -1,87 +1,72 @@
 package com.sprint.mission.discodeit.repository.file;
 
-
-
-import java.util.*;
-import com.sprint.mission.discodeit.entity.user.UserStatus;
+import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.util.FileSerialization;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
+@Repository
 public class FileUserStatusRepository implements UserStatusRepository {
-    private static final String FILE_PATH  = "UserStatus.ser";
 
-    private final Map<UUID, UserStatus> data;
+  private final Path directory;
+  private final FileLockProvider fileLockProvider;
 
-    public FileUserStatusRepository() {
-        this.data = new HashMap<>();
+  public FileUserStatusRepository(
+      @Value("${discodeit.repository.file-directory:data}") String fileDirectory,
+      FileLockProvider fileLockProvider
+  ) {
+    this.directory = Paths.get(System.getProperty("user.dir"), fileDirectory,
+        UserStatus.class.getSimpleName());
+    this.fileLockProvider = fileLockProvider;
+  }
 
-        List<UserStatus> userStatusList = FileSerialization.loadData(FILE_PATH);
-        for (UserStatus ch : userStatusList) {
-            data.put(ch.getId(), ch);
-        }
-    }
+  private Path resolvePath(UUID id) {
+    return FileSerialization.resolvePath(directory, id);
+  }
 
-    @Override
-    public UserStatus save(UserStatus userStatus) {
-        data.put(userStatus.getId(), userStatus);
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
+  @Override
+  public UserStatus save(UserStatus userStatus) {
+    return FileSerialization.save(directory, resolvePath(userStatus.getId()), userStatus, fileLockProvider);
+  }
 
-        return userStatus;
-    }
+  @Override
+  public Optional<UserStatus> findById(UUID id) {
+    return FileSerialization.findById(directory, resolvePath(id), fileLockProvider, UserStatus.class);
+  }
 
-    @Override
-    public Optional<UserStatus> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
-    }
+  @Override
+  public Optional<UserStatus> findByUserId(UUID userId) {
+    return findAll().stream()
+        .filter(userStatus -> userStatus.getUserId().equals(userId))
+        .findFirst();
+  }
 
-    @Override
-    public Optional<UserStatus> findByUserId(UUID userId) {
-        for (UserStatus userStatus : data.values()) {
-            if (userStatus.getUserId().equals(userId)) {
-                return Optional.of(userStatus);
-            }
-        }
+  @Override
+  public List<UserStatus> findAll() {
+    return FileSerialization.findAll(directory, fileLockProvider, UserStatus.class);
+  }
 
-        return Optional.empty();
-    }
+  @Override
+  public boolean existsById(UUID id) {
+    return FileSerialization.exists(directory, resolvePath(id));
+  }
 
-    @Override
-    public List<UserStatus> findAll() {
-        return new ArrayList<>(data.values());
-    }
+  @Override
+  public void deleteById(UUID id) {
+    FileSerialization.delete(directory, resolvePath(id), fileLockProvider);
+  }
 
-    @Override
-    public UserStatus deleteById(UUID id) {
-        UserStatus removed = data.remove(id);
-
-        if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 UserStatus 없음.");
-        }
-
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
-        return removed;
-    }
-
-    @Override
-    public UserStatus deleteByUserId(UUID userId) {
-        UserStatus removed = null;
-        for (UserStatus userStatus : data.values()) {
-            if (userStatus.getUserId().equals(userId)) {
-                removed = data.remove(userStatus.getId());
-            }
-        }
-
-        if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 UserStatus 없음.");
-        }
-
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
-        return removed;
-    }
+  @Override
+  public void deleteByUserId(UUID userId) {
+    this.findByUserId(userId)
+        .ifPresent(userStatus -> this.deleteById(userStatus.getId()));
+  }
 }

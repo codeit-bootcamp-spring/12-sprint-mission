@@ -1,122 +1,60 @@
 package com.sprint.mission.discodeit.repository.jcf;
 
-import java.util.*;
-import com.sprint.mission.discodeit.entity.channel.ReadStatus;
+import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
+import java.util.*;
+
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 @Repository
-@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf")
 public class JCFReadStatusRepository implements ReadStatusRepository {
-        private final Map<UUID, ReadStatus> data;
 
-        public JCFReadStatusRepository() {
-            this.data = new HashMap<>();
-        }
+  private final Map<UUID, ReadStatus> data;
 
-        @Override
-        public ReadStatus save(ReadStatus readStatus) {
-            data.put(readStatus.getId(), readStatus);
-            return readStatus;
-        }
+  public JCFReadStatusRepository() {
+    this.data = new HashMap<>();
+  }
 
-        @Override
-        public Optional<ReadStatus> findById(UUID id) {
-            return Optional.ofNullable(data.get(id));
-        }
+  @Override
+  public ReadStatus save(ReadStatus readStatus) {
+    this.data.put(readStatus.getId(), readStatus);
+    return readStatus;
+  }
 
-        @Override
-        public List<ReadStatus> findAllByUserId(UUID userId) {
-            List<ReadStatus> result = new ArrayList<>();
+  @Override
+  public Optional<ReadStatus> findById(UUID id) {
+    return Optional.ofNullable(this.data.get(id));
+  }
 
-            for (ReadStatus readStatus : data.values()) {
-                if (readStatus.getUserId().equals(userId)) {
-                    result.add(readStatus);
-                }
-            }
+  @Override
+  public List<ReadStatus> findAllByUserId(UUID userId) {
+    return this.data.values().stream()
+        .filter(readStatus -> readStatus.getUserId().equals(userId))
+        .toList();
+  }
 
-            return result;
-        }
+  @Override
+  public List<ReadStatus> findAllByChannelId(UUID channelId) {
+    return this.data.values().stream()
+        .filter(readStatus -> readStatus.getChannelId().equals(channelId))
+        .toList();
+  }
 
-        @Override
-        public List<ReadStatus> findAllByChannelId(UUID channelId) {
-            List<ReadStatus> result = new ArrayList<>();
+  @Override
+  public boolean existsById(UUID id) {
+    return this.data.containsKey(id);
+  }
 
-            for (ReadStatus readStatus : data.values()) {
-                if (readStatus.getChannelId().equals(channelId)) {
-                    result.add(readStatus);
-                }
-            }
+  @Override
+  public void deleteById(UUID id) {
+    this.data.remove(id);
+  }
 
-            return result;
-        }
-
-        @Override
-        public List<ReadStatus> findAll() {
-            return new ArrayList<>(data.values());
-        }
-
-        @Override
-        public ReadStatus deleteById(UUID id) {
-            ReadStatus removed = data.remove(id);
-
-            if (removed == null) {
-                throw new IllegalArgumentException("해당 id를 가진 ReadStatus 없음.");
-            }
-
-            return removed;
-        }
-
-        @Override
-        public ReadStatus deleteByUserId(UUID userId) {
-            List<UUID> targetIds = new ArrayList<>();
-            ReadStatus firstRemoved = null;
-
-            for (ReadStatus readStatus : data.values()) {
-                if (readStatus.getUserId().equals(userId)) {
-                    targetIds.add(readStatus.getId());
-
-                    if (firstRemoved == null) {
-                        firstRemoved = readStatus;
-                    }
-                }
-            }
-
-            if (firstRemoved == null) {
-                throw new IllegalArgumentException("해당 userId를 가진 ReadStatus 없음.");
-            }
-
-            for (UUID id : targetIds) {
-                data.remove(id);
-            }
-
-            return firstRemoved;
-        }
-
-        @Override
-        public ReadStatus deleteByChannelId(UUID channelId) {
-            List<UUID> targetIds = new ArrayList<>();
-            ReadStatus firstRemoved = null;
-
-            for (ReadStatus readStatus : data.values()) {
-                if (readStatus.getChannelId().equals(channelId)) {
-                    targetIds.add(readStatus.getId());
-
-                    if (firstRemoved == null) {
-                        firstRemoved = readStatus;
-                    }
-                }
-            }
-
-            if (firstRemoved == null) {
-                throw new IllegalArgumentException("해당 channelId를 가진 ReadStatus 없음.");
-            }
-
-            for (UUID id : targetIds) {
-                data.remove(id);
-            }
-
-            return firstRemoved;
-        }
-    }
+  @Override
+  public void deleteAllByChannelId(UUID channelId) {
+    this.findAllByChannelId(channelId)
+        .forEach(readStatus -> this.deleteById(readStatus.getId()));
+  }
+}

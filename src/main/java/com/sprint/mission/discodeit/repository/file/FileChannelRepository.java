@@ -1,68 +1,59 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.channel.Channel;
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.util.FileSerialization;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-
-@Repository
 @ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
+@Repository
 public class FileChannelRepository implements ChannelRepository {
-    private static final String FILE_PATH  = "Channel.ser";
 
-    private final Map<UUID, Channel> data;
+  private final Path directory;
+  private final FileLockProvider fileLockProvider;
 
-    public FileChannelRepository() {
-        this.data = new HashMap<>();
+  public FileChannelRepository(
+      @Value("${discodeit.repository.file-directory:data}") String fileDirectory,
+      FileLockProvider fileLockProvider
+  ) {
+    this.directory = Paths.get(System.getProperty("user.dir"), fileDirectory,
+        Channel.class.getSimpleName());
+    this.fileLockProvider = fileLockProvider;
+  }
 
-        List<Channel> channelList = FileSerialization.loadData(FILE_PATH);
-        for (Channel ch : channelList) {
-            data.put(ch.getId(), ch);
-        }
-    }
+  private Path resolvePath(UUID id) {
+    return FileSerialization.resolvePath(directory, id);
+  }
 
-    @Override
-    public Channel save(Channel channel) {
-        data.put(channel.getId(), channel);
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
+  @Override
+  public Channel save(Channel channel) {
+    return FileSerialization.save(directory, resolvePath(channel.getId()), channel, fileLockProvider);
+  }
 
-        return channel;
-    }
+  @Override
+  public Optional<Channel> findById(UUID id) {
+    return FileSerialization.findById(directory, resolvePath(id), fileLockProvider, Channel.class);
+  }
 
-    @Override
-    public Optional<Channel> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
-    }
+  @Override
+  public List<Channel> findAll() {
+    return FileSerialization.findAll(directory, fileLockProvider, Channel.class);
+  }
 
-    @Override
-    public Optional<Channel> findByName(String name) {
-        for (Channel ch : data.values()) {
-            if (ch.getName().equals(name)) {
-                return Optional.of(ch);
-            }
-        }
+  @Override
+  public boolean existsById(UUID id) {
+    return FileSerialization.exists(directory, resolvePath(id));
+  }
 
-        return Optional.empty();
-    }
-
-    @Override
-    public List<Channel> findAll() {
-        return new ArrayList<>(data.values());
-    }
-
-    @Override
-    public Channel deleteById(UUID id) {
-        Channel removed = data.remove(id);
-
-        if (removed == null) {
-            throw new IllegalArgumentException("해당 id를 가진 Channel 없음.");
-        }
-
-        FileSerialization.saveData(FILE_PATH, data.values().stream().toList());
-
-        return removed;
-    }
+  @Override
+  public void deleteById(UUID id) {
+    FileSerialization.delete(directory, resolvePath(id), fileLockProvider);
+  }
 }
