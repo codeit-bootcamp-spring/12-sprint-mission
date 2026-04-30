@@ -3,8 +3,9 @@ package com.sprint.mission.discodeit.dto.request;
 import java.time.Instant;
 import java.util.UUID;
 
-public record UserStatusCreateRequestDto(
+public record ReadStatusCreateRequest(
 	UUID userId,
-	Instant lastOnlineTime
+	UUID channelId,
+	Instant lastReadAt
 ) {
 }

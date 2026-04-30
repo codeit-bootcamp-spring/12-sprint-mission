@@ -1,22 +1,28 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
-public class User extends BaseEntity implements Comparable<User> {
-	private UUID profileId;
+public class User implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private final UUID id;
+	private final Instant createdAt;
+	private Instant updatedAt;
+	//
 	private String username;
 	private String email;
 	private String password;
+	private UUID profileId;     // BinaryContent
 
-	@Builder
 	public User(String username, String email, String password, UUID profileId) {
-		super();
+		this.id = UUID.randomUUID();
+		this.createdAt = Instant.now();
+		//
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -37,19 +43,13 @@ public class User extends BaseEntity implements Comparable<User> {
 			this.password = newPassword;
 			anyValueUpdated = true;
 		}
-
 		if (newProfileId != null && !newProfileId.equals(this.profileId)) {
 			this.profileId = newProfileId;
 			anyValueUpdated = true;
 		}
 
 		if (anyValueUpdated) {
-			updateAtUpdate();
+			this.updatedAt = Instant.now();
 		}
-	}
-
-	@Override
-	public int compareTo(User o) {
-		return this.getCreatedAt().compareTo(o.getCreatedAt());
 	}
 }

@@ -1,19 +1,26 @@
 package com.sprint.mission.discodeit.entity;
 
-import lombok.Builder;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.UUID;
+
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
-public class Channel extends BaseEntity implements Comparable<Channel> {
+public class Channel implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private final UUID id;
+	private final Instant createdAt;
+	private Instant updatedAt;
+	//
 	private final ChannelType type;
 	private String name;
 	private String description;
 
-	@Builder
 	public Channel(ChannelType type, String name, String description) {
-		super();
+		this.id = UUID.randomUUID();
+		this.createdAt = Instant.now();
+		//
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -31,12 +38,7 @@ public class Channel extends BaseEntity implements Comparable<Channel> {
 		}
 
 		if (anyValueUpdated) {
-			updateAtUpdate();
+			this.updatedAt = Instant.now();
 		}
-	}
-
-	@Override
-	public int compareTo(Channel o) {
-		return this.getCreatedAt().compareTo(o.getCreatedAt());
 	}
 }

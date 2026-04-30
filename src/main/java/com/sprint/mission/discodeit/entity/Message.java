@@ -1,23 +1,30 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
-public class Message extends BaseEntity implements Comparable<Message> {
+public class Message implements Serializable, Comparable<Message> {
+	private static final long serialVersionUID = 1L;
+
+	private final UUID id;
+	private final Instant createdAt;
+	private Instant updatedAt;
+	//
+	private String content;
+	//
 	private final UUID channelId;
 	private final UUID authorId;
-	private String content;
 	private final List<UUID> attachmentIds;
 
-	@Builder
 	public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
-		super();
+		this.id = UUID.randomUUID();
+		this.createdAt = Instant.now();
+		//
 		this.content = content;
 		this.channelId = channelId;
 		this.authorId = authorId;
@@ -32,7 +39,7 @@ public class Message extends BaseEntity implements Comparable<Message> {
 		}
 
 		if (anyValueUpdated) {
-			updateAtUpdate();
+			this.updatedAt = Instant.now();
 		}
 	}
 
@@ -40,5 +47,4 @@ public class Message extends BaseEntity implements Comparable<Message> {
 	public int compareTo(Message o) {
 		return this.getCreatedAt().compareTo(o.getCreatedAt());
 	}
-
 }
