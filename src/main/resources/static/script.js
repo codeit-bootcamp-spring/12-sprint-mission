@@ -47,23 +47,9 @@ async function renderUserList(users) {
         userElement.className = 'user-item';
 
         // Get profile image URL
-        const defaultProfiles = {
-
-            chiikawa: '/chiikawa.png',
-
-            hachiware: '/hachiware.png',
-
-            usagi: '/usagi.png',
-
-            woody: '/default-avatar.png'
-
-        };
-
-        const profileUrl = user.profileId
-
-            ? await fetchUserProfile(user.profileId)
-
-            : (defaultProfiles[user.username] || '/default-avatar.png');
+        const profileUrl = user.profileId ?
+            await fetchUserProfile(user.profileId) :
+            '/default-avatar.png';
 
         userElement.innerHTML = `
             <img src="${profileUrl}" alt="${user.username}" class="user-avatar">
