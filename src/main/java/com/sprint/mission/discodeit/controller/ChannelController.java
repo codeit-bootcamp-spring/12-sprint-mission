@@ -6,60 +6,58 @@ import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
 @ResponseBody
-@RequestMapping("/api/channel")
+@RequestMapping("/api/channels")
 public class ChannelController {
 
   private final ChannelService channelService;
 
-  @RequestMapping(path = "createPublic")
-  public ResponseEntity<Channel> create(@RequestBody PublicChannelCreateRequest request) {
+  @RequestMapping(path = "/public", method = RequestMethod.POST)
+  public ResponseEntity<Channel> createPublic(@RequestBody PublicChannelCreateRequest request) {
     Channel createdChannel = channelService.create(request);
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(createdChannel);
   }
 
-  @RequestMapping(path = "createPrivate")
-  public ResponseEntity<Channel> create(@RequestBody PrivateChannelCreateRequest request) {
+  @RequestMapping(path = "/private", method = RequestMethod.POST)
+  public ResponseEntity<Channel> createPrivate(@RequestBody PrivateChannelCreateRequest request) {
     Channel createdChannel = channelService.create(request);
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(createdChannel);
   }
 
-  @RequestMapping(path = "update")
-  public ResponseEntity<Channel> update(@RequestParam("channelId") UUID channelId,
-      @RequestBody PublicChannelUpdateRequest request) {
-    Channel udpatedChannel = channelService.update(channelId, request);
+  @RequestMapping(path = "/{channelId}", method = RequestMethod.PATCH)
+  public ResponseEntity<Channel> update(
+      @PathVariable("channelId") UUID channelId,
+      @RequestBody PublicChannelUpdateRequest request
+  ) {
+    Channel updatedChannel = channelService.update(channelId, request);
     return ResponseEntity
         .status(HttpStatus.OK)
-        .body(udpatedChannel);
+        .body(updatedChannel);
   }
 
-  @RequestMapping(path = "delete")
-  public ResponseEntity<Void> delete(@RequestParam("channelId") UUID channelId) {
+  @RequestMapping(path = "/{channelId}", method = RequestMethod.DELETE)
+  public ResponseEntity<Void> delete(@PathVariable("channelId") UUID channelId) {
     channelService.delete(channelId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
   }
 
-  @RequestMapping(path = "findAll")
+  @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<List<ChannelDto>> findAll(@RequestParam("userId") UUID userId) {
     List<ChannelDto> channels = channelService.findAllByUserId(userId);
     return ResponseEntity
