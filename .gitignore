@@ -41,3 +41,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 .idea
+
+### file-directory ###
+/file-data-map
+/my_dir
