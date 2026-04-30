@@ -1,5 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.data.user.UserDto;
+import com.sprint.mission.discodeit.dto.data.user.UserDtoMapper;
 import com.sprint.mission.discodeit.dto.request.LoginRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
@@ -14,9 +16,10 @@ import java.util.NoSuchElementException;
 public class BasicAuthService implements AuthService {
 
   private final UserRepository userRepository;
+  private final UserDtoMapper userDtoMapper;
 
   @Override
-  public User login(LoginRequest loginRequest) {
+  public UserDto login(LoginRequest loginRequest) {
     String username = loginRequest.username();
     String password = loginRequest.password();
 
@@ -27,7 +30,6 @@ public class BasicAuthService implements AuthService {
     if (!user.getPassword().equals(password)) {
       throw new IllegalArgumentException("Wrong password");
     }
-
-    return user;
+    return userDtoMapper.toDto(user);
   }
 }

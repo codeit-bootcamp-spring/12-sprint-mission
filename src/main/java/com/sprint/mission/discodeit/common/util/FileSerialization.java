@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.util;
+package com.sprint.mission.discodeit.common.util;
 
 import com.sprint.mission.discodeit.repository.file.FileLockProvider;
 import java.io.FileInputStream;

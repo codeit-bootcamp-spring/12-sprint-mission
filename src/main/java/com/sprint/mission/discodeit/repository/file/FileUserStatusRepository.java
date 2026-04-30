@@ -2,7 +2,7 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
-import com.sprint.mission.discodeit.util.FileSerialization;
+import com.sprint.mission.discodeit.common.util.FileSerialization;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;

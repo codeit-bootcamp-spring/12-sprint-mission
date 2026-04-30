@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.util;
+package com.sprint.mission.discodeit.common.util;
 
 import java.util.Objects;
 import java.util.Optional;

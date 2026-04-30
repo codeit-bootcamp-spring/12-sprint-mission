@@ -1,7 +1,8 @@
-package com.sprint.mission.discodeit.exception;
+package com.sprint.mission.discodeit.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +15,14 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<String> handleException(IllegalArgumentException e) {
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(e.getMessage());
+  }
+
+  // 2. 사용자 없음. 요구 사항으로 인해 BAD_REQUEST
+  @ExceptionHandler(UserAlreadyException.class)
+  public ResponseEntity<String> handleUserNotFound(UserAlreadyException e) {
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(e.getMessage());
