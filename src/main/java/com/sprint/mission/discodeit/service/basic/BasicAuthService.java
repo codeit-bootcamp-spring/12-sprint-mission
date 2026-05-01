@@ -7,25 +7,27 @@ import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.NoSuchElementException;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class BasicAuthService implements AuthService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    public User login(LoginRequest loginRequest) {
-        String username = loginRequest.username();
-        String password = loginRequest.password();
+  @Override
+  public User login(LoginRequest loginRequest) {
+    String username = loginRequest.username();
+    String password = loginRequest.password();
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User with username " + username + " not found"));
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(
+            () -> new NoSuchElementException("User with username " + username + " not found"));
 
-        if (!Objects.equals(user.getPassword(), password)) {
-            throw new IllegalArgumentException("Wrong password");
-        }
-        return user;
+    if (!user.getPassword().equals(password)) {
+      throw new IllegalArgumentException("Wrong password");
     }
+
+    return user;
+  }
 }

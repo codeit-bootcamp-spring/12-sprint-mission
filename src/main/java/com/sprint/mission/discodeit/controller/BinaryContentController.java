@@ -3,32 +3,38 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@RestController
+@Controller
+@ResponseBody
 @RequestMapping("/api/binaryContent")
 @AllArgsConstructor
 public class BinaryContentController {
 
-    private final BinaryContentService binaryContentService;
+  private final BinaryContentService binaryContentService;
 
-    @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public ResponseEntity<BinaryContent> download(@RequestParam UUID binaryContentId) {
-        BinaryContent binaryContent =
-                binaryContentService.find(binaryContentId);
+  @RequestMapping(path = "find")
+  public ResponseEntity<BinaryContent> find(@RequestParam("binaryContentId") UUID binaryContentId) {
+    BinaryContent binaryContent =
+        binaryContentService.find(binaryContentId);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(binaryContent);
+  }
 
-        return ResponseEntity.ok(binaryContent);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<BinaryContent>> findAllByIdIn(@RequestParam List<UUID> ids) {
-        List<BinaryContent> binaryContents = binaryContentService.findAllByIdIn(ids);
-        return ResponseEntity.ok(binaryContents);
-    }
+  @RequestMapping(path = "findAllByIdIn")
+  public ResponseEntity<List<BinaryContent>> findAllByIdIn
+      (@RequestParam("binaryContentIds") List<UUID> binaryContentIds
+      ) {
+    List<BinaryContent> binaryContents = binaryContentService.findAllByIdIn(binaryContentIds);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(binaryContents);
+  }
 }

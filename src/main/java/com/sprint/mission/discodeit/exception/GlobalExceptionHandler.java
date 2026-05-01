@@ -1,48 +1,35 @@
 package com.sprint.mission.discodeit.exception;
 
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 
-@RestControllerAdvice
+@ControllerAdvice
+@ResponseBody
 public class GlobalExceptionHandler {
 
-    // 조회 대상 없음
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNoSuchElementException(NoSuchElementException ex) {
-        System.out.println("NoSuchElementException: " + ex.getMessage());
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<String> handleException(IllegalArgumentException e) {
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(e.getMessage());
+  }
 
-        return Map.of(
-                "error", "NOT_FOUND",
-                "message", ex.getMessage()
-        );
-    }
+  @ExceptionHandler(NoSuchElementException.class)
+  public ResponseEntity<String> handleException(NoSuchElementException e) {
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+  }
 
-    // 잘못된 요청
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        System.out.println("IllegalArgumentException: " + ex.getMessage());
-
-        return Map.of(
-                "error", "BAD_REQUEST",
-                "message", ex.getMessage()
-        );
-    }
-
-    // 서버 예외
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleAllException(Exception ex) {
-        System.out.println("Exception: " + ex.getMessage());
-
-        return Map.of(
-                "error", "INTERNAL_SERVER_ERROR",
-                "message", ex.getMessage()
-        );
-    }
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleException(Exception e) {
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(e.getMessage());
+  }
 }
