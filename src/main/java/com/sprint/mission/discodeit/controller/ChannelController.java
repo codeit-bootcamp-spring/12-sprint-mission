@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
-@ResponseBody
-@RequestMapping("/api/channel")
+@RestController
+@RequestMapping("/api/channels")
 @RequiredArgsConstructor
 public class ChannelController {
 
   private final ChannelService channelService;
 
-  @RequestMapping(path = "/createPublic")
+  @PostMapping("/public")
   public ResponseEntity<Channel> create(@RequestBody PublicChannelCreateRequest request) {
     Channel createdChannel = channelService.create(request);
     return ResponseEntity
@@ -31,7 +30,7 @@ public class ChannelController {
         .body(createdChannel);
   }
 
-  @RequestMapping(path = "createdPrivate")
+  @PostMapping(path = "/private")
   public ResponseEntity<Channel> create(@RequestBody PrivateChannelCreateRequest request) {
     Channel createdChannel = channelService.create(request);
     return ResponseEntity
@@ -39,9 +38,9 @@ public class ChannelController {
         .body(createdChannel);
   }
 
-  @RequestMapping(path = "update")
+  @PatchMapping(path = "/{channelId}")
   public ResponseEntity<Channel> update(
-      @RequestParam("channelId") UUID channelId,
+      @PathVariable UUID channelId,
       @RequestBody PublicChannelUpdateRequest request) {
     Channel updatedChannel = channelService.update(channelId, request);
     return ResponseEntity
@@ -49,16 +48,16 @@ public class ChannelController {
         .body(updatedChannel);
   }
 
-  @RequestMapping(path = "delete")
-  public ResponseEntity<Void> delete(@RequestParam("channelId") UUID channelId) {
+  @DeleteMapping(path = "/{channelId}")
+  public ResponseEntity<Void> delete(@PathVariable UUID channelId) {
     channelService.delete(channelId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
   }
 
-  @RequestMapping(path = "findAll")
-  public ResponseEntity<List<ChannelDto>> findAll(@RequestParam("userId") UUID userId) {
+  @GetMapping
+  public ResponseEntity<List<ChannelDto>> findAll(@RequestParam UUID userId) {
     List<ChannelDto> channels = channelService.findAllByUserId(userId);
     return ResponseEntity
         .status(HttpStatus.OK)
