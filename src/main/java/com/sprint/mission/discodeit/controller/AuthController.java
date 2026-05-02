@@ -6,23 +6,21 @@ import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@ResponseBody
-@Controller
+@RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @RequestMapping(value = "/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
-        User user = authService.login(request);
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(user);
-    }
+  @PostMapping(value = "/login")
+  public ResponseEntity<User> login(@RequestBody LoginRequest request) {
+    User user = authService.login(request);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(user);
+  }
 
 }
