@@ -10,114 +10,121 @@ import java.util.UUID;
 public class User implements Serializable {
 
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private UUID id;
-    private Instant createdAt;
-    private Instant updatedAt;
-    //
-    private String username;
-    private String email;
-    private String password;
-    private UUID profileId;     // BinaryContent
+  private UUID id;
+  private Instant createdAt;
+  private Instant updatedAt;
+  //
+  private String username;
+  private String email;
+  private String password;
+  private UUID profileId;     // BinaryContent
 
-    public User() {
-        this.id = UUID.randomUUID();
-        this.createdAt = Instant.now();
-        //
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.profileId = profileId;
+  public User() {
+    this.id = UUID.randomUUID();
+    this.createdAt = Instant.now();
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.profileId = profileId;
+  }
+
+  public User(String username, String email, String password) {
+    this.id = UUID.randomUUID();
+    this.createdAt = Instant.now();
+    this.username = username;
+    this.email = email;
+    this.password = password;
+  }
+
+  public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
+    boolean anyValueUpdated = false;
+    if (newUsername != null && !newUsername.equals(this.username)) {
+      this.username = newUsername;
+      anyValueUpdated = true;
+    }
+    if (newEmail != null && !newEmail.equals(this.email)) {
+      this.email = newEmail;
+      anyValueUpdated = true;
+    }
+    if (newPassword != null && !newPassword.equals(this.password)) {
+      this.password = newPassword;
+      anyValueUpdated = true;
+    }
+    if (newProfileId != null && !newProfileId.equals(this.profileId)) {
+      this.profileId = newProfileId;
+      anyValueUpdated = true;
     }
 
-    public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
-        boolean anyValueUpdated = false;
-        if (newUsername != null && !newUsername.equals(this.username)) {
-            this.username = newUsername;
-            anyValueUpdated = true;
-        }
-        if (newEmail != null && !newEmail.equals(this.email)) {
-            this.email = newEmail;
-            anyValueUpdated = true;
-        }
-        if (newPassword != null && !newPassword.equals(this.password)) {
-            this.password = newPassword;
-            anyValueUpdated = true;
-        }
-        if (newProfileId != null && !newProfileId.equals(this.profileId)) {
-            this.profileId = newProfileId;
-            anyValueUpdated = true;
-        }
-
-        if (anyValueUpdated) {
-            this.updatedAt = Instant.now();
-        }
-
+    if (anyValueUpdated) {
+      this.updatedAt = Instant.now();
     }
 
-    public UUID getId() {
-        return id;
-    }
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
+  public void setCreatedAt(Instant createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setUpdatedAt(Instant updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public UUID getProfileId() {
-        return profileId;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setProfileId(UUID profileId) {
-        this.profileId = profileId;
-    }
+  public UUID getProfileId() {
+    return profileId;
+  }
 
-    public void setOnline(Object online) {
+  public void setProfileId(UUID profileId) {
+    this.profileId = profileId;
+  }
 
-    }
+  public void setOnline(Object online) {
 
-    public Object getOnline() {
-        return null;
-    }
+  }
+
+  public Object getOnline() {
+    return null;
+  }
 }
 
