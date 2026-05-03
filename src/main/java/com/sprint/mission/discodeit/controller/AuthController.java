@@ -6,18 +6,24 @@ import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestController
-@RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Controller
+@ResponseBody
+@RequestMapping("/api/auth")
 public class AuthController {
-    private final AuthService authService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
-        User user = authService.login(request);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
-    }
+  private final AuthService authService;
 
+  @RequestMapping(path = "login")
+  public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
+    User user = authService.login(loginRequest);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(user);
+  }
 }
