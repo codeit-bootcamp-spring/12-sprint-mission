@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.controller;
 
+import com.sprint.mission.discodeit.controller.api.MessageApi;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
@@ -21,13 +22,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/messages")
-public class MessageController {
+public class MessageController implements MessageApi {
 
   private final MessageService messageService;
 
   @RequestMapping(
       method = RequestMethod.POST,
-      consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
   )
   public ResponseEntity<Message> create(
       @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,

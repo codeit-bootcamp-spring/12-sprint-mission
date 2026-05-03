@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.controller;
 
+import com.sprint.mission.discodeit.controller.api.UserApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserApi {
 
   private final UserService userService;
   private final UserStatusService userStatusService;
@@ -60,7 +60,7 @@ public class UserController {
         .flatMap(this::resolveProfileRequest);
     User updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
     return ResponseEntity
-        .status(HttpStatus.OK)
+        .status(HttpStatus.CREATED)
         .body(updatedUser);
   }
 
@@ -83,8 +83,9 @@ public class UserController {
   @RequestMapping(path = "/{userId}/userStatus",
   method = RequestMethod.PATCH)
   public ResponseEntity<UserStatus> updateUserStatusByUserId(
-      @PathVariable UUID userId) {
-    UserStatusUpdateRequest request = new UserStatusUpdateRequest(Instant.now());
+      @PathVariable UUID userId,
+      @RequestBody UserStatusUpdateRequest request
+  ) {
     UserStatus updatedUserStatus = userStatusService.updateByUserId(userId, request);
     return ResponseEntity
         .status(HttpStatus.OK)
