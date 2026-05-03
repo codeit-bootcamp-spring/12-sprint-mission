@@ -25,7 +25,7 @@ public interface UserService {
 
   User updateOnlineStatus(UUID userId, Boolean online);
 
-  User login(String email, String password);
+  User login(String username, String password);
 
   UserDto createUser(UserCreateRequest request, MultipartFile profile);
 }

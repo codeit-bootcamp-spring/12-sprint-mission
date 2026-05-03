@@ -93,10 +93,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto createUser(UserCreateRequest request, MultipartFile profile) {
 
-    User user = new User();
-    user.setUsername(request.getUsername());
-    user.setEmail(request.getEmail());
-    user.setPassword(request.getPassword());
+    User user = new User
+    (request.getUsername(),
+    request.getEmail(),
+    request.getPassword());
 
     User saved = userRepository.save(user);
     return toDto(saved);
