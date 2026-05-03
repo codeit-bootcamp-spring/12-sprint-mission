@@ -3,14 +3,18 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.dto.data.LoginRequestDto;
 import com.sprint.mission.discodeit.dto.data.OnlineStatusDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,9 +28,13 @@ public class UserController {
   }
 
   // Register User
-  @PostMapping
-  public User createUser(@RequestBody UserDto userDto) {
-    return userService.create(userDto);
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<UserDto> createUser(
+      @RequestPart("userCreateRequest") UserCreateRequest request,
+      @RequestPart(value = "profile", required = false) MultipartFile profile) {
+
+    UserDto userDto = userService.createUser(request, profile);
+    return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
   }
 
   // Find User by ID
