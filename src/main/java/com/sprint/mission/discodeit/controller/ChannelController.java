@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.controller;
 
 
 import com.sprint.mission.discodeit.dto.data.ChannelDto;
+import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 import org.springframework.web.bind.annotation.*;
@@ -14,33 +15,46 @@ import java.util.UUID;
 
 public class ChannelController {
 
-    private final ChannelService channelService;
+  private final ChannelService channelService;
 
-    public ChannelController(ChannelService channelService) {
-        this.channelService = channelService;
-    }
+  public ChannelController(ChannelService channelService) {
+    this.channelService = channelService;
+  }
 
-    // Create Public/Private Channel
-    @RequestMapping(method = RequestMethod.POST)
-          public ChannelDto createChannel(@RequestBody ChannelDto channelDto) {
-        return channelService.create(channelDto);
-    }
+  // Create Public/Private Channel
+  @PostMapping
+  public ChannelDto createChannel(@RequestBody ChannelDto channelDto) {
+    return channelService.create(channelDto);
+  }
 
-    // Revise Public/Private Channel
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Channel updateChannel(@PathVariable UUID id, @RequestBody ChannelDto channelDto) {
-        return channelService.update(id, channelDto);
- }
+  // Find Channel by ID
+  @GetMapping("/{id}")
+  public ChannelDto getChannel(@PathVariable UUID id) {
+    return channelService.find(id);
+  }
 
-    // Delete Channel
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ChannelDto deleteChannel(@PathVariable UUID id) {
-        return channelService.delete(id);
-    }
+  // Revise Public/Private Channel
+  @PutMapping("/{id}")
+  public Channel updateChannel(@PathVariable UUID id, @RequestBody ChannelDto channelDto) {
+    return channelService.update(id, channelDto);
+  }
 
-    // Find Channel by User
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public List<ChannelDto> getChannelsByUser(@PathVariable UUID userId) {
-        return channelService.findChannelsByUser(userId);
-    }
+  // Partial Update Channel
+  @PatchMapping("/{id}")
+  public Channel patchChannel(@PathVariable UUID id,
+      @RequestBody PublicChannelUpdateRequest request) {
+    return channelService.update(id, new ChannelDto(request.newName(), null));
+  }
+
+  // Delete Channel
+  @DeleteMapping("/{id}")
+  public ChannelDto deleteChannel(@PathVariable UUID id) {
+    return channelService.delete(id);
+  }
+
+  // Find Channel by User
+  @GetMapping
+  public List<ChannelDto> getChannelsByUser(@RequestParam UUID userId) {
+    return channelService.findChannelsByUser(userId);
+  }
 }

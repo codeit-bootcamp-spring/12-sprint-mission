@@ -1,13 +1,12 @@
 package com.sprint.mission.discodeit.controller;
 
 
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.service.BinaryContentService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -15,16 +14,31 @@ import java.util.UUID;
 @RequestMapping("/api/binary-content")
 public class BinaryContentController {
 
-    private final BinaryContentService binaryContentService;
+  private final BinaryContentService binaryContentService;
 
-    public BinaryContentController(BinaryContentService binaryContentService) {
-        this.binaryContentService = binaryContentService;
-    }
+  public BinaryContentController(BinaryContentService binaryContentService) {
+    this.binaryContentService = binaryContentService;
+  }
 
-    @GetMapping("/find")
-    public ResponseEntity<BinaryContent> findBinaryContent(@RequestParam("binaryContentId") UUID binaryContentId) {
-        BinaryContent binaryContent = binaryContentService.find(binaryContentId);
-        return ResponseEntity.ok(binaryContent);
-    }
+  @PostMapping
+  public BinaryContent createBinaryContent(@RequestBody BinaryContentCreateRequest request) {
+    return binaryContentService.create(request);
+  }
+
+  @GetMapping("/findAll")
+  public ResponseEntity<List<BinaryContent>> findAllBinaryContents() {
+    return ResponseEntity.ok(binaryContentService.findAll());
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<BinaryContent> findBinaryContent(@PathVariable("id") UUID binaryContentId) {
+    BinaryContent binaryContent = binaryContentService.find(binaryContentId);
+    return ResponseEntity.ok(binaryContent);
+  }
+
+  @DeleteMapping("/{id}")
+  public void deleteBinaryContent(@PathVariable UUID id) {
+    binaryContentService.delete(id);
+  }
 }
 

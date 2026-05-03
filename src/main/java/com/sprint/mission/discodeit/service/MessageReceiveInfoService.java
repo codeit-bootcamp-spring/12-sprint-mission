@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageReceiveInfoService {
-    MessageReceiveInfoDto create(MessageReceiveInfoDto dto);
 
-    MessageReceiveInfoDto update(UUID id, MessageReceiveInfoDto dto);
+  MessageReceiveInfoDto create(MessageReceiveInfoDto dto);
 
-    List<MessageReceiveInfoDto> findByUserId(UUID userId);
+  MessageReceiveInfoDto find(UUID id);
+
+  MessageReceiveInfoDto update(UUID id, MessageReceiveInfoDto dto);
+
+  MessageReceiveInfoDto delete(UUID id);
+
+  List<MessageReceiveInfoDto> findByUserId(UUID userId);
 }

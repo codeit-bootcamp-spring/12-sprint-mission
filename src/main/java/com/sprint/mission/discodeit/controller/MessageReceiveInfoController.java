@@ -11,30 +11,44 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/message-receive-info")
 public class MessageReceiveInfoController {
-    private final MessageReceiveInfoService messageReceiveInfoService;
+
+  private final MessageReceiveInfoService messageReceiveInfoService;
 
 
-    public MessageReceiveInfoController(MessageReceiveInfoService messageReceiveInfoService) {
-        this.messageReceiveInfoService = messageReceiveInfoService;
-    }
+  public MessageReceiveInfoController(MessageReceiveInfoService messageReceiveInfoService) {
+    this.messageReceiveInfoService = messageReceiveInfoService;
+  }
 
-    // Create Specific Channel's Message Receive Info
-    @RequestMapping(method = RequestMethod.POST)
-    public MessageReceiveInfoDto create(@RequestBody MessageReceiveInfoDto dto) {
-        return messageReceiveInfoService.create(dto);
-    }
+  // Create Specific Channel's Message Receive Info
+  @PostMapping
+  public MessageReceiveInfoDto create(@RequestBody MessageReceiveInfoDto dto) {
+    return messageReceiveInfoService.create(dto);
+  }
 
-    // Update Specific Channel's Message Receive Info
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public MessageReceiveInfoDto update(@PathVariable UUID id, @RequestBody MessageReceiveInfoDto dto) {
-        return messageReceiveInfoService.update(id, dto);
-    }
+  // Find Specific Message Receive Info by ID
+  @GetMapping("/{id}")
+  public MessageReceiveInfoDto get(@PathVariable UUID id) {
+    return messageReceiveInfoService.find(id);
+  }
 
-    // Find Specific User's Message Receive Info
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
-    public List<MessageReceiveInfoDto> getByUserId(@PathVariable UUID userId) {
-        return messageReceiveInfoService.findByUserId(userId);
-    }
+  // Update Specific Channel's Message Receive Info
+  @PutMapping("/{id}")
+  public MessageReceiveInfoDto update(@PathVariable UUID id,
+      @RequestBody MessageReceiveInfoDto dto) {
+    return messageReceiveInfoService.update(id, dto);
+  }
+
+  // Delete Specific Message Receive Info
+  @DeleteMapping("/{id}")
+  public MessageReceiveInfoDto delete(@PathVariable UUID id) {
+    return messageReceiveInfoService.delete(id);
+  }
+
+  // Find Specific User's Message Receive Info
+  @GetMapping
+  public List<MessageReceiveInfoDto> getByUserId(@RequestParam UUID userId) {
+    return messageReceiveInfoService.findByUserId(userId);
+  }
 }
 
 

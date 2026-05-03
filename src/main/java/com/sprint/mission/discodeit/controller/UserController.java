@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.dto.data.LoginRequestDto;
 import com.sprint.mission.discodeit.dto.data.OnlineStatusDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -16,53 +17,67 @@ import java.util.UUID;
 
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    // Register User
-    @RequestMapping(method = RequestMethod.POST)
-    public User createUser(@RequestBody UserDto userDto) {
-        return userService.create(userDto);
-    }
+  // Register User
+  @PostMapping
+  public User createUser(@RequestBody UserDto userDto) {
+    return userService.create(userDto);
+  }
 
-    // Edit User info
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public User updateUser(
-            @PathVariable UUID id, @RequestBody UserDto userDto) {
-        return userService.update(id, userDto);
-    }
+  // Find User by ID
+  @GetMapping("/{id}")
+  public ResponseEntity<UserDto> findUserById(@PathVariable UUID id) {
+    UserDto user = userService.find(id);
+    return ResponseEntity.ok(user);
+  }
 
-    // Delete User
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable UUID id) {
-        userService.delete(id);
-    }
+  // Edit User info
+  @PutMapping("/{id}")
+  public User updateUser(
+      @PathVariable UUID id, @RequestBody UserDto userDto) {
+    return userService.update(id, userDto);
+  }
 
-    // 심화 요구사항
-    @GetMapping("/findAll")
-    public ResponseEntity<List<UserDto>> findAllUsers() {
-        List<UserDto> users = userService.findAll();
-        return ResponseEntity.ok(users);
-    }
+  // Delete User
+  @DeleteMapping("/{id}")
+  public void deleteUser(@PathVariable UUID id) {
+    userService.delete(id);
+  }
 
-    // Update online status
+  // Partial Update User
+  @PatchMapping("/{id}")
+  public User patchUser(@PathVariable UUID id, @RequestBody UserUpdateRequest request) {
+    // Note: Assuming a new service method is needed or using update with a wrapper
+    return userService.update(id,
+        new UserDto(null, null, null, request.newUsername(), request.newEmail(), null, null));
+  }
 
-    @RequestMapping(value = "/{id}/online", method = RequestMethod.PATCH)
-    public User updateOnlineStatus(
-            @PathVariable UUID id,
-            @RequestBody OnlineStatusDto onlineStatusDto
-    ) {
-        return userService.updateOnlineStatus(id, onlineStatusDto.getOnline());
-    }
+  // 심화 요구사항
+  @GetMapping("/findAll")
+  public ResponseEntity<List<UserDto>> findAllUsers() {
+    return ResponseEntity.ok(userService.findAll());
+  }
 
-    // Logging in
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public User login(@RequestBody LoginRequestDto loginDto) {
-        return userService.login(loginDto.getEmail(), loginDto.getPassword());
-    }
+  // Update online status
+
+  @PatchMapping("/{id}/online")
+  public User updateOnlineStatus(
+      @PathVariable UUID id,
+      @RequestBody OnlineStatusDto onlineStatusDto
+  ) {
+    return userService.updateOnlineStatus(id, onlineStatusDto.getOnline());
+  }
+
+  // Logging in
+  @PostMapping("/login")
+  public User login(@RequestBody LoginRequestDto loginDto) {
+    return userService.login(loginDto.getEmail(), loginDto.getPassword());
+  }
 
 
 }

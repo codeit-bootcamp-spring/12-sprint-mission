@@ -12,28 +12,34 @@ import java.util.UUID;
 @Service
 public class ChannelServiceImpl implements ChannelService {
 
-    private final ChannelRepository channelRepository;
+  private final ChannelRepository channelRepository;
 
-    public ChannelServiceImpl(ChannelRepository channelRepository) {
-        this.channelRepository = channelRepository;
-    }
-    @Override
-    public ChannelDto create(ChannelDto channelDto) {
-        return null;
-    }
+  public ChannelServiceImpl(ChannelRepository channelRepository) {
+    this.channelRepository = channelRepository;
+  }
 
-    @Override
-    public Channel update(UUID id, ChannelDto channelDto) {
-        return null;
-    }
+  @Override
+  public ChannelDto create(ChannelDto channelDto) {
+    return null;
+  }
 
-    @Override
-    public ChannelDto delete(UUID id) {
-        return null;
-    }
+  @Override
+  public ChannelDto find(UUID id) {
+    return null;
+  }
 
-    @Override
-    public List<ChannelDto> findChannelsByUser(UUID userId) {
-        return List.of();
-    }
+  @Override
+  public Channel update(UUID id, ChannelDto channelDto) {
+    return null;
+  }
+
+  @Override
+  public ChannelDto delete(UUID id) {
+    return null;
+  }
+
+  @Override
+  public List<ChannelDto> findChannelsByUser(UUID userId) {
+    return List.of();
+  }
 }

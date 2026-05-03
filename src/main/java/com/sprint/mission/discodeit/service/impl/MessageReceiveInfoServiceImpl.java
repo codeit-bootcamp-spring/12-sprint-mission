@@ -13,59 +13,87 @@ import java.util.stream.Collectors;
 @Service
 public class MessageReceiveInfoServiceImpl implements MessageReceiveInfoService {
 
-    private final MessageReceiveInfoRepository messageReceiveInfoRepository;
+  private final MessageReceiveInfoRepository messageReceiveInfoRepository;
 
-    public MessageReceiveInfoServiceImpl(MessageReceiveInfoRepository messageReceiveInfoRepository) {
-        this.messageReceiveInfoRepository = messageReceiveInfoRepository;
-    }
+  public MessageReceiveInfoServiceImpl(MessageReceiveInfoRepository messageReceiveInfoRepository) {
+    this.messageReceiveInfoRepository = messageReceiveInfoRepository;
+  }
 
-    @Override
-    public MessageReceiveInfoDto create(MessageReceiveInfoDto dto) {
-        MessageReceiveInfo entity = new MessageReceiveInfo(
-                dto.channelId(),
-                dto.userId(),
-                dto.read(),
-                dto.alarmOn()
-        );
-        messageReceiveInfoRepository.save(entity);
-        return new MessageReceiveInfoDto(
-                entity.getId(),
-                entity.getChannelId(),
-                entity.getUserId(),
-                entity.isRead(),
-                entity.isAlarmOn()
-        );
-    }
-    @Override
-    public MessageReceiveInfoDto update(UUID id, MessageReceiveInfoDto dto) {
-        MessageReceiveInfo entity = messageReceiveInfoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("MessageReceiveInfo not found"));
-        entity.setChannelId(dto.channelId());
-        entity.setUserId(dto.userId());
-        entity.setRead(dto.read());
-        entity.setAlarmOn(dto.alarmOn());
-        messageReceiveInfoRepository.save(entity);
-        return new MessageReceiveInfoDto(
-                entity.getId(),
-                entity.getChannelId(),
-                entity.getUserId(),
-                entity.isRead(),
-                entity.isAlarmOn()
-        );
-    }
+  @Override
+  public MessageReceiveInfoDto create(MessageReceiveInfoDto dto) {
+    MessageReceiveInfo entity = new MessageReceiveInfo(
+        dto.channelId(),
+        dto.userId(),
+        dto.read(),
+        dto.alarmOn()
+    );
+    messageReceiveInfoRepository.save(entity);
+    return new MessageReceiveInfoDto(
+        entity.getId(),
+        entity.getChannelId(),
+        entity.getUserId(),
+        entity.isRead(),
+        entity.isAlarmOn()
+    );
+  }
 
-    @Override
-    public List<MessageReceiveInfoDto> findByUserId(UUID userId) {
-        return messageReceiveInfoRepository.findByUserId(userId)
-                .stream()
-                .map(entity -> new MessageReceiveInfoDto(
-                        entity.getId(),
-                        entity.getChannelId(),
-                        entity.getUserId(),
-                        entity.isRead(),
-                        entity.isAlarmOn()
-                ))
-                .collect(Collectors.toList());
-    }
+  @Override
+  public MessageReceiveInfoDto find(UUID id) {
+    MessageReceiveInfo entity = messageReceiveInfoRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("MessageReceiveInfo not found"));
+    return new MessageReceiveInfoDto(
+        entity.getId(),
+        entity.getChannelId(),
+        entity.getUserId(),
+        entity.isRead(),
+        entity.isAlarmOn()
+    );
+  }
+
+  @Override
+  public MessageReceiveInfoDto update(UUID id, MessageReceiveInfoDto dto) {
+    MessageReceiveInfo entity = messageReceiveInfoRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("MessageReceiveInfo not found"));
+    entity.setChannelId(dto.channelId());
+    entity.setUserId(dto.userId());
+    entity.setRead(dto.read());
+    entity.setAlarmOn(dto.alarmOn());
+    messageReceiveInfoRepository.save(entity);
+    return new MessageReceiveInfoDto(
+        entity.getId(),
+        entity.getChannelId(),
+        entity.getUserId(),
+        entity.isRead(),
+        entity.isAlarmOn()
+    );
+  }
+
+  @Override
+  public List<MessageReceiveInfoDto> findByUserId(UUID userId) {
+    return messageReceiveInfoRepository.findByUserId(userId)
+        .stream()
+        .map(entity -> new MessageReceiveInfoDto(
+            entity.getId(),
+            entity.getChannelId(),
+            entity.getUserId(),
+            entity.isRead(),
+            entity.isAlarmOn()
+        ))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public MessageReceiveInfoDto delete(UUID id) {
+    MessageReceiveInfo entity = messageReceiveInfoRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("MessageReceiveInfo not found"));
+    messageReceiveInfoRepository.deleteById(id);
+    return new MessageReceiveInfoDto(
+        entity.getId(),
+        entity.getChannelId(),
+        entity.getUserId(),
+        entity.isRead(),
+        entity.isAlarmOn()
+    );
+  }
 }
 

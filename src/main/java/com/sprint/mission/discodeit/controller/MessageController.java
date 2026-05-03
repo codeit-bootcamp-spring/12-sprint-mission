@@ -11,33 +11,40 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/messages")
 public class MessageController {
-    private final MessageService messageService;
 
-    public MessageController(MessageService messageService) {
-        this.messageService = messageService;
-    }
+  private final MessageService messageService;
 
-    // Send Message
-    @RequestMapping(method = RequestMethod.POST)
-    public MessageDto createMessage(@RequestBody MessageDto messageDto) {
-        return messageService.send(messageDto);
-    }
+  public MessageController(MessageService messageService) {
+    this.messageService = messageService;
+  }
 
-    // Edit Message
-    @RequestMapping(value = "/id", method = RequestMethod.PUT)
-    public MessageDto updateMessage(@PathVariable UID id, @RequestBody MessageDto messageDto) {
-        return messageService.update(id, messageDto);
-    }
+  // Send Message
+  @PostMapping
+  public MessageDto createMessage(@RequestBody MessageDto messageDto) {
+    return messageService.send(messageDto);
+  }
 
-    // Delete Message
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public MessageDto deleteMessage(@PathVariable UUID id) {
-        return messageService.delete(id);
-    }
+  // Find Message by ID
+  @GetMapping("/{id}")
+  public MessageDto getMessage(@PathVariable UUID id) {
+    return messageService.find(id);
+  }
 
-    // Find Message by User
-    @RequestMapping(value = "/channel/{channelId}", method = RequestMethod.GET)
-    public List<MessageDto> getMessagesByChannel(@PathVariable UUID channelId) {
-        return messageService.findByChannelId(channelId);
-    }
+  // Edit Message
+  @PutMapping("/{id}")
+  public MessageDto updateMessage(@PathVariable UUID id, @RequestBody MessageDto messageDto) {
+    return messageService.update(id, messageDto);
+  }
+
+  // Delete Message
+  @DeleteMapping("/{id}")
+  public MessageDto deleteMessage(@PathVariable UUID id) {
+    return messageService.delete(id);
+  }
+
+  // Find Message by Channel
+  @GetMapping
+  public List<MessageDto> getMessagesByChannel(@RequestParam UUID channelId) {
+    return messageService.findByChannelId(channelId);
+  }
 }
