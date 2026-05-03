@@ -8,39 +8,37 @@ import java.util.UUID;
 
 @Getter
 public class ReadStatus implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    private UUID id;
-    private UUID userId;
-    private UUID channelId;
+  private static final long serialVersionUID = 1L;
 
-    private Instant createdAt;
-    private Instant updatedAt;
+  private UUID id;
+  private UUID userId;
+  private UUID channelId;
 
-    public ReadStatus(UUID userId, UUID channelId) {
-        this.id = UUID.randomUUID();
-        this.userId = userId;
-        this.channelId = channelId;
+  private Instant createdAt;
+  private Instant updatedAt;
+  private Instant lastReadAt;
 
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+  public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
+    this.id = UUID.randomUUID();
+    this.userId = userId;
+    this.channelId = channelId;
+
+    this.createdAt = Instant.now();
+    this.updatedAt = Instant.now();
+    this.lastReadAt = lastReadAt;
+  }
+
+  public void update(Instant newLastReadAt) {
+    boolean anyValueUpdated = false;
+
+    if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
+      this.lastReadAt = newLastReadAt;
+      anyValueUpdated = true;
     }
 
-    public void update(UUID userId, UUID channelId) {
-        boolean anyValueUpdated = false;
-
-        if (userId != null && !userId.equals(this.userId)) {
-            this.userId = userId;
-            anyValueUpdated = true;
-        }
-
-        if (channelId != null && !channelId.equals(this.channelId)) {
-            this.channelId = channelId;
-            anyValueUpdated = true;
-        }
-
-        if (!anyValueUpdated) {
-            this.updatedAt = Instant.now();
-        }
+    if (!anyValueUpdated) {
+      this.updatedAt = Instant.now();
     }
+  }
 }

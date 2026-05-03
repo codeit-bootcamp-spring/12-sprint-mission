@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.entity;
 
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -12,28 +13,38 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 public class UserStatus implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    private UUID id;
-    private UUID userId;
+  private static final long serialVersionUID = 1L;
 
-    private Instant createdAt;
-    private Instant updatedAt;
+  private UUID id;
+  private UUID userId;
 
-    public UserStatus(UUID userId) {
-        this.id = UUID.randomUUID();
-        this.userId = userId;
+  private Instant createdAt;
+  private Instant updatedAt;
+  private Instant lastActiveAt;
 
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+  public UserStatus(UUID userId, Instant lastActiveAt) {
+    this.id = UUID.randomUUID();
+    this.userId = userId;
+
+    this.createdAt = Instant.now();
+    this.lastActiveAt = lastActiveAt;
+  }
+
+  public void updateTimestamp(Instant lastActiveAt) {
+    boolean anyValueUpdated = false;
+    if (lastActiveAt != null && !lastActiveAt.equals(this.lastActiveAt)) {
+      anyValueUpdated = true;
+      this.lastActiveAt = lastActiveAt;
     }
 
-    public void updateTimestamp() {
-        this.updatedAt = Instant.now();
+    if (anyValueUpdated) {
+      this.updatedAt = Instant.now();
     }
+  }
 
-    public boolean isUserOnline() {
-        Instant threshold = Instant.now().minus(5, ChronoUnit.MINUTES);
-        return updatedAt.isAfter(threshold);
-    }
+  public boolean isUserOnline() {
+    Instant threshold = Instant.now().minus(5, ChronoUnit.MINUTES);
+    return lastActiveAt.isAfter(threshold);
+  }
 }

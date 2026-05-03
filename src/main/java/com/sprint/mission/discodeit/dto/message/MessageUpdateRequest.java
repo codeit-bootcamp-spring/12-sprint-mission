@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 public record MessageUpdateRequest(
-        @NonNull
-        UUID id,
-        String content,
-        List<UUID> attachmentIds
+    UUID id,
+    String content
 ) {
+
 }

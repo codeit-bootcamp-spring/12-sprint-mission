@@ -5,8 +5,8 @@ import com.sprint.mission.discodeit.entity.User;
 import java.util.List;
 import java.util.UUID;
 
-public record PrivateChannelCreateRequest (
-        String name,
-        List<UUID> userIds
+public record PrivateChannelCreateRequest(
+    List<UUID> participantIds
 ) {
+
 }

@@ -9,11 +9,16 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-//    User create(String username, String email, String password);
-    User create(UserCreateRequest request);
-    UserDto find(UUID userId);
-    List<UserDto> findAll();
-    UserDto update(UserUpdateRequest request);
-    void delete(UUID userId);
-    // 이거로 전부 수정 예정
+
+  //    User create(String newUsername, String newEmail, String newPassword);
+  User create(UserCreateRequest request);
+
+  UserDto find(UUID userId);
+
+  List<UserDto> findAll();
+
+  UserDto update(UserUpdateRequest request);
+
+  void delete(UUID userId);
+  // 이거로 전부 수정 예정
 }

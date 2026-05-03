@@ -12,7 +12,7 @@ public record UserDto(
         Instant updatedAt,
         String username,
         String email,
-        UUID profileImageId,
+        UUID profileId,
         boolean online
 
 ) {
@@ -23,7 +23,7 @@ public record UserDto(
                 user.getUpdatedAt(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getProfileImageId(),
+                user.getProfileId(),
                 status.isUserOnline());
     }
 }
