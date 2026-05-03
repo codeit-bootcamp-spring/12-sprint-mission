@@ -1,8 +1,5 @@
 package com.sprint.mission.discodeit.dto.data;
 
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
-
 import java.time.Instant;
 import java.util.UUID;
 
@@ -15,15 +12,4 @@ public record UserDto(
         UUID profileId,
         Boolean online
 ) {
-    public static UserDto from(User user, UserStatus userStatus) {
-        return new UserDto(
-                user.getId(),
-                user.getCreatedAt(),
-                user.getUpdatedAt(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getProfileId(),
-                userStatus != null && userStatus.isOnline()
-        );
-    }
 }
