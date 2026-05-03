@@ -5,4 +5,4 @@ nixPkgs = ["jdk17"]
 cmds = ["./gradlew clean build -x check -x test"]
 
 [start]
-cmd = "java -jar build/libs/*.jar"
+cmd = "java -jar build/libs/discodeit-0.0.1-SNAPSHOT.jar"
