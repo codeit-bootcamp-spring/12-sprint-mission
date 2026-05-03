@@ -20,7 +20,7 @@ public class AuthController implements AuthApi {
   public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
     User user = authService.login(loginRequest);
     return ResponseEntity
-        .status(HttpStatus.CREATED)
+        .status(HttpStatus.OK)
         .body(user);
   }
 }
