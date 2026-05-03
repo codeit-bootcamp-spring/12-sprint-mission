@@ -1,8 +1,0 @@
-{
-  "build": {
-    "cmd": "./gradlew clean bootJar -x test"
-  },
-  "deploy": {
-    "cmd": "java -jar build/libs/discodeit-0.0.1-SNAPSHOT.jar"
-  }
-}
