@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,15 +19,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Controller
-@ResponseBody
-@RequestMapping("/api/message")
+@RestController
+@RequestMapping("/api/messages")
 public class MessageController {
 
   private final MessageService messageService;
 
   @RequestMapping(
-      path = "create",
+      method = RequestMethod.POST,
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<Message> create(
@@ -56,8 +54,8 @@ public class MessageController {
         .body(createdMessage);
   }
 
-  @RequestMapping(path = "update")
-  public ResponseEntity<Message> update(@RequestParam("messageId") UUID messageId,
+  @RequestMapping(path = "/{messageId}", method = RequestMethod.PATCH)
+  public ResponseEntity<Message> update(@PathVariable UUID messageId,
       @RequestBody MessageUpdateRequest request) {
     Message updatedMessage = messageService.update(messageId, request);
     return ResponseEntity
@@ -65,15 +63,15 @@ public class MessageController {
         .body(updatedMessage);
   }
 
-  @RequestMapping(path = "delete")
-  public ResponseEntity<Void> delete(@RequestParam("messageId") UUID messageId) {
+  @RequestMapping(path = "/{messageId}",method = RequestMethod.DELETE)
+  public ResponseEntity<Void> delete(@PathVariable UUID messageId) {
     messageService.delete(messageId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
   }
 
-  @RequestMapping("findAllByChannelId")
+  @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<List<Message>> findAllByChannelId(
       @RequestParam("channelId") UUID channelId) {
     List<Message> messages = messageService.findAllByChannelId(channelId);

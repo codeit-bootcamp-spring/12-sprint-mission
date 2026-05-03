@@ -13,27 +13,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Controller
-@ResponseBody
-@RequestMapping("/api/user")
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
   private final UserService userService;
   private final UserStatusService userStatusService;
 
   @RequestMapping(
-      path = "create",
-      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+      method = RequestMethod.POST
   )
   public ResponseEntity<User> create(
       @RequestPart("userCreateRequest") UserCreateRequest userCreateRequest,
@@ -48,11 +47,12 @@ public class UserController {
   }
 
   @RequestMapping(
-      path = "update",
-      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
+      path = "/{userId}",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+      method = RequestMethod.PATCH
   )
   public ResponseEntity<User> update(
-      @RequestParam("userId") UUID userId,
+      @PathVariable UUID userId,
       @RequestPart("userUpdateRequest") UserUpdateRequest userUpdateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
@@ -64,15 +64,15 @@ public class UserController {
         .body(updatedUser);
   }
 
-  @RequestMapping(path = "delete")
-  public ResponseEntity<Void> delete(@RequestParam("userId") UUID userId) {
+  @RequestMapping(path = "/{userId}", method = RequestMethod.DELETE)
+  public ResponseEntity<Void> delete(@PathVariable UUID userId) {
     userService.delete(userId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
   }
 
-  @RequestMapping(path = "findAll")
+  @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<List<UserDto>> findAll() {
     List<UserDto> users = userService.findAll();
     return ResponseEntity
@@ -80,9 +80,11 @@ public class UserController {
         .body(users);
   }
 
-  @RequestMapping(path = "updateUserStatusByUserId")
-  public ResponseEntity<UserStatus> updateUserStatusByUserId(@RequestParam("userId") UUID userId,
-      @RequestBody UserStatusUpdateRequest request) {
+  @RequestMapping(path = "/{userId}/userStatus",
+  method = RequestMethod.PATCH)
+  public ResponseEntity<UserStatus> updateUserStatusByUserId(
+      @PathVariable UUID userId) {
+    UserStatusUpdateRequest request = new UserStatusUpdateRequest(Instant.now());
     UserStatus updatedUserStatus = userStatusService.updateByUserId(userId, request);
     return ResponseEntity
         .status(HttpStatus.OK)
