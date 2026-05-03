@@ -1,9 +1,12 @@
 package com.sprint.mission.discodeit.service;
 
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,19 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-  User create(UserDto userDto);
+  UserDto create(UserCreateRequest request, Optional<BinaryContentCreateRequest> profile);
 
   UserDto find(UUID userId);
 
   List<UserDto> findAll();
 
-  User update(UUID Id, UserDto userDto);
+  UserDto update(UUID userId, UserUpdateRequest request,
+      Optional<BinaryContentCreateRequest> profile);
 
-  UserDto delete(UUID userId);
-
-  User updateOnlineStatus(UUID userId, Boolean online);
-
-  User login(String username, String password);
-
-  UserDto createUser(UserCreateRequest request, MultipartFile profile);
+  void delete(UUID userId);
 }

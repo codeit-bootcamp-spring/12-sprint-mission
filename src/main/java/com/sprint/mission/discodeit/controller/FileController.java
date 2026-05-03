@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.controller;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+@Tag(name = "File Controller")
 @RestController
 @RequestMapping("/api/files")
 public class FileController {

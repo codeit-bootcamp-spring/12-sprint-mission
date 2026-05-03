@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
-@Service
 
 public interface BinaryContentService {
 
@@ -15,7 +14,7 @@ public interface BinaryContentService {
 
   BinaryContent find(UUID binaryContentId);
 
-  List<BinaryContent> findAll();
+  List<BinaryContent> findAllByIdIn(List<UUID> binaryContentIds);
 
   void delete(UUID binaryContentId);
 
