@@ -10,17 +10,19 @@ import java.util.UUID;
 public class Channel implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
-    private Long createdAt;
-    private Long updatedAt;
-    //
+
+    // 시간 타입 변경 Long -> Instant
+    private Instant createdAt;
+    private Instant updatedAt;
+
     private ChannelType type;
     private String name;
     private String description;
 
     public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
-        this.createdAt = Instant.now().getEpochSecond();
-        //
+        this.createdAt = Instant.now();
+
         this.type = type;
         this.name = name;
         this.description = description;
@@ -38,7 +40,7 @@ public class Channel implements Serializable {
         }
 
         if (anyValueUpdated) {
-            this.updatedAt = Instant.now().getEpochSecond();
+            this.updatedAt = Instant.now();
         }
     }
 
