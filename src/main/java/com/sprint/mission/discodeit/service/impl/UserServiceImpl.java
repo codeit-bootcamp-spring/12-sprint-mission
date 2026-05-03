@@ -79,10 +79,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User login(String email, String password) {
-
-    return (User) userRepository.findByEmail(email)
+  public User login(String username, String password) {
+    User user = (User) userRepository.findByUsername(username)
         .orElseThrow(() -> new RuntimeException("Login failed"));
+
+    if (!user.getPassword().equals(password)) {
+      throw new RuntimeException("Login failed");
+    }
+
+    return user;
   }
 
   @Override
