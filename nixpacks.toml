@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ["jdk17"]
+nixPkgs = ["jdk17_headless"]
 
 [phases.build]
-cmds = ["./gradlew clean build -x check -x test"]
+cmds = ["./gradlew clean bootJar -x test"]
 
 [start]
 cmd = "java -jar build/libs/discodeit-0.0.1-SNAPSHOT.jar"
