@@ -6,25 +6,30 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.nio.file.AccessDeniedException;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
+@ResponseBody
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseBody
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
-        return ResponseEntity
-                .badRequest()
-                .body("잘못된 요청입니다: " + ex.getMessage());
-    }
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<String> handleException(IllegalArgumentException e) {
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(e.getMessage());
+  }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseBody
-    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex){
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body("접근이 거부되었습니다: " + ex.getMessage());
-    }
+  @ExceptionHandler(NoSuchElementException.class)
+  public ResponseEntity<String> handleException(NoSuchElementException e) {
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+  }
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleException(Exception e) {
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(e.getMessage());
+  }
 }
