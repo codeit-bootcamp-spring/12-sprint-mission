@@ -1,63 +1,98 @@
 package com.sprint.mission.discodeit.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.MessageService;
-import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@RestController
-@RequestMapping("/messages")
+@RequiredArgsConstructor
+@Controller
+@ResponseBody
+@RequestMapping("/api/messages")
 public class MessageController {
 
-    private final MessageService messageService;
+  private final MessageService messageService;
+  private final ObjectMapper objectMapper;
 
-    public MessageController(MessageService messageService){
-        this.messageService = messageService;
-    }
+  @RequestMapping(
+      method = RequestMethod.POST,
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+  )
+  public ResponseEntity<Message> create(
+      @RequestPart("messageCreateRequest") String messageCreateRequestJson,
+      @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
+  ) {
+    try {
+      MessageCreateRequest messageCreateRequest =
+          objectMapper.readValue(messageCreateRequestJson, MessageCreateRequest.class);
 
-    // 메시지 생성
-    @RequestMapping(method = RequestMethod.POST)
-    public Message create(
-            @RequestBody MessageCreateRequest request
-    ){
-        return messageService.create(request,new ArrayList<>());
-    }
+      List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
+          .map(files -> files.stream()
+              .filter(file -> !file.isEmpty())
+              .map(file -> {
+                try {
+                  return new BinaryContentCreateRequest(
+                      file.getOriginalFilename(),
+                      file.getContentType(),
+                      file.getBytes()
+                  );
+                } catch (IOException e) {
+                  throw new RuntimeException("첨부 파일 변환 실패", e);
+                }
+              })
+              .toList())
+          .orElse(new ArrayList<>());
 
-    // 메시지 단건 조회
-    @RequestMapping(value="/{messageId}", method = RequestMethod.GET)
-    public Message find(
-            @PathVariable UUID messageId
-    ){
-        return messageService.find(messageId);
-    }
+      Message createdMessage = messageService.create(messageCreateRequest, attachmentRequests);
 
-    // 채널 메시지 목록 조회
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Message> findAllByChannelId(
-            @RequestParam UUID channelId
-    ){
-        return messageService.findAllByChannelId(channelId);
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .body(createdMessage);
+    } catch (IOException e) {
+      throw new RuntimeException("Message 생성 요청 JSON 파싱 실패", e);
     }
+  }
 
-    // 수정
-    @RequestMapping(value="/{messageId}", method = RequestMethod.PATCH)
-    public Message update(
-            @PathVariable UUID messageId,
-            @RequestBody MessageUpdateRequest request
-    ){
-        return messageService.update(messageId, request);
-    }
+  @RequestMapping(path = "/{messageId}", method = RequestMethod.PATCH)
+  public ResponseEntity<Message> update(
+      @PathVariable("messageId") UUID messageId,
+      @RequestBody MessageUpdateRequest request
+  ) {
+    Message updatedMessage = messageService.update(messageId, request);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(updatedMessage);
+  }
 
-    // 삭제
-    @RequestMapping(value="/{messageId}", method = RequestMethod.DELETE)
-    public void delete(
-            @PathVariable UUID messageId
-    ){
-        messageService.delete(messageId);
-    }
+  @RequestMapping(path = "/{messageId}", method = RequestMethod.DELETE)
+  public ResponseEntity<Void> delete(@PathVariable("messageId") UUID messageId) {
+    messageService.delete(messageId);
+    return ResponseEntity
+        .status(HttpStatus.NO_CONTENT)
+        .build();
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity<List<Message>> findAllByChannelId(
+      @RequestParam("channelId") UUID channelId
+  ) {
+    List<Message> messages = messageService.findAllByChannelId(channelId);
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(messages);
+  }
 }
