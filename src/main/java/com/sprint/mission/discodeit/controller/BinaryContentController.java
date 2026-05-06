@@ -27,8 +27,8 @@ public class BinaryContentController implements BinaryContentApi {
   @GetMapping("/{binaryContentId}")
   @Override
   public ResponseEntity<BinaryContent> findById(@PathVariable UUID binaryContentId) {
-    BinaryContent binaryContents = binaryContentService.find(binaryContentId);
-    return ResponseEntity.ok(binaryContents);
+    BinaryContent binaryContent = binaryContentService.find(binaryContentId);
+    return ResponseEntity.ok(binaryContent);
   }
 
   @GetMapping()
