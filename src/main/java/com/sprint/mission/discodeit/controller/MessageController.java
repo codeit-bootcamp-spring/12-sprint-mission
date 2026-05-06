@@ -70,7 +70,7 @@ public class MessageController implements MessageApi {
     return ResponseEntity.ok(messageService.findAllByChannelId(channelId));
   }
 
-  public BinaryContentCreateRequest resolveProfileRequest(MultipartFile file) {
+  private BinaryContentCreateRequest resolveProfileRequest(MultipartFile file) {
     if (file.isEmpty()) {
       return null;
     }

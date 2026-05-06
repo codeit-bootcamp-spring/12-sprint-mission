@@ -9,14 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-  public OpenAPI swaggerBasic() {
-    return new OpenAPI()
-        .info(new io.swagger.v3.oas.models.info.Info()
-            .title("Discodeit API 문서")
-            .description("Discodeit 프로젝트의 Swagger API 문서입니다.")
-        );
-  }
-
   @Bean
   public OpenAPI swagger() {
     return new OpenAPI()

@@ -30,7 +30,9 @@ public interface MessageApi {
       )
   })
   ResponseEntity<Message> create(
+      @Parameter(description = "Message 생성 정보")
       @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
+      @Parameter(description = "Message 첨부 파일들")
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments);
 
   @Operation(summary = "Message 내용 수정", operationId = "update_2")
