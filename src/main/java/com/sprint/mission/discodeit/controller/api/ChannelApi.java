@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.controller.api;
 
-import com.sprint.mission.discodeit.dto.data.ChannelDto;
+import com.sprint.mission.discodeit.dto.data.channel.ChannelDto;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
@@ -21,14 +21,14 @@ public interface ChannelApi {
 
   @Operation(summary = "Public Channel 생성")
   @ApiResponse(responseCode = "201", description = "Public Channel이 성공적으로 생성됨")
-  ResponseEntity<Channel> create(
+  ResponseEntity<ChannelDto> create(
       @Parameter(description = "Public Channel 생성 정보")
       PublicChannelCreateRequest request
   );
 
   @Operation(summary = "Private Channel 생성")
   @ApiResponse(responseCode = "201", description = "Private Channel이 성공적으로 생성됨")
-  ResponseEntity<Channel> create(
+  ResponseEntity<ChannelDto> create(
       @Parameter(description = "Private Channel 생성 정보")
       PrivateChannelCreateRequest request
   );
@@ -43,7 +43,7 @@ public interface ChannelApi {
           content = @Content(examples = @ExampleObject(value = "Channel with id {channelId} not found"))
       )
   })
-  ResponseEntity<Channel> update(
+  ResponseEntity<ChannelDto> update(
       @Parameter(description = "수정할 Channel ID")
       UUID channelId,
 

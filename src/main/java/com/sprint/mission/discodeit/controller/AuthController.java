@@ -1,34 +1,35 @@
-package com.sprint.mission.discodeit.controller;
+package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.controller.api.AuthApi;
+import com.sprint.mission.discodeit.dto.data.user.UserDto;
+import com.sprint.mission.discodeit.dto.data.user.UserDtoMapper;
 import com.sprint.mission.discodeit.dto.request.LoginRequest;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
-public class AuthController implements AuthApi {
+@Service
+public class BasicAuthService implements AuthService {
 
-    private final AuthService authService;
+  private final UserRepository userRepository;
+  private final UserDtoMapper userDtoMapper;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            User user = authService.login(loginRequest);
-            return ResponseEntity.status(HttpStatus.OK).body(user);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+  @Override
+  public UserDto login(LoginRequest loginRequest) {
+    String username = loginRequest.username();
+    String password = loginRequest.password();
+
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(
+            () -> new NoSuchElementException("User with username " + username + " not found"));
+
+    if (!user.getPassword().equals(password)) {
+      throw new IllegalArgumentException("Wrong password");
     }
+    return userDtoMapper.toDto(user);
+  }
 }

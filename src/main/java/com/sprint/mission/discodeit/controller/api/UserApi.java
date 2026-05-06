@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.controller.api;
 
-import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.data.user.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
@@ -29,7 +29,7 @@ public interface UserApi {
           content = @Content(examples = @ExampleObject(value = "User with email {email} already exists"))
       )
   })
-  ResponseEntity<User> create(
+  ResponseEntity<UserDto> create(
       @Parameter(description = "User 생성 정보")
       UserCreateRequest userCreateRequest,
 
@@ -47,7 +47,7 @@ public interface UserApi {
           content = @Content(examples = @ExampleObject(value = "User with id {userId} not found"))
       )
   })
-  ResponseEntity<User> update(
+  ResponseEntity<UserDto> update(
       @Parameter(description = "수정할 User ID")
       UUID userId,
 

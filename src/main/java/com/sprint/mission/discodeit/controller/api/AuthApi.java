@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.controller.api;
 
+import com.sprint.mission.discodeit.dto.data.user.UserDto;
 import com.sprint.mission.discodeit.dto.request.LoginRequest;
 import com.sprint.mission.discodeit.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +24,7 @@ public interface AuthApi {
           content = @Content(examples = @ExampleObject(value = "User with username {username} not found"))
       )
   })
-  ResponseEntity<User> login(
+  ResponseEntity<UserDto> login(
       @Parameter(description = "로그인 정보")
       LoginRequest loginRequest
   );

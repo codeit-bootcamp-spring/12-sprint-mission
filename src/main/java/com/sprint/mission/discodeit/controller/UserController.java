@@ -1,19 +1,16 @@
 package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.UserApi;
-import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.data.user.UserDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
-import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
-import com.sprint.mission.discodeit.exception.UserAlreadyException;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
-import com.sprint.mission.discodeit.util.BinaryContentRequestConverter;
+import com.sprint.mission.discodeit.common.util.BinaryContentRequestConverter;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -31,50 +28,37 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController implements UserApi {
+
   private final UserService userService;
   private final UserStatusService userStatusService;
 
   @RequestMapping(method = RequestMethod.POST, consumes = "multipart/form-data")
-  public ResponseEntity<User> create(
+  public ResponseEntity<UserDto> create(
       @RequestPart UserCreateRequest userCreateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
-    try {
-      Optional<BinaryContentCreateRequest> optionalProfileCreateRequest =
-          BinaryContentRequestConverter.convert(profile);
-      User user = userService.create(userCreateRequest, optionalProfileCreateRequest);
-      return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    } catch (UserAlreadyException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    Optional<BinaryContentCreateRequest> optionalProfileCreateRequest =
+        BinaryContentRequestConverter.convert(profile);
+    UserDto userDto = userService.create(userCreateRequest, optionalProfileCreateRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
   }
 
   @RequestMapping(value = "/{userId}", method = RequestMethod.PATCH, consumes = "multipart/form-data")
-  public ResponseEntity<User> update(
+  public ResponseEntity<UserDto> update(
       @PathVariable UUID userId,
       @RequestPart UserUpdateRequest userUpdateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
-    try {
-      Optional<BinaryContentCreateRequest> optionalProfileCreateRequest =
-          BinaryContentRequestConverter.convert(profile);
-      User user = userService.update(userId, userUpdateRequest, optionalProfileCreateRequest);
-      return ResponseEntity.status(HttpStatus.OK).body(user);
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    Optional<BinaryContentCreateRequest> optionalProfileCreateRequest =
+        BinaryContentRequestConverter.convert(profile);
+    UserDto userDto = userService.update(userId, userUpdateRequest, optionalProfileCreateRequest);
+    return ResponseEntity.status(HttpStatus.OK).body(userDto);
   }
 
   @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
   public ResponseEntity<Void> delete(@PathVariable UUID userId) {
-    try {
-      userService.delete(userId);
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+    userService.delete(userId);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
   @RequestMapping(method = RequestMethod.GET)
@@ -88,11 +72,7 @@ public class UserController implements UserApi {
       @PathVariable UUID userId,
       @RequestBody UserStatusUpdateRequest userStatusUpdateRequest
   ) {
-    try {
-      UserStatus status = userStatusService.updateByUserId(userId, userStatusUpdateRequest);
-      return ResponseEntity.status(HttpStatus.OK).body(status);
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+    UserStatus status = userStatusService.updateByUserId(userId, userStatusUpdateRequest);
+    return ResponseEntity.status(HttpStatus.OK).body(status);
   }
 }
