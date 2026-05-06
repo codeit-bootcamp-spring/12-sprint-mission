@@ -29,10 +29,10 @@ public class BasicUserService implements UserService {
   private final UserStatusRepository userStatusRepository;
 
   @Override
-  public UserDto create(UserCreateRequest request,
+  public UserDto create(UserCreateRequest userCreateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
-    String username = request.username();
-    String email = request.email();
+    String username = userCreateRequest.username();
+    String email = userCreateRequest.email();
 
     if (userRepository.existsByEmail(email)) {
       throw new IllegalArgumentException("User with email " + email + " already exists");
@@ -43,19 +43,23 @@ public class BasicUserService implements UserService {
 
     UUID nullableProfileId = optionalProfileCreateRequest
         .map(profileRequest -> {
-          String fileName = profileRequest.fileName();
-          String contentType = profileRequest.contentType();
-          byte[] bytes = profileRequest.bytes();
-          BinaryContent binaryContent = new BinaryContent(fileName, (long) bytes.length,
-              contentType, bytes);
+          BinaryContent binaryContent = new BinaryContent(
+              profileRequest.fileName(),
+              (long) profileRequest.bytes().length,
+              profileRequest.contentType(),
+              profileRequest.bytes()
+          );
           return binaryContentRepository.save(binaryContent).getId();
         })
         .orElse(null);
 
-    User user = new User(username, email, request.password(), nullableProfileId);
+    User user = new User(username, email, userCreateRequest.password(), nullableProfileId);
     User createdUser = userRepository.save(user);
 
-    userStatusRepository.save(new UserStatus(createdUser.getId(), Instant.now()));
+    UserStatus savedStatus = userStatusRepository.save(
+        new UserStatus(createdUser.getId(), Instant.now()));
+    System.out.println(
+        ">>> Saved UserStatus id: " + savedStatus.getId() + " userId: " + savedStatus.getUserId());
 
     return toDto(createdUser);
   }
@@ -119,6 +123,11 @@ public class BasicUserService implements UserService {
     userStatusRepository.deleteByUserId(userId);
 
     userRepository.deleteById(userId);
+  }
+
+  @Override
+  public Optional<Object> findById(UUID id) {
+    return Optional.empty();
   }
 
   private UserDto toDto(User user) {

@@ -15,7 +15,6 @@ public class User implements Serializable {
   private UUID id;
   private Instant createdAt;
   private Instant updatedAt;
-  //
   private String username;
   private String email;
   private String password;
@@ -24,10 +23,6 @@ public class User implements Serializable {
   public User() {
     this.id = UUID.randomUUID();
     this.createdAt = Instant.now();
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.profileId = profileId;
   }
 
   public User(String username, String email, String password) {
@@ -39,6 +34,12 @@ public class User implements Serializable {
   }
 
   public User(String username, String email, String password, UUID nullableProfileId) {
+    this.id = UUID.randomUUID();
+    this.createdAt = Instant.now();
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.profileId = nullableProfileId;
   }
 
   public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
@@ -66,68 +67,34 @@ public class User implements Serializable {
 
   }
 
-  public UUID getId() {
-    return id;
-  }
-
   public void setId(UUID id) {
     this.id = id;
-  }
-
-  public Instant getCreatedAt() {
-    return createdAt;
   }
 
   public void setCreatedAt(Instant createdAt) {
     this.createdAt = createdAt;
   }
 
-  public Instant getUpdatedAt() {
-    return updatedAt;
-  }
-
   public void setUpdatedAt(Instant updatedAt) {
     this.updatedAt = updatedAt;
-  }
-
-  public String getUsername() {
-    return username;
   }
 
   public void setUsername(String username) {
     this.username = username;
   }
 
-  public String getEmail() {
-    return email;
-  }
-
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public void setPassword(String password) {
     this.password = password;
   }
 
-  public UUID getProfileId() {
-    return profileId;
-  }
-
   public void setProfileId(UUID profileId) {
     this.profileId = profileId;
   }
-
-  public void setOnline(Object online) {
-
-  }
-
-  public Object getOnline() {
-    return null;
-  }
 }
+
+
 

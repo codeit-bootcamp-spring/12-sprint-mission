@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
-
+@Service
 public interface UserService {
 
   UserDto create(UserCreateRequest request, Optional<BinaryContentCreateRequest> profile);
@@ -26,4 +26,6 @@ public interface UserService {
       Optional<BinaryContentCreateRequest> profile);
 
   void delete(UUID userId);
+
+  Optional<Object> findById(UUID id);
 }
