@@ -2,60 +2,44 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.Getter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 public class Channel implements Serializable {
-    private final UUID id;
-    private final UUID userId;
-    private String title;
-    private String description;
-    private final ChannelType type;
-    private final Instant createdAt;
-    private Instant updatedAt;
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
+  private UUID id;
+  private Instant createdAt;
+  private Instant updatedAt;
+  //
+  private ChannelType type;
+  private String name;
+  private String description;
 
-    public Channel(ChannelType type, String title, UUID userId, String description) {
-        id = UUID.randomUUID();
-        this.title = title;
-        this.userId = userId;
-        this.description = description;
-        this.type = type;
-        createdAt = Instant.now();
-        updatedAt = Instant.now();
+  public Channel(ChannelType type, String name, String description) {
+    this.id = UUID.randomUUID();
+    this.createdAt = Instant.now();
+    //
+    this.type = type;
+    this.name = name;
+    this.description = description;
+  }
+
+  public void update(String newName, String newDescription) {
+    boolean anyValueUpdated = false;
+    if (newName != null && !newName.equals(this.name)) {
+      this.name = newName;
+      anyValueUpdated = true;
+    }
+    if (newDescription != null && !newDescription.equals(this.description)) {
+      this.description = newDescription;
+      anyValueUpdated = true;
     }
 
-    public void update(String title, String description){
-        boolean isUpdated = false;
-
-        if(title != null){
-            this.title = title;
-            isUpdated = true;
-        }
-        if(description != null){
-            this.description = description;
-            isUpdated = true;
-        }
-
-        if(isUpdated){
-            this.updatedAt = Instant.now();
-        }
+    if (anyValueUpdated) {
+      this.updatedAt = Instant.now();
     }
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "id=" + id +
-                ", user=" + userId +
-                ", title='" + title + '\'' +
-                ", category='" + description + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}'+"\n";
-    }
+  }
 }

@@ -7,57 +7,54 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "jcf", matchIfMissing = true)
 @Repository
-@ConditionalOnProperty(name = "spring.service.type", havingValue = "jcf")
 public class JCFReadStatusRepository implements ReadStatusRepository {
-    private final Map<UUID,ReadStatus> data = new HashMap<>();
 
-    @Override
-    public ReadStatus save(ReadStatus readStatus) {
-        if(readStatus == null){
-            throw new NoSuchElementException("ReadStatus 객체가 비어있습니다.");
-        }
-        if(readStatus.getId() == null){
-            throw new NoSuchElementException("ReadStatus ID를 찾을 수 없습니다.");
-        }
-        data.put(readStatus.getId(),readStatus);
-        return data.get(readStatus.getId());
-    }
+  private final Map<UUID, ReadStatus> data;
 
-    @Override
-    public List<ReadStatus> findAll() {
-        return data.values().stream().toList();
-    }
+  public JCFReadStatusRepository() {
+    this.data = new HashMap<>();
+  }
 
-    @Override
-    public Optional<ReadStatus> findById(UUID id) {
-        return Optional.ofNullable(data.get(id));
-    }
+  @Override
+  public ReadStatus save(ReadStatus readStatus) {
+    this.data.put(readStatus.getId(), readStatus);
+    return readStatus;
+  }
 
-    @Override
-    public List<ReadStatus> findByChannelId(UUID channelId) {
-        return data.values().stream()
-                .filter(status->status.getChannelId().equals(channelId))
-                .toList();
-    }
+  @Override
+  public Optional<ReadStatus> findById(UUID id) {
+    return Optional.ofNullable(this.data.get(id));
+  }
 
-    @Override
-    public List<ReadStatus> findByUserId(UUID userId) {
-        return data.values().stream()
-                .filter(status->status.getUserId().equals(userId))
-                .toList();
-    }
+  @Override
+  public List<ReadStatus> findAllByUserId(UUID userId) {
+    return this.data.values().stream()
+        .filter(readStatus -> readStatus.getUserId().equals(userId))
+        .toList();
+  }
 
-    @Override
-    public Optional<ReadStatus> findByChannelIdAndUserId(UUID channelId, UUID userId) {
-        return data.values().stream()
-                .filter(status->
-                        status.getChannelId().equals(channelId) && status.getUserId().equals(userId))
-                .findFirst();
-    }
+  @Override
+  public List<ReadStatus> findAllByChannelId(UUID channelId) {
+    return this.data.values().stream()
+        .filter(readStatus -> readStatus.getChannelId().equals(channelId))
+        .toList();
+  }
 
-    @Override
-    public void delete(UUID id) {
-        data.remove(id);
-    }
+  @Override
+  public boolean existsById(UUID id) {
+    return this.data.containsKey(id);
+  }
+
+  @Override
+  public void deleteById(UUID id) {
+    this.data.remove(id);
+  }
+
+  @Override
+  public void deleteAllByChannelId(UUID channelId) {
+    this.findAllByChannelId(channelId)
+        .forEach(readStatus -> this.deleteById(readStatus.getId()));
+  }
 }
