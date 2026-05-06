@@ -18,7 +18,7 @@ public class Channel implements Serializable {
     private String name;
     private String description;
 
-    public Channel(ChannelType type, String name, String description) {
+    private Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
@@ -42,6 +42,14 @@ public class Channel implements Serializable {
         if (anyValueUpdated) {
             this.updatedAt = Instant.now();
         }
+    }
+
+    public static Channel createPublic(String name, String description) {
+        return new Channel(ChannelType.PUBLIC, name, description);
+    }
+
+    public static Channel createPrivate() {
+        return new Channel(ChannelType.PRIVATE, null, null);
     }
 
     @Override

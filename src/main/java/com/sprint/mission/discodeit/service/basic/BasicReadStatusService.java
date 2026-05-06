@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.domain.ReadStatus;
-import com.sprint.mission.discodeit.domain.user.UserStatus;
 import com.sprint.mission.discodeit.dto.readstatus.ReadStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.readstatus.ReadStatusResponse;
 import com.sprint.mission.discodeit.dto.readstatus.ReadStatusUpdateRequest;
@@ -12,7 +11,6 @@ import com.sprint.mission.discodeit.service.ReadStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -48,20 +46,22 @@ public class BasicReadStatusService implements ReadStatusService {
                 readStatus.getUserId(),
                 readStatus.getChannelId(),
                 readStatus.getLastReadAt(),
-                readStatus.getCreatedAt()
+                readStatus.getCreatedAt(),
+                readStatus.getUpdatedAt()
         );
     }
 
     @Override
     public ReadStatusResponse findById(UUID id) {
-        ReadStatus readStatus = readStatusRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("ReadStatus with id " + id + " not found"));
+        ReadStatus readStatus = getReadStatusOrThrow(id);
 
-        return new ReadStatusResponse(readStatus.getId(),
+        return new ReadStatusResponse(
+                readStatus.getId(),
                 readStatus.getUserId(),
                 readStatus.getChannelId(),
                 readStatus.getLastReadAt(),
-                readStatus.getCreatedAt()
+                readStatus.getCreatedAt(),
+                readStatus.getUpdatedAt()
         );
     }
 
@@ -73,17 +73,17 @@ public class BasicReadStatusService implements ReadStatusService {
                         readStatus.getUserId(),
                         readStatus.getChannelId(),
                         readStatus.getLastReadAt(),
-                        readStatus.getCreatedAt()
+                        readStatus.getCreatedAt(),
+                        readStatus.getUpdatedAt()
                 ))
                 .toList();
     }
 
     @Override
     public ReadStatusResponse update(UUID readStatusId, ReadStatusUpdateRequest dto) {
-        ReadStatus readStatus = readStatusRepository.findById(readStatusId)
-                .orElseThrow(() -> new NoSuchElementException("ReadStatus with id " + readStatusId + " not found"));
+        ReadStatus readStatus = getReadStatusOrThrow(readStatusId);
 
-        readStatus.update(dto.newReadAt());
+        readStatus.update(dto.newLastReadAt());
         readStatusRepository.save(readStatus);
 
         return new ReadStatusResponse(
@@ -91,13 +91,19 @@ public class BasicReadStatusService implements ReadStatusService {
                 readStatus.getUserId(),
                 readStatus.getChannelId(),
                 readStatus.getLastReadAt(),
-                readStatus.getCreatedAt()
+                readStatus.getCreatedAt(),
+                readStatus.getUpdatedAt()
         );
     }
 
     @Override
     public void delete(UUID id) {
-        findById(id);
+        getReadStatusOrThrow(id);
         readStatusRepository.deleteById(id);
+    }
+
+    private ReadStatus getReadStatusOrThrow(UUID readStatusId) {
+        return readStatusRepository.findById(readStatusId)
+                .orElseThrow(() -> new NoSuchElementException("ReadStatus with id " + readStatusId + " not found"));
     }
 }

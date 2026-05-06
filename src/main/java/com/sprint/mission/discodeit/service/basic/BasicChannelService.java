@@ -30,13 +30,12 @@ public class BasicChannelService implements ChannelService {
 
     @Override
     public ChannelResponse createPublicChannel(CreatePublicChannelRequest dto) {
-        ChannelType channelType = ChannelType.PUBLIC;
-        Channel channel = new Channel(channelType, dto.name(), dto.description());
+        Channel channel = Channel.createPublic(dto.name(), dto.description());
 
         channelRepository.save(channel);
 
         return new ChannelResponse(channel.getId(),
-                channelType,
+                channel.getType(),
                 channel.getName(),
                 channel.getDescription(),
                 channel.getCreatedAt(),
@@ -47,31 +46,28 @@ public class BasicChannelService implements ChannelService {
 
     @Override
     public ChannelResponse createPrivateChannel(CreatePrivateChannelRequest dto) {
-        ChannelType channelType = ChannelType.PRIVATE;
-        Channel channel = new Channel(channelType, null, null);
+        Channel channel = Channel.createPrivate();
         channelRepository.save(channel);
 
-        for (UUID userId : dto.userIds()) {
+        for (UUID userId : dto.participantIds()) {
             ReadStatus readStatus = new ReadStatus(userId, channel.getId(), Instant.MIN);
             readStatusRepository.save(readStatus);
         }
 
         return new ChannelResponse(
                 channel.getId(),
-                channelType,
+                channel.getType(),
                 channel.getName(),
                 channel.getDescription(),
                 channel.getCreatedAt(),
                 null,
-                dto.userIds()
+                dto.participantIds()
         );
     }
 
     @Override
     public ChannelResponse findById(UUID channelId) {
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() ->
-                        new NoSuchElementException("Channel with id " + channelId + " not found"));
+        Channel channel = getChannelOrThrow(channelId);
 
         Instant latestMessageAt = getLatestMessageAt(channel.getId());
 
@@ -134,9 +130,8 @@ public class BasicChannelService implements ChannelService {
     }
 
     @Override
-    public ChannelResponse update(UUID channelId , ChannelUpdateRequest dto) {
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new NoSuchElementException("Channel with id " + channelId + " not found"));
+    public ChannelResponse update(UUID channelId, ChannelUpdateRequest dto) {
+        Channel channel = getChannelOrThrow(channelId);
 
         if (channel.getType() == ChannelType.PRIVATE) {
             throw new IllegalStateException("Private channel cannot be updated");
@@ -159,9 +154,7 @@ public class BasicChannelService implements ChannelService {
 
     @Override
     public void delete(UUID channelId) {
-        if (!channelRepository.existsById(channelId)) {
-            throw new NoSuchElementException("Channel with id " + channelId + " not found");
-        }
+        getChannelOrThrow(channelId);
 
         List<Message> messages = messageRepository.findAllByChannelId(channelId);
         for (Message message : messages) {
@@ -181,6 +174,11 @@ public class BasicChannelService implements ChannelService {
                 .map(Message::getCreatedAt)
                 .max(Instant::compareTo)
                 .orElse(null);
+    }
+
+    private Channel getChannelOrThrow(UUID channelId) {
+        return channelRepository.findById(channelId)
+                .orElseThrow(() -> new NoSuchElementException("Channel with id " + channelId + " not found"));
     }
 }
 

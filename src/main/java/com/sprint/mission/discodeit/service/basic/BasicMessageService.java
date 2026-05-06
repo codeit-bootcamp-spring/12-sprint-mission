@@ -14,7 +14,6 @@ import com.sprint.mission.discodeit.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -59,6 +58,7 @@ public class BasicMessageService implements MessageService {
         return new MessageResponse(
                 message.getId(),
                 message.getCreatedAt(),
+                message.getUpdatedAt(),
                 message.getContent(),
                 message.getChannelId(),
                 message.getAuthorId(),
@@ -68,33 +68,27 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public Message find(UUID messageId) {
-        return messageRepository.findById(messageId)
-                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
+        return getMessageOrThrow(messageId);
     }
 
     @Override
     public List<MessageResponse> findAllByChannelId(UUID channelId) {
-        List<Message> messageList = messageRepository.findAllByChannelId(channelId);
-        List<MessageResponse> messageResponseList = new ArrayList<>();
-
-        for (Message message : messageList) {
-            MessageResponse messageResponse = new MessageResponse(
-                    message.getId(),
-                    message.getCreatedAt(),
-                    message.getContent(),
-                    message.getChannelId(),
-                    message.getAuthorId(),
-                    message.getAttachmentIds()
-            );
-            messageResponseList.add(messageResponse);
-        }
-        return messageResponseList;
+        return messageRepository.findAllByChannelId(channelId).stream()
+                .map(message -> new MessageResponse(
+                        message.getId(),
+                        message.getCreatedAt(),
+                        message.getUpdatedAt(),
+                        message.getContent(),
+                        message.getChannelId(),
+                        message.getAuthorId(),
+                        message.getAttachmentIds()
+                ))
+                .toList();
     }
 
     @Override
     public MessageResponse update(UUID messageId, MessageUpdateRequest dto) {
-        Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
+        Message message = getMessageOrThrow(messageId);
 
         message.update(dto.newContent());
         messageRepository.save(message);
@@ -102,6 +96,7 @@ public class BasicMessageService implements MessageService {
         return new MessageResponse(
                 message.getId(),
                 message.getCreatedAt(),
+                message.getUpdatedAt(),
                 message.getContent(),
                 message.getChannelId(),
                 message.getAuthorId(),
@@ -111,12 +106,16 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public void delete(UUID messageId) {
-        Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
+        Message message = getMessageOrThrow(messageId);
 
         for (UUID attachmentId : message.getAttachmentIds()) {
             binaryContentRepository.deleteById(attachmentId);
         }
         messageRepository.deleteById(messageId);
+    }
+
+    private Message getMessageOrThrow(UUID messageId) {
+        return messageRepository.findById(messageId)
+                .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
     }
 }

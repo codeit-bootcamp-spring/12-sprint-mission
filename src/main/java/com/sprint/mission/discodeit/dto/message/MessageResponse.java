@@ -7,6 +7,7 @@ import java.util.UUID;
 public record MessageResponse(
         UUID id,
         Instant createdAt,
+        Instant updatedAt,
         String content,
         UUID channelId,
         UUID authorId,

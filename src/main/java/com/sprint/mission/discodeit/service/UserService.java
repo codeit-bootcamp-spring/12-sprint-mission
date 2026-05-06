@@ -14,6 +14,6 @@ public interface UserService {
     UserResponse create(UserCreateRequest dto, Optional<BinaryContentCreateRequest> optionalProfileCreateRequest);
     UserResponse findById(UUID userId);
     List<UserResponse> findAll();
-    UserResponse update(UUID userId, UserUpdateRequest dto, MultipartFile profile);
+    UserResponse update(UUID userId, UserUpdateRequest dto, Optional<BinaryContentCreateRequest> optionalProfileCreateRequest);
     void delete(UUID userId);
 }

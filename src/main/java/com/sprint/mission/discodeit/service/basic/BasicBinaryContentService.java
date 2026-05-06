@@ -25,23 +25,24 @@ public class BasicBinaryContentService implements BinaryContentService {
         return new BinaryContentResponse(
                 binaryContent.getId(),
                 binaryContent.getCreatedAt(),
+                binaryContent.getFilename(),
+                binaryContent.getData().length,
                 binaryContent.getMimeType(),
-                binaryContent.getData(),
-                binaryContent.getFilename()
+                binaryContent.getData()
         );
     }
 
     @Override
     public BinaryContentResponse findById(UUID id) {
-        BinaryContent binaryContent = binaryContentRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("BinaryContent with id " + id + " not found"));
+        BinaryContent binaryContent = getBinaryContentOrThrow(id);
 
         return new BinaryContentResponse(
                 binaryContent.getId(),
                 binaryContent.getCreatedAt(),
+                binaryContent.getFilename(),
+                binaryContent.getData().length,
                 binaryContent.getMimeType(),
-                binaryContent.getData(),
-                binaryContent.getFilename()
+                binaryContent.getData()
         );
     }
 
@@ -57,16 +58,22 @@ public class BasicBinaryContentService implements BinaryContentService {
                 .map(binaryContent -> new BinaryContentResponse(
                         binaryContent.getId(),
                         binaryContent.getCreatedAt(),
+                        binaryContent.getFilename(),
+                        binaryContent.getData().length,
                         binaryContent.getMimeType(),
-                        binaryContent.getData(),
-                        binaryContent.getFilename()
+                        binaryContent.getData()
                 ))
                 .toList();
     }
 
     @Override
     public void delete(UUID id) {
-        findById(id);
+        getBinaryContentOrThrow(id);
         binaryContentRepository.deleteById(id);
+    }
+
+    private BinaryContent getBinaryContentOrThrow(UUID id) {
+        return binaryContentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("BinaryContent with id " + id + " not found"));
     }
 }

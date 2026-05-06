@@ -13,9 +13,7 @@ import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,16 +29,13 @@ public class BasicUserService implements UserService {
     private final BinaryContentRepository binaryContentRepository;
 
     @Override
-    public UserResponse create(UserCreateRequest dto, Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
-        boolean existsUsername = userRepository.findAll().stream()
-                .anyMatch(user -> user.getUsername().equals(dto.username()));
-        if (existsUsername) {
+    public UserResponse create(UserCreateRequest dto,
+                               Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
+        if (userRepository.existsByUsername(dto.username())) {
             throw new IllegalArgumentException("Username already exists: " + dto.username());
         }
 
-        boolean existsEmail = userRepository.findAll().stream()
-                .anyMatch(user -> user.getEmail().equals(dto.email()));
-        if (existsEmail) {
+        if (userRepository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email already exists: " + dto.email());
         }
 
@@ -61,8 +56,8 @@ public class BasicUserService implements UserService {
                 dto.password());
 
         UserStatus userStatus = new UserStatus(user.getId(), Instant.now());
-        userStatusRepository.save(userStatus);
         userRepository.save(user);
+        userStatusRepository.save(userStatus);
 
         return new UserResponse(
                 user.getId(),
@@ -117,48 +112,37 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public UserResponse update(UUID userId, UserUpdateRequest dto, MultipartFile profile) {
-        if (dto.newUsername() != null) {
-            boolean existsUsername = userRepository.findAll().stream()
-                    .anyMatch(user ->
-                            !user.getId().equals(userId)
-                                    && user.getUsername().equals(dto.newUsername())
-                    );
-            if (existsUsername) {
-                throw new IllegalArgumentException("Username already exists: " + dto.newUsername());
-            }
-        }
-
-        if (dto.newEmail() != null) {
-            boolean existsEmail = userRepository.findAll().stream()
-                    .anyMatch(user ->
-                            !user.getId().equals(userId)
-                                    && user.getEmail().equals(dto.newEmail())
-                    );
-            if (existsEmail) {
-                throw new IllegalArgumentException("Email already exists: " + dto.newEmail());
-            }
-        }
-
+    public UserResponse update(UUID userId, UserUpdateRequest dto,
+                               Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
 
+        if (dto.newUsername() != null
+                && !dto.newUsername().equals(user.getUsername())
+                && userRepository.existsByUsername(dto.newUsername())) {
+            throw new IllegalArgumentException("Username already exists: " + dto.newUsername());
+        }
+
+        if (dto.newEmail() != null
+                && !dto.newEmail().equals(user.getEmail())
+                && userRepository.existsByEmail(dto.newEmail())) {
+            throw new IllegalArgumentException("Email already exists: " + dto.newEmail());
+        }
+
         UUID profileId = user.getProfileId();
 
-        if (profile != null && !profile.isEmpty()) {
-            try {
-                Optional.ofNullable(user.getProfileId())
-                        .ifPresent(binaryContentRepository::deleteById);
+        if (optionalProfileCreateRequest.isPresent()) {
+            BinaryContentCreateRequest request = optionalProfileCreateRequest.get();
 
-                BinaryContent binaryContent = new BinaryContent(
-                        profile.getBytes(),
-                        profile.getOriginalFilename(),
-                        profile.getContentType()
-                );
-                profileId = binaryContentRepository.save(binaryContent).getId();
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to read profile file", e);
-            }
+            Optional.ofNullable(user.getProfileId())
+                    .ifPresent(binaryContentRepository::deleteById);
+
+            BinaryContent binaryContent = new BinaryContent(
+                    request.data(),
+                    request.filename(),
+                    request.mimeType()
+            );
+            profileId = binaryContentRepository.save(binaryContent).getId();
         }
 
         user.update(
