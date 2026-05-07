@@ -12,4 +12,4 @@ server:
 discodeit:
   repository:
     type: file
-    file-directory: /app/.discodeit
+    file-directory: discodeit
