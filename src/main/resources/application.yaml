@@ -3,9 +3,11 @@ spring:
     name: discodeit
   servlet:
     multipart:
-      maxFileSize: 10MB
-      maxRequestSize: 30MB
+      max-file-size: 10MB
+      max-request-size: 30MB
 
+server:
+  port: ${PORT:8080}
 
 discodeit:
   repository:
