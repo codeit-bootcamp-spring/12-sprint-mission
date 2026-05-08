@@ -7,20 +7,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
+    User save(User user);
 
-  User save(User user);
+    Optional<User> findById(UUID id);
 
-  Optional<User> findById(UUID id);
+    List<User> findAll();
 
-  Optional<User> findByUsername(String username);
+    boolean existsByNickname(String nickname);
 
-  List<User> findAll();
+    boolean existsById(UUID id);
 
-  boolean existsById(UUID id);
+    boolean existsByEmail(String email);
 
-  void deleteById(UUID id);
+    Optional<User> findByNameAndPassword(String name, String password);
 
-  boolean existsByEmail(String email);
-
-  boolean existsByUsername(String username);
+    void deleteById(UUID id);
 }
