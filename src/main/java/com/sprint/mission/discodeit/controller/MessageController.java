@@ -27,7 +27,6 @@ public class MessageController {
   private final MessageService messageService;
 
   @PostMapping(
-      path = "/create",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
   public ResponseEntity<Message> create(
@@ -55,8 +54,8 @@ public class MessageController {
         .body(createdMessage);
   }
 
-  @PutMapping("/update")
-  public ResponseEntity<Message> update(@RequestParam("messageId") UUID messageId,
+  @PatchMapping("/{messageId}")
+  public ResponseEntity<Message> update(@PathVariable UUID messageId,
       @RequestBody MessageUpdateRequest request) {
     Message updatedMessage = messageService.update(messageId, request);
     return ResponseEntity
@@ -64,17 +63,17 @@ public class MessageController {
         .body(updatedMessage);
   }
 
-  @DeleteMapping("/delete")
-  public ResponseEntity<Void> delete(@RequestParam("messageId") UUID messageId) {
+  @DeleteMapping("/{messageId}")
+  public ResponseEntity<Void> delete(@PathVariable UUID messageId) {
     messageService.delete(messageId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
   }
 
-  @GetMapping("/findAllByChannelId")
+  @GetMapping
   public ResponseEntity<List<Message>> findAllByChannelId(
-      @RequestParam("channelId") UUID channelId) {
+      @RequestParam UUID channelId) {
     List<Message> messages = messageService.findAllByChannelId(channelId);
     return ResponseEntity
         .status(HttpStatus.OK)

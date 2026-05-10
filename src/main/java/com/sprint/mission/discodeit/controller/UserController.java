@@ -43,12 +43,12 @@ public class UserController {
         .body(createdUser);
   }
 
-  @PutMapping(
-      path = "update",
+  @PatchMapping(
+      path = "/{userId}",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
   )
   public ResponseEntity<User> update(
-      @RequestParam("userId") UUID userId,
+      @PathVariable UUID userId,
       @RequestPart("userUpdateRequest") UserUpdateRequest userUpdateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
@@ -60,22 +60,22 @@ public class UserController {
         .body(updatedUser);
   }
 
-  @DeleteMapping(path = "delete")
-  public ResponseEntity<Void> delete(@RequestParam("userId") UUID userId) {
+  @DeleteMapping(path = "/{userId}")
+  public ResponseEntity<Void> delete(@PathVariable UUID userId) {
     userService.delete(userId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
   }
 
-  @GetMapping(path = "findAll")
+  @GetMapping
   public ResponseEntity<List<UserDto>> findAll() {
     List<UserDto> users = userService.findAll();
     return ResponseEntity.ok(users);
   }
 
-  @PutMapping(path = "updateUserStatusByUserId")
-  public ResponseEntity<UserStatus> updateUserStatusByUserId(@RequestParam("userId") UUID userId,
+  @PatchMapping(path = "/{userId}/userStatus")
+  public ResponseEntity<UserStatus> updateUserStatusByUserId(@PathVariable UUID userId,
       @RequestBody UserStatusUpdateRequest request) {
     UserStatus updatedUserStatus = userStatusService.updateByUserId(userId, request);
     return ResponseEntity
