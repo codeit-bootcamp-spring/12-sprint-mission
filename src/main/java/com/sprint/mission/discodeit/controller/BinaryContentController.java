@@ -35,7 +35,7 @@ public class BinaryContentController implements BinaryContentApi {
         .body(binaryContents);
   }
 
-  @GetMapping(path = "{binaryContentId}/image")
+  @RequestMapping(path = "{binaryContentId}/image")
   public ResponseEntity<byte[]> findImage(@PathVariable("binaryContentId") UUID binaryContentId) {
     BinaryContent binaryContent = binaryContentService.find(binaryContentId);
     return ResponseEntity
