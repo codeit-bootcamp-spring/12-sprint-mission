@@ -11,5 +11,5 @@ server:
 
 discodeit:
   repository:
-    type: file
-    file-directory: discodeit
+    type: jcf
+    file-directory: .discodeit
