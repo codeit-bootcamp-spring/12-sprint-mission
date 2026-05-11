@@ -833,15 +833,17 @@ Error generating stack: `+a.message+`
         responseType: 'blob'
       });
       const blob = u.data;
-      const contentType = blob.type || u.headers['content-type'] || 'application/octet-stream';
+      const contentType = blob.type || u.headers['content-type']
+          || 'application/octet-stream';
       const disposition = u.headers['content-disposition'] || '';
       const match = disposition.match(/filename\*?=["']?([^"';\n]+)/);
       const originalName = match ? decodeURIComponent(match[1].trim()) : s;
       const url = window.URL.createObjectURL(blob);
-      const x = { url, contentType, originalName, size: blob.size };
-      return r(E => ({ attachments: { ...E.attachments, [s]: x } }))
-    } catch(u) {
+      const x = {url, contentType, originalName, size: blob.size};
+      return r(E => ({attachments: {...E.attachments, [s]: x}}))
+    } catch (u) {
       return console.error("첨부파일 로딩 실패:", u), null
+    }
   }
   ,h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(() => {
       if (r != null && r.id) {
