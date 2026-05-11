@@ -11,43 +11,44 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class BasicBinaryContentService implements BinaryContentService {
 
-    private final BinaryContentRepository binaryContentRepository;
+  private final BinaryContentRepository binaryContentRepository;
 
-    @Override
-    public BinaryContent create(BinaryContentCreateRequest request) {
-        String fileName = request.fileName();
-        byte[] bytes = request.bytes();
-        String contentType = request.contentType();
-        BinaryContent binaryContent = new BinaryContent(
-                fileName,
-                (long) bytes.length,
-                contentType,
-                bytes
-        );
+  @Override
+  public BinaryContent create(BinaryContentCreateRequest request) {
+    String fileName = request.fileName();
+    byte[] bytes = request.bytes();
+    String contentType = request.contentType();
+    BinaryContent binaryContent = new BinaryContent(
+        fileName,
+        (long) bytes.length,
+        contentType,
+        bytes
+    );
+    return binaryContentRepository.save(binaryContent);
+  }
 
-        return binaryContentRepository.save(binaryContent);
+  @Override
+  public BinaryContent find(UUID binaryContentId) {
+    return binaryContentRepository.findById(binaryContentId)
+        .orElseThrow(() -> new NoSuchElementException(
+            "BinaryContent with id " + binaryContentId + " not found"));
+  }
+
+  @Override
+  public List<BinaryContent> findAllByIdIn(List<UUID> binaryContentIds) {
+    return binaryContentRepository.findAllByIdIn(binaryContentIds).stream()
+        .toList();
+  }
+
+  @Override
+  public void delete(UUID binaryContentId) {
+    if (!binaryContentRepository.existsById(binaryContentId)) {
+      throw new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found");
     }
-
-    @Override
-    public BinaryContent find(UUID binaryContentId) {
-        return binaryContentRepository.findById(binaryContentId)
-                .orElseThrow(() -> new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found"));
-    }
-
-    @Override
-    public List<BinaryContent> findAllByIdIn(List<UUID> binaryContentIds) {
-        return binaryContentRepository.findAllByIdIn(binaryContentIds).stream().toList();
-    }
-
-    @Override
-    public void delete(UUID binaryContentId) {
-        if (binaryContentRepository.existsById(binaryContentId)) {
-            throw new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found");
-        }
-        binaryContentRepository.deleteById(binaryContentId);
-    }
+    binaryContentRepository.deleteById(binaryContentId);
+  }
 }
