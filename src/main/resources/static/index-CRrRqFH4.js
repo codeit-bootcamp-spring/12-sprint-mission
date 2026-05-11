@@ -809,7 +809,23 @@ Error generating stack: `+a.message+`
   &:hover {
     color: ${({theme:r})=>r.colors.text.primary};
   }
-`,vo=bn((r,i)=>({messages:[],pollingIntervals:{},lastMessageId:null, fetchMessages:async s=>{try{const u=await he.get(`${Xe.apiBaseUrl}/messages`,{params:{channelId:s}}),c=u.data[u.data.length-1],d=(c==null?void 0:c.id)!==i().lastMessageId;return r({messages:u.data,lastMessageId:c==null?void 0:c.id}),d}catch(u){return console.error("메시지 목록 조회 실패:",u),!1}},startPolling:s=>{const u=i();u.pollingIntervals[s]&&clearTimeout(u.pollingIntervals[s]);let c=300;const d=3e3;r(m=>({pollingIntervals:{...m.pollingIntervals,[s]:!0}}));const p=async()=>{const m=i();if(!m.pollingIntervals[s])return;if(await m.fetchMessages(s)?c=300:c=Math.min(c*1.5,d),i().pollingIntervals[s]){const x=setTimeout(p,c);r(E=>({pollingIntervals:{...E.pollingIntervals,[s]:x}}))}};p()},stopPolling:s=>{const{pollingIntervals:u}=i();if(u[s]){const c=u[s];typeof c=="number"&&clearTimeout(c),r(d=>{const p={...d.pollingIntervals};return delete p[s],{pollingIntervals:p}})}},createMessage:async s=>{try{const u=new FormData;u.append("messageCreateRequest",new Blob([JSON.stringify({content:s.content,channelId:s.channelId,authorId:s.authorId})],{type:"application/json"})),s.attachments&&s.attachments.forEach(p=>{u.append("attachments",p)});const c=await he.post(`${Xe.apiBaseUrl}/messages`,u,{headers:{"Content-Type":"multipart/form-data"}}),d=yo.getState().updateReadStatus;return await d(s.channelId),r(p=>({messages:[...p.messages,c.data]})),c.data}catch(u){throw console.error("메시지 생성 실패:",u),u}}})),p1=bn((r,i)=>({attachments:{},
+`,vo=bn((r,i)=>({messages:[],pollingIntervals:{},lastMessageId:null, fetchMessages:async s=>{try{const u=await he.get(`${Xe.apiBaseUrl}/messages`,{params:{channelId:s}}),c=u.data[u.data.length-1],d=(c==null?void 0:c.id)!==i().lastMessageId;return r({messages:u.data,lastMessageId:c==null?void 0:c.id}),d}catch(u){return console.error("메시지 목록 조회 실패:",u),!1}},startPolling:s=>{const u=i();u.pollingIntervals[s]&&clearTimeout(u.pollingIntervals[s]);let c=300;const d=3e3;r(m=>({pollingIntervals:{...m.pollingIntervals,[s]:!0}}));const p=async()=>{const m=i();if(!m.pollingIntervals[s])return;if(await m.fetchMessages(s)?c=300:c=Math.min(c*1.5,d),i().pollingIntervals[s]){const x=setTimeout(p,c);r(E=>({pollingIntervals:{...E.pollingIntervals,[s]:x}}))}};p()},stopPolling:s=>{const{pollingIntervals:u}=i();if(u[s]){const c=u[s];typeof c=="number"&&clearTimeout(c),r(d=>{const p={...d.pollingIntervals};return delete p[s],{pollingIntervals:p}})}},
+  createMessage:async s=>{
+  try{
+    const u=new FormData;
+    u.append("messageCreateRequest",new Blob(
+        [JSON.stringify({
+          content:s.content,
+          channelId:s.channelId,
+          authorId:s.authorId})],
+        {type:"application/json"})),
+    s.attachments&&s.attachments.forEach(p=>{u.append("attachments",p)});
+    const c=await he.post(`${Xe.apiBaseUrl}/messages`,u,
+        {headers:{"Content-Type":"multipart/form-data"}};
+    console.log(" 응답 데이터:", c.data);
+    return await d(s.channelId),r(p=>({messages:[...p.messages,c.data]})),c.data}catch(u){
+    throw console.error("메시지 생성 실패:",u),u}}})),p1=bn((r,i)=>({attachments:{},
+
   fetchAttachment: async s => {
     if (i.attachments[s]) return i.attachments[s]
     try {
