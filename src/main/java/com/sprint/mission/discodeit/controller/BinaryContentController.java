@@ -34,16 +34,6 @@ public class BinaryContentController implements BinaryContentApi {
         .status(HttpStatus.OK)
         .body(binaryContents);
   }
-
-  @RequestMapping(path = "{binaryContentId}/image")
-  public ResponseEntity<byte[]> findImage(@PathVariable("binaryContentId") UUID binaryContentId) {
-    BinaryContent binaryContent = binaryContentService.find(binaryContentId);
-    return ResponseEntity
-        .status(HttpStatus.OK)
-        .header("Content-Type", binaryContent.getContentType())
-        .header("Content-Disposition", "inline; filename=\"" + binaryContent.getFileName() + "\"")
-        .body(binaryContent.getBytes());
-  }
-
-
 }
+
+
