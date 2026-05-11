@@ -195,9 +195,11 @@ Error generating stack: `+a.message+`
         responseType: 'blob'
       });
       const d = window.URL.createObjectURL(s.data);
-      return r(p => ({ profileImages: { ...p.profileImages, [i]: d } })), d
+      r(p => ({ profileImages: { ...p.profileImages, [i]: d } }));
+      return d;
     } catch(s) {
-      return console.error("프로필 이미지 로딩 실패:", s), null
+      console.error("프로필 이미지 로딩 실패:", s);
+      return null;
     }
   }
 }));
@@ -824,7 +826,6 @@ Error generating stack: `+a.message+`
       return r(E => ({ attachments: { ...E.attachments, [s]: x } }))
     } catch(u) {
       return console.error("첨부파일 로딩 실패:", u), null
-    }
   }
   ,h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(()=>{if(r!=null&&r.id)return s(r.id),u(r.id),()=>{c(r.id)}},[r==null?void 0:r.id,s,u,c]),ue.useEffect(()=>{i.forEach(P=>{var I;(I=P.attachmentIds)==null||I.forEach(R=>{m[R]||v(R)})})},[i,m,v]);
   const x = async (P, I) => {
