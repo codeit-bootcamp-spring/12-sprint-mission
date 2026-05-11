@@ -187,25 +187,22 @@ Error generating stack: `+a.message+`
 `+d.map(Ld).join(`
 `):" "+Ld(d[0]):"as no adapter specified";throw new ie("There is no suitable adapter to dispatch the request "+p,"ERR_NOT_SUPPORT")}return u},adapters:zu};function wu(r){if(r.cancelToken&&r.cancelToken.throwIfRequested(),r.signal&&r.signal.aborted)throw new Pr(null,r)}function Dd(r){return wu(r),r.headers=lt.from(r.headers),r.data=vu.call(r,r.transformRequest),["post","put","patch"].indexOf(r.method)!==-1&&r.headers.setContentType("application/x-www-form-urlencoded",!1),Bp.getAdapter(r.adapter||Co.adapter)(r).then(function(u){return wu(r),u.data=vu.call(r,r.transformResponse,u),u.headers=lt.from(u.headers),u},function(u){return Lp(u)||(wu(r),u&&u.response&&(u.response.data=vu.call(r,r.transformResponse,u.response),u.response.headers=lt.from(u.response.headers))),Promise.reject(u)})}const $p="1.7.9",ps={};["object","boolean","number","function","string","symbol"].forEach((r,i)=>{ps[r]=function(u){return typeof u===r||"a"+(i<1?"n ":" ")+r}});const zd={};ps.transitional=function(i,s,u){function c(d,p){return"[Axios v"+$p+"] Transitional option '"+d+"'"+p+(u?". "+u:"")}return(d,p,m)=>{if(i===!1)throw new ie(c(p," has been removed"+(s?" in "+s:"")),ie.ERR_DEPRECATED);return s&&!zd[p]&&(zd[p]=!0,console.warn(c(p," has been deprecated since v"+s+" and will be removed in the near future"))),i?i(d,p,m):!0}};ps.spelling=function(i){return(s,u)=>(console.warn(`${u} is likely a misspelling of ${i}`),!0)};function $0(r,i,s){if(typeof r!="object")throw new ie("options must be an object",ie.ERR_BAD_OPTION_VALUE);const u=Object.keys(r);let c=u.length;for(;c-- >0;){const d=u[c],p=i[d];if(p){const m=r[d],v=m===void 0||p(m,d,r);if(v!==!0)throw new ie("option "+d+" must be "+v,ie.ERR_BAD_OPTION_VALUE);continue}if(s!==!0)throw new ie("Unknown option "+d,ie.ERR_BAD_OPTION)}}const Gi={assertOptions:$0,validators:ps},Ht=Gi.validators;class Vn{constructor(i){this.defaults=i,this.interceptors={request:new Pd,response:new Pd}}async request(i,s){try{return await this._request(i,s)}catch(u){if(u instanceof Error){let c={};Error.captureStackTrace?Error.captureStackTrace(c):c=new Error;const d=c.stack?c.stack.replace(/^.+\n/,""):"";try{u.stack?d&&!String(u.stack).endsWith(d.replace(/^.+\n.+\n/,""))&&(u.stack+=`
 `+d):u.stack=d}catch{}}throw u}}_request(i,s){typeof i=="string"?(s=s||{},s.url=i):s=i||{},s=qn(this.defaults,s);const{transitional:u,paramsSerializer:c,headers:d}=s;u!==void 0&&Gi.assertOptions(u,{silentJSONParsing:Ht.transitional(Ht.boolean),forcedJSONParsing:Ht.transitional(Ht.boolean),clarifyTimeoutError:Ht.transitional(Ht.boolean)},!1),c!=null&&(_.isFunction(c)?s.paramsSerializer={serialize:c}:Gi.assertOptions(c,{encode:Ht.function,serialize:Ht.function},!0)),Gi.assertOptions(s,{baseUrl:Ht.spelling("baseURL"),withXsrfToken:Ht.spelling("withXSRFToken")},!0),s.method=(s.method||this.defaults.method||"get").toLowerCase();let p=d&&_.merge(d.common,d[s.method]);d&&_.forEach(["delete","get","head","post","put","patch","common"],I=>{delete d[I]}),s.headers=lt.concat(p,d);const m=[];let v=!0;this.interceptors.request.forEach(function(R){typeof R.runWhen=="function"&&R.runWhen(s)===!1||(v=v&&R.synchronous,m.unshift(R.fulfilled,R.rejected))});const x=[];this.interceptors.response.forEach(function(R){x.push(R.fulfilled,R.rejected)});let E,j=0,O;if(!v){const I=[Dd.bind(this),void 0];for(I.unshift.apply(I,m),I.push.apply(I,x),O=I.length,E=Promise.resolve(s);j<O;)E=E.then(I[j++],I[j++]);return E}O=m.length;let P=s;for(j=0;j<O;){const I=m[j++],R=m[j++];try{P=I(P)}catch(L){R.call(this,L);break}}try{E=Dd.call(this,P)}catch(I){return Promise.reject(I)}for(j=0,O=x.length;j<O;)E=E.then(x[j++],x[j++]);return E}getUri(i){i=qn(this.defaults,i);const s=zp(i.baseURL,i.url);return Np(s,i.params,i.paramsSerializer)}}_.forEach(["delete","get","head","options"],function(i){Vn.prototype[i]=function(s,u){return this.request(qn(u||{},{method:i,url:s,data:(u||{}).data}))}});_.forEach(["post","put","patch"],function(i){function s(u){return function(d,p,m){return this.request(qn(m||{},{method:i,headers:u?{"Content-Type":"multipart/form-data"}:{},url:d,data:p}))}}Vn.prototype[i]=s(),Vn.prototype[i+"Form"]=s(!0)});class Yu{constructor(i){if(typeof i!="function")throw new TypeError("executor must be a function.");let s;this.promise=new Promise(function(d){s=d});const u=this;this.promise.then(c=>{if(!u._listeners)return;let d=u._listeners.length;for(;d-- >0;)u._listeners[d](c);u._listeners=null}),this.promise.then=c=>{let d;const p=new Promise(m=>{u.subscribe(m),d=m}).then(c);return p.cancel=function(){u.unsubscribe(d)},p},i(function(d,p,m){u.reason||(u.reason=new Pr(d,p,m),s(u.reason))})}throwIfRequested(){if(this.reason)throw this.reason}subscribe(i){if(this.reason){i(this.reason);return}this._listeners?this._listeners.push(i):this._listeners=[i]}unsubscribe(i){if(!this._listeners)return;const s=this._listeners.indexOf(i);s!==-1&&this._listeners.splice(s,1)}toAbortSignal(){const i=new AbortController,s=u=>{i.abort(u)};return this.subscribe(s),i.signal.unsubscribe=()=>this.unsubscribe(s),i.signal}static source(){let i;return{token:new Yu(function(c){i=c}),cancel:i}}}function H0(r){return function(s){return r.apply(null,s)}}function V0(r){return _.isObject(r)&&r.isAxiosError===!0}const Mu={Continue:100,SwitchingProtocols:101,Processing:102,EarlyHints:103,Ok:200,Created:201,Accepted:202,NonAuthoritativeInformation:203,NoContent:204,ResetContent:205,PartialContent:206,MultiStatus:207,AlreadyReported:208,ImUsed:226,MultipleChoices:300,MovedPermanently:301,Found:302,SeeOther:303,NotModified:304,UseProxy:305,Unused:306,TemporaryRedirect:307,PermanentRedirect:308,BadRequest:400,Unauthorized:401,PaymentRequired:402,Forbidden:403,NotFound:404,MethodNotAllowed:405,NotAcceptable:406,ProxyAuthenticationRequired:407,RequestTimeout:408,Conflict:409,Gone:410,LengthRequired:411,PreconditionFailed:412,PayloadTooLarge:413,UriTooLong:414,UnsupportedMediaType:415,RangeNotSatisfiable:416,ExpectationFailed:417,ImATeapot:418,MisdirectedRequest:421,UnprocessableEntity:422,Locked:423,FailedDependency:424,TooEarly:425,UpgradeRequired:426,PreconditionRequired:428,TooManyRequests:429,RequestHeaderFieldsTooLarge:431,UnavailableForLegalReasons:451,InternalServerError:500,NotImplemented:501,BadGateway:502,ServiceUnavailable:503,GatewayTimeout:504,HttpVersionNotSupported:505,VariantAlsoNegotiates:506,InsufficientStorage:507,LoopDetected:508,NotExtended:510,NetworkAuthenticationRequired:511};Object.entries(Mu).forEach(([r,i])=>{Mu[i]=r});function Hp(r){const i=new Vn(r),s=wp(Vn.prototype.request,i);return _.extend(s,Vn.prototype,i,{allOwnKeys:!0}),_.extend(s,i,null,{allOwnKeys:!0}),s.create=function(c){return Hp(qn(r,c))},s}const he=Hp(Co);he.Axios=Vn;he.CanceledError=Pr;he.CancelToken=Yu;he.isCancel=Lp;he.VERSION=$p;he.toFormData=fs;he.AxiosError=ie;he.Cancel=he.CanceledError;he.all=function(i){return Promise.all(i)};he.spread=H0;he.isAxiosError=V0;he.mergeConfig=qn;he.AxiosHeaders=lt;he.formToJSON=r=>Tp(_.isHTMLForm(r)?new FormData(r):r);he.getAdapter=Bp.getAdapter;he.HttpStatusCode=Mu;he.default=he;const Xe={apiBaseUrl:"/api"},Dt=bn(r=>({users:[],fetchUsers:async()=>{try{const i=await he.get(`${Xe.apiBaseUrl}/users`);r({users:i.data})}catch(i){console.error("사용자 목록 조회 실패:",i)}},updateUserStatus:async i=>{try{await he.patch(`${Xe.apiBaseUrl}/users/${i}/userStatus`,{newLastActiveAt:new Date().toISOString()})}catch(s){console.error("사용자 상태 업데이트 실패:",s)}}})),
-    {
-      profileImages: {},
-      fetchProfileImage: async (i) => {
-  try {
-    const s = await he.get(
-        `${Xe.apiBaseUrl}/binary-contents/${i}`,
-        { responseType: 'blob' }
-    );
-    // s.data는 이미 Blob — 다시 감싸면 안 됨
-    const url = window.URL.createObjectURL(s.data);
-    return r(p => ({
-      profileImages: { ...p.profileImages, [i]: url }
-    }));
-  } catch (s) {
-    return console.error('fetchProfileImage error:', s), null;
+    Wt = bn(r => ({
+  profileImages: {},
+  fetchProfileImage: async i => {
+    try {
+      const s = await he.get(`${Xe.apiBaseUrl}/binaryContents/${i}`, {
+        responseType: 'blob'
+      });
+      const d = window.URL.createObjectURL(s.data);
+      return r(p => ({ profileImages: { ...p.profileImages, [i]: d } })), d
+    } catch(s) {
+      return console.error("프로필 이미지 로딩 실패:", s), null
+    }
   }
-}
-}
-position: fixed;
+}));
+  function Vp(r,i){let s;try{s=r()}catch{return}return{getItem:c=>{var d;const p=v=>v===null?null:JSON.parse(v,void 0),m=(d=s.getItem(c))!=null?d:null;return m instanceof Promise?m.then(p):p(m)},setItem:(c,d)=>s.setItem(c,JSON.stringify(d,void 0)),removeItem:c=>s.removeItem(c)}}const Uu=r=>i=>{try{const s=r(i);return s instanceof Promise?s:{then(u){return Uu(u)(s)},catch(u){return this}}}catch(s){return{then(u){return this},catch(u){return Uu(u)(s)}}}},W0=(r,i)=>(s,u,c)=>{let d={storage:Vp(()=>localStorage),partialize:R=>R,version:0,merge:(R,L)=>({...L,...R}),...i},p=!1;const m=new Set,v=new Set;let x=d.storage;if(!x)return r((...R)=>{console.warn(`[zustand persist middleware] Unable to update item '${d.name}', the given storage is currently unavailable.`),s(...R)},u,c);const E=()=>{const R=d.partialize({...u()});return x.setItem(d.name,{state:R,version:d.version})},j=c.setState;c.setState=(R,L)=>{j(R,L),E()};const O=r((...R)=>{s(...R),E()},u,c);c.getInitialState=()=>O;let P;const I=()=>{var R,L;if(!x)return;p=!1,m.forEach(F=>{var W;return F((W=u())!=null?W:O)});const V=((L=d.onRehydrateStorage)==null?void 0:L.call(d,(R=u())!=null?R:O))||void 0;return Uu(x.getItem.bind(x))(d.name).then(F=>{if(F)if(typeof F.version=="number"&&F.version!==d.version){if(d.migrate){const W=d.migrate(F.state,F.version);return W instanceof Promise?W.then(K=>[!0,K]):[!0,W]}console.error("State loaded from storage couldn't be migrated since no migrate function was provided")}else return[!1,F.state];return[!1,void 0]}).then(F=>{var W;const[K,$]=F;if(P=d.merge($,(W=u())!=null?W:O),s(P,!0),K)return E()}).then(()=>{V==null||V(P,void 0),P=u(),p=!0,v.forEach(F=>F(P))}).catch(F=>{V==null||V(void 0,F)})};return c.persist={setOptions:R=>{d={...d,...R},R.storage&&(x=R.storage)},clearStorage:()=>{x==null||x.removeItem(d.name)},getOptions:()=>d,rehydrate:()=>I(),hasHydrated:()=>p,onHydrate:R=>(m.add(R),()=>{m.delete(R)}),onFinishHydration:R=>(v.add(R),()=>{v.delete(R)})},d.skipHydration||I(),P||O},Q0=W0,ut=bn(Q0(r=>({currentUserId:null,setCurrentUser:i=>r({currentUserId:i.id}),logout:()=>{const i=ut.getState().currentUserId;i&&Dt.getState().updateUserStatus(i),r({currentUserId:null})},updateUser:async(i,s)=>{try{const u=await he.patch(`${Xe.apiBaseUrl}/users/${i}`,s,{headers:{"Content-Type":"multipart/form-data"}});return await Dt.getState().fetchUsers(),u.data}catch(u){throw console.error("사용자 정보 수정 실패:",u),u}}}),{name:"user-storage",storage:Vp(()=>sessionStorage)})),Qt="data:image/png;base64,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";function Md({channel:r,isActive:i,onClick:s,hasUnread:u}){const c=ut(x=>x.currentUserId),d=Dt(x=>x.users),p=Wt(x=>x.profileImages);if(r.type==="PUBLIC")return g.jsxs(yp,{$isActive:i,onClick:s,$hasUnread:u,children:["# ",r.name]});const m=r.participantIds.map(x=>d.find(E=>E.id===x)).filter(Boolean);if(m.length>2){const x=m.filter(E=>E.id!==c).map(E=>E.username).join(", ");return g.jsxs(yd,{$isActive:i,onClick:s,children:[g.jsx(uy,{children:m.filter(E=>E.id!==c).slice(0,2).map((E,j)=>g.jsx(cy,{src:E.profileId?p[E.profileId]:Qt,style:{position:"absolute",left:j*16,zIndex:2-j}},E.id))}),g.jsxs(xd,{children:[g.jsx(vd,{$hasUnread:u,children:x}),g.jsxs(ay,{children:["멤버 ",m.length,"명"]})]})]})}const v=m.filter(x=>x.id!==c)[0];return g.jsxs(yd,{$isActive:i,onClick:s,children:[g.jsxs(ly,{children:[g.jsx("img",{src:v.profileId?p[v.profileId]:Qt,alt:"profile"}),g.jsx(vp,{$online:v.online})]}),g.jsx(xd,{children:g.jsx(vd,{$hasUnread:u,children:v.username})})]})}function q0({isOpen:r,onClose:i,user:s,onSubmit:u}){const[c,d]=ue.useState(s.username),[p,m]=ue.useState(s.email),[v,x]=ue.useState(""),[E,j]=ue.useState(null),[O,P]=ue.useState(""),[I,R]=ue.useState(null),L=Wt(T=>T.profileImages),V=Wt(T=>T.fetchProfileImage),F=ut(T=>T.logout);ue.useEffect(()=>{s.profileId&&!L[s.profileId]&&V(s.profileId)},[s.profileId,L,V]);const W=()=>{d(s.username),m(s.email),x(""),j(null),R(null),P(""),i()},K=T=>{const H=T.target.files[0];if(H){j(H);const se=new FileReader;se.onloadend=()=>{R(se.result)},se.readAsDataURL(H)}},$=async T=>{T.preventDefault(),P("");try{const H=new FormData,se={};c!==s.username&&(se.newUsername=c),p!==s.email&&(se.newEmail=p),v&&(se.newPassword=v),(Object.keys(se).length>0||E)&&(H.append("userUpdateRequest",new Blob([JSON.stringify(se)],{type:"application/json"})),E&&H.append("profile",E),await u(H)),i()}catch{P("사용자 정보 수정에 실패했습니다.")}};return r?g.jsx(b0,{children:g.jsxs(G0,{children:[g.jsx("h2",{children:"프로필 수정"}),g.jsxs("form",{onSubmit:$,children:[g.jsxs(Mi,{children:[g.jsx(Ui,{children:"프로필 이미지"}),g.jsxs(K0,{children:[g.jsx(X0,{src:I||L[s.profileId]||Qt,alt:"profile"}),g.jsx(J0,{type:"file",accept:"image/*",onChange:K,id:"profile-image"}),g.jsx(Z0,{htmlFor:"profile-image",children:"이미지 변경"})]})]}),g.jsxs(Mi,{children:[g.jsxs(Ui,{children:["사용자명 ",g.jsx(Fd,{children:"*"})]}),g.jsx(xu,{type:"text",value:c,onChange:T=>d(T.target.value),required:!0})]}),g.jsxs(Mi,{children:[g.jsxs(Ui,{children:["이메일 ",g.jsx(Fd,{children:"*"})]}),g.jsx(xu,{type:"email",value:p,onChange:T=>m(T.target.value),required:!0})]}),g.jsxs(Mi,{children:[g.jsx(Ui,{children:"새 비밀번호"}),g.jsx(xu,{type:"password",placeholder:"변경하지 않으려면 비워두세요",value:v,onChange:T=>x(T.target.value)})]}),O&&g.jsx(Y0,{children:O}),g.jsxs(ev,{children:[g.jsx(Ud,{type:"button",onClick:W,$secondary:!0,children:"취소"}),g.jsx(Ud,{type:"submit",children:"저장"})]})]}),g.jsx(tv,{onClick:F,children:"로그아웃"})]})}):null}const b0=N.div`
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -810,30 +807,75 @@ position: fixed;
   &:hover {
     color: ${({theme:r})=>r.colors.text.primary};
   }
-`,vo=bn((r,i)=>({messages:[],pollingIntervals:{},lastMessageId:null,fetchMessages:async s=>{try{const u=await he.get(`${Xe.apiBaseUrl}/messages`,{params:{channelId:s}}),c=u.data[u.data.length-1],d=(c==null?void 0:c.id)!==i().lastMessageId;return r({messages:u.data,lastMessageId:c==null?void 0:c.id}),d}catch(u){return console.error("메시지 목록 조회 실패:",u),!1}},startPolling:s=>{const u=i();u.pollingIntervals[s]&&clearTimeout(u.pollingIntervals[s]);let c=300;const d=3e3;r(m=>({pollingIntervals:{...m.pollingIntervals,[s]:!0}}));const p=async()=>{const m=i();if(!m.pollingIntervals[s])return;if(await m.fetchMessages(s)?c=300:c=Math.min(c*1.5,d),i().pollingIntervals[s]){const x=setTimeout(p,c);r(E=>({pollingIntervals:{...E.pollingIntervals,[s]:x}}))}};p()},stopPolling:s=>{const{pollingIntervals:u}=i();if(u[s]){const c=u[s];typeof c=="number"&&clearTimeout(c),r(d=>{const p={...d.pollingIntervals};return delete p[s],{pollingIntervals:p}})}},createMessage:async s=>{try{const u=new FormData;u.append("messageCreateRequest",new Blob([JSON.stringify({content:s.content,channelId:s.channelId,authorId:s.authorId})],{type:"application/json"})),s.attachments&&s.attachments.forEach(p=>{u.append("attachments",p)});const c=await he.post(`${Xe.apiBaseUrl}/messages`,u,{headers:{"Content-Type":"multipart/form-data"}}),d=yo.getState().updateReadStatus;return await d(s.channelId),r(p=>({messages:[...p.messages,c.data]})),c.data}catch(u){throw console.error("메시지 생성 실패:",u),u}}})),
-fetchAttachment: async s => {
-  if (i().attachments[s]) return i().attachments[s];
-  try {
-    const u = await he.get(
-        `${Xe.apiBaseUrl}/binary-contents/${s}`,
-        { responseType: 'blob' }
-    );
-    const url = window.URL.createObjectURL(u.data);
-    const x = {
-      url,
-      contentType: u.data.type,
-      originalName: s,
-      size: u.data.size
-    };
-    return r(E => ({ attachments: { ...E.attachments, [s]: x } })), x;
-  } catch (u) {
-    return console.error('첨부파일 정보 조회 실패:', u), null;
+`,vo=bn((r,i)=>({messages:[],pollingIntervals:{},lastMessageId:null, fetchMessages:async s=>{try{const u=await he.get(`${Xe.apiBaseUrl}/messages`,{params:{channelId:s}}),c=u.data[u.data.length-1],d=(c==null?void 0:c.id)!==i().lastMessageId;return r({messages:u.data,lastMessageId:c==null?void 0:c.id}),d}catch(u){return console.error("메시지 목록 조회 실패:",u),!1}},startPolling:s=>{const u=i();u.pollingIntervals[s]&&clearTimeout(u.pollingIntervals[s]);let c=300;const d=3e3;r(m=>({pollingIntervals:{...m.pollingIntervals,[s]:!0}}));const p=async()=>{const m=i();if(!m.pollingIntervals[s])return;if(await m.fetchMessages(s)?c=300:c=Math.min(c*1.5,d),i().pollingIntervals[s]){const x=setTimeout(p,c);r(E=>({pollingIntervals:{...E.pollingIntervals,[s]:x}}))}};p()},stopPolling:s=>{const{pollingIntervals:u}=i();if(u[s]){const c=u[s];typeof c=="number"&&clearTimeout(c),r(d=>{const p={...d.pollingIntervals};return delete p[s],{pollingIntervals:p}})}},createMessage:async s=>{try{const u=new FormData;u.append("messageCreateRequest",new Blob([JSON.stringify({content:s.content,channelId:s.channelId,authorId:s.authorId})],{type:"application/json"})),s.attachments&&s.attachments.forEach(p=>{u.append("attachments",p)});const c=await he.post(`${Xe.apiBaseUrl}/messages`,u,{headers:{"Content-Type":"multipart/form-data"}}),d=yo.getState().updateReadStatus;return await d(s.channelId),r(p=>({messages:[...p.messages,c.data]})),c.data}catch(u){throw console.error("메시지 생성 실패:",u),u}}})),p1=bn((r,i)=>({attachments:{},
+  fetchAttachment: async s => {
+    if (i.attachments[s]) return i.attachments[s]
+    try {
+      const u = await he.get(`${Xe.apiBaseUrl}/binaryContents/${s}`, {
+        responseType: 'blob'
+      });
+      const blob = u.data;
+      const contentType = blob.type || u.headers['content-type'] || 'application/octet-stream';
+      const disposition = u.headers['content-disposition'] || '';
+      const match = disposition.match(/filename\*?=["']?([^"';\n]+)/);
+      const originalName = match ? decodeURIComponent(match[1].trim()) : s;
+      const url = window.URL.createObjectURL(blob);
+      const x = { url, contentType, originalName, size: blob.size };
+      return r(E => ({ attachments: { ...E.attachments, [s]: x } }))
+    } catch(u) {
+      return console.error("첨부파일 로딩 실패:", u), null
+    }
   }
-}
+  ,h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(()=>{if(r!=null&&r.id)return s(r.id),u(r.id),()=>{c(r.id)}},[r==null?void 0:r.id,s,u,c]),ue.useEffect(()=>{i.forEach(P=>{var I;(I=P.attachmentIds)==null||I.forEach(R=>{m[R]||v(R)})})},[i,m,v]);
+  const x = async (P, I) => {
+    try {
+      // 이미 fetchAttachment로 캐시된 objectURL이 있으면 재사용
+      const cached = p1.getState().attachments[P];
+      let blobUrl;
+      let needRevoke = false;
+      if (cached?.url) {
+        blobUrl = cached.url;
+      } else {
+        const R = await he.get(`${Xe.apiBaseUrl}/binaryContents/${P}`, { responseType: 'blob' });
+        blobUrl = window.URL.createObjectURL(R.data);
+        needRevoke = true;
+      }
+      const F = document.createElement('a');
+      F.href = blobUrl; F.download = I; F.style.display = 'none';
+      document.body.appendChild(F);
+      try {
+        const K = await (await window.showSaveFilePicker({
+          suggestedName: I,
+          types: [{ description: 'Files', accept: { '*/*': ['.txt','.pdf','.doc','.docx','.xls','.xlsx','.jpg','.jpeg','.png','.gif'] } }]
+        })).createWritable();
+        // blob 재취득 필요
+        const R2 = await he.get(`${Xe.apiBaseUrl}/binaryContents/${P}`, { responseType: 'blob' });
+        await K.write(R2.data); await K.close()
+      } catch(W) {
+        if (W.name !== 'AbortError') F.click()
+      }
+      document.body.removeChild(F);
+      if (needRevoke) window.URL.revokeObjectURL(blobUrl)
+    } catch(R) {
+      console.error("다운로드 실패:", R)
+    }
+  }
+  변경 요약
+  수정 위치	문제	해결
+  fetchProfileImage	s.data.bytes (base64 필드) — 서버가 이 필드를 안 줌	responseType: 'blob' → createObjectURL
+  fetchAttachment	bytes, contentType 필드 직접 파싱 — 응답 구조 불일치	responseType: 'blob' → headers에서 메타 추출 → createObjectURL
+  다운로드 핸들러	new Blob([R.data]) — 이미 blob인데 이중 감싸기	캐시된 URL 재사용, R.data 직접 write
+  Prepared using Claude Sonnet 4.6
+
+
+
+  width: 240px;
+  background: ${J.colors.background.secondary};
   border-left: 1px solid ${J.colors.border.primary};
 `,x1=N.div`
   padding: 16px;
   font-size: 14px;
+  font-weight: bold;
   font-weight: bold;
   color: ${J.colors.text.muted};
   text-transform: uppercase;
@@ -936,8 +978,7 @@ fetchAttachment: async s => {
   &:hover {
     text-decoration: underline;
   }
-`;f
-unction j1({isOpen:r,onClose:i}){const[s,u]=ue.useState(""),[c,d]=ue.useState(""),[p,m]=ue.useState(""),[v,x]=ue.useState(null),[E,j]=ue.useState(null),[O,P]=ue.useState(""),I=ut(V=>V.setCurrentUser),R=V=>{const F=V.target.files[0];if(F){x(F);const W=new FileReader;W.onloadend=()=>{j(W.result)},W.readAsDataURL(F)}},L=async V=>{V.preventDefault(),P("");try{const F=new FormData;F.append("userCreateRequest",new Blob([JSON.stringify({email:s,username:c,password:p})],{type:"application/json"})),v&&F.append("profile",v);const W=await he.post(`${Xe.apiBaseUrl}/users`,F);I(W.data),i()}catch{P("회원가입에 실패했습니다.")}};return r?g.jsx(qp,{children:g.jsxs(bp,{children:[g.jsx("h2",{children:"계정 만들기"}),g.jsxs("form",{onSubmit:L,children:[g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["이메일 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"email",value:s,onChange:V=>u(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["사용자명 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"text",value:c,onChange:V=>d(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["비밀번호 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"password",value:p,onChange:V=>m(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsx(Bi,{children:"프로필 이미지"}),g.jsxs(I1,{children:[g.jsx(_1,{src:E||Qt,alt:"profile"}),g.jsx(N1,{type:"file",accept:"image/*",onChange:R,id:"profile-image"}),g.jsx(O1,{htmlFor:"profile-image",children:"이미지 변경"})]})]}),O&&g.jsx(Yp,{children:O}),g.jsx(Gp,{type:"submit",children:"계속하기"}),g.jsx(L1,{onClick:i,children:"이미 계정이 있으신가요?"})]})]})}):null}const Fi=N.div`
+`;function j1({isOpen:r,onClose:i}){const[s,u]=ue.useState(""),[c,d]=ue.useState(""),[p,m]=ue.useState(""),[v,x]=ue.useState(null),[E,j]=ue.useState(null),[O,P]=ue.useState(""),I=ut(V=>V.setCurrentUser),R=V=>{const F=V.target.files[0];if(F){x(F);const W=new FileReader;W.onloadend=()=>{j(W.result)},W.readAsDataURL(F)}},L=async V=>{V.preventDefault(),P("");try{const F=new FormData;F.append("userCreateRequest",new Blob([JSON.stringify({email:s,username:c,password:p})],{type:"application/json"})),v&&F.append("profile",v);const W=await he.post(`${Xe.apiBaseUrl}/users`,F);I(W.data),i()}catch{P("회원가입에 실패했습니다.")}};return r?g.jsx(qp,{children:g.jsxs(bp,{children:[g.jsx("h2",{children:"계정 만들기"}),g.jsxs("form",{onSubmit:L,children:[g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["이메일 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"email",value:s,onChange:V=>u(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["사용자명 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"text",value:c,onChange:V=>d(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["비밀번호 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"password",value:p,onChange:V=>m(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsx(Bi,{children:"프로필 이미지"}),g.jsxs(I1,{children:[g.jsx(_1,{src:E||Qt,alt:"profile"}),g.jsx(N1,{type:"file",accept:"image/*",onChange:R,id:"profile-image"}),g.jsx(O1,{htmlFor:"profile-image",children:"이미지 변경"})]})]}),O&&g.jsx(Yp,{children:O}),g.jsx(Gp,{type:"submit",children:"계속하기"}),g.jsx(L1,{onClick:i,children:"이미 계정이 있으신가요?"})]})]})}):null}const Fi=N.div`
   margin-bottom: 20px;
 `,Bi=N.label`
   display: block;
