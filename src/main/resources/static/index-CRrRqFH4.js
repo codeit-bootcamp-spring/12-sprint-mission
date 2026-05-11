@@ -844,8 +844,8 @@ Error generating stack: `+a.message+`
     } catch (u) {
       return console.error("첨부파일 로딩 실패:", u), null
     }
-  }
-  ,h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(() => {
+  };
+  const h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(() => {
       if (r != null && r.id) {
         s(r.id);
         u(r.id);
