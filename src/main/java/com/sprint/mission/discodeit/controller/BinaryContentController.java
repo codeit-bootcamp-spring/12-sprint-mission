@@ -7,7 +7,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +21,14 @@ public class BinaryContentController implements BinaryContentApi {
   private final BinaryContentService binaryContentService;
 
   @GetMapping("/{binaryContentId}")
-  public ResponseEntity<BinaryContent> find(
+  public ResponseEntity<Map<String, String>> find(
       @PathVariable UUID binaryContentId) {
-    BinaryContent binaryContent = binaryContentService.find(binaryContentId);
-    return ResponseEntity.ok(binaryContent);
+    BinaryContent bc = binaryContentService.find(binaryContentId);
+    String base64 = Base64.getEncoder().encodeToString(bc.getBytes());
+    Map<String, String> response = new HashMap<>();
+    response.put("bytes", base64);
+    response.put("contentType", bc.getContentType());
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping
