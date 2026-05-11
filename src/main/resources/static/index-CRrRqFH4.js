@@ -827,7 +827,7 @@ Error generating stack: `+a.message+`
     } catch(u) {
       return console.error("첨부파일 로딩 실패:", u), null
   }
-  ,h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(()=>{if(r!=null&&r.id)return s(r.id),u(r.id),()=>{c(r.id)}},[r==null?void 0:r.id,s,u,c]),ue.useEffect(()=>{i.forEach(P=>{var I;(I=P.attachmentIds)==null||I.forEach(R=>{m[R]||v(R)})})},[i,m,v]);
+  ,h1=r=>r<1024?r+" B":r<1024*1024?(r/1024).toFixed(2)+" KB":r<1024*1024*1024?(r/(1024*1024)).toFixed(2)+" MB":(r/(1024*1024*1024)).toFixed(2)+" GB";function m1({channel:r}){const i=vo(P=>P.messages),s=vo(P=>P.fetchMessages),u=vo(P=>P.startPolling),c=vo(P=>P.stopPolling),d=Wt(P=>P.profileImages),p=Dt(P=>P.users),{attachments:m,fetchAttachment:v}=p1();ue.useEffect(()=>{if(r!=null&&r.id)return s(r.id),u(r.id),()=>{c(r.id)}},[r==null?void 0:r.id,s,u,c]),ue.useEffect(()=>{i.forEach(P=>{var I;(I=P.attachmentIds)==null||I.forEach(R=>{m[R]||v(R)})})},[i,m,v])
   const x = async (P, I) => {
     try {
       // 이미 fetchAttachment로 캐시된 objectURL이 있으면 재사용
@@ -861,15 +861,6 @@ Error generating stack: `+a.message+`
       console.error("다운로드 실패:", R)
     }
   }
-  변경 요약
-  수정 위치	문제	해결
-  fetchProfileImage	s.data.bytes (base64 필드) — 서버가 이 필드를 안 줌	responseType: 'blob' → createObjectURL
-  fetchAttachment	bytes, contentType 필드 직접 파싱 — 응답 구조 불일치	responseType: 'blob' → headers에서 메타 추출 → createObjectURL
-  다운로드 핸들러	new Blob([R.data]) — 이미 blob인데 이중 감싸기	캐시된 URL 재사용, R.data 직접 write
-  Prepared using Claude Sonnet 4.6
-
-
-
   width: 240px;
   background: ${J.colors.background.secondary};
   border-left: 1px solid ${J.colors.border.primary};
@@ -979,7 +970,19 @@ Error generating stack: `+a.message+`
   &:hover {
     text-decoration: underline;
   }
-`;function j1({isOpen:r,onClose:i}){const[s,u]=ue.useState(""),[c,d]=ue.useState(""),[p,m]=ue.useState(""),[v,x]=ue.useState(null),[E,j]=ue.useState(null),[O,P]=ue.useState(""),I=ut(V=>V.setCurrentUser),R=V=>{const F=V.target.files[0];if(F){x(F);const W=new FileReader;W.onloadend=()=>{j(W.result)},W.readAsDataURL(F)}},L=async V=>{V.preventDefault(),P("");try{const F=new FormData;F.append("userCreateRequest",new Blob([JSON.stringify({email:s,username:c,password:p})],{type:"application/json"})),v&&F.append("profile",v);const W=await he.post(`${Xe.apiBaseUrl}/users`,F);I(W.data),i()}catch{P("회원가입에 실패했습니다.")}};return r?g.jsx(qp,{children:g.jsxs(bp,{children:[g.jsx("h2",{children:"계정 만들기"}),g.jsxs("form",{onSubmit:L,children:[g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["이메일 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"email",value:s,onChange:V=>u(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["사용자명 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"text",value:c,onChange:V=>d(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["비밀번호 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"password",value:p,onChange:V=>m(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsx(Bi,{children:"프로필 이미지"}),g.jsxs(I1,{children:[g.jsx(_1,{src:E||Qt,alt:"profile"}),g.jsx(N1,{type:"file",accept:"image/*",onChange:R,id:"profile-image"}),g.jsx(O1,{htmlFor:"profile-image",children:"이미지 변경"})]})]}),O&&g.jsx(Yp,{children:O}),g.jsx(Gp,{type:"submit",children:"계속하기"}),g.jsx(L1,{onClick:i,children:"이미 계정이 있으신가요?"})]})]})}):null}const Fi=N.div`
+`;function j1({isOpen:r,onClose:i}){const[s,u]=ue.useState(""),[c,d]=ue.useState(""),[p,m]=ue.useState(""),[v,x]=ue.useState(null),[E,j]=ue.useState(null),[O,P]=ue.useState(""),I=ut(V=>V.setCurrentUser),R=V=>{const F=V.target.files[0];if(F){x(F);const W=new FileReader;W.onloadend=()=>{j(W.result)},W.readAsDataURL(F)}},L=async V=>{V.preventDefault(),P("");try{const F=new FormData;F.append("userCreateRequest",new Blob([JSON.stringify({email:s,username:c,password:p})],{type:"application/json"})),v&&F.append("profile",v);const W=await he.post(`${Xe.apiBaseUrl}/users`,F);I(W.data),i()}catch{P("회원가입에 실패했습니다.")}};return r?g.jsx(qp,{children:g.jsxs(bp,{children:[g.jsx("h2",{children:"계정 만들기"}),g.jsxs("form",{onSubmit:L,children:[g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["이메일 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"email",value:s,onChange:V=>u(V.target.value),required:!0})]}),g.jsxs(Fi,{children:[g.jsxs(Bi,{children:["사용자명 ",g.jsx(Eu,{children:"*"})]}),g.jsx(xo,{type:"text",value:c,onChange:V=>d(V.target.value),required:!0})]}),g.jsxs(Fi, {
+      children: [
+        g.jsxs(Bi, {
+          children: ["비밀번호 ", g.jsx(Eu, {children: "*"})]
+        }),
+        g.jsx(xo, {
+          type: "password",
+          value: p,
+          onChange: V => m(V.target.value),
+          required: !0
+        })
+      ]
+    }),g.jsxs(Fi,{children:[g.jsx(Bi,{children:"프로필 이미지"}),g.jsxs(I1,{children:[g.jsx(_1,{src:E||Qt,alt:"profile"}),g.jsx(N1,{type:"file",accept:"image/*",onChange:R,id:"profile-image"}),g.jsx(O1,{htmlFor:"profile-image",children:"이미지 변경"})]})]}),O&&g.jsx(Yp,{children:O}),g.jsx(Gp,{type:"submit",children:"계속하기"}),g.jsx(L1,{onClick:i,children:"이미 계정이 있으신가요?"})]})]})}):null}const Fi=N.div`;
   margin-bottom: 20px;
 `,Bi=N.label`
   display: block;
