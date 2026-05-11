@@ -2,13 +2,14 @@
 const API_BASE_URL = '/api';
 const ENDPOINTS = {
   USERS: `${API_BASE_URL}/users`,
-  BINARY_CONTENT: `${API_BASE_URL}/binary-content`
+  BINARY_CONTENT: `${API_BASE_URL}/binary-contents`
 };
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
   fetchAndRenderUsers();
 });
+
 
 // Fetch users from the API
 async function fetchAndRenderUsers() {

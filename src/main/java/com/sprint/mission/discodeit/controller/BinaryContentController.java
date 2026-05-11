@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/binaryContents")
+@RequestMapping("/api/binary-contents/{binaryContentId}")
 public class BinaryContentController implements BinaryContentApi {
 
   private final BinaryContentService binaryContentService;
@@ -35,5 +35,3 @@ public class BinaryContentController implements BinaryContentApi {
         .body(binaryContents);
   }
 }
-
-
