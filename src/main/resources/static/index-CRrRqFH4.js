@@ -821,7 +821,7 @@ Error generating stack: `+a.message+`
         {type:"application/json"})),
     s.attachments&&s.attachments.forEach(p=>{u.append("attachments",p)});
     const c=await he.post(`${Xe.apiBaseUrl}/messages`,u,
-        {headers:{"Content-Type":"multipart/form-data"}};
+        {headers: {"Content-Type": "multipart/form-data"}});
     console.log(" 응답 데이터:", c.data);
     return await d(s.channelId),r(p=>({messages:[...p.messages,c.data]})),c.data}catch(u){
     throw console.error("메시지 생성 실패:",u),u}}})),p1=bn((r,i)=>({attachments:{},
