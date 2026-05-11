@@ -32,11 +32,13 @@ public class BasicMessageService implements MessageService {
             throw new NoSuchElementException("Author not found with id " + request.authorId());
         }
 
-        request.attachmentIds().forEach(attachmentId -> {
-            if (!binaryContentRepository.existsById(attachmentId)) {
-                throw new NoSuchElementException("Attachment not found with id " + attachmentId);
-            }
-        });
+        if (request.attachmentIds() != null) {
+            request.attachmentIds().forEach(attachmentId -> {
+                if (!binaryContentRepository.existsById(attachmentId)) {
+                    throw new NoSuchElementException("Attachment not found with id " + attachmentId);
+                }
+            });
+        }
 
         Message message = new Message(
                 request.content(),

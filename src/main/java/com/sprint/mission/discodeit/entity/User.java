@@ -18,7 +18,7 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    private UUID profileImageId;
+    private UUID profileId;
 
     public User(String username, String email, String password, UUID profileImageId) {
         this.id = UUID.randomUUID();
@@ -27,7 +27,7 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.profileImageId = profileImageId;
+        this.profileId = profileImageId;
     }
 
     // 호환성 위해 남겨둠 삭제해도될듯
@@ -55,8 +55,8 @@ public class User implements Serializable {
             anyValueUpdated = true;
         }
 
-        if (profileImageId != null && !profileImageId.equals(this.profileImageId)) {
-            this.profileImageId = profileImageId;
+        if (profileImageId != null && !profileImageId.equals(this.profileId)) {
+            this.profileId = profileImageId;
             anyValueUpdated = true;
         }
 

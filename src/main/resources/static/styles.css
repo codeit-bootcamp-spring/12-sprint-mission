@@ -1,0 +1,77 @@
+/* 기본 테마 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #36393f; /* 디스코드 메인 배경색 */
+    color: #ffffff;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 16px;
+    text-align: left;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-list {
+    background-color: #2f3136; /* 리스트 배경 */
+    border-radius: 8px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    margin: 0 10px;
+    border-bottom: 1px solid #3f4248;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.user-item:hover {
+    background-color: #393c43; /* 호버 효과 */
+    border-radius: 8px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.user-info {
+    flex-grow: 1;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.user-email {
+    font-size: 12px;
+    color: #b9bbbe; /* 디스코드 보조 텍스트 색상 */
+}
+
+.status-badge {
+    font-size: 12px;
+    color: #b9bbbe;
+}
+
+/* 상태 색상 */
+.online { color: #43b581; }
+.offline { color: #747f8d; }

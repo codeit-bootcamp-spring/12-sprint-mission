@@ -17,11 +17,28 @@ public class BasicBinaryContentService implements BinaryContentService {
 
     @Override
     public BinaryContent create(BinaryContentCreateRequest request) {
-        if (request.bytes() == null) {
-            throw new IllegalArgumentException("Binary content bytes cannot be null (BinaryContentService-create)");
+        if (request.bytes() == null || request.bytes().length == 0) {
+            throw new IllegalArgumentException("업로드할 파일 데이터가 없습니다.");
         }
 
-        return binaryContentRepository.save(new BinaryContent(request.bytes()));
+        if (request.fileName() == null || request.fileName().isBlank()) {
+            throw new IllegalArgumentException("파일명은 필수 항목입니다.");
+        }
+
+        if (request.contentType() == null || request.contentType().isBlank()) {
+            throw new IllegalArgumentException("파일의 MIME 타입(contentType)이 누락되었습니다.");
+        }
+
+        if (request.fileSize() <= 0) {
+            throw new IllegalArgumentException("파일 크기는 0보다 커야 합니다.");
+        }
+
+        return binaryContentRepository.save(new BinaryContent(
+                request.fileName(),
+                request.contentType(),
+                (long) request.bytes().length,
+                request.bytes()
+        ));
     }
 
     @Override

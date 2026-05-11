@@ -13,14 +13,19 @@ public class BasicAuthService implements AuthService {
     private final UserRepository userRepository;
 
     public User login(AuthRequest authRequest) {
-        if (authRequest.username() == null  || authRequest.password() == null) {
+        if (authRequest.username() == null || authRequest.username().isBlank() ||
+                authRequest.password() == null || authRequest.password().isBlank()) {
             throw new IllegalArgumentException("Username and password must not be null (login)");
         }
 
-        return userRepository.findAll().stream()
-                .filter(u -> u.getUsername().equals(authRequest.username()))
-                .filter(u -> u.getPassword().equals(authRequest.password()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+        User user = userRepository.findByUsername(authRequest.username())
+                .orElseThrow(() -> new IllegalArgumentException("Username not found : " + authRequest.username()));
+
+        if (!user.getPassword().equals(authRequest.password())) {
+            throw new IllegalArgumentException("Wrong password");
+        }
+
+        return user;
     }
+
 }

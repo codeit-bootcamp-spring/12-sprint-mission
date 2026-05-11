@@ -25,6 +25,7 @@ public class BasicUserService implements UserService {
     private final BinaryContentRepository binaryContentRepository;
     private final UserStatusRepository userStatusRepository;
 
+    @Override
     public User create(UserCreateRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw new IllegalArgumentException("User with Username " + request.username() + " already exists");
@@ -82,9 +83,9 @@ public class BasicUserService implements UserService {
             throw new IllegalArgumentException("User with Username " + request.username() + " already exists");
         }
 
-        if (request.profileImageId() != null && !request.profileImageId().equals(user.getProfileImageId())) {
-            if (user.getProfileImageId() != null) {
-                binaryContentRepository.delete(user.getProfileImageId());
+        if (request.profileImageId() != null && !request.profileImageId().equals(user.getProfileId())) {
+            if (user.getProfileId() != null) {
+                binaryContentRepository.delete(user.getProfileId());
             }
         }
 
@@ -110,7 +111,7 @@ public class BasicUserService implements UserService {
 
         userStatusRepository.deleteByUserId(userId);
 
-        UUID profileImageId = user.getProfileImageId();
+        UUID profileImageId = user.getProfileId();
         if (profileImageId != null) {
             binaryContentRepository.delete(profileImageId);
         }
