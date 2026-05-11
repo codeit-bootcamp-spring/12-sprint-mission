@@ -19,11 +19,15 @@ import java.util.UUID;
 @Tag(name = "BinaryContent", description = "Attachment API")
 public interface BinaryContentApi {
 
-  @Operation(summary = "Find Attachment")
+  @Operation(summary = "Find Attachment", description = "Returns base64 encoded image with content type")
   @ApiResponses(value = {
       @ApiResponse(
           responseCode = "200", description = "Attachment Search Successful",
-          content = @Content(schema = @Schema(implementation = BinaryContent.class))
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"bytes\": \"iVBORw0KGgoAAAANSUhEUg...\", \"contentType\": \"image/jpeg\"}"
+              )
+          )
       ),
       @ApiResponse(
           responseCode = "404", description = "Unable to find attachment",
