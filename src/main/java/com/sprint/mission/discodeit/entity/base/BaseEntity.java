@@ -16,7 +16,7 @@ import java.util.UUID;
 public abstract class BaseEntity {
 
     @Id
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @CreatedDate
     private Instant createdAt;
