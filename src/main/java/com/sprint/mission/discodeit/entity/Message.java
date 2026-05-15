@@ -1,50 +1,62 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serializable;
-import java.time.Instant;
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.jspecify.annotations.NonNull;
 
+@Entity
 @Getter
-public class Message implements Serializable, Comparable<Message> {
-	private static final long serialVersionUID = 1L;
+@SuperBuilder
+@Table(name = "messages")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public class Message extends BaseUpdatableEntity implements Comparable<Message> {
 
-	private final UUID id;
-	private final Instant createdAt;
-	private Instant updatedAt;
-	//
-	private String content;
-	//
-	private final UUID channelId;
-	private final UUID authorId;
-	private final List<UUID> attachmentIds;
+  @Column(name = "content", length = Integer.MAX_VALUE)
+  private String content;
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "channel_id")
+  private Channel channel;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "author_id")
+  private User author;
+  @NonNull
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinTable(name = "message_attachments",
+      joinColumns = {@JoinColumn(name = "message_id")},
+      inverseJoinColumns = {@JoinColumn(name = "attachment_id")})
+  private List<BinaryContent> attachments = new ArrayList<>();
 
-	public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
-		this.id = UUID.randomUUID();
-		this.createdAt = Instant.now();
-		//
-		this.content = content;
-		this.channelId = channelId;
-		this.authorId = authorId;
-		this.attachmentIds = attachmentIds;
-	}
 
-	public void update(String newContent) {
-		boolean anyValueUpdated = false;
-		if (newContent != null && !newContent.equals(this.content)) {
-			this.content = newContent;
-			anyValueUpdated = true;
-		}
+  public void setBinaryContents(@NonNull List<BinaryContent> attachments) {
+    this.attachments = attachments;
+  }
 
-		if (anyValueUpdated) {
-			this.updatedAt = Instant.now();
-		}
-	}
+  public void update(String newContent) {
+    if (newContent != null && !newContent.equals(this.content)) {
+      this.content = newContent;
+    }
+  }
 
-	@Override
-	public int compareTo(Message o) {
-		return this.getCreatedAt().compareTo(o.getCreatedAt());
-	}
+  @Override
+  public int compareTo(Message o) {
+    return this.getCreatedAt().compareTo(o.getCreatedAt());
+  }
 }

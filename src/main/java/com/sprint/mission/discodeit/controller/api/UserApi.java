@@ -1,11 +1,10 @@
 package com.sprint.mission.discodeit.controller.api;
 
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.data.UserStatusDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,7 +31,7 @@ public interface UserApi {
           content = @Content(examples = @ExampleObject(value = "User with email {email} already exists"))
       )
   })
-  ResponseEntity<User> create(
+  ResponseEntity<UserDto> create(
       @RequestPart UserCreateRequest userCreateRequest,
       @Parameter(description = "User 프로필 이미지")
       @RequestPart(value = "profile", required = false) MultipartFile profile);
@@ -47,7 +46,7 @@ public interface UserApi {
           content = @Content(examples = @ExampleObject(value = "User with id {userId} not found"))
       )
   })
-  ResponseEntity<User> update(
+  ResponseEntity<UserDto> update(
       @Parameter(name = "userId", description = "수정할 User ID")
       @PathVariable UUID userId,
       @RequestPart("userUpdateRequest") UserUpdateRequest userUpdateRequest,
@@ -76,7 +75,7 @@ public interface UserApi {
           content = @Content(examples = @ExampleObject(value = "UserStatus with userId {userId} not found"))
       )
   })
-  ResponseEntity<UserStatus> updateStatus(
+  ResponseEntity<UserStatusDto> updateStatus(
       @Parameter(name = "userId", description = "상태를 변경할 User ID")
       @PathVariable UUID userId,
       @RequestBody UserStatusUpdateRequest request);

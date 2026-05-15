@@ -1,16 +1,13 @@
 package com.sprint.mission.discodeit.exception;
 
-import ch.qos.logback.core.spi.ErrorCodes;
 import com.sprint.mission.discodeit.dto.data.ErrorResponse;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j

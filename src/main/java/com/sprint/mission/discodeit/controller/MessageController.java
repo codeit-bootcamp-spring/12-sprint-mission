@@ -1,16 +1,21 @@
 package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.MessageApi;
+import com.sprint.mission.discodeit.dto.data.MessageDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
-import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +40,11 @@ public class MessageController implements MessageApi {
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Override
-  public ResponseEntity<Message> create(
+  public ResponseEntity<MessageDto> create(
       @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments) {
     if (attachments == null) {
-      return ResponseEntity.ok(
+      return ResponseEntity.status(HttpStatus.CREATED).body(
           messageService.create(messageCreateRequest, Collections.emptyList()));
     }
     List<BinaryContentCreateRequest> binaryContentCreateRequests = attachments.stream()
@@ -52,7 +57,7 @@ public class MessageController implements MessageApi {
 
   @PatchMapping("/{messageId}")
   @Override
-  public ResponseEntity<Message> update(@PathVariable UUID messageId,
+  public ResponseEntity<MessageDto> update(@PathVariable UUID messageId,
       @RequestBody MessageUpdateRequest request) {
     return ResponseEntity.ok(messageService.update(messageId, request));
   }
@@ -66,8 +71,13 @@ public class MessageController implements MessageApi {
 
   @GetMapping()
   @Override
-  public ResponseEntity<List<Message>> findByChannelId(@RequestParam UUID channelId) {
-    return ResponseEntity.ok(messageService.findAllByChannelId(channelId));
+  public ResponseEntity<PageResponse<MessageDto>> findByChannelId(@RequestParam UUID channelId,
+      @RequestParam(name = "cursor", required = false) Instant cursor,
+      @PageableDefault(size = 50,
+          sort = "createdAt",
+          direction = Direction.DESC
+      ) Pageable pageable) {
+    return ResponseEntity.ok(messageService.findAllByChannelId(channelId, cursor, pageable));
   }
 
   private BinaryContentCreateRequest resolveProfileRequest(MultipartFile file) {

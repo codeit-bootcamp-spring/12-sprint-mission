@@ -1,40 +1,46 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serializable;
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.UUID;
-
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+@Entity
 @Getter
-public class ReadStatus implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final UUID id;
-	private final Instant createdAt;
-	private Instant updatedAt;
-	//
-	private final UUID userId;
-	private final UUID channelId;
-	private Instant lastReadAt;
+@SuperBuilder
+@Table(name = "read_statuses", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_id", "channel_id"})})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class ReadStatus extends BaseUpdatableEntity {
 
-	public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
-		this.id = UUID.randomUUID();
-		this.createdAt = Instant.now();
-		//
-		this.userId = userId;
-		this.channelId = channelId;
-		this.lastReadAt = lastReadAt;
-	}
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "channel_id", nullable = false)
+  private Channel channel;
+  @NotNull
+  @Column(name = "last_read_at", nullable = false)
+  private Instant lastReadAt;
 
-	public void update(Instant newLastReadAt) {
-		boolean anyValueUpdated = false;
-		if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
-			this.lastReadAt = newLastReadAt;
-			anyValueUpdated = true;
-		}
 
-		if (anyValueUpdated) {
-			this.updatedAt = Instant.now();
-		}
-	}
+  public void update(Instant newLastReadAt) {
+    if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
+      this.lastReadAt = newLastReadAt;
+    }
+  }
 }
