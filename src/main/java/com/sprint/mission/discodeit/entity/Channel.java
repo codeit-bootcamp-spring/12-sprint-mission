@@ -1,14 +1,24 @@
 package com.sprint.mission.discodeit.entity;
 
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
+@Entity
+@Table(name = "channels")
 public class Channel extends BaseUpdatableEntity {
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private ChannelType type;
+
   private String name;
   private String description;
+
+  protected Channel() {
+
+  }
 
   public Channel(ChannelType type, String name, String description) {
     this.type = type;
