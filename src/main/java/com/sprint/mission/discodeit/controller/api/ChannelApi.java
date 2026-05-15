@@ -4,7 +4,6 @@ import com.sprint.mission.discodeit.dto.data.ChannelDto;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
-import com.sprint.mission.discodeit.entity.Channel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,11 +23,11 @@ public interface ChannelApi {
 
   @Operation(summary = "Public Channel 생성", operationId = "create_3")
   @ApiResponse(responseCode = "201", description = "Public Channel이 성공적으로 생성됨")
-  ResponseEntity<Channel> createPublic(@RequestBody PublicChannelCreateRequest request);
+  ResponseEntity<ChannelDto> createPublic(@RequestBody PublicChannelCreateRequest request);
 
   @Operation(summary = "Private Channel 생성", operationId = "create_4")
   @ApiResponse(responseCode = "201", description = "Private Channel이 성공적으로 생성됨")
-  ResponseEntity<Channel> createPrivate(@RequestBody PrivateChannelCreateRequest request);
+  ResponseEntity<ChannelDto> createPrivate(@RequestBody PrivateChannelCreateRequest request);
 
   @Operation(summary = "Channel 정보 수정", operationId = "update_3")
   @ApiResponses({
@@ -40,7 +39,7 @@ public interface ChannelApi {
           content = @Content(examples = @ExampleObject(value = "Channel with id {channelId} not found"))
       )
   })
-  ResponseEntity<Channel> update(
+  ResponseEntity<ChannelDto> update(
       @Parameter(name = "channelId", description = "수정할 Channel ID")
       @PathVariable UUID channelId,
       @RequestBody PublicChannelUpdateRequest request);
