@@ -18,6 +18,12 @@ spring:
     show-sql: true
 
 logging:
-level:
-  org.hibernate.SQL: debug
-  org.hibernate.orm.jdbc.bind: trace
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+
+discodeit:
+  storage:
+    type: local
+    local:
+      root-path: storage
