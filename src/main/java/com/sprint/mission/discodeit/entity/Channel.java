@@ -31,7 +31,7 @@ public class Channel extends BaseUpdatableEntity {
   @Column(nullable = false)
   private ChannelType type;
 
-  public Channel(ChannelType type, String name, String description) {
+  public Channel(String name, String description, ChannelType type) {
     this.type = type;
     this.name = name;
     this.description = description;

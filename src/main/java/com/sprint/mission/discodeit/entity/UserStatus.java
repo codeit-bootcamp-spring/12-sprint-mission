@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.Duration;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -38,5 +39,11 @@ public class UserStatus extends BaseUpdatableEntity {
     if (newLastActiveAt != null) {
       this.lastActiveAt = newLastActiveAt;
     }
+  }
+
+  public Boolean isOnline() {
+    Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
+
+    return lastActiveAt.isAfter(instantFiveMinutesAgo);
   }
 }
