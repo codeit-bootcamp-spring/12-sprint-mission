@@ -1,45 +1,40 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-public class Channel implements Serializable {
+@ToString(callSuper = true)
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Channel extends BaseUpdatableEntity {
 
-  private static final long serialVersionUID = 1L;
-  private UUID id;
-  private Instant createdAt;
-  private Instant updatedAt;
-
-  private ChannelType type;
   private String name;
   private String description;
+  private ChannelType type;
 
   public Channel(ChannelType type, String name, String description) {
-    this.id = UUID.randomUUID();
-    this.createdAt = Instant.now();
-
     this.type = type;
     this.name = name;
     this.description = description;
   }
 
-  public void update(String newName, String newDescription) {
-    boolean anyValueUpdated = false;
-    if (newName != null && !newName.equals(this.name)) {
+  public void update(String newName, String newDescription, ChannelType newType) {
+    if (newName != null) {
       this.name = newName;
-      anyValueUpdated = true;
-    }
-    if (newDescription != null && !newDescription.equals(this.description)) {
-      this.description = newDescription;
-      anyValueUpdated = true;
     }
 
-    if (anyValueUpdated) {
-      this.updatedAt = Instant.now();
+    if (newDescription != null) {
+      this.description = newDescription;
+    }
+
+    if (newType != null) {
+      this.type = newType;
     }
   }
 }
