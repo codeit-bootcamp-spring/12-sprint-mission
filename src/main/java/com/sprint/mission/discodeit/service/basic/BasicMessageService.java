@@ -54,8 +54,7 @@ public class BasicMessageService implements MessageService {
           BinaryContent binaryContent = new BinaryContent(
               fileName,
               (long) bytes.length,
-              contentType,
-              bytes
+              contentType
           );
 
           return binaryContentRepository.save(binaryContent);
