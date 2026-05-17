@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.data.ChannelDto;
+import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
@@ -65,7 +66,7 @@ public class BasicChannelService implements ChannelService {
   @Transactional(readOnly = true)
   public ChannelDto find(UUID channelId) {
     return channelRepository.findById(channelId)
-        .map(channelMapper::toDto)
+        .map(this::toDto)
         .orElseThrow(
             () -> new NoSuchElementException("Channel with id " + channelId + " not found"));
   }
@@ -82,7 +83,7 @@ public class BasicChannelService implements ChannelService {
             channel.getType().equals(ChannelType.PUBLIC)
                 || mySubscribedChannelIds.contains(channel.getId())
         )
-        .map(channelMapper::toDto)
+        .map(this::toDto)
         .toList();
   }
 
@@ -114,5 +115,39 @@ public class BasicChannelService implements ChannelService {
     readStatusRepository.deleteAllByChannelId(channel.getId());
 
     channelRepository.deleteById(channelId);
+  }
+
+  private ChannelDto toDto(Channel channel) {
+    ChannelDto channelDto = channelMapper.toDto(channel);
+
+    Instant lastMessageAt = messageRepository
+        .findTopByChannelIdOrderByCreatedAtDesc(channel.getId())
+        .map(Message::getCreatedAt)
+        .orElse(Instant.MIN);
+
+    List<UserDto> participants = List.of();
+
+    if (channel.getType().equals(ChannelType.PRIVATE)) {
+      participants = readStatusRepository.findAllByChannelId(channel.getId())
+          .stream()
+          .map(ReadStatus::getUser)
+          .map(user -> new UserDto(
+              user.getId(),
+              user.getUsername(),
+              user.getEmail(),
+              null,
+              user.getUserStatus() == null ? null : user.getUserStatus().isOnline()
+          ))
+          .toList();
+    }
+
+    return new ChannelDto(
+        channelDto.id(),
+        channelDto.type(),
+        channelDto.name(),
+        channelDto.description(),
+        participants,
+        lastMessageAt
+    );
   }
 }
