@@ -15,6 +15,7 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "messages")
@@ -35,6 +36,7 @@ public class Message extends BaseUpdatableEntity {
   @JoinColumn(name = "author_id")
   private User author;
 
+  @BatchSize(size = 50)
   @ManyToMany
   @JoinTable(
       name = "message_attachments",
