@@ -5,16 +5,18 @@ CREATE DATABASE discodeit
 
 GRANT ALL PRIVILEGES ON DATABASE discodeit TO discodeit_user;
 
-GRANT ALL ON SCHEMA public TO discodeit_user;
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
 
+GRANT ALL ON SCHEMA public TO discodeit_user;
+-- DROP TABLE binary_contents;
 CREATE TABLE binary_contents
 (
     id           uuid PRIMARY KEY,
     created_at   timestamptz  NOT NULL,
     file_name    VARCHAR(255) NOT NULL,
     size         BIGINT       NOT NULL,
-    content_type VARCHAR(100) NOT NULL,
-    bytes        bytea        NOT NULL
+    content_type VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE users
