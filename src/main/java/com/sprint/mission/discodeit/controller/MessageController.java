@@ -1,9 +1,11 @@
 package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.MessageApi;
+import com.sprint.mission.discodeit.dto.data.MessageDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
+import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -70,9 +72,10 @@ public class MessageController implements MessageApi {
   }
 
   @GetMapping
-  public ResponseEntity<List<Message>> findAllByChannelId(
+  public ResponseEntity<PageResponse<MessageDto>> findAllByChannelId(
       @RequestParam("channelId") UUID channelId) {
-    List<Message> messages = messageService.findAllByChannelId(channelId);
+    PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId);
+
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(messages);

@@ -24,11 +24,9 @@ public class ChannelMapper {
 
   public ChannelDto toDto(Channel channel) {
 
-    Instant lastMessageAt = messageRepository.findAllByChannelId(channel.getId())
-        .stream()
-        .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
+    Instant lastMessageAt = messageRepository
+        .findTopByChannelIdOrderByCreatedAtDesc(channel.getId())
         .map(Message::getCreatedAt)
-        .findFirst()
         .orElse(Instant.MIN);
 
     List<UserDto> participants = List.of();
