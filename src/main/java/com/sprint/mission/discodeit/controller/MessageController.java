@@ -9,6 +9,7 @@ import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
 import com.sprint.mission.discodeit.service.MessageService;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,8 +76,10 @@ public class MessageController implements MessageApi {
 
   @GetMapping
   public ResponseEntity<PageResponse<MessageDto>> findAllByChannelId(
-      @RequestParam("channelId") UUID channelId) {
-    PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId);
+      @RequestParam("channelId") UUID channelId,
+      @RequestParam(value = "cursor", required = false) Instant cursor
+  ) {
+    PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId, cursor);
 
     return ResponseEntity
         .status(HttpStatus.OK)

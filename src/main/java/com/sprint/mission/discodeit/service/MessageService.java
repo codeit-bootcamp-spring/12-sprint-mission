@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.entity.Message;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,5 +22,5 @@ public interface MessageService {
 
   void delete(UUID messageId);
 
-  PageResponse<MessageDto> findAllByChannelId(UUID channelId);
+  PageResponse<MessageDto> findAllByChannelId(UUID channelId, Instant cursor);
 }

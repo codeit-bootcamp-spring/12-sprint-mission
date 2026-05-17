@@ -17,14 +17,11 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,19 +95,33 @@ public class BasicMessageService implements MessageService {
 
   @Override
   @Transactional(readOnly = true)
-  public PageResponse<MessageDto> findAllByChannelId(UUID channelId) {
+  public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Instant cursor) {
+    List<Message> messages;
 
-    Pageable pageable = PageRequest.of(
-        0,
+    if (cursor == null) {
+      messages = messageRepository.findTop50ByChannelIdOrderByCreatedAtDesc(channelId);
+    } else {
+      messages = messageRepository
+          .findTop50ByChannelIdAndCreatedAtLessThanOrderByCreatedAtDesc(channelId, cursor);
+    }
+
+    List<MessageDto> messageDtos = messages.stream()
+        .map(messageMapper::toDto)
+        .toList();
+
+    Object nextCursor = messages.isEmpty()
+        ? null
+        : messages.get(messages.size() - 1).getCreatedAt();
+
+    boolean hasNext = messages.size() == 50;
+
+    return pageResponseMapper.fromCursor(
+        messageDtos,
+        nextCursor,
         50,
-        Sort.by(Sort.Direction.DESC, "createdAt")
+        hasNext,
+        null
     );
-
-    Slice<MessageDto> messageDtos = messageRepository
-        .findAllByChannelId(channelId, pageable)
-        .map(messageMapper::toDto);
-
-    return pageResponseMapper.fromSlice(messageDtos);
   }
 
   @Override
