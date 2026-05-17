@@ -1,44 +1,42 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-public class Channel implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Entity
+@Table(name = "channels")
+public class Channel extends BaseUpdatableEntity {
 
-    private UUID id;
-    private Instant createdAt;
-    private Instant updatedAt;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
     private ChannelType type;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "description")
     private String description;
 
-    public Channel(ChannelType type, String name, String description) {
-        id = UUID.randomUUID();
-        this.createdAt = Instant.now();
+    protected Channel() {}
 
+    public Channel(ChannelType type, String name, String description) {
+        super(UUID.randomUUID());
         this.type = type;
         this.name = name;
         this.description = description;
     }
 
     public void update(String newName, String newDescription) {
-        boolean anyValueUpdated = false;
         if (newName != null && !newName.equals(this.name)) {
             this.name = newName;
-            anyValueUpdated = true;
         }
         if (newDescription != null && !newDescription.equals(this.description)) {
             this.description = newDescription;
-            anyValueUpdated = true;
-        }
-        if (anyValueUpdated) {
-            this.updatedAt = Instant.now();
         }
     }
 }

@@ -1,44 +1,42 @@
 package com.sprint.mission.discodeit.controller;
 
+import com.sprint.mission.discodeit.controller.api.AuthApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.LoginRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
-import com.sprint.mission.discodeit.repository.UserStatusRepository;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.service.AuthService;
+import com.sprint.mission.discodeit.service.UserStatusService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements AuthApi {
 
     private final AuthService authService;
-    private final UserStatusRepository userStatusRepository;
+    private final UserStatusService userStatusService;
+    private final UserMapper userMapper;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public UserDto login(@RequestBody LoginRequest request) {
-        User user = authService.login(request);
-        return toDto(user);
+    @PostMapping(path = "login")
+    @Override
+    public ResponseEntity<UserDto> login(@RequestBody LoginRequest loginRequest) {
+        User user = authService.login(loginRequest);
+        UserDto response = userMapper.toDto(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
-    private UserDto toDto(User user) {
-        Boolean online = userStatusRepository.findByUserId(user.getId())
+    private Boolean resolveOnline(User user) {
+        return userStatusService.findAll().stream()
+                .filter(userStatus -> userStatus.getUser().getId().equals(user.getId()))
+                .findFirst()
                 .map(UserStatus::isOnline)
-                .orElse(null);
-
-        return new UserDto(
-                user.getId(),
-                user.getCreatedAt(),
-                user.getUpdatedAt(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getProfileId(),
-                online
-        );
+                .orElse(false);
     }
 }

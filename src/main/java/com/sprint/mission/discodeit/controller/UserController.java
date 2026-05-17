@@ -1,65 +1,121 @@
 package com.sprint.mission.discodeit.controller;
 
+import com.sprint.mission.discodeit.controller.api.UserApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
-import com.sprint.mission.discodeit.dto.request.UserCreateApiRequest;
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
-import com.sprint.mission.discodeit.dto.request.UserUpdateApiRequest;
+import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserApi {
 
     private final UserService userService;
     private final UserStatusService userStatusService;
+    private final UserMapper userMapper;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public User createUser(@RequestBody UserCreateApiRequest request) {
-        return userService.create(
-                request.user(),
-                Optional.ofNullable(request.profile())
-        );
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Override
+    public ResponseEntity<UserDto> create(
+            @RequestPart("userCreateRequest") UserCreateRequest userCreateRequest,
+            @RequestPart(value = "profile", required = false) MultipartFile profile
+    ) {
+        Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
+                .flatMap(this::resolveProfileRequest);
+        User createdUser = userService.create(userCreateRequest, profileRequest);
+        UserDto response = userMapper.toDto(createdUser);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
-    @RequestMapping(value = "/{userId}", method = RequestMethod.PATCH)
-    public User updateUser(@PathVariable UUID userId,
-                              @RequestBody UserUpdateApiRequest request) {
-        return userService.update(
-                userId,
-                request.user(),
-                Optional.ofNullable(request.profile())
-        );
+    @PatchMapping(
+            path = "{userId}",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
+    )
+    @Override
+    public ResponseEntity<UserDto> update(
+            @PathVariable("userId") UUID userId,
+            @RequestPart("userUpdateRequest") UserUpdateRequest userUpdateRequest,
+            @RequestPart(value = "profile", required = false) MultipartFile profile
+    ) {
+        Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
+                .flatMap(this::resolveProfileRequest);
+        User updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
+        UserDto response = userMapper.toDto(updatedUser);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<UserDto> findAllUsers() {
-        return userService.findAll();
-    }
-
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public UserDto findUser(@PathVariable UUID userId) {
-        return userService.find(userId);
-    }
-
-    @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable UUID userId) {
+    @DeleteMapping(path = "{userId}")
+    @Override
+    public ResponseEntity<Void> delete(@PathVariable("userId") UUID userId) {
         userService.delete(userId);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
-    @RequestMapping(value = "/{userId}/status", method = RequestMethod.PATCH)
-    public UserStatus updateUserStatus(@PathVariable UUID userId,
-                                       @RequestBody UserStatusUpdateRequest request) {
-        return userStatusService.updateByUserId(userId, request);
+    @GetMapping
+    @Override
+    public ResponseEntity<List<UserDto>> findAll() {
+        List<UserDto> users = userService.findAll();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(users);
+    }
+
+    @PatchMapping(path = "{userId}/userStatus")
+    @Override
+    public ResponseEntity<UserStatus> updateUserStatusByUserId(@PathVariable("userId") UUID userId,
+                                                               @RequestBody UserStatusUpdateRequest request) {
+        UserStatus updatedUserStatus = userStatusService.updateByUserId(userId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedUserStatus);
+    }
+
+    private Boolean resolveOnline(User user) {
+        return userStatusService.findAll().stream()
+                .filter(userStatus -> userStatus.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .map(UserStatus::isOnline)
+                .orElse(false);
+    }
+
+    private Optional<BinaryContentCreateRequest> resolveProfileRequest(MultipartFile profileFile) {
+        if (profileFile.isEmpty()) {
+            return Optional.empty();
+        } else {
+            try {
+                BinaryContentCreateRequest binaryContentCreateRequest = new BinaryContentCreateRequest(
+                        profileFile.getOriginalFilename(),
+                        profileFile.getContentType(),
+                        profileFile.getBytes()
+                );
+                return Optional.of(binaryContentCreateRequest);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
