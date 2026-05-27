@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -43,14 +44,10 @@ public class MessageController implements MessageApi {
   public ResponseEntity<MessageDto> create(
       @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments) {
-    if (attachments == null) {
-      return ResponseEntity.status(HttpStatus.CREATED).body(
-          messageService.create(messageCreateRequest, Collections.emptyList()));
-    }
-    List<BinaryContentCreateRequest> binaryContentCreateRequests = attachments.stream()
-        .filter(f -> f != null && !f.isEmpty())
-        .map(this::resolveProfileRequest)
-        .toList();
+    List<BinaryContentCreateRequest> binaryContentCreateRequests =
+        Optional.ofNullable(attachments).orElse(Collections.emptyList()).stream()
+            .map(this::resolveProfileRequest)
+            .toList();
     return ResponseEntity.status(HttpStatus.CREATED).body(
         messageService.create(messageCreateRequest, binaryContentCreateRequests));
   }

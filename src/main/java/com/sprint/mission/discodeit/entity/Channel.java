@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.jspecify.annotations.NonNull;
 
 @Entity
 @Getter
@@ -38,10 +37,10 @@ public class Channel extends BaseUpdatableEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "type", nullable = false, length = 10)
   private ChannelType type;
-  @NonNull
+  @NotNull
   @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Message> messages = new ArrayList<>();
-  @NonNull
+  @NotNull
   @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ReadStatus> readStatuses = new ArrayList<>();
 
@@ -49,14 +48,6 @@ public class Channel extends BaseUpdatableEntity {
     this.type = type;
     this.name = name;
     this.description = description;
-  }
-
-  public void setMessages(@NonNull List<Message> messages) {
-    this.messages = messages;
-  }
-
-  public void setReadStatuses(@NonNull List<ReadStatus> readStatuses) {
-    this.readStatuses = readStatuses;
   }
 
   public void update(String newName, String newDescription) {

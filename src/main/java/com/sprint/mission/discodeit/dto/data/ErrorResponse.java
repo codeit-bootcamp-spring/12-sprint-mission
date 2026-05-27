@@ -1,14 +1,11 @@
 package com.sprint.mission.discodeit.dto.data;
 
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.time.Instant;
 
-@Getter
-@AllArgsConstructor
-public class ErrorResponse {
+public record ErrorResponse(
+    int code,
+    String message,
+    Instant timestamp
+) {
 
-  private int code;
-  private String message;
-  private LocalDateTime timestamp;
 }

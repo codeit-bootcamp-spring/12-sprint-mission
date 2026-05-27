@@ -60,14 +60,6 @@ public class User extends BaseUpdatableEntity {
     this.profile = profile;
   }
 
-  public void setMessages(@NonNull List<Message> messages) {
-    this.messages = messages;
-  }
-
-  public void setReadStatuses(@NonNull List<ReadStatus> readStatuses) {
-    this.readStatuses = readStatuses;
-  }
-
   public void setUserStatus(@NonNull UserStatus userStatus) {
     this.userStatus = userStatus;
   }

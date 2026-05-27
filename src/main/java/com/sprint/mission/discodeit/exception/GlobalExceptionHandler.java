@@ -2,7 +2,7 @@ package com.sprint.mission.discodeit.exception;
 
 import com.sprint.mission.discodeit.dto.data.ErrorResponse;
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(
         HttpStatus.BAD_REQUEST.value(),
         e.getMessage(),
-        LocalDateTime.now()
+        Instant.now()
     );
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
   }
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(
         HttpStatus.FORBIDDEN.value(),
         e.getMessage(),
-        LocalDateTime.now()
+        Instant.now()
     );
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
   }
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(
         HttpStatus.NOT_FOUND.value(),
         e.getMessage(),
-        LocalDateTime.now()
+        Instant.now()
     );
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
   }
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR.value(),
         e.getMessage(),
-        LocalDateTime.now()
+        Instant.now()
     );
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }

@@ -26,7 +26,7 @@ import org.jspecify.annotations.NonNull;
 @Table(name = "messages")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Message extends BaseUpdatableEntity implements Comparable<Message> {
+public class Message extends BaseUpdatableEntity {
 
   @Column(name = "content", length = Integer.MAX_VALUE)
   private String content;
@@ -44,19 +44,10 @@ public class Message extends BaseUpdatableEntity implements Comparable<Message> 
       inverseJoinColumns = {@JoinColumn(name = "attachment_id")})
   private List<BinaryContent> attachments = new ArrayList<>();
 
-
-  public void setBinaryContents(@NonNull List<BinaryContent> attachments) {
-    this.attachments = attachments;
-  }
-
   public void update(String newContent) {
     if (newContent != null && !newContent.equals(this.content)) {
       this.content = newContent;
     }
   }
 
-  @Override
-  public int compareTo(Message o) {
-    return this.getCreatedAt().compareTo(o.getCreatedAt());
-  }
 }
