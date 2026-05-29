@@ -177,3 +177,11 @@ gradle-app.setting
 file-data-map
 .discodeit
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,gradle,intellij+all
+
+/uploads
+api-docs.json
+# Claude Code
+.claude/
+.agents/
+CLAUDE.md
+skills-lock.json
