@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public interface UserApi {
       )
   })
   ResponseEntity<UserDto> create(
-      @RequestPart UserCreateRequest userCreateRequest,
+      @RequestPart @Valid UserCreateRequest userCreateRequest,
       @Parameter(description = "User 프로필 이미지")
       @RequestPart(value = "profile", required = false) MultipartFile profile);
 
@@ -78,6 +79,6 @@ public interface UserApi {
   ResponseEntity<UserStatusDto> updateStatus(
       @Parameter(name = "userId", description = "상태를 변경할 User ID")
       @PathVariable UUID userId,
-      @RequestBody UserStatusUpdateRequest request);
+      @RequestBody @Valid UserStatusUpdateRequest request);
 
 }

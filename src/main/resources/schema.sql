@@ -13,42 +13,42 @@ DROP TABLE IF EXISTS "binary_contents" CASCADE;
 CREATE TABLE "binary_contents"
 (
     "id"           UUID PRIMARY KEY,
-    "created_at"   timestamptz  NOT NULL,
-    "file_name"    varchar(255) NOT NULL,
-    "size"         bigint       NOT NULL,
-    "content_type" varchar(100) NOT NULL
+    "created_at"   timestamp with time zone NOT NULL,
+    "file_name"    varchar(255)             NOT NULL,
+    "size"         bigint                   NOT NULL,
+    "content_type" varchar(100)             NOT NULL
 --     "bytes"        bytea        NOT NULL
 );
 
 CREATE TABLE "users"
 (
     "id"         UUID PRIMARY KEY,
-    "created_at" timestamptz  NOT NULL,
-    "updated_at" timestamptz  NULL,
-    "username"   varchar(50)  NOT NULL UNIQUE, -- UK, NN
-    "email"      varchar(100) NOT NULL UNIQUE, -- UK, NN
-    "password"   varchar(60)  NOT NULL,
-    "profile_id" UUID UNIQUE  NULL             -- UK, FK 지정 예정 (탈퇴 시 NULL 처리를 위해 NULL 허용)
+    "created_at" timestamp with time zone NOT NULL,
+    "updated_at" timestamp with time zone NULL,
+    "username"   varchar(50)              NOT NULL UNIQUE, -- UK, NN
+    "email"      varchar(100)             NOT NULL UNIQUE, -- UK, NN
+    "password"   varchar(60)              NOT NULL,
+    "profile_id" UUID UNIQUE              NULL             -- UK, FK 지정 예정 (탈퇴 시 NULL 처리를 위해 NULL 허용)
 );
 
 CREATE TABLE "channels"
 (
     "id"          UUID PRIMARY KEY,
-    "created_at"  timestamptz  NOT NULL,
-    "updated_at"  timestamptz  NULL,
-    "name"        varchar(100) NULL,
-    "description" varchar(500) NULL,
-    "type"        varchar(10)  NOT NULL CHECK ("type" IN ('PUBLIC', 'PRIVATE')) -- ENUM 처리
+    "created_at"  timestamp with time zone NOT NULL,
+    "updated_at"  timestamp with time zone NULL,
+    "name"        varchar(100)             NULL,
+    "description" varchar(500)             NULL,
+    "type"        varchar(10)              NOT NULL CHECK ("type" IN ('PUBLIC', 'PRIVATE')) -- ENUM 처리
 );
 
 CREATE TABLE "messages"
 (
     "id"         UUID PRIMARY KEY,
-    "created_at" timestamptz NOT NULL,
-    "updated_at" timestamptz NULL,
-    "content"    text        NULL,
-    "channel_id" UUID        NOT NULL,
-    "author_id"  UUID        NULL -- 탈퇴 시 SET NULL 처리를 위해 NULL 허용
+    "created_at" timestamp with time zone NOT NULL,
+    "updated_at" timestamp with time zone NULL,
+    "content"    text                     NULL,
+    "channel_id" UUID                     NOT NULL,
+    "author_id"  UUID                     NULL -- 탈퇴 시 SET NULL 처리를 위해 NULL 허용
 );
 
 CREATE TABLE "message_attachments"
@@ -61,20 +61,20 @@ CREATE TABLE "message_attachments"
 CREATE TABLE "user_statuses"
 (
     "id"             UUID PRIMARY KEY,
-    "created_at"     timestamptz NOT NULL,
-    "updated_at"     timestamptz NULL,
-    "user_id"        UUID        NOT NULL UNIQUE, -- 1:1 관계를 위한 UK
-    "last_active_at" timestamptz NOT NULL
+    "created_at"     timestamp with time zone NOT NULL,
+    "updated_at"     timestamp with time zone NULL,
+    "user_id"        UUID                     NOT NULL UNIQUE, -- 1:1 관계를 위한 UK
+    "last_active_at" timestamp with time zone NOT NULL
 );
 
 CREATE TABLE "read_statuses"
 (
     "id"           UUID PRIMARY KEY,
-    "created_at"   timestamptz NOT NULL,
-    "updated_at"   timestamptz NULL,
-    "user_id"      UUID        NOT NULL,
-    "channel_id"   UUID        NOT NULL,
-    "last_read_at" timestamptz NOT NULL,
+    "created_at"   timestamp with time zone NOT NULL,
+    "updated_at"   timestamp with time zone NULL,
+    "user_id"      UUID                     NOT NULL,
+    "channel_id"   UUID                     NOT NULL,
+    "last_read_at" timestamp with time zone NOT NULL,
     UNIQUE ("user_id", "channel_id") -- 동일한 방에 중복 읽음 상태 방지 (UK)
 );
 

@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/messages")
@@ -44,25 +47,35 @@ public class MessageController implements MessageApi {
   public ResponseEntity<MessageDto> create(
       @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments) {
+    log.debug("Message 생성 요청: messageCreateRequest={}, attachmentsCount={}", messageCreateRequest,
+        attachments != null ? attachments.size() : 0);
     List<BinaryContentCreateRequest> binaryContentCreateRequests =
         Optional.ofNullable(attachments).orElse(Collections.emptyList()).stream()
             .map(this::resolveProfileRequest)
             .toList();
-    return ResponseEntity.status(HttpStatus.CREATED).body(
-        messageService.create(messageCreateRequest, binaryContentCreateRequests));
+    MessageDto createdMessage = messageService.create(messageCreateRequest,
+        binaryContentCreateRequests);
+    log.info("Message 생성 응답: messageId={}, content={}", createdMessage.id(),
+        createdMessage.content());
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
   }
 
   @PatchMapping("/{messageId}")
   @Override
   public ResponseEntity<MessageDto> update(@PathVariable UUID messageId,
-      @RequestBody MessageUpdateRequest request) {
-    return ResponseEntity.ok(messageService.update(messageId, request));
+      @RequestBody @Valid MessageUpdateRequest request) {
+    log.debug("Message 수정 요청: messageId={}, request={}", messageId, request);
+    MessageDto updatedMessage = messageService.update(messageId, request);
+    log.info("Message 수정 응답: messageId={}, content={}", messageId, updatedMessage.content());
+    return ResponseEntity.ok(updatedMessage);
   }
 
   @DeleteMapping(path = "/{messageId}")
   @Override
   public ResponseEntity<Void> delete(@PathVariable UUID messageId) {
+    log.debug("Message 삭제 요청: messageId={}", messageId);
     messageService.delete(messageId);
+    log.info("Message 삭제 응답: messageId={}", messageId);
     return ResponseEntity.noContent().build();
   }
 
@@ -74,7 +87,13 @@ public class MessageController implements MessageApi {
           sort = "createdAt",
           direction = Direction.DESC
       ) Pageable pageable) {
-    return ResponseEntity.ok(messageService.findAllByChannelId(channelId, cursor, pageable));
+    log.debug("Message 목록 조회 응답: channelId={}, cursor={}, pageable={}", channelId, cursor,
+        pageable);
+    PageResponse<MessageDto> response = messageService.findAllByChannelId(channelId, cursor,
+        pageable);
+    log.info("Message 목록 조회 응답: channelId={}, returnedCount={}, hasNext={}", channelId,
+        response.content().size(), response.hasNext());
+    return ResponseEntity.ok(response);
   }
 
   private BinaryContentCreateRequest resolveProfileRequest(MultipartFile file) {
