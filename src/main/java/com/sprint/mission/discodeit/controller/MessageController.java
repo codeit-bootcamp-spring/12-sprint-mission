@@ -6,6 +6,9 @@ import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
+import com.sprint.mission.discodeit.exception.DiscodeitException;
+import com.sprint.mission.discodeit.exception.ErrorCode;
+import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentUploadException;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.io.IOException;
 import java.time.Instant;
@@ -54,7 +57,7 @@ public class MessageController implements MessageApi {
                     file.getBytes()
                 );
               } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new BinaryContentUploadException(e);
               }
             })
             .toList())

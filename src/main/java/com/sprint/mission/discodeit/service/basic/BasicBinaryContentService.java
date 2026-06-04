@@ -3,6 +3,8 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentNotFoundException;
+import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentUploadException;
 import com.sprint.mission.discodeit.mapper.BinaryContentMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.service.BinaryContentService;
@@ -45,8 +47,8 @@ public class BasicBinaryContentService implements BinaryContentService {
             binaryContentStorage.put(binaryContent.getId(), bytes);
             log.info("파일 업로드 성공 : filename = {}", binaryContent.getFileName());
         } catch (Exception e) {
-            log.error("파일 업로드 중 오류 발생 : filename = {}", binaryContent.getFileName(), e);
-            throw e;
+            log.error("파일 업로드 중 오류 발생 : filename = {}, size = {}", binaryContent.getFileName(),binaryContent.getSize(), e);
+            throw new BinaryContentUploadException(e);
         }
 
         return binaryContentMapper.toDto(binaryContent);
@@ -56,8 +58,7 @@ public class BasicBinaryContentService implements BinaryContentService {
     public BinaryContentDto find(UUID binaryContentId) {
         return binaryContentRepository.findById(binaryContentId)
                 .map(binaryContentMapper::toDto)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "BinaryContent with id " + binaryContentId + " not found"));
+                .orElseThrow(() -> BinaryContentNotFoundException.withId(binaryContentId));
     }
 
     @Override
@@ -71,7 +72,7 @@ public class BasicBinaryContentService implements BinaryContentService {
     @Override
     public void delete(UUID binaryContentId) {
         if (!binaryContentRepository.existsById(binaryContentId)) {
-            throw new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found");
+            throw BinaryContentNotFoundException.withId(binaryContentId);
         }
         binaryContentRepository.deleteById(binaryContentId);
     }

@@ -9,6 +9,9 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
+import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
+import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
 import com.sprint.mission.discodeit.mapper.PageResponseMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
@@ -56,11 +59,10 @@ public class BasicMessageService implements MessageService {
 
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(
-                        () -> new NoSuchElementException("Channel with id " + channelId + " does not exist"));
+                        () -> ChannelNotFoundException.withId(channelId));
         User author = userRepository.findById(authorId)
                 .orElseThrow(
-                        () -> new NoSuchElementException("Author with id " + authorId + " does not exist")
-                );
+                        () -> UserNotFoundException.withId(authorId));
 
         List<BinaryContent> attachments = binaryContentCreateRequests.stream()
                 .map(attachmentRequest -> {
@@ -83,14 +85,9 @@ public class BasicMessageService implements MessageService {
                 author,
                 attachments
         );
+        messageRepository.save(message);
+        log.info("메시지 생성 완료 : messageId = {}, channelId = {}, content={}", message.getId(), message.getChannel(), message.getContent());
 
-        try {
-            messageRepository.save(message);
-            log.info("메시지 생성 완료 : messageId = {}, channelId = {}, content={}", message.getId(), message.getChannel(), message.getContent());
-        } catch (Exception e) {
-            log.error("메시지 생성 중 오류 발생 : messageId = {}",message.getId(),e);
-            throw e;
-        }
         return messageMapper.toDto(message);
     }
 
@@ -100,7 +97,7 @@ public class BasicMessageService implements MessageService {
         return messageRepository.findById(messageId)
                 .map(messageMapper::toDto)
                 .orElseThrow(
-                        () -> new NoSuchElementException("Message with id " + messageId + " not found"));
+                        () -> MessageNotFoundException.withId(messageId));
     }
 
     @Transactional(readOnly = true)
@@ -125,19 +122,15 @@ public class BasicMessageService implements MessageService {
     @Override
     public MessageDto update(UUID messageId, MessageUpdateRequest request) {
         log.info("메시지 수정 요청 : messageId = {}", messageId);
-        log.debug("메시지 수정 상세 요청 : messageId = {}, request = {}",messageId, request);
+        log.debug("메시지 수정 상세 요청 : messageId = {}, request = {}", messageId, request);
         String newContent = request.newContent();
         Message message = messageRepository.findById(messageId)
                 .orElseThrow(
-                        () -> new NoSuchElementException("Message with id " + messageId + " not found"));
+                        () -> MessageNotFoundException.withId(messageId));
 
-        try {
-            message.update(newContent);
-            log.info("메시지 수정 완료 : messageId = {}", messageId);
-        } catch (Exception e) {
-            log.error("메시지 수정 중 오류 발생 : messageId = {}", messageId, e);
-            throw e;
-        }
+        message.update(newContent);
+        log.info("메시지 수정 완료 : messageId = {}", messageId);
+
         return messageMapper.toDto(message);
     }
 
@@ -146,15 +139,11 @@ public class BasicMessageService implements MessageService {
     public void delete(UUID messageId) {
         log.info("메시지 삭제 요청 : messageId = {}", messageId);
         if (!messageRepository.existsById(messageId)) {
-            throw new NoSuchElementException("Message with id " + messageId + " not found");
+            throw MessageNotFoundException.withId(messageId);
         }
 
-        try {
-            messageRepository.deleteById(messageId);
-            log.debug("메시지 삭제 성공 : messageId = {}", messageId);
-        } catch (Exception e) {
-            log.error("메시지 삭제 중 오류 발생 :  messageId = {}", messageId, e);
-            throw e;
-        }
+        messageRepository.deleteById(messageId);
+        log.debug("메시지 삭제 성공 : messageId = {}", messageId);
+
     }
 }
