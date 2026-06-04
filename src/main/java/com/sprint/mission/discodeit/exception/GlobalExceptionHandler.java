@@ -44,7 +44,8 @@ public class GlobalExceptionHandler {
       case DUPLICATE_USER,
            DUPLICATE_CHANNEL,
            DUPLICATE_USER_STATUS,
-           DUPLICATE_READ_STATUS -> HttpStatus.CONFLICT;
+           DUPLICATE_READ_STATUS,
+           DUPLICATE_BINARY_CONTENT-> HttpStatus.CONFLICT;
 
       // 403 forbidden
       case MESSAGE_UPDATE_FORBIDDEN,

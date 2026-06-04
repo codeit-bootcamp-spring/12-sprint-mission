@@ -12,7 +12,7 @@ public class ChannelNotFoundException extends ChannelException {
         super(ErrorCode.CHANNEL_NOT_FOUND, cause);
     }
 
-    public static ChannelNotFoundException isId(UUID channelId) {
+    public static ChannelNotFoundException withId(UUID channelId) {
         ChannelNotFoundException exception = new ChannelNotFoundException();
         exception.addDetail("channelId", channelId);
         return exception;

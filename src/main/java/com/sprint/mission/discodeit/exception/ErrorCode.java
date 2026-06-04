@@ -37,7 +37,8 @@ public enum ErrorCode {
     BINARY_CONTENT_NOT_FOUND("파일을 찾을 수 없습니다."),
     FILE_UPLOAD_FAILED("파일 업로드에 실패했습니다."),
     FILE_DOWNLOAD_FAILED("파일 다운로드에 실패했습니다."),
-    INVALID_FILE_REQUEST("잘못된 파일 요청입니다.");
+    INVALID_FILE_REQUEST("잘못된 파일 요청입니다."),
+    DUPLICATE_BINARY_CONTENT("이미 존재하는 파일입니다.");
 
 
     private final String message;
