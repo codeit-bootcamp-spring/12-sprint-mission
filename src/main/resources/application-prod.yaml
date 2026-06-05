@@ -20,9 +20,15 @@ spring:
         format_sql: true
         highlight_sql: true
         user_sql_comments: true
-        dialect: org.hiberate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         jdbc.time_zone: UTC
+
+discodeit:
+  storage:
+    type: local
+    local:
+      root-path: .discodeit/storage
 
 logging:
   level:

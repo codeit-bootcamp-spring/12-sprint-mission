@@ -1,6 +1,12 @@
 server:
   port: 8080
 
+discodeit:
+  storage:
+    type: local
+    local:
+      root-path: .discodeit/storage
+
 spring:
   config:
     activate:
@@ -14,14 +20,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl_auto: update
+      ddl_auto: create
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
         user_sql_comments: true
-        dialect: org.hiberate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         jdbc.time_zone: UTC
 

@@ -7,7 +7,7 @@ COMMIT;
 CREATE TABLE binary_contents
 (
     id         UUID PRIMARY KEY,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     file_name VARCHAR(255) NOT NULL,
     size BIGINT NOT NULL,
     content_type VARCHAR(100) NOT NULL,
@@ -17,8 +17,8 @@ CREATE TABLE binary_contents
 CREATE TABLE users
 (
     id         UUID PRIMARY KEY,
-    created_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ           DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE           DEFAULT now(),
     username   VARCHAR(50)  NOT NULL UNIQUE,
     email      VARCHAR(100) NOT NULL UNIQUE,
     password   VARCHAR(60)  NOT NULL,
@@ -29,17 +29,17 @@ CREATE TABLE users
 CREATE TABLE user_statuses
 (
     id UUID PRIMARY KEY ,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     user_id UUID NOT NULL,
-    last_active_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_active_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     CONSTRAINT fk_userstatus_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 CREATE TABLE channels
 (
     id          UUID PRIMARY KEY,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at  TIMESTAMPTZ          DEFAULT now(),
+    created_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updated_at  TIMESTAMP WITH TIME ZONE          DEFAULT now(),
     name        VARCHAR(100),
     description VARCHAR(500),
     type        VARCHAR(10) NOT NULL
@@ -48,12 +48,12 @@ CREATE TABLE channels
 CREATE TABLE read_statuses
 (
     id UUID PRIMARY KEY ,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     user_id UUID NOT NULL,
     channel_id UUID NOT NULL,
     UNIQUE(user_id,channel_id),
-    last_read_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_read_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     CONSTRAINT fk_readStatus_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_readStatus_channel FOREIGN KEY (channel_id) REFERENCES channels(id) ON DELETE CASCADE
 );
@@ -61,8 +61,8 @@ CREATE TABLE read_statuses
 CREATE TABLE messages
 (
     id         UUID PRIMARY KEY,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ          DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE          DEFAULT now(),
     content    TEXT,
     channel_id UUID        NOT NULL,
     author_id  UUID,
