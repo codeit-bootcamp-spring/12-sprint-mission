@@ -65,7 +65,7 @@ public class BasicUserStatusService implements UserStatusService {
         .orElseThrow(
             () -> {
               log.warn("UserStatus 조회 실패(UserStatus 없음): userStatusId={}", userStatusId);
-              return UserNotFoundException.withId(userStatusId);
+              return UserStatusNotFoundException.withId(userStatusId);
             });
     log.info("UserStatus 조회 성공: userStatusId={}", userStatusId);
     return userStatusDto;

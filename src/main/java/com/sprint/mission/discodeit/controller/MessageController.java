@@ -45,7 +45,7 @@ public class MessageController implements MessageApi {
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Override
   public ResponseEntity<MessageDto> create(
-      @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
+      @RequestPart("messageCreateRequest") @Valid MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments) {
     log.debug("Message 생성 요청: messageCreateRequest={}, attachmentsCount={}", messageCreateRequest,
         attachments != null ? attachments.size() : 0);

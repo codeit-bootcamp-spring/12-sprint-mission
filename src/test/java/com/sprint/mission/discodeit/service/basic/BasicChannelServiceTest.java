@@ -73,6 +73,7 @@ public class BasicChannelServiceTest {
     channelId = UuidCreator.getTimeOrderedEpoch();
     name = "Test Channel";
     description = "This is a test channel.";
+    now = Instant.now();
     user = new User("testUser", "test@test.com", "password1234!", null);
     channel = new Channel(ChannelType.PUBLIC, name, description);
     ReflectionTestUtils.setField(channel, "id", channelId);

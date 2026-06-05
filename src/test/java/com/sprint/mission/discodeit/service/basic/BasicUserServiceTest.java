@@ -12,7 +12,6 @@ import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
@@ -20,6 +19,7 @@ import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,6 +121,18 @@ public class BasicUserServiceTest {
     given(userRepository.findById(id)).willReturn(Optional.empty());
     assertThatThrownBy(() -> userService.find(id))
         .isInstanceOf(UserNotFoundException.class);
+  }
+
+  @Test
+  @DisplayName("사용자 목록 조회 테스트(성공)")
+  public void findAll_success() {
+    List<UserDto> userDtoList = List.of(userDto);
+    given(userRepository.findAllWithProfileAndUserStatus()).willReturn(List.of(user));
+    given(userMapper.toDto(user)).willReturn(userDto);
+
+    List<UserDto> result = userService.findAll();
+
+    assertThat(result).isEqualTo(userDtoList);
   }
 
   @Test
