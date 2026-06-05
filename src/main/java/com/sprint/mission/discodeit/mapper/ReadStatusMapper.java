@@ -5,9 +5,10 @@ import com.sprint.mission.discodeit.entity.ReadStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = UserMapper.class)
+@Mapper(componentModel = "spring")
 public interface ReadStatusMapper {
 
-  @Mapping(target = "channel", ignore = true)
+  @Mapping(target = "userId", source = "user.id")
+  @Mapping(target = "channelId", source = "channel.id")
   ReadStatusDto toDto(ReadStatus readStatus);
 }

@@ -8,46 +8,38 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
-
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "channels")
 @Getter
-@ToString(callSuper = true)
-@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel extends BaseUpdatableEntity {
 
-  @Column(nullable = false)
-  private String name;
-
-  @Column
-  private String description;
-
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(length = 100)
   private ChannelType type;
 
-  public Channel(String name, String description, ChannelType type) {
+  @Column(length = 100)
+  private String name;
+
+  @Column(length = 500)
+  private String description;
+
+
+  public Channel(ChannelType type, String name, String description) {
     this.type = type;
     this.name = name;
     this.description = description;
   }
 
-  public void update(String newName, String newDescription, ChannelType newType) {
-    if (newName != null) {
+  public void update(String newName, String newDescription) {
+    if (newName != null && !newName.equals(this.name)) {
       this.name = newName;
     }
 
-    if (newDescription != null) {
+    if (newDescription != null && !newDescription.equals(this.description)) {
       this.description = newDescription;
-    }
-
-    if (newType != null) {
-      this.type = newType;
     }
   }
 }

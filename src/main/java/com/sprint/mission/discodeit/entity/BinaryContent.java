@@ -13,8 +13,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "binary_contents")
 @Getter
-@ToString(callSuper = true)
-@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BinaryContent extends BaseEntity {
 
@@ -24,7 +22,7 @@ public class BinaryContent extends BaseEntity {
   @Column(nullable = false)
   private Long size;
 
-  @Column(nullable = false)
+  @Column(length = 100, nullable = false)
   private String contentType;
 
 

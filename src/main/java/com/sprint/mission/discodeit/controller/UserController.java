@@ -32,8 +32,6 @@ public class UserController implements UserApi {
 
   private final UserService userService;
   private final UserStatusService userStatusService;
-  private final UserMapper userMapper;
-  private final UserStatusMapper userStatusMapper;
 
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   @Override
@@ -43,10 +41,10 @@ public class UserController implements UserApi {
   ) {
     Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
         .flatMap(this::resolveProfileRequest);
-    User createdUser = userService.create(userCreateRequest, profileRequest);
+    UserDto createdUser = userService.create(userCreateRequest, profileRequest);
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(userMapper.toDto(createdUser));
+        .body(createdUser);
   }
 
   @PatchMapping(
@@ -61,10 +59,10 @@ public class UserController implements UserApi {
   ) {
     Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
         .flatMap(this::resolveProfileRequest);
-    User updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
+    UserDto updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
     return ResponseEntity
         .status(HttpStatus.OK)
-        .body(userMapper.toDto(updatedUser));
+        .body(updatedUser);
   }
 
   @DeleteMapping(path = "{userId}")
@@ -89,10 +87,10 @@ public class UserController implements UserApi {
   @Override
   public ResponseEntity<UserStatusDto> updateUserStatusByUserId(@PathVariable("userId") UUID userId,
       @RequestBody UserStatusUpdateRequest request) {
-    UserStatus updatedUserStatus = userStatusService.updateByUserId(userId, request);
+    UserStatusDto updatedUserStatus = userStatusService.updateByUserId(userId, request);
     return ResponseEntity
         .status(HttpStatus.OK)
-        .body(userStatusMapper.toDto(updatedUserStatus));
+        .body(updatedUserStatus);
   }
 
   private Optional<BinaryContentCreateRequest> resolveProfileRequest(MultipartFile profileFile) {

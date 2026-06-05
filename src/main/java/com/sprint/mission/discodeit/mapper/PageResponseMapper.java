@@ -1,25 +1,30 @@
 package com.sprint.mission.discodeit.mapper;
 
 import com.sprint.mission.discodeit.dto.response.PageResponse;
-import java.util.List;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
-@Component
-public class PageResponseMapper {
+@Mapper(componentModel = "spring")
+public interface PageResponseMapper {
 
-  public <T> PageResponse<T> fromCursor(
-      List<T> content,
-      Object nextCursor,
-      int size,
-      boolean hasNext,
-      Long totalElements
-  ) {
+  default <T> PageResponse<T> fromSlice(Slice<T> slice, Object nextCursor) {
     return new PageResponse<>(
-        content,
+        slice.getContent(),
         nextCursor,
-        size,
-        hasNext,
-        totalElements
+        slice.getSize(),
+        slice.hasNext(),
+        null
+    );
+  }
+
+  default <T> PageResponse<T> fromPage(Page<T> page, Object nextCursor) {
+    return new PageResponse<>(
+        page.getContent(),
+        nextCursor,
+        page.getSize(),
+        page.hasNext(),
+        page.getTotalElements()
     );
   }
 }

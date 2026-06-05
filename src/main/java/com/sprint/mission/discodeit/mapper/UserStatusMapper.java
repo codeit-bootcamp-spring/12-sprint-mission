@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 public interface UserStatusMapper {
 
   @Mapping(target = "userId", source = "user.id")
-  @Mapping(target = "online", expression = "java(userStatus.isOnline())")
   UserStatusDto toDto(UserStatus userStatus);
 
 }
