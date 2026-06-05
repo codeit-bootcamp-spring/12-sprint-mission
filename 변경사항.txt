@@ -1,0 +1,2 @@
+mission_6 부터는 mission_5에 이어서 작성
+폴더명을 mission_0 으로 변경
