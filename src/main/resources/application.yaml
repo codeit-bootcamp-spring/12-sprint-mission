@@ -3,7 +3,7 @@ spring:
     name: discodeit
     version: 1.7.0
   profiles:
-    active: prod   # dev, prod 선택 가능
+    active: dev   # dev, prod 선택 가능
   servlet:
     multipart:
       maxFileSize: 100MB # 파일 하나의 최대 크기
@@ -25,15 +25,8 @@ spring:
   boot:
     admin:
       client:
-        # Admin 서버 주소
-        url: http://localhost:9090
         instance:
-          name: blog
-          # 서비스 접근 URL (리버스 프록시 사용 시 정확한 외부 URL 지정)
-          service-url: http://localhost:8080
-          # 액추에이터 베이스 URL
-          management-base-url: http://localhost:8080
-        enabled: true
+          name: discodeit
 
 springdoc:
   api-docs:

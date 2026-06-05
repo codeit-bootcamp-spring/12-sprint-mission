@@ -13,6 +13,15 @@ spring:
       ddl-auto: validate
     show-sql: false
 
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_CLIENT_URL:http://localhost:9090}
+        enabled: true
+        instance:
+          name: discodeit-prod
+          service-url: ${SPRING_BOOT_ADMIN_SERVICE_URL:http://localhost:8080}
+
 logging:
   level:
     root: info
