@@ -66,9 +66,11 @@ public class MessageRepositoryTest {
     return channelRepository.save(channel);
   }
 
+  // ── findLastMessageAtByChannelId ────────────────────────────────────────
+
   @Test
   @DisplayName("채널의 마지막 메시지 조회")
-  public void findLastMessageAtByChannelId_success() {
+  public void findLastMessageAtByChannelId() {
     User user = createUser("testUser", "test@test.com");
     Channel channel = createChannel(ChannelType.PUBLIC, "testChannel");
     Instant now = Instant.now();
@@ -99,6 +101,8 @@ public class MessageRepositoryTest {
     assertThat(lastMessageAt).isEmpty();
   }
 
+  // ── deleteAllByChannelId ────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널의 전체 메시지 삭제")
   public void deleteAllByChannelId() {
@@ -121,6 +125,8 @@ public class MessageRepositoryTest {
 
     assertThat(messageRepository.count()).isZero();
   }
+
+  // ── findMessagesByChannelIdBeforeCursor ─────────────────────────────────
 
   @Test
   @DisplayName("채널의 메시지 조회 - 커서 이전")

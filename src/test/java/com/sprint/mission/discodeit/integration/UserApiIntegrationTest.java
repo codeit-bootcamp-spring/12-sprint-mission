@@ -43,7 +43,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 생성 성공 - 201")
-  void create_success() throws Exception {
+  void create() throws Exception {
     MockMultipartFile requestPart = new MockMultipartFile(
         "userCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
         objectMapper.writeValueAsBytes(
@@ -59,7 +59,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 생성 실패 - 409 (중복 이메일)")
-  void create_fail_duplicateEmail() throws Exception {
+  void create_duplicateEmail() throws Exception {
     MockMultipartFile requestPart = new MockMultipartFile(
         "userCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
         objectMapper.writeValueAsBytes(
@@ -85,7 +85,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 수정 성공 - 200")
-  void update_success() throws Exception {
+  void update() throws Exception {
     String userId = createUser("updateUser", "update@test.com");
 
     MockMultipartFile updatePart = new MockMultipartFile(
@@ -106,7 +106,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 수정 실패 - 404 (존재하지 않는 사용자)")
-  void update_fail_notFound() throws Exception {
+  void update_notFound() throws Exception {
     MockMultipartFile updatePart = new MockMultipartFile(
         "userUpdateRequest", "", MediaType.APPLICATION_JSON_VALUE,
         objectMapper.writeValueAsBytes(
@@ -126,7 +126,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 삭제 성공 - 204")
-  void delete_success() throws Exception {
+  void deleteUser() throws Exception {
     String userId = createUser("deleteUser", "delete@test.com");
 
     mockMvc.perform(delete("/api/users/{userId}", userId))
@@ -135,7 +135,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 삭제 실패 - 404 (존재하지 않는 사용자)")
-  void delete_fail_notFound() throws Exception {
+  void delete_notFound() throws Exception {
     mockMvc.perform(delete("/api/users/{userId}", UUID.randomUUID()))
         .andExpect(status().isNotFound());
   }
@@ -144,7 +144,7 @@ class UserApiIntegrationTest {
 
   @Test
   @DisplayName("사용자 목록 조회 성공 - 200")
-  void findAll_success() throws Exception {
+  void findAll() throws Exception {
     createUser("listUser1", "list1@test.com");
     createUser("listUser2", "list2@test.com");
 

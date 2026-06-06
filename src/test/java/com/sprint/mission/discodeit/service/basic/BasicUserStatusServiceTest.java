@@ -74,9 +74,11 @@ public class BasicUserStatusServiceTest {
     userStatusDto = new UserStatusDto(userStatusId, userId, lastActiveAt);
   }
 
+  // ── create ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 상태 생성 테스트(성공)")
-  public void create_success() {
+  public void create() {
     UserStatusCreateRequest request = new UserStatusCreateRequest(userId, lastActiveAt);
 
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
@@ -92,7 +94,7 @@ public class BasicUserStatusServiceTest {
 
   @Test
   @DisplayName("사용자 상태 생성 테스트(실패 - 사용자 없음)")
-  public void create_fail_not_found() {
+  public void create_userNotFound() {
     UserStatusCreateRequest request = new UserStatusCreateRequest(userId, lastActiveAt);
 
     given(userRepository.findById(userId)).willReturn(Optional.empty());
@@ -106,7 +108,7 @@ public class BasicUserStatusServiceTest {
 
   @Test
   @DisplayName("사용자 상태 생성 테스트(실패 - 이미 존재)")
-  public void create_fail_already_exists() {
+  public void create_alreadyExists() {
     UserStatusCreateRequest request = new UserStatusCreateRequest(userId, lastActiveAt);
 
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
@@ -119,9 +121,11 @@ public class BasicUserStatusServiceTest {
     verify(userStatusRepository, never()).save(any());
   }
 
+  // ── find ────────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 상태 조회 테스트(성공)")
-  public void find_success() {
+  public void find() {
     given(userStatusRepository.findById(userStatusId)).willReturn(Optional.of(userStatus));
     given(userStatusMapper.toDto(any(UserStatus.class))).willReturn(userStatusDto);
 
@@ -132,7 +136,7 @@ public class BasicUserStatusServiceTest {
 
   @Test
   @DisplayName("사용자 상태 조회 테스트(실패 - 상태 없음)")
-  public void find_fail_not_found() {
+  public void find_notFound() {
     given(userStatusRepository.findById(userStatusId)).willReturn(Optional.empty());
 
     assertThatThrownBy(() -> userStatusService.find(userStatusId))
@@ -140,9 +144,11 @@ public class BasicUserStatusServiceTest {
     verify(userStatusRepository).findById(any());
   }
 
+  // ── findAll ─────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("모든 사용자 상태 조회 테스트(성공)")
-  public void findAll_success() {
+  public void findAll() {
     List<UserStatus> userStatusList = List.of(userStatus);
     given(userStatusRepository.findAll()).willReturn(userStatusList);
     given(userStatusMapper.toDto(any(UserStatus.class))).willReturn(userStatusDto);
@@ -152,9 +158,11 @@ public class BasicUserStatusServiceTest {
     assertThat(result).isEqualTo(List.of(userStatusDto));
   }
 
+  // ── update ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 상태 수정 테스트(성공)")
-  public void update_success() {
+  public void update() {
     UserStatusUpdateRequest request = new UserStatusUpdateRequest(Instant.now());
     given(userStatusRepository.findById(userStatusId)).willReturn(Optional.of(userStatus));
     given(userStatusRepository.save(any(UserStatus.class))).willReturn(userStatus);
@@ -169,7 +177,7 @@ public class BasicUserStatusServiceTest {
 
   @Test
   @DisplayName("사용자 상태 수정 테스트(실패 - 상태 없음)")
-  public void update_fail_not_found() {
+  public void update_notFound() {
     UserStatusUpdateRequest request = new UserStatusUpdateRequest(Instant.now());
     given(userStatusRepository.findById(userStatusId)).willReturn(Optional.empty());
 
@@ -179,9 +187,11 @@ public class BasicUserStatusServiceTest {
     verify(userStatusRepository, never()).save(any());
   }
 
+  // ── updateByUserId───────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 ID로 사용자 상태 수정 테스트(성공)")
-  public void updateByUserId_success_findByUserId() {
+  public void updateByUserId() {
     UserStatusUpdateRequest request = new UserStatusUpdateRequest(Instant.now());
     given(userStatusRepository.findByUserId(userId)).willReturn(Optional.of(userStatus));
     given(userStatusRepository.save(any(UserStatus.class))).willReturn(userStatus);
@@ -194,7 +204,7 @@ public class BasicUserStatusServiceTest {
 
   @Test
   @DisplayName("사용자 ID로 사용자 상태 수정 테스트(실패 - 상태 없음)")
-  public void updateByUserId_fail_not_found() {
+  public void updateByUserId_notFound() {
     UserStatusUpdateRequest request = new UserStatusUpdateRequest(Instant.now());
     given(userStatusRepository.findByUserId(userId)).willReturn(Optional.empty());
     assertThatThrownBy(() -> userStatusService.updateByUserId(userId, request))
@@ -203,9 +213,11 @@ public class BasicUserStatusServiceTest {
     verify(userStatusRepository, never()).save(any());
   }
 
+  // ── delete ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 상태 삭제 테스트(성공)")
-  public void delete_success() {
+  public void delete() {
     given(userStatusRepository.existsById(userStatusId)).willReturn(true);
     userStatusService.delete(userStatusId);
     verify(userStatusRepository).deleteById(userStatusId);
@@ -213,7 +225,7 @@ public class BasicUserStatusServiceTest {
 
   @Test
   @DisplayName("사용자 상태 삭제 테스트(실패 - 상태 없음)")
-  public void delete_fail_not_found() {
+  public void delete_notFound() {
     given(userStatusRepository.existsById(userStatusId)).willReturn(false);
     assertThatThrownBy(() -> userStatusService.delete(userStatusId))
         .isInstanceOf(UserStatusNotFoundException.class);

@@ -36,9 +36,11 @@ public class UserRepositoryTest {
     return userRepository.save(user);
   }
 
+  // ── findByUsername ──────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 이름 조회 테스트(성공)")
-  public void findByUsername_success() {
+  public void findByUsername() {
     String username = "testUser";
     User user = createUser(username, "test@test.com");
     em.flush();
@@ -51,15 +53,17 @@ public class UserRepositoryTest {
 
   @Test
   @DisplayName("사용자 이름 조회 테스트(실패)")
-  public void findByUsername_fail() {
+  public void findByUsername_notFound() {
     String username = "testUser10";
     Optional<User> result = userRepository.findByUsername(username);
     assertThat(result).isNotPresent();
   }
 
+  // ── existsByEmail ───────────────────────────────────────────────────────
+
   @Test
   @DisplayName("이메일 존재 여부 테스트(성공)")
-  public void existsByEmail_success() {
+  public void existsByEmail() {
     String username = "testUser";
     String email = "test10@test.com";
     User user = createUser(username, email);
@@ -72,15 +76,17 @@ public class UserRepositoryTest {
 
   @Test
   @DisplayName("이메일 존재 여부 테스트(실패)")
-  public void existsByEmail_fail() {
+  public void existsByEmail_notExists() {
     String email = "test10@test.com";
     boolean result = userRepository.existsByEmail(email);
     assertThat(result).isFalse();
   }
 
+  // ── existsByUsername ────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 이름 존재 여부 테스트(성공)")
-  public void existsByUsername_success() {
+  public void existsByUsername() {
     String username = "testUser";
     String email = "test10@test.com";
     User user = createUser(username, email);
@@ -93,15 +99,17 @@ public class UserRepositoryTest {
 
   @Test
   @DisplayName("사용자 이름 존재 여부 테스트(실패)")
-  public void existsByUsername_fail() {
+  public void existsByUsername_notExists() {
     String username = "testUser10";
     boolean result = userRepository.existsByUsername(username);
     assertThat(result).isFalse();
   }
 
+  // ── findAllWithProfileAndUserStatus ─────────────────────────────────────
+
   @Test
   @DisplayName("프로필과 사용자 상태를 함께 조회하는 테스트(성공)")
-  public void findAllWithProfileAndUserStatus_success() {
+  public void findAllWithProfileAndUserStatus() {
     User user1 = createUser("testUser1", "test1@test.com");
     User user2 = createUser("testUser2", "test2@test.com");
     em.flush();

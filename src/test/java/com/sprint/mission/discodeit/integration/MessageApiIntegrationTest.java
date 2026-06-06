@@ -47,7 +47,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("메시지 생성 성공 - 201")
-  void create_success() throws Exception {
+  void create() throws Exception {
     String userId = createUser("msgUser", "msg@test.com");
     String channelId = createChannel("msg-channel");
 
@@ -67,7 +67,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("메시지 생성 실패 - 400 (내용 없음)")
-  void create_fail_blankContent() throws Exception {
+  void create_blankContent() throws Exception {
     String userId = createUser("blankUser", "blank@test.com");
     String channelId = createChannel("blank-channel");
 
@@ -86,7 +86,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("메시지 수정 성공 - 200")
-  void update_success() throws Exception {
+  void update() throws Exception {
     String userId = createUser("updateMsgUser", "updatemsg@test.com");
     String channelId = createChannel("update-msg-channel");
     String messageId = createMessage("원본 내용", channelId, userId);
@@ -101,7 +101,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("메시지 수정 실패 - 404 (존재하지 않는 메시지)")
-  void update_fail_notFound() throws Exception {
+  void update_notFound() throws Exception {
     mockMvc.perform(patch("/api/messages/{messageId}", UUID.randomUUID())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
@@ -113,7 +113,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("메시지 삭제 성공 - 204")
-  void delete_success() throws Exception {
+  void deleteMessage() throws Exception {
     String userId = createUser("deleteMsgUser", "deletemsg@test.com");
     String channelId = createChannel("delete-msg-channel");
     String messageId = createMessage("삭제할 메시지", channelId, userId);
@@ -124,7 +124,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("메시지 삭제 실패 - 404 (존재하지 않는 메시지)")
-  void delete_fail_notFound() throws Exception {
+  void delete_notFound() throws Exception {
     mockMvc.perform(delete("/api/messages/{messageId}", UUID.randomUUID()))
         .andExpect(status().isNotFound());
   }
@@ -133,7 +133,7 @@ class MessageApiIntegrationTest {
 
   @Test
   @DisplayName("채널 메시지 목록 조회 성공 - 200")
-  void findByChannelId_success() throws Exception {
+  void findByChannelId() throws Exception {
     String userId = createUser("listMsgUser", "listmsg@test.com");
     String channelId = createChannel("list-msg-channel");
     createMessage("첫 번째 메시지", channelId, userId);

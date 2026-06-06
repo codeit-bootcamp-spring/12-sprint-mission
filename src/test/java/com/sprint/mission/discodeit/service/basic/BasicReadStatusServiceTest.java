@@ -91,9 +91,11 @@ public class BasicReadStatusServiceTest {
     readStatusDto = new ReadStatusDto(userStatusId, userId, channelId, lastReadAt);
   }
 
+  // ── create ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 읽음 상태 생성 성공")
-  public void create_success() {
+  public void create() {
     ReadStatusCreateRequest request = new ReadStatusCreateRequest(userId, channelId, lastReadAt);
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
     given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
@@ -110,7 +112,7 @@ public class BasicReadStatusServiceTest {
 
   @Test
   @DisplayName("채널 읽음 상태 생성 (실패 - 사용자 없음)")
-  public void create_fail_user_not_found() {
+  public void create_userNotFound() {
     ReadStatusCreateRequest request = new ReadStatusCreateRequest(userId, channelId, lastReadAt);
     given(userRepository.findById(userId)).willReturn(Optional.empty());
 
@@ -122,7 +124,7 @@ public class BasicReadStatusServiceTest {
 
   @Test
   @DisplayName("채널 읽음 상태 생성 (실패 - 채널 없음)")
-  public void create_fail_channel_not_found() {
+  public void create_channelNotFound() {
     ReadStatusCreateRequest request = new ReadStatusCreateRequest(userId, channelId, lastReadAt);
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
     given(channelRepository.findById(channelId)).willReturn(Optional.empty());
@@ -136,7 +138,7 @@ public class BasicReadStatusServiceTest {
 
   @Test
   @DisplayName("채널 읽음 상태 생성 (실패 - 이미 존재)")
-  public void create_fail_already_exists() {
+  public void create_alreadyExists() {
     ReadStatusCreateRequest request = new ReadStatusCreateRequest(userId, channelId, lastReadAt);
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
     given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
@@ -149,9 +151,11 @@ public class BasicReadStatusServiceTest {
     verify(readStatusRepository, never()).save(any());
   }
 
+  // ── find ────────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 읽음 상태 조회 (성공)")
-  public void find_success() {
+  public void find() {
     given(readStatusRepository.findById(userStatusId)).willReturn(Optional.of(readStatus));
     given(readStatusMapper.toDto(readStatus)).willReturn(readStatusDto);
 
@@ -162,16 +166,18 @@ public class BasicReadStatusServiceTest {
 
   @Test
   @DisplayName("채널 읽음 상태 조회 (실패 - 상태 없음)")
-  public void find_fail_not_found() {
+  public void find_notFound() {
     given(readStatusRepository.findById(userStatusId)).willReturn(Optional.empty());
     assertThatThrownBy(() -> readStatusService.find(userStatusId))
         .isInstanceOf(ReadStatusNotFoundException.class);
     verify(readStatusRepository).findById(any());
   }
 
+  // ── update ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 읽음 수정 (성공)")
-  public void update_success() {
+  public void update() {
     ReadStatusUpdateRequest request = new ReadStatusUpdateRequest(Instant.now());
     given(readStatusRepository.findById(userStatusId)).willReturn(Optional.of(readStatus));
     given(readStatusRepository.save(any(ReadStatus.class))).willReturn(readStatus);
@@ -184,7 +190,7 @@ public class BasicReadStatusServiceTest {
 
   @Test
   @DisplayName("채널 읽음 수정 (실패 - 상태 없음)")
-  public void update_fail_not_found() {
+  public void update_notFound() {
     ReadStatusUpdateRequest request = new ReadStatusUpdateRequest(Instant.now());
     given(readStatusRepository.findById(userStatusId)).willReturn(Optional.empty());
 
@@ -195,9 +201,11 @@ public class BasicReadStatusServiceTest {
     verify(readStatusRepository, never()).save(any());
   }
 
+  // ── delete ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 읽음 상태 삭제 (성공)")
-  public void delete_success() {
+  public void delete() {
     given(readStatusRepository.existsById(userStatusId)).willReturn(true);
 
     readStatusService.delete(userStatusId);
@@ -207,7 +215,7 @@ public class BasicReadStatusServiceTest {
 
   @Test
   @DisplayName("채널 읽음 상태 삭제 (실패 - 상태 없음)")
-  public void delete_fail_not_found() {
+  public void delete_notFound() {
     given(readStatusRepository.existsById(userStatusId)).willReturn(false);
 
     assertThatThrownBy(() -> readStatusService.delete(userStatusId))

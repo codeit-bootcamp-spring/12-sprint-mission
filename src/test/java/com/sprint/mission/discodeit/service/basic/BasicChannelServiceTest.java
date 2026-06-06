@@ -80,9 +80,11 @@ public class BasicChannelServiceTest {
     channelDto = new ChannelDto(channelId, ChannelType.PUBLIC, name, description, List.of(), now);
   }
 
+  // ── create ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("공개 채널 생성 테스트(성공)")
-  public void create_public_channel_success() {
+  public void createPublicChannel() {
     PublicChannelCreateRequest request = new PublicChannelCreateRequest(name, description);
     given(channelRepository.save(any())).willReturn(channel);
     given(channelMapper.toDto(channel)).willReturn(channelDto);
@@ -94,7 +96,7 @@ public class BasicChannelServiceTest {
 
   @Test
   @DisplayName("비공개 채널 생성 테스트(성공)")
-  public void create_private_channel_success() {
+  public void createPrivateChannel() {
     PrivateChannelCreateRequest request = new PrivateChannelCreateRequest(List.of(userId));
     Channel privateChannel = new Channel(ChannelType.PRIVATE, null, null);
     ReflectionTestUtils.setField(privateChannel, "id", channelId);
@@ -111,9 +113,11 @@ public class BasicChannelServiceTest {
     verify(readStatusRepository).saveAll(anyList());
   }
 
+  // ── findByUser ──────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 채널 조회 테스트(성공)")
-  public void find_by_user_success() {
+  public void findByUser() {
     List<ReadStatus> readStatuses = List.of(new ReadStatus(user, channel, now));
     given(readStatusRepository.findAllByUserId(userId)).willReturn(readStatuses);
     given(channelRepository.findAllPublicOrId(List.of(channelId))).willReturn(List.of(channel));
@@ -123,9 +127,11 @@ public class BasicChannelServiceTest {
     assertThat(result).containsExactly(channelDto);
   }
 
+  // ── update ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 업데이트 테스트(성공)")
-  public void update_success() {
+  public void update() {
     PublicChannelUpdateRequest request = new PublicChannelUpdateRequest("Updated Name",
         "Updated Description");
     ChannelDto updatedChannelDto = new ChannelDto(channelId, ChannelType.PUBLIC, "Updated Name",
@@ -141,7 +147,7 @@ public class BasicChannelServiceTest {
 
   @Test
   @DisplayName("채널 업데이트 테스트(실패 - 채널 없음)")
-  public void update_fail_not_found() {
+  public void update_notFound() {
     PublicChannelUpdateRequest request = new PublicChannelUpdateRequest("Updated Name",
         "Updated Description");
     given(channelRepository.findById(channelId)).willReturn(Optional.empty());
@@ -153,7 +159,7 @@ public class BasicChannelServiceTest {
 
   @Test
   @DisplayName("채널 업데이트 테스트(실패 - 비공개 채널)")
-  public void update_fail_private_channel() {
+  public void update_privateChannel() {
     PublicChannelUpdateRequest request = new PublicChannelUpdateRequest("Updated Name",
         "Updated Description");
     ReflectionTestUtils.setField(channel, "type", ChannelType.PRIVATE);
@@ -164,9 +170,11 @@ public class BasicChannelServiceTest {
     verify(channelRepository, never()).save(any());
   }
 
+  // ── delete ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 삭제 테스트(성공)")
-  public void delete_success() {
+  public void delete() {
     given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
 
     channelService.delete(channelId);
@@ -178,7 +186,7 @@ public class BasicChannelServiceTest {
 
   @Test
   @DisplayName("채널 삭제 테스트(실패 - 채널 없음)")
-  public void delete_fail_not_found() {
+  public void delete_notFound() {
     given(channelRepository.findById(channelId)).willReturn(Optional.empty());
     assertThatThrownBy(() -> channelService.delete(channelId))
         .isInstanceOf(ChannelNotFoundException.class);

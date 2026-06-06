@@ -48,7 +48,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("공개 채널 생성 성공 - 201")
-  void createPublic_success() throws Exception {
+  void createPublicChannel() throws Exception {
     mockMvc.perform(post("/api/channels/public")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
@@ -61,7 +61,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("공개 채널 생성 실패 - 400 (이름 누락)")
-  void createPublic_fail_blankName() throws Exception {
+  void createPublicChannel_blankName() throws Exception {
     mockMvc.perform(post("/api/channels/public")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
@@ -73,7 +73,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("비공개 채널 생성 성공 - 201")
-  void createPrivate_success() throws Exception {
+  void createPrivateChannel() throws Exception {
     String userId1 = createUser("privUser1", "priv1@test.com");
     String userId2 = createUser("privUser2", "priv2@test.com");
 
@@ -88,7 +88,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("비공개 채널 생성 실패 - 400 (참여자 목록 없음)")
-  void createPrivate_fail_emptyParticipants() throws Exception {
+  void createPrivateChannel_emptyParticipants() throws Exception {
     mockMvc.perform(post("/api/channels/private")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
@@ -100,7 +100,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("공개 채널 수정 성공 - 200")
-  void update_success() throws Exception {
+  void update() throws Exception {
     String channelId = createPublicChannel("old-name", "old desc");
 
     mockMvc.perform(patch("/api/channels/{channelId}", channelId)
@@ -114,7 +114,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("공개 채널 수정 실패 - 404 (존재하지 않는 채널)")
-  void update_fail_notFound() throws Exception {
+  void update_notFound() throws Exception {
     mockMvc.perform(patch("/api/channels/{channelId}", UUID.randomUUID())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
@@ -126,7 +126,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("채널 삭제 성공 - 204")
-  void delete_success() throws Exception {
+  void deleteChannel() throws Exception {
     String channelId = createPublicChannel("to-delete", null);
 
     mockMvc.perform(delete("/api/channels/{channelId}", channelId))
@@ -135,7 +135,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("채널 삭제 실패 - 404 (존재하지 않는 채널)")
-  void delete_fail_notFound() throws Exception {
+  void delete_notFound() throws Exception {
     mockMvc.perform(delete("/api/channels/{channelId}", UUID.randomUUID()))
         .andExpect(status().isNotFound());
   }
@@ -144,7 +144,7 @@ class ChannelApiIntegrationTest {
 
   @Test
   @DisplayName("사용자의 채널 목록 조회 성공 - 200")
-  void findAllByUserId_success() throws Exception {
+  void findAllByUserId() throws Exception {
     createPublicChannel("ch1", null);
     createPublicChannel("ch2", null);
     String userId = createUser("listChanUser", "listchan@test.com");

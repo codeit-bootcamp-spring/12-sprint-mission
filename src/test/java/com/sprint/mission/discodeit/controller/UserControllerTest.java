@@ -60,7 +60,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 생성 성공 - 201")
-  void create_success() throws Exception {
+  void create() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     BinaryContentDto avatarDto = new BinaryContentDto(UuidCreator.getTimeOrderedEpoch(),
         "avatar.png", 1024L, "image/png");
@@ -84,7 +84,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 생성 실패 - 400 (유효성 검사 실패)")
-  void create_fail_validationError() throws Exception {
+  void create_validationError() throws Exception {
     MockMultipartFile requestPart = new MockMultipartFile(
         "userCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
         objectMapper.writeValueAsBytes(new UserCreateRequest("t", "not-email", "short")));
@@ -98,7 +98,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 수정 성공 - 200")
-  void update_success() throws Exception {
+  void update() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     UserDto updatedUser = new UserDto(userId, "updatedUser", "updated@test.com", null, false);
     given(userService.update(eq(userId), any(UserUpdateRequest.class), any())).willReturn(
@@ -122,7 +122,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 수정 실패 - 404 (존재하지 않는 사용자)")
-  void update_fail_userNotFound() throws Exception {
+  void update_notFound() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     given(userService.update(eq(userId), any(UserUpdateRequest.class), any()))
         .willThrow(UserNotFoundException.withId(userId));
@@ -145,7 +145,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 삭제 성공 - 204")
-  void delete_success() throws Exception {
+  void deleteUser() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     willDoNothing().given(userService).delete(userId);
 
@@ -155,7 +155,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 삭제 실패 - 404 (존재하지 않는 사용자)")
-  void delete_fail_userNotFound() throws Exception {
+  void delete_notFound() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     willThrow(UserNotFoundException.withId(userId)).given(userService).delete(userId);
 
@@ -168,7 +168,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 목록 조회 성공 - 200")
-  void findAll_success() throws Exception {
+  void findAll() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     UserDto userDto = new UserDto(userId, "testUser", "test@test.com", null, true);
     given(userService.findAll()).willReturn(List.of(userDto));
@@ -193,7 +193,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 상태 업데이트 성공 - 200")
-  void updateStatus_success() throws Exception {
+  void updateStatus() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     Instant now = Instant.now();
     UserStatusDto statusDto = new UserStatusDto(UuidCreator.getTimeOrderedEpoch(), userId, now);
@@ -209,7 +209,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("사용자 상태 업데이트 실패 - 404 (존재하지 않는 사용자)")
-  void updateStatus_fail_userNotFound() throws Exception {
+  void updateStatus_notFound() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     given(userStatusService.updateByUserId(eq(userId), any(UserStatusUpdateRequest.class)))
         .willThrow(UserNotFoundException.withId(userId));

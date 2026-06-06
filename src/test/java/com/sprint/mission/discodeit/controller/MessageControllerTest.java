@@ -54,7 +54,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("메시지 생성 성공 - 201")
-  void create_success() throws Exception {
+  void create() throws Exception {
     UUID messageId = UuidCreator.getTimeOrderedEpoch();
     UUID channelId = UuidCreator.getTimeOrderedEpoch();
     UUID authorId = UuidCreator.getTimeOrderedEpoch();
@@ -76,7 +76,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("메시지 생성 실패 - 400 (내용 없음)")
-  void create_fail_blankContent() throws Exception {
+  void create_blankContent() throws Exception {
     UUID channelId = UuidCreator.getTimeOrderedEpoch();
     UUID authorId = UuidCreator.getTimeOrderedEpoch();
     MockMultipartFile requestPart = new MockMultipartFile(
@@ -92,7 +92,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("메시지 수정 성공 - 200")
-  void update_success() throws Exception {
+  void update() throws Exception {
     UUID messageId = UuidCreator.getTimeOrderedEpoch();
     UUID channelId = UuidCreator.getTimeOrderedEpoch();
     MessageDto updatedMessage = new MessageDto(messageId, Instant.now(), Instant.now(), "수정된 내용",
@@ -110,7 +110,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("메시지 수정 실패 - 400 (빈 내용)")
-  void update_fail_blankContent() throws Exception {
+  void update_blankContent() throws Exception {
     UUID messageId = UuidCreator.getTimeOrderedEpoch();
 
     mockMvc.perform(patch("/api/messages/{messageId}", messageId)
@@ -123,7 +123,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("메시지 삭제 성공 - 204")
-  void delete_success() throws Exception {
+  void deleteMessage() throws Exception {
     UUID messageId = UuidCreator.getTimeOrderedEpoch();
     willDoNothing().given(messageService).delete(messageId);
 
@@ -133,7 +133,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("메시지 삭제 실패 - 404 (존재하지 않는 메시지)")
-  void delete_fail_messageNotFound() throws Exception {
+  void delete_notFound() throws Exception {
     UUID messageId = UuidCreator.getTimeOrderedEpoch();
     willThrow(MessageNotFoundException.withId(messageId)).given(messageService).delete(messageId);
 
@@ -146,7 +146,7 @@ class MessageControllerTest {
 
   @Test
   @DisplayName("채널 메시지 목록 조회 성공 - 200")
-  void findByChannelId_success() throws Exception {
+  void findByChannelId() throws Exception {
     UUID channelId = UuidCreator.getTimeOrderedEpoch();
     UUID messageId = UuidCreator.getTimeOrderedEpoch();
     MessageDto messageDto = new MessageDto(messageId, Instant.now(), Instant.now(), "테스트 메시지",

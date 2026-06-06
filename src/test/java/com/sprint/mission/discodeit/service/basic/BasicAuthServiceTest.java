@@ -56,9 +56,11 @@ public class BasicAuthServiceTest {
     userDto = new UserDto(userId, username, email, null, true);
   }
 
+  // ── login ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("로그인 테스트(성공)")
-  public void login_success() {
+  public void login() {
     LoginRequest loginRequest = new LoginRequest(username, password);
 
     given(userRepository.findByUsername(any(String.class)))
@@ -75,7 +77,7 @@ public class BasicAuthServiceTest {
 
   @Test
   @DisplayName("로그인 테스트(실패 - 사용자 없음)")
-  public void login_fail_user_not_found() {
+  public void login_userNotFound() {
     LoginRequest loginRequest = new LoginRequest(username, password);
     given(userRepository.findByUsername(any(String.class))).willReturn(Optional.empty());
     assertThatThrownBy(() -> authService.login(loginRequest))
@@ -85,7 +87,7 @@ public class BasicAuthServiceTest {
 
   @Test
   @DisplayName("로그인 테스트(실패 - 비밀번호 불일치)")
-  public void login_fail_password_mismatch() {
+  public void login_passwordMismatch() {
     LoginRequest loginRequest = new LoginRequest(username, "wrongPassword");
     given(userRepository.findByUsername(any(String.class))).willReturn(Optional.of(user));
     assertThatThrownBy(() -> authService.login(loginRequest))

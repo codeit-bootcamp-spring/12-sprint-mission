@@ -28,9 +28,11 @@ public class ChannelRepositoryTest {
     return channelRepository.save(channel);
   }
 
+  // ── findAllPublicOrId ───────────────────────────────────────────────────
+
   @Test
   @DisplayName("공개 채널이나 채널 리스트를 모두 조회")
-  public void findAllPublicOrId_success() {
+  public void findAllPublicOrId() {
     Channel publicChannel1 = createChannel(ChannelType.PUBLIC, "publicChannel1");
     Channel publicChannel2 = createChannel(ChannelType.PUBLIC, "publicChannel2");
     Channel publicChannel3 = createChannel(ChannelType.PUBLIC, "publicChannel3");
@@ -55,7 +57,7 @@ public class ChannelRepositoryTest {
 
   @Test
   @DisplayName("PRIVATE 채널만 있고 ID 리스트가 비어있으면 빈 리스트 반환")
-  public void findAllPublicOrId_fail() {
+  public void findAllPublicOrId_emptyResult() {
     Channel privateChannel1 = createChannel(ChannelType.PRIVATE, "privateChannel1");
     Channel privateChannel2 = createChannel(ChannelType.PRIVATE, "privateChannel2");
 

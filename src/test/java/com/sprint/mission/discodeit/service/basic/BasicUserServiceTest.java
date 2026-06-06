@@ -69,9 +69,11 @@ public class BasicUserServiceTest {
     userDto = new UserDto(id, username, email, null, true);
   }
 
+  // ── create ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 생성 테스트(성공)")
-  public void create_success() {
+  public void create() {
     UserCreateRequest request = new UserCreateRequest(username, email, password);
     given(userRepository.existsByEmail(email)).willReturn(false);
     given(userRepository.existsByUsername(username)).willReturn(false);
@@ -85,7 +87,7 @@ public class BasicUserServiceTest {
 
   @Test
   @DisplayName("사용자 생성 테스트(실패 - 이메일 중복)")
-  public void create_fail_email_duplicate() {
+  public void create_duplicateEmail() {
     UserCreateRequest request = new UserCreateRequest(username, email, password);
     given(userRepository.existsByEmail(email)).willReturn(true);
 
@@ -95,7 +97,7 @@ public class BasicUserServiceTest {
 
   @Test
   @DisplayName("사용자 생성 테스트(실패 - 사용자 이름 중복)")
-  public void create_fail_username_duplicate() {
+  public void create_duplicateUsername() {
     UserCreateRequest request = new UserCreateRequest(username, email, password);
     given(userRepository.existsByEmail(email)).willReturn(false);
     given(userRepository.existsByUsername(username)).willReturn(true);
@@ -104,9 +106,11 @@ public class BasicUserServiceTest {
         .isInstanceOf(UserAlreadyExistException.class);
   }
 
+  // ── find ────────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 조회 테스트(성공)")
-  public void find_success() {
+  public void find() {
     given(userRepository.findById(id)).willReturn(Optional.of(user));
     given(userMapper.toDto(user)).willReturn(userDto);
 
@@ -117,15 +121,17 @@ public class BasicUserServiceTest {
 
   @Test
   @DisplayName("사용자 조회 테스트(실패 - 사용자 없음)")
-  public void find_fail_not_found() {
+  public void find_notFound() {
     given(userRepository.findById(id)).willReturn(Optional.empty());
     assertThatThrownBy(() -> userService.find(id))
         .isInstanceOf(UserNotFoundException.class);
   }
 
+  // ── findAll ─────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 목록 조회 테스트(성공)")
-  public void findAll_success() {
+  public void findAll() {
     List<UserDto> userDtoList = List.of(userDto);
     given(userRepository.findAllWithProfileAndUserStatus()).willReturn(List.of(user));
     given(userMapper.toDto(user)).willReturn(userDto);
@@ -135,9 +141,11 @@ public class BasicUserServiceTest {
     assertThat(result).isEqualTo(userDtoList);
   }
 
+  // ── update ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 수정 테스트(성공)")
-  public void update_success() {
+  public void update() {
     String newUsername = "updatedUser";
     String newEmail = "updated@test.com";
     String newPassword = "newPass1234!";
@@ -161,7 +169,7 @@ public class BasicUserServiceTest {
 
   @Test
   @DisplayName("사용자 수정 테스트(실패 - 사용자 없음)")
-  public void update_fail_not_found() {
+  public void update_notFound() {
     String newUsername = "updatedUser";
     String newEmail = "updated@test.com";
     String newPassword = "newPass1234!";
@@ -174,9 +182,11 @@ public class BasicUserServiceTest {
     verify(userRepository, never()).save(any());
   }
 
+  // ── delete ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("사용자 삭제 테스트(성공)")
-  public void delete_success() {
+  public void delete() {
     given(userRepository.findById(id)).willReturn(Optional.of(user));
 
     userService.delete(id);
@@ -185,7 +195,7 @@ public class BasicUserServiceTest {
 
   @Test
   @DisplayName("사용자 삭제 테스트(실패 - 사용자 없음)")
-  public void delete_fail_not_found() {
+  public void delete_notFound() {
     given(userRepository.findById(id)).willReturn(Optional.empty());
     assertThatThrownBy(() -> userService.delete(id))
         .isInstanceOf(UserNotFoundException.class);

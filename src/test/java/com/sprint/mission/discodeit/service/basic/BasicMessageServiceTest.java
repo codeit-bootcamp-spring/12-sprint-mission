@@ -121,9 +121,11 @@ public class BasicMessageServiceTest {
         List.of(binaryContentDto));
   }
 
+  // ── create ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("메시지 생성 테스트(성공)")
-  public void create_success() {
+  public void create() {
     MessageCreateRequest request = new MessageCreateRequest(content, channelId, authorId);
     BinaryContentCreateRequest attachmentRequest = new BinaryContentCreateRequest("testfile.png",
         "image/png", new byte[1000]);
@@ -147,7 +149,7 @@ public class BasicMessageServiceTest {
 
   @Test
   @DisplayName("메시지 생성 테스트(실패 - 채널 없음)")
-  public void createe_fail_channel_not_found() {
+  public void create_channelNotFound() {
     MessageCreateRequest request = new MessageCreateRequest(content, channelId, authorId);
     List<BinaryContentCreateRequest> attachmentsRequest = List.of();
     given(channelRepository.findById(channelId)).willReturn(Optional.empty());
@@ -159,7 +161,7 @@ public class BasicMessageServiceTest {
 
   @Test
   @DisplayName("메시지 생성 테스트(실패 - 작성자 없음)")
-  public void create_fail_user_not_found() {
+  public void create_userNotFound() {
     MessageCreateRequest request = new MessageCreateRequest(content, channelId, authorId);
     List<BinaryContentCreateRequest> attachmentsRequest = List.of();
     given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
@@ -172,9 +174,11 @@ public class BasicMessageServiceTest {
     verify(messageRepository, never()).save(any());
   }
 
+  // ── findByChannel ───────────────────────────────────────────────────────
+
   @Test
   @DisplayName("채널 메시지 조회 테스트(성공)")
-  public void find_by_channel_success() {
+  public void findByChannel() {
     int pageSize = 2;
     Instant cursor = Instant.now();
     Pageable pageable = PageRequest.of(0, pageSize);
@@ -243,9 +247,11 @@ public class BasicMessageServiceTest {
     assertThat(result).isEqualTo(pageResponse);
   }
 
+  // ── update ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("메시지 수정 테스트(성공)")
-  public void update_success() {
+  public void update() {
     String newContent = "updated message";
     MessageUpdateRequest request = new MessageUpdateRequest(newContent);
     given(messageRepository.findById(messageId)).willReturn(Optional.of(message));
@@ -257,9 +263,11 @@ public class BasicMessageServiceTest {
     assertThat(result).isEqualTo(messageDto);
   }
 
+  // ── delete ──────────────────────────────────────────────────────────────
+
   @Test
   @DisplayName("메시지 수정 테스트(실패 - 메시지 없음)")
-  public void update_fail_message_not_found() {
+  public void update_notFound() {
     String newContent = "updated message";
     MessageUpdateRequest request = new MessageUpdateRequest(newContent);
     given(messageRepository.findById(messageId)).willReturn(Optional.empty());
@@ -270,7 +278,7 @@ public class BasicMessageServiceTest {
 
   @Test
   @DisplayName("메시지 삭제 테스트(성공)")
-  public void delete_success() {
+  public void delete() {
     given(messageRepository.findById(messageId)).willReturn(Optional.of(message));
 
     messageService.delete(messageId);
