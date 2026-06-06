@@ -40,4 +40,15 @@ public class ErrorResponse {
                 status
         );
     }
+
+    public ErrorResponse(Exception exception, int status, Map<String, Object> details) {
+        this(
+                Instant.now(),
+                exception.getClass().getSimpleName(),
+                exception.getMessage(),
+                details,
+                exception.getClass().getSimpleName(),
+                status
+        );
+    }
 }

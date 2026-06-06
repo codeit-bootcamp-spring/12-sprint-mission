@@ -6,8 +6,6 @@ import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
-import com.sprint.mission.discodeit.exception.DiscodeitException;
-import com.sprint.mission.discodeit.exception.ErrorCode;
 import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentUploadException;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.io.IOException;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -44,7 +44,7 @@ public class MessageController implements MessageApi {
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<MessageDto> create(
-      @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
+      @RequestPart("messageCreateRequest") @Valid MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
   ) {
     List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
@@ -70,7 +70,7 @@ public class MessageController implements MessageApi {
 
   @PatchMapping(path = "{messageId}")
   public ResponseEntity<MessageDto> update(@PathVariable("messageId") UUID messageId,
-      @RequestBody MessageUpdateRequest request) {
+      @RequestBody @Valid MessageUpdateRequest request) {
     MessageDto updatedMessage = messageService.update(messageId, request);
     return ResponseEntity
         .status(HttpStatus.OK)

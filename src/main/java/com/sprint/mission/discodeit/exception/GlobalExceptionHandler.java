@@ -3,8 +3,13 @@ package com.sprint.mission.discodeit.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -17,6 +22,44 @@ public class GlobalExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(e,httpStatus.value());
     return ResponseEntity
             .status(httpStatus)
+            .body(errorResponse);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException e) {
+      Map<String, Object> details = new LinkedHashMap<>();
+
+      String objectName = e.getBindingResult().getObjectName();
+
+      List<Map<String,Object>> errors = e.getBindingResult().getFieldErrors()
+              .stream()
+              .map(fieldError ->{
+                  Map<String,Object> fieldDetails = new LinkedHashMap<>();
+                  fieldDetails.put("field", fieldError.getField());
+                  fieldDetails.put("message", fieldError.getDefaultMessage());
+
+                  log.warn(
+                          "검증 오류 발생 : objectName={}, field={}, message={}",
+                          objectName,
+                          fieldError.getField(),
+                          fieldError.getDefaultMessage()
+                  );
+
+                  return fieldDetails;
+              })
+              .toList();
+
+      details.put("ObjectName", objectName);
+      details.put("errors", errors);
+
+      ErrorResponse errorResponse = new ErrorResponse(
+              e,
+              HttpStatus.BAD_REQUEST.value(),
+              details
+      );
+
+      return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
             .body(errorResponse);
   }
 
