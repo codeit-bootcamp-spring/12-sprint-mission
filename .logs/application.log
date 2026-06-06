@@ -46,3 +46,1371 @@
 26-06-07 00:07:22:512 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
 26-06-07 00:07:22:523 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown initiated...
 26-06-07 00:07:22:527 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown completed.
+26-06-07 00:52:05:875 [background-preinit] INFO  o.h.validator.internal.util.Version HV000001: Hibernate Validator 8.0.1.Final
+26-06-07 00:52:05:956 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest Starting UserRepositoryTest using Java 17.0.18 with PID 57148 (started by minjijeon in /Users/minjijeon/work_space_sprint/12-sprint-mission)
+26-06-07 00:52:05:956 [Test worker] DEBUG c.s.m.d.r.UserRepositoryTest Running with Spring Boot v3.4.0, Spring v6.2.0
+26-06-07 00:52:05:957 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest The following 1 profile is active: "test"
+26-06-07 00:52:06:507 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-07 00:52:06:549 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 36 ms. Found 6 JPA repository interfaces.
+26-06-07 00:52:06:702 [Test worker] INFO  o.h.jpa.internal.util.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-07 00:52:06:733 [Test worker] INFO  org.hibernate.Version HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-07 00:52:06:757 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+26-06-07 00:52:06:908 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-07 00:52:06:926 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Starting...
+26-06-07 00:52:07:008 [Test worker] INFO  com.zaxxer.hikari.pool.HikariPool HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:discodeit-test user=SA
+26-06-07 00:52:07:009 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Start completed.
+26-06-07 00:52:07:041 [Test worker] INFO  o.hibernate.orm.connections.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-07 00:52:07:538 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-07 00:52:07:545 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists binary_contents cascade 
+26-06-07 00:52:07:547 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists channels cascade 
+26-06-07 00:52:07:548 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists message_attachments cascade 
+26-06-07 00:52:07:548 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists messages cascade 
+26-06-07 00:52:07:548 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists read_statuses cascade 
+26-06-07 00:52:07:548 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists user_statuses cascade 
+26-06-07 00:52:07:548 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists users cascade 
+26-06-07 00:52:07:553 [Test worker] DEBUG org.hibernate.SQL 
+    create table binary_contents (
+        created_at timestamp with time zone not null,
+        size bigint not null,
+        id uuid not null,
+        content_type varchar(100) not null,
+        file_name varchar(255) not null,
+        primary key (id)
+    )
+26-06-07 00:52:07:558 [Test worker] DEBUG org.hibernate.SQL 
+    create table channels (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        name varchar(100),
+        description varchar(500),
+        type enum ('PRIVATE','PUBLIC'),
+        primary key (id)
+    )
+26-06-07 00:52:07:560 [Test worker] DEBUG org.hibernate.SQL 
+    create table message_attachments (
+        attachment_id uuid not null unique,
+        message_id uuid not null
+    )
+26-06-07 00:52:07:562 [Test worker] DEBUG org.hibernate.SQL 
+    create table messages (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        author_id uuid,
+        channel_id uuid not null,
+        id uuid not null,
+        content text not null,
+        primary key (id)
+    )
+26-06-07 00:52:07:565 [Test worker] DEBUG org.hibernate.SQL 
+    create table read_statuses (
+        created_at timestamp with time zone not null,
+        last_read_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        channel_id uuid not null,
+        id uuid not null,
+        user_id uuid not null,
+        primary key (id),
+        unique (user_id, channel_id)
+    )
+26-06-07 00:52:07:567 [Test worker] DEBUG org.hibernate.SQL 
+    create table user_statuses (
+        created_at timestamp with time zone not null,
+        last_active_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        user_id uuid not null unique,
+        primary key (id)
+    )
+26-06-07 00:52:07:568 [Test worker] DEBUG org.hibernate.SQL 
+    create table users (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        profile_id uuid unique,
+        username varchar(50) not null unique,
+        password varchar(60) not null,
+        email varchar(100) not null unique,
+        primary key (id)
+    )
+26-06-07 00:52:07:571 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists message_attachments 
+       add constraint FKsd1m8rb8jcpbcnb7rpdue7ctc 
+       foreign key (attachment_id) 
+       references binary_contents
+26-06-07 00:52:07:584 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists message_attachments 
+       add constraint FKj7twd218e2gqw9cmlhwvo1rth 
+       foreign key (message_id) 
+       references messages
+26-06-07 00:52:07:587 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists messages 
+       add constraint FKowtlim26svclkatusptbgi7u1 
+       foreign key (author_id) 
+       references users
+26-06-07 00:52:07:589 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists messages 
+       add constraint FK3u3ckbhwq9se1cmopk2pq05b2 
+       foreign key (channel_id) 
+       references channels
+26-06-07 00:52:07:590 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists read_statuses 
+       add constraint FKa38ri44ml4gfdpklx4ahqr8gd 
+       foreign key (channel_id) 
+       references channels
+26-06-07 00:52:07:591 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists read_statuses 
+       add constraint FKml3k4wr9sj5yxrmj6d0aoib2e 
+       foreign key (user_id) 
+       references users
+26-06-07 00:52:07:594 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists user_statuses 
+       add constraint FK4lfl3ei2ubchgcxrrpo3pw4mm 
+       foreign key (user_id) 
+       references users
+26-06-07 00:52:07:596 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists users 
+       add constraint FKtbudycgrip49xdptogmhfqnso 
+       foreign key (profile_id) 
+       references binary_contents
+26-06-07 00:52:07:601 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-07 00:52:07:854 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-07 00:52:09:301 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest Started UserRepositoryTest in 3.698 seconds (process running for 4.568)
+26-06-07 00:52:10:407 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:10:426 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.140002Z]
+26-06-07 00:52:10:432 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:10:432 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:10:432 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:10:432 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.140002Z]
+26-06-07 00:52:10:432 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:10:432 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [95b40199-93be-452e-984d-3b855432794c]
+26-06-07 00:52:10:465 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:10:465 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.165389Z]
+26-06-07 00:52:10:465 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.163926Z]
+26-06-07 00:52:10:465 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.165389Z]
+26-06-07 00:52:10:465 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [95b40199-93be-452e-984d-3b855432794c]
+26-06-07 00:52:10:465 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [7e27cb88-da50-4fd4-a7a6-2e1002f6c3ed]
+26-06-07 00:52:10:488 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+26-06-07 00:52:10:490 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:10:493 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:INTEGER) <- [1]
+26-06-07 00:52:10:623 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:10:625 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.614613Z]
+26-06-07 00:52:10:625 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [bbb@test.com]
+26-06-07 00:52:10:625 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:10:626 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:10:626 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.614613Z]
+26-06-07 00:52:10:626 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [bbb]
+26-06-07 00:52:10:626 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [7542fb26-80eb-40e3-ba08-3ecfc200cc7f]
+26-06-07 00:52:10:627 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:10:628 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.616570Z]
+26-06-07 00:52:10:628 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.616278Z]
+26-06-07 00:52:10:629 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.616570Z]
+26-06-07 00:52:10:629 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [7542fb26-80eb-40e3-ba08-3ecfc200cc7f]
+26-06-07 00:52:10:629 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [b84a79d9-ea1c-4c98-bb67-99f14a75e0da]
+26-06-07 00:52:10:631 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:10:632 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.617126Z]
+26-06-07 00:52:10:633 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [aaa@test.com]
+26-06-07 00:52:10:633 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:10:633 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:10:633 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.617126Z]
+26-06-07 00:52:10:633 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [aaa]
+26-06-07 00:52:10:633 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [63353678-0182-49d6-b330-1ce175a49f6f]
+26-06-07 00:52:10:635 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:10:635 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.618064Z]
+26-06-07 00:52:10:636 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.617335Z]
+26-06-07 00:52:10:636 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.618064Z]
+26-06-07 00:52:10:636 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [63353678-0182-49d6-b330-1ce175a49f6f]
+26-06-07 00:52:10:636 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [9cfa2c41-eb07-4d25-8991-ff341177408b]
+26-06-07 00:52:10:684 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.password,
+        u1_0.profile_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    order by
+        u1_0.username
+26-06-07 00:52:10:715 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        us1_0.id,
+        us1_0.created_at,
+        us1_0.last_active_at,
+        us1_0.updated_at,
+        us1_0.user_id 
+    from
+        user_statuses us1_0 
+    where
+        us1_0.user_id=?
+26-06-07 00:52:10:717 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [63353678-0182-49d6-b330-1ce175a49f6f]
+26-06-07 00:52:10:732 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        us1_0.id,
+        us1_0.created_at,
+        us1_0.last_active_at,
+        us1_0.updated_at,
+        us1_0.user_id 
+    from
+        user_statuses us1_0 
+    where
+        us1_0.user_id=?
+26-06-07 00:52:10:736 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [7542fb26-80eb-40e3-ba08-3ecfc200cc7f]
+26-06-07 00:52:10:771 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:10:772 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.768815Z]
+26-06-07 00:52:10:773 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:10:773 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:10:773 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:10:774 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.768815Z]
+26-06-07 00:52:10:774 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:10:774 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [63c07a44-68c3-4e31-a7e5-5526fc9d7794]
+26-06-07 00:52:10:775 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:10:776 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.769393Z]
+26-06-07 00:52:10:777 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.769255Z]
+26-06-07 00:52:10:777 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.769393Z]
+26-06-07 00:52:10:777 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [63c07a44-68c3-4e31-a7e5-5526fc9d7794]
+26-06-07 00:52:10:777 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [a6b28468-e653-4151-b8aa-2ff7a993283d]
+26-06-07 00:52:10:778 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:10:779 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.769569Z]
+26-06-07 00:52:10:779 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [java@test.com]
+26-06-07 00:52:10:779 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:10:779 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:10:780 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.769569Z]
+26-06-07 00:52:10:780 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [java]
+26-06-07 00:52:10:780 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [bdf283e9-a1f0-49ca-b18b-d991c67713fe]
+26-06-07 00:52:10:781 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:10:782 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.770373Z]
+26-06-07 00:52:10:782 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.769968Z]
+26-06-07 00:52:10:782 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.770373Z]
+26-06-07 00:52:10:782 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [bdf283e9-a1f0-49ca-b18b-d991c67713fe]
+26-06-07 00:52:10:782 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [f10a1a24-3ee1-4d93-9b82-a09ee747297a]
+26-06-07 00:52:10:790 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.password,
+        p1_0.id,
+        p1_0.content_type,
+        p1_0.created_at,
+        p1_0.file_name,
+        p1_0.size,
+        s1_0.id,
+        s1_0.created_at,
+        s1_0.last_active_at,
+        s1_0.updated_at,
+        s1_0.user_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    left join
+        binary_contents p1_0 
+            on p1_0.id=u1_0.profile_id 
+    join
+        user_statuses s1_0 
+            on u1_0.id=s1_0.user_id
+26-06-07 00:52:10:812 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:10:812 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.808190Z]
+26-06-07 00:52:10:812 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:10:813 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:10:813 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:10:813 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.808190Z]
+26-06-07 00:52:10:813 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:10:813 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [4d915b6c-ebe9-4ad3-877f-7167f4d9bb5c]
+26-06-07 00:52:10:814 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:10:815 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.808890Z]
+26-06-07 00:52:10:815 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.808635Z]
+26-06-07 00:52:10:815 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:10.808890Z]
+26-06-07 00:52:10:815 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [4d915b6c-ebe9-4ad3-877f-7167f4d9bb5c]
+26-06-07 00:52:10:815 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [af502040-f751-4a76-b857-c0da274c0f00]
+26-06-07 00:52:10:816 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+26-06-07 00:52:10:817 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:VARCHAR) <- [none@test.com]
+26-06-07 00:52:10:817 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:INTEGER) <- [1]
+26-06-07 00:52:10:837 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+26-06-07 00:52:10:838 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists binary_contents cascade 
+26-06-07 00:52:10:839 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists channels cascade 
+26-06-07 00:52:10:840 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists message_attachments cascade 
+26-06-07 00:52:10:841 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists messages cascade 
+26-06-07 00:52:10:841 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists read_statuses cascade 
+26-06-07 00:52:10:842 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists user_statuses cascade 
+26-06-07 00:52:10:843 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists users cascade 
+26-06-07 00:52:10:847 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown initiated...
+26-06-07 00:52:10:850 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown completed.
+26-06-07 00:52:25:304 [background-preinit] INFO  o.h.validator.internal.util.Version HV000001: Hibernate Validator 8.0.1.Final
+26-06-07 00:52:25:332 [Test worker] INFO  c.s.m.d.r.ChannelRepositoryTest Starting ChannelRepositoryTest using Java 17.0.18 with PID 57388 (started by minjijeon in /Users/minjijeon/work_space_sprint/12-sprint-mission)
+26-06-07 00:52:25:332 [Test worker] DEBUG c.s.m.d.r.ChannelRepositoryTest Running with Spring Boot v3.4.0, Spring v6.2.0
+26-06-07 00:52:25:332 [Test worker] INFO  c.s.m.d.r.ChannelRepositoryTest The following 1 profile is active: "test"
+26-06-07 00:52:25:607 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-07 00:52:25:655 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 42 ms. Found 6 JPA repository interfaces.
+26-06-07 00:52:25:857 [Test worker] INFO  o.h.jpa.internal.util.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-07 00:52:25:904 [Test worker] INFO  org.hibernate.Version HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-07 00:52:25:925 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+26-06-07 00:52:26:123 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-07 00:52:26:163 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Starting...
+26-06-07 00:52:27:072 [Test worker] INFO  com.zaxxer.hikari.pool.HikariPool HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:discodeit-test user=SA
+26-06-07 00:52:27:094 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Start completed.
+26-06-07 00:52:27:285 [Test worker] INFO  o.hibernate.orm.connections.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-07 00:52:29:246 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-07 00:52:29:254 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists binary_contents cascade 
+26-06-07 00:52:29:261 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists channels cascade 
+26-06-07 00:52:29:261 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists message_attachments cascade 
+26-06-07 00:52:29:262 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists messages cascade 
+26-06-07 00:52:29:262 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists read_statuses cascade 
+26-06-07 00:52:29:262 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists user_statuses cascade 
+26-06-07 00:52:29:262 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists users cascade 
+26-06-07 00:52:29:274 [Test worker] DEBUG org.hibernate.SQL 
+    create table binary_contents (
+        created_at timestamp with time zone not null,
+        size bigint not null,
+        id uuid not null,
+        content_type varchar(100) not null,
+        file_name varchar(255) not null,
+        primary key (id)
+    )
+26-06-07 00:52:29:300 [Test worker] DEBUG org.hibernate.SQL 
+    create table channels (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        name varchar(100),
+        description varchar(500),
+        type enum ('PRIVATE','PUBLIC'),
+        primary key (id)
+    )
+26-06-07 00:52:29:309 [Test worker] DEBUG org.hibernate.SQL 
+    create table message_attachments (
+        attachment_id uuid not null unique,
+        message_id uuid not null
+    )
+26-06-07 00:52:29:314 [Test worker] DEBUG org.hibernate.SQL 
+    create table messages (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        author_id uuid,
+        channel_id uuid not null,
+        id uuid not null,
+        content text not null,
+        primary key (id)
+    )
+26-06-07 00:52:29:318 [Test worker] DEBUG org.hibernate.SQL 
+    create table read_statuses (
+        created_at timestamp with time zone not null,
+        last_read_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        channel_id uuid not null,
+        id uuid not null,
+        user_id uuid not null,
+        primary key (id),
+        unique (user_id, channel_id)
+    )
+26-06-07 00:52:29:323 [Test worker] DEBUG org.hibernate.SQL 
+    create table user_statuses (
+        created_at timestamp with time zone not null,
+        last_active_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        user_id uuid not null unique,
+        primary key (id)
+    )
+26-06-07 00:52:29:330 [Test worker] DEBUG org.hibernate.SQL 
+    create table users (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        profile_id uuid unique,
+        username varchar(50) not null unique,
+        password varchar(60) not null,
+        email varchar(100) not null unique,
+        primary key (id)
+    )
+26-06-07 00:52:29:334 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists message_attachments 
+       add constraint FKsd1m8rb8jcpbcnb7rpdue7ctc 
+       foreign key (attachment_id) 
+       references binary_contents
+26-06-07 00:52:29:354 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists message_attachments 
+       add constraint FKj7twd218e2gqw9cmlhwvo1rth 
+       foreign key (message_id) 
+       references messages
+26-06-07 00:52:29:360 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists messages 
+       add constraint FKowtlim26svclkatusptbgi7u1 
+       foreign key (author_id) 
+       references users
+26-06-07 00:52:29:361 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists messages 
+       add constraint FK3u3ckbhwq9se1cmopk2pq05b2 
+       foreign key (channel_id) 
+       references channels
+26-06-07 00:52:29:363 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists read_statuses 
+       add constraint FKa38ri44ml4gfdpklx4ahqr8gd 
+       foreign key (channel_id) 
+       references channels
+26-06-07 00:52:29:364 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists read_statuses 
+       add constraint FKml3k4wr9sj5yxrmj6d0aoib2e 
+       foreign key (user_id) 
+       references users
+26-06-07 00:52:29:368 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists user_statuses 
+       add constraint FK4lfl3ei2ubchgcxrrpo3pw4mm 
+       foreign key (user_id) 
+       references users
+26-06-07 00:52:29:372 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists users 
+       add constraint FKtbudycgrip49xdptogmhfqnso 
+       foreign key (profile_id) 
+       references binary_contents
+26-06-07 00:52:29:377 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-07 00:52:29:577 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-07 00:52:30:012 [Test worker] INFO  c.s.m.d.r.ChannelRepositoryTest Started ChannelRepositoryTest in 4.888 seconds (process running for 6.28)
+26-06-07 00:52:30:475 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:30:484 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.448178Z]
+26-06-07 00:52:30:493 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [bbb 설명]
+26-06-07 00:52:30:494 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [bbb]
+26-06-07 00:52:30:494 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:30:494 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.448178Z]
+26-06-07 00:52:30:495 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [89ae728d-4e72-4589-81bd-095332fa69cf]
+26-06-07 00:52:30:518 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:30:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.461684Z]
+26-06-07 00:52:30:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [aaa 설명]
+26-06-07 00:52:30:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [aaa]
+26-06-07 00:52:30:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:30:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.461684Z]
+26-06-07 00:52:30:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [f54562ad-cce5-4721-b3b1-99ab7fd29fb4]
+26-06-07 00:52:30:581 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.name,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        channels c1_0 
+    order by
+        c1_0.name
+26-06-07 00:52:30:651 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:30:652 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.650751Z]
+26-06-07 00:52:30:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [공개 채널]
+26-06-07 00:52:30:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [public]
+26-06-07 00:52:30:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:30:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.650751Z]
+26-06-07 00:52:30:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [8143e284-6fa0-4ccd-8a95-814ebaf1a51c]
+26-06-07 00:52:30:654 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:30:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.651200Z]
+26-06-07 00:52:30:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [null]
+26-06-07 00:52:30:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [null]
+26-06-07 00:52:30:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PRIVATE]
+26-06-07 00:52:30:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.651200Z]
+26-06-07 00:52:30:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [585c2244-4b39-4a1f-8a90-432eaa1a00c1]
+26-06-07 00:52:30:657 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:30:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.651373Z]
+26-06-07 00:52:30:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [null]
+26-06-07 00:52:30:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [null]
+26-06-07 00:52:30:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PRIVATE]
+26-06-07 00:52:30:659 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.651373Z]
+26-06-07 00:52:30:659 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [c64485f5-ac8a-40cf-a8bd-134dba76afcc]
+26-06-07 00:52:30:671 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.name,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        channels c1_0 
+    where
+        c1_0.type=? 
+        or c1_0.id in (?)
+26-06-07 00:52:30:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:ENUM) <- [PUBLIC]
+26-06-07 00:52:30:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [585c2244-4b39-4a1f-8a90-432eaa1a00c1]
+26-06-07 00:52:30:684 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:30:684 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.683625Z]
+26-06-07 00:52:30:684 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [null]
+26-06-07 00:52:30:684 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [null]
+26-06-07 00:52:30:684 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PRIVATE]
+26-06-07 00:52:30:684 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:30.683625Z]
+26-06-07 00:52:30:684 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [5e976fec-ad6e-4186-9950-6077ffd01ca7]
+26-06-07 00:52:30:686 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.name,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        channels c1_0 
+    where
+        c1_0.type=? 
+        or c1_0.id in (?)
+26-06-07 00:52:30:686 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:ENUM) <- [PUBLIC]
+26-06-07 00:52:30:686 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [54912ac5-3469-42ed-8b53-150364c22217]
+26-06-07 00:52:30:713 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+26-06-07 00:52:30:715 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists binary_contents cascade 
+26-06-07 00:52:30:721 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists channels cascade 
+26-06-07 00:52:30:723 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists message_attachments cascade 
+26-06-07 00:52:30:726 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists messages cascade 
+26-06-07 00:52:30:727 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists read_statuses cascade 
+26-06-07 00:52:30:728 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists user_statuses cascade 
+26-06-07 00:52:30:730 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists users cascade 
+26-06-07 00:52:30:733 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown initiated...
+26-06-07 00:52:30:736 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown completed.
+26-06-07 00:52:42:350 [background-preinit] INFO  o.h.validator.internal.util.Version HV000001: Hibernate Validator 8.0.1.Final
+26-06-07 00:52:42:397 [Test worker] INFO  c.s.m.d.r.MessageRepositoryTest Starting MessageRepositoryTest using Java 17.0.18 with PID 57623 (started by minjijeon in /Users/minjijeon/work_space_sprint/12-sprint-mission)
+26-06-07 00:52:42:398 [Test worker] DEBUG c.s.m.d.r.MessageRepositoryTest Running with Spring Boot v3.4.0, Spring v6.2.0
+26-06-07 00:52:42:398 [Test worker] INFO  c.s.m.d.r.MessageRepositoryTest The following 1 profile is active: "test"
+26-06-07 00:52:42:668 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-07 00:52:42:704 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 32 ms. Found 6 JPA repository interfaces.
+26-06-07 00:52:42:844 [Test worker] INFO  o.h.jpa.internal.util.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-07 00:52:42:878 [Test worker] INFO  org.hibernate.Version HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-07 00:52:42:899 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+26-06-07 00:52:43:052 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-07 00:52:43:071 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Starting...
+26-06-07 00:52:43:164 [Test worker] INFO  com.zaxxer.hikari.pool.HikariPool HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:discodeit-test user=SA
+26-06-07 00:52:43:165 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Start completed.
+26-06-07 00:52:43:198 [Test worker] INFO  o.hibernate.orm.connections.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-07 00:52:43:667 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-07 00:52:43:674 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists binary_contents cascade 
+26-06-07 00:52:43:676 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists channels cascade 
+26-06-07 00:52:43:676 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists message_attachments cascade 
+26-06-07 00:52:43:677 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists messages cascade 
+26-06-07 00:52:43:677 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists read_statuses cascade 
+26-06-07 00:52:43:677 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists user_statuses cascade 
+26-06-07 00:52:43:677 [Test worker] DEBUG org.hibernate.SQL 
+    drop table if exists users cascade 
+26-06-07 00:52:43:680 [Test worker] DEBUG org.hibernate.SQL 
+    create table binary_contents (
+        created_at timestamp with time zone not null,
+        size bigint not null,
+        id uuid not null,
+        content_type varchar(100) not null,
+        file_name varchar(255) not null,
+        primary key (id)
+    )
+26-06-07 00:52:43:684 [Test worker] DEBUG org.hibernate.SQL 
+    create table channels (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        name varchar(100),
+        description varchar(500),
+        type enum ('PRIVATE','PUBLIC'),
+        primary key (id)
+    )
+26-06-07 00:52:43:686 [Test worker] DEBUG org.hibernate.SQL 
+    create table message_attachments (
+        attachment_id uuid not null unique,
+        message_id uuid not null
+    )
+26-06-07 00:52:43:688 [Test worker] DEBUG org.hibernate.SQL 
+    create table messages (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        author_id uuid,
+        channel_id uuid not null,
+        id uuid not null,
+        content text not null,
+        primary key (id)
+    )
+26-06-07 00:52:43:689 [Test worker] DEBUG org.hibernate.SQL 
+    create table read_statuses (
+        created_at timestamp with time zone not null,
+        last_read_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        channel_id uuid not null,
+        id uuid not null,
+        user_id uuid not null,
+        primary key (id),
+        unique (user_id, channel_id)
+    )
+26-06-07 00:52:43:692 [Test worker] DEBUG org.hibernate.SQL 
+    create table user_statuses (
+        created_at timestamp with time zone not null,
+        last_active_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        user_id uuid not null unique,
+        primary key (id)
+    )
+26-06-07 00:52:43:693 [Test worker] DEBUG org.hibernate.SQL 
+    create table users (
+        created_at timestamp with time zone not null,
+        updated_at timestamp with time zone,
+        id uuid not null,
+        profile_id uuid unique,
+        username varchar(50) not null unique,
+        password varchar(60) not null,
+        email varchar(100) not null unique,
+        primary key (id)
+    )
+26-06-07 00:52:43:697 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists message_attachments 
+       add constraint FKsd1m8rb8jcpbcnb7rpdue7ctc 
+       foreign key (attachment_id) 
+       references binary_contents
+26-06-07 00:52:43:704 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists message_attachments 
+       add constraint FKj7twd218e2gqw9cmlhwvo1rth 
+       foreign key (message_id) 
+       references messages
+26-06-07 00:52:43:707 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists messages 
+       add constraint FKowtlim26svclkatusptbgi7u1 
+       foreign key (author_id) 
+       references users
+26-06-07 00:52:43:708 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists messages 
+       add constraint FK3u3ckbhwq9se1cmopk2pq05b2 
+       foreign key (channel_id) 
+       references channels
+26-06-07 00:52:43:710 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists read_statuses 
+       add constraint FKa38ri44ml4gfdpklx4ahqr8gd 
+       foreign key (channel_id) 
+       references channels
+26-06-07 00:52:43:712 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists read_statuses 
+       add constraint FKml3k4wr9sj5yxrmj6d0aoib2e 
+       foreign key (user_id) 
+       references users
+26-06-07 00:52:43:714 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists user_statuses 
+       add constraint FK4lfl3ei2ubchgcxrrpo3pw4mm 
+       foreign key (user_id) 
+       references users
+26-06-07 00:52:43:715 [Test worker] DEBUG org.hibernate.SQL 
+    alter table if exists users 
+       add constraint FKtbudycgrip49xdptogmhfqnso 
+       foreign key (profile_id) 
+       references binary_contents
+26-06-07 00:52:43:719 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-07 00:52:43:878 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-07 00:52:44:189 [Test worker] INFO  c.s.m.d.r.MessageRepositoryTest Started MessageRepositoryTest in 2.05 seconds (process running for 2.816)
+26-06-07 00:52:44:514 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:519 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.474612Z]
+26-06-07 00:52:44:522 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [공개 채널]
+26-06-07 00:52:44:523 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [public]
+26-06-07 00:52:44:523 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:44:524 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.474612Z]
+26-06-07 00:52:44:524 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [5570f027-2580-4e8a-90d0-b559dc26e25e]
+26-06-07 00:52:44:534 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:535 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.485404Z]
+26-06-07 00:52:44:535 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:44:535 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:44:536 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:44:536 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.485404Z]
+26-06-07 00:52:44:536 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:44:536 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [f9a78d6f-ff7a-48de-9dde-305beb419935]
+26-06-07 00:52:44:536 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:44:537 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.489113Z]
+26-06-07 00:52:44:537 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.488188Z]
+26-06-07 00:52:44:537 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.489113Z]
+26-06-07 00:52:44:537 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [f9a78d6f-ff7a-48de-9dde-305beb419935]
+26-06-07 00:52:44:537 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [63baf0e4-0b2f-41fd-b526-f1532c405b9d]
+26-06-07 00:52:44:538 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:538 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [f9a78d6f-ff7a-48de-9dde-305beb419935]
+26-06-07 00:52:44:538 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [5570f027-2580-4e8a-90d0-b559dc26e25e]
+26-06-07 00:52:44:538 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [첫 번째 메시지]
+26-06-07 00:52:44:538 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.492467Z]
+26-06-07 00:52:44:538 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.492467Z]
+26-06-07 00:52:44:538 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [a92fa69d-29f6-4619-93ec-57308d2a828d]
+26-06-07 00:52:44:540 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:540 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [f9a78d6f-ff7a-48de-9dde-305beb419935]
+26-06-07 00:52:44:540 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [5570f027-2580-4e8a-90d0-b559dc26e25e]
+26-06-07 00:52:44:540 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [두 번째 메시지]
+26-06-07 00:52:44:540 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.500827Z]
+26-06-07 00:52:44:541 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.500827Z]
+26-06-07 00:52:44:541 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [54c55f3f-4130-4b8e-8f43-7cb6868aa3a8]
+26-06-07 00:52:44:587 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        m1_0.id,
+        a1_0.id,
+        a1_0.created_at,
+        a1_0.email,
+        a1_0.password,
+        p1_0.id,
+        p1_0.content_type,
+        p1_0.created_at,
+        p1_0.file_name,
+        p1_0.size,
+        s1_0.id,
+        s1_0.created_at,
+        s1_0.last_active_at,
+        s1_0.updated_at,
+        s1_0.user_id,
+        a1_0.updated_at,
+        a1_0.username,
+        m1_0.channel_id,
+        m1_0.content,
+        m1_0.created_at,
+        m1_0.updated_at 
+    from
+        messages m1_0 
+    left join
+        users a1_0 
+            on a1_0.id=m1_0.author_id 
+    join
+        user_statuses s1_0 
+            on a1_0.id=s1_0.user_id 
+    left join
+        binary_contents p1_0 
+            on p1_0.id=a1_0.profile_id 
+    where
+        m1_0.channel_id=? 
+        and m1_0.created_at<? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first ? rows only
+26-06-07 00:52:44:590 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [5570f027-2580-4e8a-90d0-b559dc26e25e]
+26-06-07 00:52:44:591 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:53:44.548199Z]
+26-06-07 00:52:44:591 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:INTEGER) <- [11]
+26-06-07 00:52:44:652 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.650963Z]
+26-06-07 00:52:44:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [공개 채널]
+26-06-07 00:52:44:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [public]
+26-06-07 00:52:44:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:44:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.650963Z]
+26-06-07 00:52:44:653 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [51d3cc17-3926-4911-af2a-47b01c01191d]
+26-06-07 00:52:44:654 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651196Z]
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651196Z]
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:44:654 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [e99f8c5c-20d9-4725-90a8-e0172d62b801]
+26-06-07 00:52:44:655 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:44:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651338Z]
+26-06-07 00:52:44:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651286Z]
+26-06-07 00:52:44:655 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651338Z]
+26-06-07 00:52:44:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [e99f8c5c-20d9-4725-90a8-e0172d62b801]
+26-06-07 00:52:44:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [f1430cf0-0906-4464-b272-9338cd04ba76]
+26-06-07 00:52:44:656 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [e99f8c5c-20d9-4725-90a8-e0172d62b801]
+26-06-07 00:52:44:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [51d3cc17-3926-4911-af2a-47b01c01191d]
+26-06-07 00:52:44:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [첫 번째 메시지]
+26-06-07 00:52:44:656 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651454Z]
+26-06-07 00:52:44:657 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651454Z]
+26-06-07 00:52:44:657 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [9ada7ef7-a8e6-4121-aaef-f46356979e6b]
+26-06-07 00:52:44:657 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [e99f8c5c-20d9-4725-90a8-e0172d62b801]
+26-06-07 00:52:44:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [51d3cc17-3926-4911-af2a-47b01c01191d]
+26-06-07 00:52:44:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [두 번째 메시지]
+26-06-07 00:52:44:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651618Z]
+26-06-07 00:52:44:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.651618Z]
+26-06-07 00:52:44:658 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [e54a7667-b5a4-414f-9ebe-692ade86b31a]
+26-06-07 00:52:44:662 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        m1_0.created_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first 1 rows only
+26-06-07 00:52:44:663 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [51d3cc17-3926-4911-af2a-47b01c01191d]
+26-06-07 00:52:44:668 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:669 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.667688Z]
+26-06-07 00:52:44:669 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [공개 채널]
+26-06-07 00:52:44:669 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [public]
+26-06-07 00:52:44:669 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:44:669 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.667688Z]
+26-06-07 00:52:44:669 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [84cd2bbd-5f03-4f84-8ca4-2dd7763d3aa2]
+26-06-07 00:52:44:670 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.667874Z]
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.667874Z]
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:44:671 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [be6c10fd-7a1e-4a9b-9443-98e20956dd7a]
+26-06-07 00:52:44:672 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.668012Z]
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.667960Z]
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.668012Z]
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [be6c10fd-7a1e-4a9b-9443-98e20956dd7a]
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [7f880b14-6084-4ed0-bd31-cf8dfecb3e4d]
+26-06-07 00:52:44:673 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [be6c10fd-7a1e-4a9b-9443-98e20956dd7a]
+26-06-07 00:52:44:673 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [84cd2bbd-5f03-4f84-8ca4-2dd7763d3aa2]
+26-06-07 00:52:44:674 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [첫 번째 메시지]
+26-06-07 00:52:44:674 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.668112Z]
+26-06-07 00:52:44:674 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.668112Z]
+26-06-07 00:52:44:674 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [043adc09-ed55-4104-a036-032189b0e23d]
+26-06-07 00:52:44:674 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:675 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [be6c10fd-7a1e-4a9b-9443-98e20956dd7a]
+26-06-07 00:52:44:675 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [84cd2bbd-5f03-4f84-8ca4-2dd7763d3aa2]
+26-06-07 00:52:44:675 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [두 번째 메시지]
+26-06-07 00:52:44:675 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.668322Z]
+26-06-07 00:52:44:675 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.668322Z]
+26-06-07 00:52:44:675 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [7bd8ec5f-a077-4799-b4c9-6982534c4a07]
+26-06-07 00:52:44:686 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        m1_0.id,
+        m1_0.author_id,
+        m1_0.channel_id,
+        m1_0.content,
+        m1_0.created_at,
+        m1_0.updated_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=?
+26-06-07 00:52:44:687 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [84cd2bbd-5f03-4f84-8ca4-2dd7763d3aa2]
+26-06-07 00:52:44:692 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        a1_0.message_id,
+        a1_1.id,
+        a1_1.content_type,
+        a1_1.created_at,
+        a1_1.file_name,
+        a1_1.size 
+    from
+        message_attachments a1_0 
+    join
+        binary_contents a1_1 
+            on a1_1.id=a1_0.attachment_id 
+    where
+        a1_0.message_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:694 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [043adc09-ed55-4104-a036-032189b0e23d]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [7bd8ec5f-a077-4799-b4c9-6982534c4a07]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (8:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (9:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (10:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (11:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (12:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (13:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (14:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (15:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (16:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (17:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (18:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (19:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (20:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (21:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (22:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (23:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (24:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (25:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (26:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (27:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (28:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (29:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (30:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (31:UUID) <- [null]
+26-06-07 00:52:44:695 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (32:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (33:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (34:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (35:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (36:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (37:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (38:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (39:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (40:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (41:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (42:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (43:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (44:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (45:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (46:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (47:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (48:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (49:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (50:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (51:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (52:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (53:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (54:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (55:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (56:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (57:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (58:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (59:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (60:UUID) <- [null]
+26-06-07 00:52:44:696 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (61:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (62:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (63:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (64:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (65:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (66:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (67:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (68:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (69:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (70:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (71:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (72:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (73:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (74:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (75:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (76:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (77:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (78:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (79:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (80:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (81:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (82:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (83:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (84:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (85:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (86:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (87:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (88:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (89:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (90:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (91:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (92:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (93:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (94:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (95:UUID) <- [null]
+26-06-07 00:52:44:697 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (96:UUID) <- [null]
+26-06-07 00:52:44:698 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (97:UUID) <- [null]
+26-06-07 00:52:44:698 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (98:UUID) <- [null]
+26-06-07 00:52:44:698 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (99:UUID) <- [null]
+26-06-07 00:52:44:698 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (100:UUID) <- [null]
+26-06-07 00:52:44:705 [Test worker] DEBUG org.hibernate.SQL 
+    delete 
+    from
+        messages 
+    where
+        id=?
+26-06-07 00:52:44:705 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [043adc09-ed55-4104-a036-032189b0e23d]
+26-06-07 00:52:44:707 [Test worker] DEBUG org.hibernate.SQL 
+    delete 
+    from
+        messages 
+    where
+        id=?
+26-06-07 00:52:44:707 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [7bd8ec5f-a077-4799-b4c9-6982534c4a07]
+26-06-07 00:52:44:712 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        m1_0.id,
+        m1_0.author_id,
+        m1_0.channel_id,
+        m1_0.content,
+        m1_0.created_at,
+        m1_0.updated_at 
+    from
+        messages m1_0
+26-06-07 00:52:44:718 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717463Z]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [공개 채널]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [public]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717463Z]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [bb893470-7413-42bd-a378-197d16720a46]
+26-06-07 00:52:44:719 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717697Z]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [minji@test.com]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [1234]
+26-06-07 00:52:44:719 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [null]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717697Z]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:VARCHAR) <- [minji]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (7:UUID) <- [1da4a9c1-dad6-4a02-99f0-d203bf2b1aa6]
+26-06-07 00:52:44:720 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        user_statuses
+        (created_at, last_active_at, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?)
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717873Z]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717820Z]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.717873Z]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:UUID) <- [1da4a9c1-dad6-4a02-99f0-d203bf2b1aa6]
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:UUID) <- [29c4b8ca-c5ff-4801-afdb-4f8e764d7446]
+26-06-07 00:52:44:720 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        messages
+        (author_id, channel_id, content, created_at, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:720 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [1da4a9c1-dad6-4a02-99f0-d203bf2b1aa6]
+26-06-07 00:52:44:721 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:UUID) <- [bb893470-7413-42bd-a378-197d16720a46]
+26-06-07 00:52:44:721 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [메시지]
+26-06-07 00:52:44:721 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.718136Z]
+26-06-07 00:52:44:721 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.718136Z]
+26-06-07 00:52:44:721 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [2eb3d95a-e911-4a0b-ab54-d1feb3e40e6a]
+26-06-07 00:52:44:722 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        m1_0.id,
+        a1_0.id,
+        a1_0.created_at,
+        a1_0.email,
+        a1_0.password,
+        p1_0.id,
+        p1_0.content_type,
+        p1_0.created_at,
+        p1_0.file_name,
+        p1_0.size,
+        s1_0.id,
+        s1_0.created_at,
+        s1_0.last_active_at,
+        s1_0.updated_at,
+        s1_0.user_id,
+        a1_0.updated_at,
+        a1_0.username,
+        m1_0.channel_id,
+        m1_0.content,
+        m1_0.created_at,
+        m1_0.updated_at 
+    from
+        messages m1_0 
+    left join
+        users a1_0 
+            on a1_0.id=m1_0.author_id 
+    join
+        user_statuses s1_0 
+            on a1_0.id=s1_0.user_id 
+    left join
+        binary_contents p1_0 
+            on p1_0.id=a1_0.profile_id 
+    where
+        m1_0.channel_id=? 
+        and m1_0.created_at<? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first ? rows only
+26-06-07 00:52:44:724 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [bb893470-7413-42bd-a378-197d16720a46]
+26-06-07 00:52:44:724 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:TIMESTAMP_UTC) <- [1970-01-01T00:00:00Z]
+26-06-07 00:52:44:724 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:INTEGER) <- [11]
+26-06-07 00:52:44:735 [Test worker] DEBUG org.hibernate.SQL 
+    insert 
+    into
+        channels
+        (created_at, description, name, type, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+26-06-07 00:52:44:736 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.735174Z]
+26-06-07 00:52:44:736 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (2:VARCHAR) <- [공개 채널]
+26-06-07 00:52:44:736 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (3:VARCHAR) <- [public]
+26-06-07 00:52:44:737 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (4:ENUM) <- [PUBLIC]
+26-06-07 00:52:44:737 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (5:TIMESTAMP_UTC) <- [2026-06-06T15:52:44.735174Z]
+26-06-07 00:52:44:737 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (6:UUID) <- [655caa5f-da11-476b-96ac-b28b757510af]
+26-06-07 00:52:44:738 [Test worker] DEBUG org.hibernate.SQL 
+    select
+        m1_0.created_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first 1 rows only
+26-06-07 00:52:44:739 [Test worker] TRACE org.hibernate.orm.jdbc.bind binding parameter (1:UUID) <- [655caa5f-da11-476b-96ac-b28b757510af]
+26-06-07 00:52:44:758 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+26-06-07 00:52:44:758 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists binary_contents cascade 
+26-06-07 00:52:44:759 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists channels cascade 
+26-06-07 00:52:44:760 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists message_attachments cascade 
+26-06-07 00:52:44:760 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists messages cascade 
+26-06-07 00:52:44:761 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists read_statuses cascade 
+26-06-07 00:52:44:762 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists user_statuses cascade 
+26-06-07 00:52:44:763 [SpringApplicationShutdownHook] DEBUG org.hibernate.SQL 
+    drop table if exists users cascade 
+26-06-07 00:52:44:764 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown initiated...
+26-06-07 00:52:44:767 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown completed.
