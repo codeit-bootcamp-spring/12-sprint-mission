@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
+import com.sprint.mission.discodeit.exception.binarycontent.FileNotFoundException;
 
 @RequiredArgsConstructor
 @Service
@@ -45,8 +45,7 @@ public class BasicBinaryContentService implements BinaryContentService {
   public BinaryContentDto find(UUID binaryContentId) {
     return binaryContentRepository.findById(binaryContentId)
         .map(binaryContentMapper::toDto)
-        .orElseThrow(() -> new NoSuchElementException(
-            "BinaryContent with id " + binaryContentId + " not found"));
+        .orElseThrow(() -> new FileNotFoundException(binaryContentId));
   }
 
   @Override
@@ -60,7 +59,7 @@ public class BasicBinaryContentService implements BinaryContentService {
   @Override
   public void delete(UUID binaryContentId) {
     if (!binaryContentRepository.existsById(binaryContentId)) {
-      throw new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found");
+      throw new FileNotFoundException(binaryContentId);
     }
     binaryContentRepository.deleteById(binaryContentId);
   }

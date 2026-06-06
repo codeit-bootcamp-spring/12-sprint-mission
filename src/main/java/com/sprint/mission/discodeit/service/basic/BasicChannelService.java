@@ -16,8 +16,11 @@ import com.sprint.mission.discodeit.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
+import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -48,8 +51,8 @@ public class BasicChannelService implements ChannelService {
     return channelMapper.toDto(channel);
   }
 
-  @Transactional
   @Override
+  @Transactional
   public ChannelDto create(PrivateChannelCreateRequest request) {
     log.debug("비공개 채널 생성 요청: participantCount={}", request.participantIds().size());
 
@@ -72,8 +75,7 @@ public class BasicChannelService implements ChannelService {
   public ChannelDto find(UUID channelId) {
     return channelRepository.findById(channelId)
         .map(channelMapper::toDto)
-        .orElseThrow(
-            () -> new NoSuchElementException("Channel with id " + channelId + " not found"));
+        .orElseThrow(() -> new ChannelNotFoundException(channelId));
   }
 
   @Override
@@ -101,11 +103,11 @@ public class BasicChannelService implements ChannelService {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> {
           log.warn("채널 수정 실패 - 채널을 찾을 수 없음: channelId={}", channelId);
-          return new NoSuchElementException("Channel with id " + channelId + " not found");
+          return new ChannelNotFoundException(channelId);
         });
     if (channel.getType().equals(ChannelType.PRIVATE)) {
       log.warn("채널 수정 실패 - 비공개 채널은 수정할 수 없음: channelId={}", channelId);
-      throw new IllegalArgumentException("Private channel cannot be updated");
+      throw new PrivateChannelUpdateException(channelId);
     }
 
     channel.update(newName, newDescription);
@@ -122,7 +124,7 @@ public class BasicChannelService implements ChannelService {
 
     if (!channelRepository.existsById(channelId)) {
       log.warn("채널 삭제 실패 - 채널을 찾을 수 없음: channelId={}", channelId);
-      throw new NoSuchElementException("Channel with id " + channelId + " not found");
+      throw new ChannelNotFoundException(channelId);
     }
 
     messageRepository.deleteAllByChannelId(channelId);

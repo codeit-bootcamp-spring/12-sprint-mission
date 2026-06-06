@@ -19,7 +19,6 @@ import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
+import com.sprint.mission.discodeit.exception.message.AuthorNotFoundException;
+import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 
 @RequiredArgsConstructor
 @Service
@@ -57,13 +60,13 @@ public class BasicMessageService implements MessageService {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> {
           log.warn("메세지 생성 실패 - 채널을 찾을 수 없음: channelId={}", channelId);
-          return new NoSuchElementException("Channel with id " + channelId + " does not exist");
+          return new ChannelNotFoundException(channelId);
         });
 
     User author = userRepository.findById(authorId)
         .orElseThrow(() -> {
-          log.warn("메세지 생성 실패 - 작성자를 찾을 수 없음: authorId{}", authorId);
-          return new NoSuchElementException("Author with id " + authorId + " does not exist");
+          log.warn("메세지 생성 실패 - 작성자를 찾을 수 없음: authorId={}", authorId);
+          return new AuthorNotFoundException(authorId);
         });
 
     List<BinaryContent> attachments = binaryContentCreateRequests.stream()
@@ -105,8 +108,7 @@ public class BasicMessageService implements MessageService {
   public MessageDto find(UUID messageId) {
     return messageRepository.findById(messageId)
         .map(messageMapper::toDto)
-        .orElseThrow(() ->
-            new NoSuchElementException("Message with id " + messageId + " not found"));
+        .orElseThrow(() -> new MessageNotFoundException(messageId));
   }
 
   @Override
@@ -137,7 +139,7 @@ public class BasicMessageService implements MessageService {
     Message message = messageRepository.findById(messageId)
         .orElseThrow(() -> {
           log.warn("메세지 수정 실패 - 메세지를 찾을 수 없음: messageId={}", messageId);
-          return new NoSuchElementException("Message with id " + messageId + " not found");
+          return new MessageNotFoundException(messageId);
         });
     message.update(newContent);
 
@@ -152,7 +154,7 @@ public class BasicMessageService implements MessageService {
     log.debug("메세지 삭제 요청: messageId={}", messageId);
     if (!messageRepository.existsById(messageId)) {
       log.warn("메세지 삭제 실패 - 메세지를 찾을 수 없음: messageId={}", messageId);
-      throw new NoSuchElementException("Message with id " + messageId + " not found");
+      throw new MessageNotFoundException(messageId);
     }
 
     messageRepository.deleteById(messageId);
