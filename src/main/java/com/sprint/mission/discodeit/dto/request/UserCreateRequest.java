@@ -1,22 +1,18 @@
 package com.sprint.mission.discodeit.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record UserCreateRequest(
-    String username,
-    String email,
-    String password
-) {
 
-  @JsonCreator
-  public UserCreateRequest(
-      @JsonProperty("username") String username,
-      @JsonProperty("email") String email,
-      @JsonProperty("password") String password
-  ) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
-  }
+    @NotBlank(message = "이름은 필수입니다.")
+    String name,
+    @Email(message = "이메일 형식이 올바르지 않습니다.")
+    String email,
+    @Size(min = 8, message = "비밀번호는 8글자 이상이어야 합니다.")
+    String password) {
+
+
 }
+

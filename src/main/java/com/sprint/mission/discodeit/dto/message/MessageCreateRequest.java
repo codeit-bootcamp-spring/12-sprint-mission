@@ -1,0 +1,19 @@
+package com.sprint.mission.discodeit.dto.message;
+
+import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
+import java.util.UUID;
+
+public record MessageCreateRequest(
+    @NotNull(message = "사용자 ID는 필수입니다.")
+    UUID userId,
+
+    @NotNull(message = "채널 ID는 필수입니다.")
+    UUID channelId,
+
+    @NotNull(message = "마지막으로 읽은 시간이 필수입니다.")
+    Instant lastReadAt
+) {
+
+
+}
