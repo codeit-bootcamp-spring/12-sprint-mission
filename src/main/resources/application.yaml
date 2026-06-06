@@ -1,15 +1,18 @@
 spring:
   application:
-    name: discodeit
+    name: Discodeit
+
   datasource:
     url: jdbc:postgresql://localhost:5432/discodeit
     username: discodeit_user
     password: 1234
     driver-class-name: org.postgresql.Driver
+
   servlet:
     multipart:
-      maxFileSize: 10MB # 파일 하나의 최대 크기
-      maxRequestSize: 30MB  # 한 번에 최대 업로드 가능 용량
+      max-file-size: 10MB
+      max-request-size: 30MB
+
   profiles:
     active: dev
 
@@ -22,7 +25,7 @@ spring:
       hibernate:
         format_sql: true
         highlight_sql: true
-        user_sql_comments: true
+        use_sql_comments: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
         physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         jdbc.time_zone: UTC
@@ -55,3 +58,43 @@ logging:
     # Spring Web
     org.springframework.web: trace
     org.springframework.web.filter.CommonsRequestLoggingFilter: info
+
+info:
+  app:
+    name: Discodeit
+    description: Chatting service
+    version: 1.7.0
+
+  java:
+    version: 17
+
+  spring-boot:
+    version: 3.4.0
+
+  config:
+    datasource:
+      url: ${spring.datasource.url}
+      driver-class-name: ${spring.datasource.driver-class-name}
+    jpa:
+      ddl-auto: ${spring.jpa.hibernate.ddl-auto}
+
+    storage:
+      type: ${discodeit.storage.type}
+      path: ${discodeit.storage.local.root-path}
+
+    multipart:
+      max-file-size: ${spring.servlet.multipart.max-file-size}
+      max-request-size: ${spring.servlet.multipart.max-request-size}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, loggers
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
