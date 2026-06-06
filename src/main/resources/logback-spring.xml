@@ -2,7 +2,7 @@
 <configuration>
   <!-- 로그 패턴 설정 -->
   <property name="LOG_PATTERN"
-    value="%d{yy-MM-dd HH:mm:ss:SSS} [%thread] %-5level %logger{36} %msg%n"/>
+    value="%d{yy-MM-dd HH:mm:ss:SSS} [%thread] %-5level %logger{36} [%X{requestId} | %X{requestMethod} | %X{requestUrl}] - %msg%n"/>
 
   <!-- 로그 파일 저장 경로 - 프로젝트 루트 -->
   <property name="LOG_FILE_PATH" value=".logs"/>
