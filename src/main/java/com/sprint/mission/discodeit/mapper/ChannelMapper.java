@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.mapper;
 
-import com.sprint.mission.discodeit.dto.data.ChannelDto;
+import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
@@ -26,7 +26,7 @@ public abstract class ChannelMapper {
 
   @Mapping(target = "participants", expression = "java(resolveParticipants(channel))")
   @Mapping(target = "lastMessageAt", expression = "java(resolveLastMessageAt(channel))")
-  abstract public ChannelDto toDto(Channel channel);
+  abstract public ChannelResponse toDto(Channel channel);
 
   protected Instant resolveLastMessageAt(Channel channel) {
     return messageRepository.findLastMessageAtByChannelId(

@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.data.MessageDto;
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
@@ -43,7 +43,7 @@ public class BasicMessageService implements MessageService {
 
   @Transactional
   @Override
-  public MessageDto create(MessageCreateRequest messageCreateRequest,
+  public MessageResponse create(MessageCreateRequest messageCreateRequest,
       List<BinaryContentCreateRequest> binaryContentCreateRequests) {
     UUID channelId = messageCreateRequest.channelId();
     UUID authorId = messageCreateRequest.authorId();
@@ -84,7 +84,7 @@ public class BasicMessageService implements MessageService {
 
   @Transactional(readOnly = true)
   @Override
-  public MessageDto find(UUID messageId) {
+  public MessageResponse find(UUID messageId) {
     return messageRepository.findById(messageId)
         .map(messageMapper::toDto)
         .orElseThrow(
@@ -93,12 +93,11 @@ public class BasicMessageService implements MessageService {
 
   @Transactional(readOnly = true)
   @Override
-  public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Instant createAt,
+  public PageResponse<MessageResponse> findAllByChannelId(UUID channelId, Instant createAt,
       Pageable pageable) {
-    Slice<MessageDto> slice = messageRepository.findAllByChannelIdWithAuthor(channelId,
-            Optional.ofNullable(createAt).orElse(Instant.now()),
-            pageable)
-        .map(messageMapper::toDto);
+    Slice<MessageResponse> slice = messageRepository.findAllByChannelIdWithAuthor(channelId,
+        Optional.ofNullable(createAt).orElse(Instant.now()),
+        pageable);
 
     Instant nextCursor = null;
     if (!slice.getContent().isEmpty()) {
@@ -111,7 +110,7 @@ public class BasicMessageService implements MessageService {
 
   @Transactional
   @Override
-  public MessageDto update(UUID messageId, MessageUpdateRequest request) {
+  public MessageResponse update(UUID messageId, MessageUpdateRequest request) {
     String newContent = request.newContent();
     Message message = messageRepository.findById(messageId)
         .orElseThrow(

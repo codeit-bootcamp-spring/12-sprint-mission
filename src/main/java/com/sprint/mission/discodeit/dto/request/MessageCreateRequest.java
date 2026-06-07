@@ -6,10 +6,10 @@ import java.util.UUID;
 
 public record MessageCreateRequest(
     @NotNull(message = "채널 ID는 필수입니다.")
-    Long channelId,
+    UUID channelId,
 
     @NotNull(message = "작성자 ID는 필수입니다.")
-    Long userId,
+    UUID authorId,
 
     @NotBlank(message = "메시지 내용은 비어 있을 수 없습니다.")
     String content

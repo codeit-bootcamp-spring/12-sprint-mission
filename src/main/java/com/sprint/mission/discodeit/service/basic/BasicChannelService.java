@@ -35,17 +35,14 @@ public class BasicChannelService implements ChannelService {
   @Transactional
   @Override
   public ChannelResponse create(PublicChannelCreateRequest request) {
-    String name = request.name();
-    String description = request.description();
-    Channel channel = new Channel(ChannelType.PUBLIC, name, description);
-
+    Channel channel = new Channel(ChannelType.PUBLIC, request.name(), null);
     channelRepository.save(channel);
     return channelMapper.toDto(channel);
   }
 
   @Transactional
   @Override
-  public ChannelDto create(PrivateChannelCreateRequest request) {
+  public ChannelResponse create(PrivateChannelCreateRequest request) {
     Channel channel = new Channel(ChannelType.PRIVATE, null, null);
     channelRepository.save(channel);
 
@@ -59,7 +56,7 @@ public class BasicChannelService implements ChannelService {
 
   @Transactional(readOnly = true)
   @Override
-  public ChannelDto find(UUID channelId) {
+  public ChannelResponse find(UUID channelId) {
     return channelRepository.findById(channelId)
         .map(channelMapper::toDto)
         .orElseThrow(
@@ -68,7 +65,7 @@ public class BasicChannelService implements ChannelService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ChannelDto> findAllByUserId(UUID userId) {
+  public List<ChannelResponse> findAllByUserId(UUID userId) {
     List<UUID> mySubscribedChannelIds = readStatusRepository.findAllByUserId(userId).stream()
         .map(ReadStatus::getChannel)
         .map(Channel::getId)
@@ -82,7 +79,7 @@ public class BasicChannelService implements ChannelService {
 
   @Transactional
   @Override
-  public ChannelDto update(UUID channelId, PublicChannelUpdateRequest request) {
+  public ChannelResponse update(UUID channelId, PublicChannelUpdateRequest request) {
     String newName = request.newName();
     String newDescription = request.newDescription();
     Channel channel = channelRepository.findById(channelId)
@@ -104,7 +101,6 @@ public class BasicChannelService implements ChannelService {
 
     messageRepository.deleteAllByChannelId(channelId);
     readStatusRepository.deleteAllByChannelId(channelId);
-
     channelRepository.deleteById(channelId);
   }
 }

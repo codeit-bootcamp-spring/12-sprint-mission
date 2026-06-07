@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.repository;
 
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.entity.Message;
 import java.time.Instant;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
       + "JOIN FETCH a.status "
       + "LEFT JOIN FETCH a.profile "
       + "WHERE m.channel.id=:channelId AND m.createdAt < :createdAt")
-  Slice<Message> findAllByChannelIdWithAuthor(@Param("channelId") UUID channelId,
+  Slice<MessageResponse> findAllByChannelIdWithAuthor(@Param("channelId") UUID channelId,
       @Param("createdAt") Instant createdAt,
       Pageable pageable);
 
