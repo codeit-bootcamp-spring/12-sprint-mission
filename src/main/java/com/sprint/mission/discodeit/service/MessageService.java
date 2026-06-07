@@ -16,7 +16,7 @@ public interface MessageService {
   MessageResponse create(MessageCreateRequest request,
       List<BinaryContentCreateRequest> binaryContentCreateRequests);
 
-  MessageDto find(UUID messageId);
+  MessageResponse find(UUID messageId);
 
   PageResponse<MessageResponse> findAllByChannelId(UUID channelId, Instant cursor,
       Pageable pageable);

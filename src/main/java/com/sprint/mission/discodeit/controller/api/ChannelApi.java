@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.controller.api;
 
+import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.data.ChannelDto;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
@@ -27,7 +28,7 @@ public interface ChannelApi {
           content = @Content(schema = @Schema(implementation = ChannelDto.class))
       )
   })
-  ResponseEntity<ChannelDto> create(
+  ResponseEntity<ChannelResponse> create(
       @Parameter(description = "Public Channel 생성 정보") PublicChannelCreateRequest request
   );
 

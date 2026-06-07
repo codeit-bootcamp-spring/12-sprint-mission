@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.data.ChannelDto;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
@@ -33,7 +34,7 @@ public class BasicChannelService implements ChannelService {
 
   @Transactional
   @Override
-  public ChannelDto create(PublicChannelCreateRequest request) {
+  public ChannelResponse create(PublicChannelCreateRequest request) {
     String name = request.name();
     String description = request.description();
     Channel channel = new Channel(ChannelType.PUBLIC, name, description);

@@ -1,12 +1,13 @@
 package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.MessageApi;
-import com.sprint.mission.discodeit.dto.data.MessageDto;
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public class MessageController implements MessageApi {
   private final MessageService messageService;
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<MessageDto> create(
-      @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
+  public ResponseEntity<MessageResponse> create(
+      @RequestPart("messageCreateRequest") @Valid MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
   ) {
     List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
@@ -59,16 +60,18 @@ public class MessageController implements MessageApi {
             })
             .toList())
         .orElse(new ArrayList<>());
-    MessageDto createdMessage = messageService.create(messageCreateRequest, attachmentRequests);
+    MessageResponse createdMessage = messageService.create(messageCreateRequest,
+        attachmentRequests);
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(createdMessage);
   }
 
   @PatchMapping(path = "{messageId}")
-  public ResponseEntity<MessageDto> update(@PathVariable("messageId") UUID messageId,
-      @RequestBody MessageUpdateRequest request) {
-    MessageDto updatedMessage = messageService.update(messageId, request);
+  public ResponseEntity<MessageResponse> update(
+      @PathVariable("messageId") UUID messageId,
+      @RequestBody @Valid MessageUpdateRequest request) {
+    MessageResponse updatedMessage = messageService.update(messageId, request);
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedMessage);
@@ -82,8 +85,9 @@ public class MessageController implements MessageApi {
         .build();
   }
 
+
   @GetMapping
-  public ResponseEntity<PageResponse<MessageDto>> findAllByChannelId(
+  public ResponseEntity<PageResponse<MessageResponse>> findAllByChannelId(
       @RequestParam("channelId") UUID channelId,
       @RequestParam(value = "cursor", required = false) Instant cursor,
       @PageableDefault(
@@ -92,7 +96,7 @@ public class MessageController implements MessageApi {
           sort = "createdAt",
           direction = Direction.DESC
       ) Pageable pageable) {
-    PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId, cursor,
+    PageResponse<MessageResponse> messages = messageService.findAllByChannelId(channelId, cursor,
         pageable);
     return ResponseEntity
         .status(HttpStatus.OK)
