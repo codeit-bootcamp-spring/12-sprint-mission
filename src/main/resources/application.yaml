@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: discodeit
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 30MB
+  jpa:
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Discodeit
+    version: 1.7.0
+    java-version: "17"
+    spring-boot-version: "3.4.0"
+
+logging:
+  level:
+    root: info
