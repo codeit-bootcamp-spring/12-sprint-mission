@@ -1,10 +1,31 @@
 spring:
   application:
     name: discodeit
+  info:
+    app:
+      name: Discodeit
+      version: 1.7.0
+    java:
+      version: 17
+    spring-boot:
+      version: 3.4.0
+    datasource:
+      url: jdbc:postgresql://localhost:5432/discodeit
+      driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: validate
+    storage:
+      type: local
+      path: .discodeit/storage
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+
   servlet:
     multipart:
-      maxFileSize: 10MB # 파일 하나의 최대 크기
-      maxRequestSize: 30MB  # 한 번에 최대 업로드 가능 용량
+      maxFileSize: 10MB
+      maxRequestSize: 30MB
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/discodeit
@@ -19,7 +40,6 @@ spring:
     #        default_batch_fetch_size: 100
     open-in-view: false
 
-
 logging:
   level:
     root: info
@@ -31,3 +51,9 @@ discodeit:
     type: local
     local:
       root-path: .discodeit/storage
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
