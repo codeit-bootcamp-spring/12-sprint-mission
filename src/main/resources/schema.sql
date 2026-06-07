@@ -51,11 +51,11 @@ CREATE TABLE user_statuses
 CREATE TABLE read_statuses
 (
     id           uuid PRIMARY KEY,
-    created_at   timestamptz NOT NULL,
-    updated_at   timestamptz,
-    user_id      uuid        NOT NULL,
-    channel_id   uuid        NOT NULL,
-    last_read_at timestamptz NOT NULL,
+    created_at   timestamp with time zone NOT NULL,
+    updated_at   timestamp with time zone,
+    user_id      uuid                     NOT NULL,
+    channel_id   uuid                     NOT NULL,
+    last_read_at timestamptz              NOT NULL,
     CONSTRAINT uk_read_statuses_user_channel
         UNIQUE (user_id, channel_id),
     CONSTRAINT fk_read_statuses_user
