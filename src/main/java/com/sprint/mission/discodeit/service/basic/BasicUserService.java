@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
+import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
@@ -89,7 +90,7 @@ public class BasicUserService implements UserService {
   public UserResponse update(UUID userId, UserUpdateRequest userUpdateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+        .orElseThrow(() -> UserNotFoundException.withId(userId));
 
     String newUsername = userUpdateRequest.newUsername();
     String newEmail = userUpdateRequest.newEmail();
@@ -121,7 +122,7 @@ public class BasicUserService implements UserService {
   @Override
   public void delete(UUID userId) {
     if (!userRepository.existsById(userId)) { // 조건 반전 수정
-      throw new NoSuchElementException("User with id " + userId + " not found");
+      throw UserNotFoundException.withId(userId);
     }
     userRepository.deleteById(userId);
   }

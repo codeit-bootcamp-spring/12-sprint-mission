@@ -2,7 +2,6 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.ChannelApi;
 import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
-import com.sprint.mission.discodeit.dto.data.ChannelDto;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
@@ -40,18 +39,18 @@ public class ChannelController implements ChannelApi {
   }
 
   @PostMapping(path = "private")
-  public ResponseEntity<ChannelDto> create(
+  public ResponseEntity<ChannelResponse> create(
       @RequestBody @Valid PrivateChannelCreateRequest request) {
-    ChannelDto createdChannel = channelService.create(request);
+    ChannelResponse createdChannel = channelService.create(request);
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(createdChannel);
   }
 
   @PatchMapping(path = "{channelId}")
-  public ResponseEntity<ChannelDto> update(@PathVariable("channelId") UUID channelId,
+  public ResponseEntity<ChannelResponse> update(@PathVariable("channelId") UUID channelId,
       @RequestBody PublicChannelUpdateRequest request) {
-    ChannelDto updatedChannel = channelService.update(channelId, request);
+    ChannelResponse updatedChannel = channelService.update(channelId, request);
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedChannel);
@@ -66,8 +65,8 @@ public class ChannelController implements ChannelApi {
   }
 
   @GetMapping
-  public ResponseEntity<List<ChannelDto>> findAll(@RequestParam("userId") UUID userId) {
-    List<ChannelDto> channels = channelService.findAllByUserId(userId);
+  public ResponseEntity<List<ChannelResponse>> findAll(@RequestParam("userId") UUID userId) {
+    List<ChannelResponse> channels = channelService.findAllByUserId(userId);
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(channels);

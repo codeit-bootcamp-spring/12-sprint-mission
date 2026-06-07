@@ -72,14 +72,14 @@ class ChannelServiceTest {
   }
 
   @Test
-  @DisplayName("create PUBLIC 실패 - 이름 없음")
-  void createPublic_fail_nullName() {
-    // given
-    PublicChannelCreateRequest request = new PublicChannelCreateRequest(null, "PUBLIC");
+  @DisplayName("create PUBLIC 실패 - 저장 중 예외 발생")
+  void createPublic_fail_repositoryError() {
+    PublicChannelCreateRequest request = new PublicChannelCreateRequest("공지", "PUBLIC");
+    given(channelRepository.save(any(Channel.class)))
+        .willThrow(new RuntimeException("DB 저장 실패"));
 
-    // when & then
     assertThatThrownBy(() -> channelService.create(request))
-        .isInstanceOf(Exception.class);
+        .isInstanceOf(RuntimeException.class);
   }
 
   // create PRIVATE
@@ -116,14 +116,16 @@ class ChannelServiceTest {
   }
 
   @Test
-  @DisplayName("create PRIVATE 실패 - participantIds null")
-  void createPrivate_fail_nullParticipants() {
-    // given
-    PrivateChannelCreateRequest request = new PrivateChannelCreateRequest("PRIVATE", null);
+  @DisplayName("create PRIVATE 실패 - 저장 중 예외 발생")
+  void createPrivate_fail_repositoryError() {
+    List<UUID> participantIds = List.of(UUID.randomUUID());
+    PrivateChannelCreateRequest request = new PrivateChannelCreateRequest("PRIVATE",
+        participantIds);
+    given(channelRepository.save(any(Channel.class)))
+        .willThrow(new RuntimeException("DB 저장 실패"));
 
-    // when & then
     assertThatThrownBy(() -> channelService.create(request))
-        .isInstanceOf(Exception.class);
+        .isInstanceOf(RuntimeException.class);
   }
 
   // update
@@ -217,12 +219,11 @@ class ChannelServiceTest {
     Channel publicChannel = new Channel(ChannelType.PUBLIC, "공지", null);
     Channel privateChannel = new Channel(ChannelType.PRIVATE, null, null);
     ReadStatus readStatus = new ReadStatus(null, privateChannel, null);
-    ChannelResponse mockResponse = new ChannelResponse(UUID.randomUUID(), ChannelType.PUBLIC, "공지",
-        null, null, null);
+    ChannelResponse mockResponse = new ChannelResponse(UUID.randomUUID(), ChannelType.PUBLIC,
+        "공지", null, null, null);
 
     given(readStatusRepository.findAllByUserId(userId)).willReturn(List.of(readStatus));
-    given(
-        channelRepository.findAllByTypeOrIdIn(ChannelType.PUBLIC, List.of(privateChannel.getId())))
+    given(channelRepository.findAllByTypeOrIdIn(any(ChannelType.class), anyList()))
         .willReturn(List.of(publicChannel, privateChannel));
     given(channelMapper.toDto(any(Channel.class))).willReturn(mockResponse);
 

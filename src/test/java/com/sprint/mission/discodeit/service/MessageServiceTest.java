@@ -58,8 +58,8 @@ class MessageServiceTest {
   @Mock
   private BinaryContentStorage binaryContentStorage;
 
-
-  private final PageResponseMapper pageResponseMapper = new PageResponseMapperImpl();
+  @Spy
+  private PageResponseMapper pageResponseMapper = new PageResponseMapperImpl();
 
   // create
   @Test

@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
+import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.mapper.BinaryContentMapper;
@@ -24,33 +24,28 @@ public class BasicBinaryContentService implements BinaryContentService {
 
   @Transactional
   @Override
-  public BinaryContentDto create(BinaryContentCreateRequest request) {
+  public BinaryContentResponse create(BinaryContentCreateRequest request) {
     String fileName = request.fileName();
     byte[] bytes = request.bytes();
     String contentType = request.contentType();
-    BinaryContent binaryContent = new BinaryContent(
-        fileName,
-        (long) bytes.length,
-        contentType
-    );
+    BinaryContent binaryContent = new BinaryContent(fileName, (long) bytes.length, contentType);
     binaryContentRepository.save(binaryContent);
     binaryContentStorage.put(binaryContent.getId(), bytes);
-
-    return binaryContentMapper.toDto(binaryContent);
+    return binaryContentMapper.toResponse(binaryContent);
   }
 
   @Override
-  public BinaryContentDto find(UUID binaryContentId) {
+  public BinaryContentResponse find(UUID binaryContentId) {
     return binaryContentRepository.findById(binaryContentId)
-        .map(binaryContentMapper::toDto)
+        .map(binaryContentMapper::toResponse) // ✅
         .orElseThrow(() -> new NoSuchElementException(
             "BinaryContent with id " + binaryContentId + " not found"));
   }
 
   @Override
-  public List<BinaryContentDto> findAllByIdIn(List<UUID> binaryContentIds) {
+  public List<BinaryContentResponse> findAllByIdIn(List<UUID> binaryContentIds) {
     return binaryContentRepository.findAllById(binaryContentIds).stream()
-        .map(binaryContentMapper::toDto)
+        .map(binaryContentMapper::toResponse)
         .toList();
   }
 

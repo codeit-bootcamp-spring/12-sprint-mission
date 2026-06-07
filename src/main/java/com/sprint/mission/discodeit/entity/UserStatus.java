@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserStatus extends BaseUpdatableEntity {
 
-  @JsonBackReference
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", nullable = false, unique = true)
   private User user;
@@ -44,6 +43,9 @@ public class UserStatus extends BaseUpdatableEntity {
   }
 
   protected void setUser(User user) {
+    if (user == null) {
+      throw new IllegalArgumentException("User must not be null");
+    }
     this.user = user;
     user.setStatus(this);
   }

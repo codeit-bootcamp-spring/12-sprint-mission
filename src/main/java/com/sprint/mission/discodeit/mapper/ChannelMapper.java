@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.mapper;
 
 import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
@@ -34,13 +35,13 @@ public abstract class ChannelMapper {
         .orElse(Instant.MIN);
   }
 
-  protected List<UserDto> resolveParticipants(Channel channel) {
-    List<UserDto> participants = new ArrayList<>();
+  protected List<UserResponse> resolveParticipants(Channel channel) {
+    List<UserResponse> participants = new ArrayList<>();
     if (channel.getType().equals(ChannelType.PRIVATE)) {
       readStatusRepository.findAllByChannelIdWithUser(channel.getId())
           .stream()
           .map(ReadStatus::getUser)
-          .map(userMapper::toDto)
+          .map(userMapper::toResponse)
           .forEach(participants::add);
     }
     return participants;
