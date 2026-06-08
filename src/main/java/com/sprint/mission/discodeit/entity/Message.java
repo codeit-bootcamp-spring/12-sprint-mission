@@ -28,7 +28,7 @@ public class Message extends BaseUpdatableEntity {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "channel_id", columnDefinition = "uuid")
   private Channel channel;
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "author_id", columnDefinition = "uuid")
   private User author;
   @BatchSize(size = 100)
@@ -41,14 +41,14 @@ public class Message extends BaseUpdatableEntity {
   private List<BinaryContent> attachments = new ArrayList<>();
 
   public Message(String content, Channel channel, User author, List<BinaryContent> attachments) {
-    this.channel = channel;
     this.content = content;
+    this.channel = channel;
     this.author = author;
     this.attachments = attachments;
   }
 
   public void update(String newContent) {
-    if (newContent != null && !newContent.equals(this.content)) {
+    if (newContent != null && !newContent.isBlank() && !newContent.equals(this.content)) {
       this.content = newContent;
     }
   }

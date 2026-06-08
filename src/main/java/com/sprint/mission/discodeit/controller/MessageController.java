@@ -47,19 +47,10 @@ public class MessageController implements MessageApi {
   ) {
     List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
         .map(files -> files.stream()
-            .map(file -> {
-              try {
-                return new BinaryContentCreateRequest(
-                    file.getOriginalFilename(),
-                    file.getContentType(),
-                    file.getBytes()
-                );
-              } catch (IOException e) {
-                throw new RuntimeException(e);
-              }
-            })
+            .map(this::toBinaryContentCreateRequest)
             .toList())
         .orElse(new ArrayList<>());
+
     MessageResponse createdMessage = messageService.create(messageCreateRequest,
         attachmentRequests);
     return ResponseEntity
@@ -67,18 +58,16 @@ public class MessageController implements MessageApi {
         .body(createdMessage);
   }
 
-  @PatchMapping(path = "{messageId}")
+  @PatchMapping(path = "/{messageId}")
   public ResponseEntity<MessageResponse> update(
-      @PathVariable("messageId") UUID messageId,
+      @PathVariable UUID messageId,
       @RequestBody @Valid MessageUpdateRequest request) {
     MessageResponse updatedMessage = messageService.update(messageId, request);
-    return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(updatedMessage);
+    return ResponseEntity.ok(updatedMessage);
   }
 
-  @DeleteMapping(path = "{messageId}")
-  public ResponseEntity<Void> delete(@PathVariable("messageId") UUID messageId) {
+  @DeleteMapping(path = "/{messageId}")
+  public ResponseEntity<Void> delete(@PathVariable UUID messageId) {
     messageService.delete(messageId);
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
@@ -92,14 +81,24 @@ public class MessageController implements MessageApi {
       @RequestParam(value = "cursor", required = false) Instant cursor,
       @PageableDefault(
           size = 50,
-          page = 0,
           sort = "createdAt",
           direction = Direction.DESC
       ) Pageable pageable) {
     PageResponse<MessageResponse> messages = messageService.findAllByChannelId(channelId, cursor,
         pageable);
-    return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(messages);
+    return ResponseEntity.ok(messages);
+  }
+
+  private BinaryContentCreateRequest toBinaryContentCreateRequest(MultipartFile file) {
+    try {
+      return new BinaryContentCreateRequest(
+          file.getOriginalFilename(),
+          file.getContentType(),
+          file.getBytes()
+      );
+    } catch (IOException e) {
+      throw new IllegalStateException("파일 읽기 오류: " + file.getOriginalFilename(), e);
+    }
   }
 }
+

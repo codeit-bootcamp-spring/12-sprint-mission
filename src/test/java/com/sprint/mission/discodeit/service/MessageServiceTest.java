@@ -201,14 +201,19 @@ class MessageServiceTest {
     Pageable pageable = PageRequest.of(0, 50);
     Instant cursor = Instant.now();
 
+    Channel mockChannel = new Channel(ChannelType.PUBLIC, "공지", null);
+    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null);
+    Message mockMessage = new Message("메시지", mockChannel, mockAuthor, List.of());
+    SliceImpl<Message> mockSlice = new SliceImpl<>(List.of(mockMessage), pageable, false);
+
     MessageResponse mockResponse = new MessageResponse(
         UUID.randomUUID(), Instant.now(), Instant.now(), "메시지", channelId, null, List.of()
     );
-    SliceImpl<MessageResponse> mockSlice = new SliceImpl<>(List.of(mockResponse), pageable, false);
 
     given(messageRepository.findAllByChannelIdWithAuthor(any(UUID.class), any(Instant.class),
         any(Pageable.class)))
         .willReturn(mockSlice);
+    given(messageMapper.toDto(any(Message.class))).willReturn(mockResponse);
 
     // when
     PageResponse<MessageResponse> result = messageService.findAllByChannelId(channelId, cursor,
@@ -219,13 +224,14 @@ class MessageServiceTest {
     assertThat(result.hasNext()).isFalse();
   }
 
+
   @Test
   @DisplayName("findAllByChannelId - cursor null이면 현재 시각 기준으로 조회")
   void findAllByChannelId_nullCursor() {
     // given
     UUID channelId = UUID.randomUUID();
     Pageable pageable = PageRequest.of(0, 50);
-    SliceImpl<MessageResponse> mockSlice = new SliceImpl<>(List.of(), pageable, false);
+    SliceImpl<Message> mockSlice = new SliceImpl<>(List.of(), pageable, false); // ✅ Message 타입
 
     given(messageRepository.findAllByChannelIdWithAuthor(any(UUID.class), any(Instant.class),
         any(Pageable.class)))

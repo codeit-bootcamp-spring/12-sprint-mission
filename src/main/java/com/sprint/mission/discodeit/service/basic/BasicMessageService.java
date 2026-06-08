@@ -95,14 +95,15 @@ public class BasicMessageService implements MessageService {
   @Override
   public PageResponse<MessageResponse> findAllByChannelId(UUID channelId, Instant createAt,
       Pageable pageable) {
-    Slice<MessageResponse> slice = messageRepository.findAllByChannelIdWithAuthor(channelId,
-        Optional.ofNullable(createAt).orElse(Instant.now()),
-        pageable);
+    Slice<MessageResponse> slice = messageRepository.findAllByChannelIdWithAuthor(
+            channelId,
+            Optional.ofNullable(createAt).orElse(Instant.now()),
+            pageable)
+        .map(messageMapper::toDto);
 
     Instant nextCursor = null;
     if (!slice.getContent().isEmpty()) {
-      nextCursor = slice.getContent().get(slice.getContent().size() - 1)
-          .createdAt();
+      nextCursor = slice.getContent().get(slice.getContent().size() - 1).createdAt();
     }
 
     return pageResponseMapper.fromSlice(slice, nextCursor);
