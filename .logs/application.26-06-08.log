@@ -1,0 +1,437 @@
+26-06-08 02:48:50.344 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-08 02:48:50.420 [main] INFO  c.s.m.discodeit.DiscodeitApplication - Starting DiscodeitApplication using Java 17.0.18 with PID 29884 (/Users/nsl/work_space_sprint/12-sprint-mission/build/classes/java/main started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-08 02:48:50.420 [main] INFO  c.s.m.discodeit.DiscodeitApplication - No active profile set, falling back to 1 default profile: "default"
+26-06-08 02:48:51.602 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-08 02:48:51.636 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 29 ms. Found 6 JPA repository interfaces.
+26-06-08 02:48:52.037 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer     - Tomcat initialized with port 8080 (http)
+26-06-08 02:48:52.044 [main] INFO  o.a.coyote.http11.Http11NioProtocol  - Initializing ProtocolHandler ["http-nio-8080"]
+26-06-08 02:48:52.045 [main] INFO  o.a.catalina.core.StandardService    - Starting service [Tomcat]
+26-06-08 02:48:52.045 [main] INFO  o.a.catalina.core.StandardEngine     - Starting Servlet engine: [Apache Tomcat/10.1.33]
+26-06-08 02:48:52.071 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/]   - Initializing Spring embedded WebApplicationContext
+26-06-08 02:48:52.071 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1622 ms
+26-06-08 02:48:52.184 [main] INFO  com.zaxxer.hikari.HikariDataSource   - HikariPool-1 - Starting...
+26-06-08 02:48:52.333 [main] INFO  com.zaxxer.hikari.pool.HikariPool    - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3add5e17
+26-06-08 02:48:52.333 [main] INFO  com.zaxxer.hikari.HikariDataSource   - HikariPool-1 - Start completed.
+26-06-08 02:48:52.379 [main] INFO  o.h.jpa.internal.util.LogHelper      - HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-08 02:48:52.407 [main] INFO  org.hibernate.Version                - HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-08 02:48:52.423 [main] INFO  o.h.c.i.RegionFactoryInitiator       - HHH000026: Second-level cache disabled
+26-06-08 02:48:52.574 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo  - No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-08 02:48:52.650 [main] INFO  o.hibernate.orm.connections.pooling  - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 18.3
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-08 02:48:53.147 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator   - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-08 02:48:53.215 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 02:48:53.377 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-08 02:48:53.778 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-08 02:48:54.179 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver  - Exposing 4 endpoints beneath base path '/actuator'
+26-06-08 02:48:54.220 [main] INFO  o.a.coyote.http11.Http11NioProtocol  - Starting ProtocolHandler ["http-nio-8080"]
+26-06-08 02:48:54.232 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer     - Tomcat started on port 8080 (http) with context path '/'
+26-06-08 02:48:54.244 [main] INFO  c.s.m.discodeit.DiscodeitApplication - Started DiscodeitApplication in 4.64 seconds (process running for 5.339)
+26-06-08 02:48:54.509 [RMI TCP Connection(4)-127.0.0.1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/]   - Initializing Spring DispatcherServlet 'dispatcherServlet'
+26-06-08 02:48:54.509 [RMI TCP Connection(4)-127.0.0.1] INFO  o.s.web.servlet.DispatcherServlet    - Initializing Servlet 'dispatcherServlet'
+26-06-08 02:48:54.510 [RMI TCP Connection(4)-127.0.0.1] INFO  o.s.web.servlet.DispatcherServlet    - Completed initialization in 1 ms
+26-06-08 03:10:23.580 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown    - Commencing graceful shutdown. Waiting for active requests to complete
+26-06-08 03:10:23.589 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown    - Graceful shutdown complete
+26-06-08 03:10:23.596 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 03:10:23.601 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource   - HikariPool-1 - Shutdown initiated...
+26-06-08 03:10:23.603 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource   - HikariPool-1 - Shutdown completed.
+26-06-08 04:51:32.907 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-08 04:51:32.932 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest         - Starting UserRepositoryTest using Java 17.0.18 with PID 41362 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-08 04:51:32.933 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest         - The following 1 profile is active: "test"
+26-06-08 04:51:33.159 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-08 04:51:33.201 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 36 ms. Found 6 JPA repository interfaces.
+26-06-08 04:51:33.228 [Test worker] INFO  o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor - Replacing 'dataSource' DataSource bean with embedded version
+26-06-08 04:51:33.294 [Test worker] INFO  o.s.j.d.e.EmbeddedDatabaseFactory    - Starting embedded database: url='jdbc:h2:mem:d60632f5-ed4a-460a-8227-ae182c67ee16;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+26-06-08 04:51:33.442 [Test worker] INFO  o.h.jpa.internal.util.LogHelper      - HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-08 04:51:33.471 [Test worker] INFO  org.hibernate.Version                - HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-08 04:51:33.487 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator       - HHH000026: Second-level cache disabled
+26-06-08 04:51:33.612 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo  - No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-08 04:51:33.652 [Test worker] INFO  o.hibernate.orm.connections.pooling  - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory$EmbeddedDataSourceProxy@93ce24d']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-08 04:51:34.124 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator   - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-08 04:51:34.141 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 04:51:34.297 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-08 04:51:34.606 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest         - Started UserRepositoryTest in 1.878 seconds (process running for 2.417)
+26-06-08 04:51:34.931 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:34.934 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.934 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:34.934 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:34.934 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:34.934 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.934 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:34.935 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [05b1c04a-18d8-410e-a1dc-9b46d7c336e8]
+26-06-08 04:51:34.940 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:34.941 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:34.966 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:34.966 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.966 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:34.967 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:34.967 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:34.967 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.967 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:34.967 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [c522554e-46ae-4a29-8be0-9bac01a04b37]
+26-06-08 04:51:34.967 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:34.967 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:34.976 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:34.977 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [56045731-e04c-40a9-87ca-689ac843dd83]
+26-06-08 04:51:34.978 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:34.978 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:34.992 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:34.992 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.993 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:34.993 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:34.993 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:34.993 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:34.993 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:34.993 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [1a7c8f28-2cc5-4c90-a48f-5d91cdd44d34]
+26-06-08 04:51:34.993 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:34.993 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:35.005 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:35.006 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.006 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:35.007 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:35.007 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:35.007 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.007 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:35.007 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [55bcea32-96f1-489d-a303-1f95679d321a]
+26-06-08 04:51:35.007 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:35.008 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:35.020 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:35.021 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.021 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:35.022 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:35.022 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:35.022 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.022 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:35.022 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [c8a936fe-9c23-4334-a31f-1dc6511c0597]
+26-06-08 04:51:35.024 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:35.024 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:35.041 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:35.042 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.043 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:35.043 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:35.043 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:35.043 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.043 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:35.043 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [17e1f57a-f00a-459d-a9a9-ae2370527d6b]
+26-06-08 04:51:35.043 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:35.044 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:35.055 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:35.055 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.056 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:51:35.056 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:51:35.056 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:35.056 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:35.056 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:51:35.056 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [ec3e44b8-0101-4369-a888-7f27a6470b53]
+26-06-08 04:51:35.056 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:35.056 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:35.088 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 04:51:57.467 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-08 04:51:57.504 [Test worker] INFO  c.s.m.d.r.ChannelRepositoryTest      - Starting ChannelRepositoryTest using Java 17.0.18 with PID 41398 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-08 04:51:57.505 [Test worker] INFO  c.s.m.d.r.ChannelRepositoryTest      - The following 1 profile is active: "test"
+26-06-08 04:51:57.795 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-08 04:51:57.877 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 74 ms. Found 6 JPA repository interfaces.
+26-06-08 04:51:57.961 [Test worker] INFO  o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor - Replacing 'dataSource' DataSource bean with embedded version
+26-06-08 04:51:58.075 [Test worker] INFO  o.s.j.d.e.EmbeddedDatabaseFactory    - Starting embedded database: url='jdbc:h2:mem:d0665643-dd98-4467-a8bc-ddb79eb4f8c1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+26-06-08 04:51:58.253 [Test worker] INFO  o.h.jpa.internal.util.LogHelper      - HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-08 04:51:58.281 [Test worker] INFO  org.hibernate.Version                - HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-08 04:51:58.298 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator       - HHH000026: Second-level cache disabled
+26-06-08 04:51:58.425 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo  - No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-08 04:51:58.463 [Test worker] INFO  o.hibernate.orm.connections.pooling  - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory$EmbeddedDataSourceProxy@4fee14b']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-08 04:51:58.920 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator   - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-08 04:51:58.937 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 04:51:59.089 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-08 04:51:59.373 [Test worker] INFO  c.s.m.d.r.ChannelRepositoryTest      - Started ChannelRepositoryTest in 2.161 seconds (process running for 2.693)
+26-06-08 04:51:59.728 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [hong@example.com]
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [pw]
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [홍길동]
+26-06-08 04:51:59.730 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [733db9de-b5b1-4928-acee-cc68dbfb8ddb]
+26-06-08 04:51:59.738 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:59.739 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:59.754 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:59.754 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:59.754 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [hong@example.com]
+26-06-08 04:51:59.754 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [pw]
+26-06-08 04:51:59.754 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:59.755 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:59.755 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [홍길동]
+26-06-08 04:51:59.755 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [b98801bd-c35f-4b53-9d13-6100cc98061b]
+26-06-08 04:51:59.756 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:59.756 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:59.767 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [hong@example.com]
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [pw]
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [홍길동]
+26-06-08 04:51:59.768 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [a0513da6-b89d-40e6-8352-fec45137be25]
+26-06-08 04:51:59.768 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:51:59.768 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:51:59.787 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 04:52:08.292 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-08 04:52:08.315 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest         - Starting UserRepositoryTest using Java 17.0.18 with PID 41421 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-08 04:52:08.316 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest         - The following 1 profile is active: "test"
+26-06-08 04:52:08.551 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-06-08 04:52:08.589 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 6 JPA repository interfaces.
+26-06-08 04:52:08.617 [Test worker] INFO  o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor - Replacing 'dataSource' DataSource bean with embedded version
+26-06-08 04:52:08.677 [Test worker] INFO  o.s.j.d.e.EmbeddedDatabaseFactory    - Starting embedded database: url='jdbc:h2:mem:9310fdb5-44c6-4503-89ed-cbd1e8d4ed97;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+26-06-08 04:52:08.821 [Test worker] INFO  o.h.jpa.internal.util.LogHelper      - HHH000204: Processing PersistenceUnitInfo [name: default]
+26-06-08 04:52:08.846 [Test worker] INFO  org.hibernate.Version                - HHH000412: Hibernate ORM core version 6.6.2.Final
+26-06-08 04:52:08.860 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator       - HHH000026: Second-level cache disabled
+26-06-08 04:52:08.980 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo  - No LoadTimeWeaver setup: ignoring JPA class transformer
+26-06-08 04:52:09.018 [Test worker] INFO  o.hibernate.orm.connections.pooling  - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory$EmbeddedDataSourceProxy@e886caf']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-06-08 04:52:09.459 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator   - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-06-08 04:52:09.476 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-06-08 04:52:09.633 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+26-06-08 04:52:09.976 [Test worker] INFO  c.s.m.d.r.UserRepositoryTest         - Started UserRepositoryTest in 1.844 seconds (process running for 2.343)
+26-06-08 04:52:10.312 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.314 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [13042051-8458-4c51-88e8-2672ad5d8062]
+26-06-08 04:52:10.321 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.322 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.347 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.348 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [48034f2e-e5f1-4a7a-8551-e854cd1a4f2c]
+26-06-08 04:52:10.348 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.349 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.356 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.356 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [f2b6c19e-77f0-425f-a4de-9306d25198cf]
+26-06-08 04:52:10.356 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.356 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.376 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.377 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.377 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.377 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.378 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.378 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.379 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.379 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [93cb6173-fc59-4dd3-a0c7-00a0257f9d44]
+26-06-08 04:52:10.379 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.379 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.391 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.392 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.393 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.393 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.393 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.393 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.394 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.394 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [37b442e3-2235-4882-8ac7-21cd86b2109f]
+26-06-08 04:52:10.394 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.395 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.409 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.411 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [30bd7935-a643-4966-b197-d6ac54e153cb]
+26-06-08 04:52:10.412 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.412 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.427 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.428 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.428 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.428 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.428 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.428 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.429 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.429 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [657a4b61-407e-4dab-8597-3bb712fd5c0a]
+26-06-08 04:52:10.429 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.430 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.446 [Test worker] DEBUG org.hibernate.SQL                    - 
+    insert 
+    into
+        users
+        (created_at, email, password, profile_id, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (1:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (2:VARCHAR) <- [JaneDoe@codeit.com]
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (3:VARCHAR) <- [password123]
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (4:UUID) <- [null]
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (5:TIMESTAMP_UTC) <- [null]
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (6:VARCHAR) <- [JaneDoe]
+26-06-08 04:52:10.446 [Test worker] TRACE org.hibernate.orm.jdbc.bind          - binding parameter (7:UUID) <- [53f2d698-bae3-4148-86eb-82ffe17e07b9]
+26-06-08 04:52:10.447 [Test worker] WARN  o.h.e.jdbc.spi.SqlExceptionHelper    - SQL Error: 23502, SQLState: 23502
+26-06-08 04:52:10.447 [Test worker] ERROR o.h.e.jdbc.spi.SqlExceptionHelper    - NULL not allowed for column "CREATED_AT"; SQL statement:
+insert into users (created_at,email,password,profile_id,updated_at,username,id) values (?,?,?,?,?,?,?) [23502-232]
+26-06-08 04:52:10.472 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'

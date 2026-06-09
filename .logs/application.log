@@ -1,0 +1,73 @@
+26-06-09 18:43:45.548 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 18:43:45.590 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Starting ChannelControllerTest using Java 17.0.18 with PID 47680 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 18:43:45.591 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 18:43:46.705 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 18:43:46.910 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 18:43:46.910 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 18:43:46.912 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 18:43:46.947 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Started ChannelControllerTest in 1.619 seconds (process running for 2.272)
+26-06-09 18:43:47.082 [Test worker] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' is not supported]
+26-06-09 18:50:13.029 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 18:50:13.067 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Starting ChannelControllerTest using Java 17.0.18 with PID 48291 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 18:50:13.070 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 18:50:14.126 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 18:50:14.348 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 18:50:14.348 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 18:50:14.350 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 18:50:14.388 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Started ChannelControllerTest in 1.589 seconds (process running for 2.246)
+26-06-09 18:56:08.071 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 18:56:08.102 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Starting ChannelControllerTest using Java 17.0.18 with PID 48792 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 18:56:08.103 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 18:56:09.105 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 18:56:09.327 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 18:56:09.328 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 18:56:09.329 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 18:56:09.356 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Started ChannelControllerTest in 1.495 seconds (process running for 2.137)
+26-06-09 18:58:48.170 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 18:58:48.204 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Starting ChannelControllerTest using Java 17.0.18 with PID 49015 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 18:58:48.206 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 18:58:49.220 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 18:58:49.435 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 18:58:49.435 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 18:58:49.437 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 18:58:49.466 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Started ChannelControllerTest in 1.526 seconds (process running for 2.175)
+26-06-09 18:59:14.548 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 18:59:14.584 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Starting ChannelControllerTest using Java 17.0.18 with PID 49063 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 18:59:14.585 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 18:59:15.601 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 18:59:15.828 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 18:59:15.829 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 18:59:15.831 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 18:59:15.862 [Test worker] INFO  c.s.m.d.c.ChannelControllerTest      - Started ChannelControllerTest in 1.532 seconds (process running for 2.19)
+26-06-09 18:59:24.446 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 18:59:24.486 [Test worker] INFO  c.s.m.d.c.MessageControllerTest      - Starting MessageControllerTest using Java 17.0.18 with PID 49085 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 18:59:24.488 [Test worker] INFO  c.s.m.d.c.MessageControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 18:59:26.529 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 18:59:27.329 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 18:59:27.329 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 18:59:27.333 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 18:59:27.371 [Test worker] INFO  c.s.m.d.c.MessageControllerTest      - Started MessageControllerTest in 3.154 seconds (process running for 3.901)
+26-06-09 19:05:56.934 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 19:05:56.958 [Test worker] INFO  c.s.m.d.c.MessageControllerTest      - Starting MessageControllerTest using Java 17.0.18 with PID 49630 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 19:05:56.960 [Test worker] INFO  c.s.m.d.c.MessageControllerTest      - No active profile set, falling back to 1 default profile: "default"
+26-06-09 19:05:57.812 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 19:05:57.977 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 19:05:57.978 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 19:05:57.979 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 19:05:58.002 [Test worker] INFO  c.s.m.d.c.MessageControllerTest      - Started MessageControllerTest in 1.246 seconds (process running for 1.815)
+26-06-09 19:06:09.328 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 19:06:09.358 [Test worker] INFO  c.s.m.d.c.UserControllerTest         - Starting UserControllerTest using Java 17.0.18 with PID 49663 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 19:06:09.358 [Test worker] INFO  c.s.m.d.c.UserControllerTest         - No active profile set, falling back to 1 default profile: "default"
+26-06-09 19:06:10.228 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 19:06:10.422 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 19:06:10.423 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 19:06:10.424 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 19:06:10.446 [Test worker] INFO  c.s.m.d.c.UserControllerTest         - Started UserControllerTest in 1.29 seconds (process running for 1.82)
+26-06-09 19:15:33.248 [background-preinit] INFO  o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+26-06-09 19:15:33.276 [Test worker] INFO  c.s.m.d.c.UserControllerTest         - Starting UserControllerTest using Java 17.0.18 with PID 50379 (started by nsl in /Users/nsl/work_space_sprint/12-sprint-mission)
+26-06-09 19:15:33.277 [Test worker] INFO  c.s.m.d.c.UserControllerTest         - No active profile set, falling back to 1 default profile: "default"
+26-06-09 19:15:34.135 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+26-06-09 19:15:34.305 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+26-06-09 19:15:34.305 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Initializing Servlet ''
+26-06-09 19:15:34.307 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet      - Completed initialization in 1 ms
+26-06-09 19:15:34.330 [Test worker] INFO  c.s.m.d.c.UserControllerTest         - Started UserControllerTest in 1.259 seconds (process running for 1.795)
