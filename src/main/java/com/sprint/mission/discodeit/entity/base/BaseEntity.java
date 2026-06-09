@@ -12,24 +12,22 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @ToString
-@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
   @Id
-  @GeneratedValue
-  @Column(name = "id", nullable = false, updatable = false, unique = true)
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(columnDefinition = "uuid", nullable = false, updatable = false)
   private UUID id;
 
   @CreatedDate
-  @Column(name = "created_at", nullable = false, updatable = false)
+  @Column(columnDefinition = "timestamp with time zone", nullable = false, updatable = false)
   private Instant createdAt;
 }
