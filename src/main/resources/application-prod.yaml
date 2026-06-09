@@ -1,0 +1,30 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/discodeit
+    username: ${DB_USERNAME:discodeit_user}
+    password: ${DB_PASSWORD:discodeit1234}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+discodeit:
+  storage:
+    type: local
+    local:
+      root-path: /var/discodeit/storage
+
+logging:
+  level:
+    com.sprint.mission.discodeit: info
+    org.hibernate.SQL: warn
