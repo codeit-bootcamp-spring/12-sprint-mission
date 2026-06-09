@@ -9,6 +9,8 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
+import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
 import com.sprint.mission.discodeit.mapper.PageResponseMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
@@ -50,7 +52,7 @@ public class BasicMessageService implements MessageService {
 
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(
-            () -> new NoSuchElementException("Channel with id " + channelId + " does not exist"));
+            () -> ChannelNotFoundException.withId(channelId));
     User author = userRepository.findById(authorId)
         .orElseThrow(
             () -> new NoSuchElementException("Author with id " + authorId + " does not exist")
@@ -88,7 +90,7 @@ public class BasicMessageService implements MessageService {
     return messageRepository.findById(messageId)
         .map(messageMapper::toDto)
         .orElseThrow(
-            () -> new NoSuchElementException("Message with id " + messageId + " not found"));
+            () -> MessageNotFoundException.withId(messageId));
   }
 
   @Transactional(readOnly = true)
@@ -115,7 +117,7 @@ public class BasicMessageService implements MessageService {
     String newContent = request.newContent();
     Message message = messageRepository.findById(messageId)
         .orElseThrow(
-            () -> new NoSuchElementException("Message with id " + messageId + " not found"));
+            () -> MessageNotFoundException.withId(messageId));
     message.update(newContent);
     return messageMapper.toDto(message);
   }
@@ -124,7 +126,7 @@ public class BasicMessageService implements MessageService {
   @Override
   public void delete(UUID messageId) {
     if (!messageRepository.existsById(messageId)) {
-      throw new NoSuchElementException("Message with id " + messageId + " not found");
+      throw MessageNotFoundException.withId(messageId);
     }
 
     messageRepository.deleteById(messageId);
