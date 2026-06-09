@@ -13,12 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
 import com.sprint.mission.discodeit.dto.data.MessageDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.time.Instant;
@@ -56,9 +59,9 @@ class MessageControllerTest {
     UUID channelId = UUID.randomUUID();
     UUID authorId = UUID.randomUUID();
     MessageCreateRequest createRequest = new MessageCreateRequest(
-        "안녕하세요, 테스트 메시지입니다.",
         channelId,
-        authorId
+        authorId,
+        "안녕하세요, 테스트 메시지입니다."
     );
 
     MockMultipartFile messageCreateRequestPart = new MockMultipartFile(
@@ -78,22 +81,22 @@ class MessageControllerTest {
     UUID messageId = UUID.randomUUID();
     Instant now = Instant.now();
 
-    UserDto author = new UserDto(
+    UserResponse author = new UserResponse(
         authorId,
         "testuser",
-        "test@example.com",
+        "test@Codeit.com",
         null,
         true
     );
 
-    BinaryContentDto attachmentDto = new BinaryContentDto(
+    BinaryContentResponse attachmentDto = new BinaryContentResponse(
         UUID.randomUUID(),
         "test.jpg",
         10L,
         MediaType.IMAGE_JPEG_VALUE
     );
 
-    MessageDto createdMessage = new MessageDto(
+    MessageResponse createdMessage = new MessageResponse(
         messageId,
         now,
         now,
@@ -116,7 +119,7 @@ class MessageControllerTest {
         .andExpect(jsonPath("$.content").value("안녕하세요, 테스트 메시지입니다."))
         .andExpect(jsonPath("$.channelId").value(channelId.toString()))
         .andExpect(jsonPath("$.author.id").value(authorId.toString()))
-        .andExpect(jsonPath("$.attachments[0].fileName").value("test.jpg"));
+        .andExpect(jsonPath("$.attachments[0].filename").value("test.jpg"));
   }
 
   @Test
@@ -124,9 +127,9 @@ class MessageControllerTest {
   void createMessage_Failure_InvalidRequest() throws Exception {
     // Given
     MessageCreateRequest invalidRequest = new MessageCreateRequest(
-        "", // 내용이 비어있음 (NotBlank 위반)
-        null, // 채널 ID가 비어있음 (NotNull 위반)
-        null  // 작성자 ID가 비어있음 (NotNull 위반)
+        null, // 내용이 비어있음
+        null, // 채널 ID가 비어있음
+        ""  // 작성자 ID가 비어있음
     );
 
     MockMultipartFile messageCreateRequestPart = new MockMultipartFile(
@@ -157,15 +160,15 @@ class MessageControllerTest {
 
     Instant now = Instant.now();
 
-    UserDto author = new UserDto(
+    UserResponse author = new UserResponse(
         authorId,
         "testuser",
-        "test@example.com",
+        "test@Codeit.com",
         null,
         true
     );
 
-    MessageDto updatedMessage = new MessageDto(
+    MessageResponse updatedMessage = new MessageResponse(
         messageId,
         now.minusSeconds(60),
         now,
@@ -245,16 +248,16 @@ class MessageControllerTest {
     Instant cursor = Instant.now();
     Pageable pageable = PageRequest.of(0, 50, Sort.Direction.DESC, "createdAt");
 
-    UserDto author = new UserDto(
+    UserResponse author = new UserResponse(
         authorId,
         "testuser",
-        "test@example.com",
+        "test@Codeit.com",
         null,
         true
     );
 
-    List<MessageDto> messages = List.of(
-        new MessageDto(
+    List<MessageResponse> messages = List.of(
+        new MessageResponse(
             UUID.randomUUID(),
             cursor.minusSeconds(10),
             cursor.minusSeconds(10),
@@ -263,7 +266,7 @@ class MessageControllerTest {
             author,
             new ArrayList<>()
         ),
-        new MessageDto(
+        new MessageResponse(
             UUID.randomUUID(),
             cursor.minusSeconds(20),
             cursor.minusSeconds(20),
@@ -274,7 +277,7 @@ class MessageControllerTest {
         )
     );
 
-    PageResponse<MessageDto> pageResponse = new PageResponse<>(
+    PageResponse<MessageResponse> pageResponse = new PageResponse<>(
         messages,
         cursor.minusSeconds(30), // nextCursor 값
         pageable.getPageSize(),

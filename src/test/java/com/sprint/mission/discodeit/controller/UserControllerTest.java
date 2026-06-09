@@ -14,8 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
-import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
-import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.data.UserStatusDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
@@ -103,7 +101,7 @@ class UserControllerTest {
         .andExpect(jsonPath("$.id").value(userId.toString()))
         .andExpect(jsonPath("$.username").value("testuser"))
         .andExpect(jsonPath("$.email").value("test@Codeit.com"))
-        .andExpect(jsonPath("$.profile.fileName").value("profile.jpg"))
+        .andExpect(jsonPath("$.profile.filename").value("profile.jpg"))
         .andExpect(jsonPath("$.online").value(false));
   }
 
@@ -155,6 +153,8 @@ class UserControllerTest {
     );
 
     List<UserResponse> users = List.of(user1, user2);
+
+    given(userService.findAll()).willReturn(users);
 
     // When & Then
     mockMvc.perform(get("/api/users")
@@ -226,8 +226,8 @@ class UserControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(userId.toString()))
         .andExpect(jsonPath("$.username").value("updateduser"))
-        .andExpect(jsonPath("$.email").value("updated@example.com"))
-        .andExpect(jsonPath("$.profile.fileName").value("updated-profile.jpg"))
+        .andExpect(jsonPath("$.email").value("updated@Codeit.com"))
+        .andExpect(jsonPath("$.profile.filename").value("updated-profile.jpg"))
         .andExpect(jsonPath("$.online").value(true));
   }
 

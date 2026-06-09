@@ -54,7 +54,7 @@ class ChannelControllerTest {
     // Given
     PublicChannelCreateRequest createRequest = new PublicChannelCreateRequest(
         "test-channel",
-        "채널 설명입니다."
+        "PUBLIC"
     );
 
     UUID channelId = UUID.randomUUID();
@@ -86,12 +86,12 @@ class ChannelControllerTest {
   void createPublicChannel_Failure_InvalidRequest() throws Exception {
     // Given
     PublicChannelCreateRequest invalidRequest = new PublicChannelCreateRequest(
-        "a", // 최소 길이 위반 (2자 이상이어야 함)
-        "채널 설명은 최대 255자까지 가능합니다.".repeat(10) // 최대 길이 위반
+        "a",
+        "채널 설명은 최대 255자까지 가능합니다.".repeat(10)
     );
 
     // When & Then
-    mockMvc.perform(post("/api/channels/public")
+    mockMvc.perform(post("/api/channels")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(invalidRequest)))
         .andExpect(status().isBadRequest());
@@ -102,12 +102,13 @@ class ChannelControllerTest {
   void createPrivateChannel_Success() throws Exception {
     // Given
     List<UUID> participantIds = List.of(UUID.randomUUID(), UUID.randomUUID());
-    PrivateChannelCreateRequest createRequest = new PrivateChannelCreateRequest(participantIds);
+    PrivateChannelCreateRequest createRequest = new PrivateChannelCreateRequest("PRIVATE",
+        participantIds);
 
     UUID channelId = UUID.randomUUID();
-    List<UserDto> participants = new ArrayList<>();
+    List<UserResponse> participants = new ArrayList<>();
     for (UUID userId : participantIds) {
-      participants.add(new UserDto(userId, "user-" + userId.toString().substring(0, 5),
+      participants.add(new UserResponse(userId, "user-" + userId.toString().substring(0, 5),
           "user" + userId.toString().substring(0, 5) + "@example.com", null, false));
     }
 

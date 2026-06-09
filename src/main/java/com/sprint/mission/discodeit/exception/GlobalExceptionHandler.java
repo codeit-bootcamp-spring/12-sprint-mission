@@ -14,6 +14,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+  @ExceptionHandler(DiscodeitException.class)
+  public ResponseEntity<ErrorResponse> handleDiscodeitException(DiscodeitException e) {
+    ErrorCode errorCode = e.getErrorCode();
+
+    return ResponseEntity
+        .status(errorCode.getStatus())
+        .body(ErrorResponse.of(
+            errorCode.getStatus().value(),
+            errorCode.name(),
+            e.getMessage(),
+            e.getClass().getSimpleName(),
+            e.getDetails()
+        ));
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
       MethodArgumentNotValidException e) {
