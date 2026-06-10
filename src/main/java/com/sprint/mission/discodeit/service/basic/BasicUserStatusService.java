@@ -1,121 +1,98 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.domain.user.UserStatus;
 import com.sprint.mission.discodeit.dto.userstatus.UserStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.userstatus.UserStatusResponse;
 import com.sprint.mission.discodeit.dto.userstatus.UserStatusUpdateRequest;
+import com.sprint.mission.discodeit.entity.user.User;
+import com.sprint.mission.discodeit.entity.user.UserStatus;
+import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
+import com.sprint.mission.discodeit.exception.user.UserStatusAlreadyExistsException;
+import com.sprint.mission.discodeit.exception.user.UserStatusNotFoundException;
+import com.sprint.mission.discodeit.mapper.UserStatusMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserStatusService;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class BasicUserStatusService implements UserStatusService {
+
     private final UserStatusRepository userStatusRepository;
     private final UserRepository userRepository;
+    private final UserStatusMapper userStatusMapper;
 
     @Override
-    public UserStatusResponse create(UserStatusCreateRequest dto) {
-        if (!userRepository.existsById(dto.userId())) {
-            throw new NoSuchElementException("User not found with id " + dto.userId());
-        }
-        if (userStatusRepository.findByUserId(dto.userId()).isPresent()) {
-            throw new IllegalStateException("User status already exists for user id " + dto.userId());
+    @Transactional
+    public UserStatusResponse create(UserStatusCreateRequest request) {
+        User user = getUserOrThrow(request.userId());
+
+        if (userStatusRepository.findByUser_Id(request.userId()).isPresent()) {
+            throw new UserStatusAlreadyExistsException(request.userId());
         }
 
-        UserStatus userStatus = new UserStatus(dto.userId(), dto.lastActiveAt());
-        userStatusRepository.save(userStatus);
+        UserStatus userStatus = userStatusMapper.toEntity(user, request.lastActiveAt());
+        UserStatus saved = userStatusRepository.save(userStatus);
 
-        return new UserStatusResponse(
-                userStatus.getId(),
-                userStatus.getUserId(),
-                userStatus.isOnline(),
-                userStatus.getLastActiveAt(),
-                userStatus.getCreatedAt(),
-                userStatus.getUpdatedAt()
-        );
+        return userStatusMapper.toResponse(saved);
     }
 
     @Override
-    public UserStatusResponse findById(UUID id) {
-        UserStatus userStatus = getUserStatusOrThrow(id);
-
-        return new UserStatusResponse(
-                userStatus.getId(),
-                userStatus.getUserId(),
-                userStatus.isOnline(),
-                userStatus.getLastActiveAt(),
-                userStatus.getCreatedAt(),
-                userStatus.getUpdatedAt()
-        );
+    @Transactional(readOnly = true)
+    public UserStatusResponse findById(UUID userStatusId) {
+        UserStatus userStatus = getUserStatusByIdOrThrow(userStatusId);
+        return userStatusMapper.toResponse(userStatus);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserStatusResponse> findAll() {
         return userStatusRepository.findAll().stream()
-                .map(status -> new UserStatusResponse(
-                        status.getId(),
-                        status.getUserId(),
-                        status.isOnline(),
-                        status.getLastActiveAt(),
-                        status.getCreatedAt(),
-                        status.getUpdatedAt()
-                ))
+                .map(userStatusMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public UserStatusResponse update(UUID id, UserStatusUpdateRequest dto) {
-        UserStatus userStatus = getUserStatusOrThrow(id);
+    @Transactional
+    public UserStatusResponse update(UUID userStatusId, UserStatusUpdateRequest request) {
+        UserStatus userStatus = getUserStatusByIdOrThrow(userStatusId);
 
-        userStatus.update(dto.newLastActiveAt());
-        userStatusRepository.save(userStatus);
+        userStatus.updateLastActiveAt(request.newLastActiveAt());
 
-        return new UserStatusResponse(
-                userStatus.getId(),
-                userStatus.getUserId(),
-                userStatus.isOnline(),
-                userStatus.getLastActiveAt(),
-                userStatus.getCreatedAt(),
-                userStatus.getUpdatedAt()
-        );
+        return userStatusMapper.toResponse(userStatus);
     }
 
     @Override
-    public UserStatusResponse updateByUserId(UUID userId, UserStatusUpdateRequest dto) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+    @Transactional
+    public UserStatusResponse updateByUserId(UUID userId, UserStatusUpdateRequest request) {
+        User user = getUserOrThrow(userId);
 
-        UserStatus userStatus = userStatusRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoSuchElementException("No user status found for user id " + userId));
+        UserStatus userStatus = userStatusRepository.findByUser_Id(user.getId())
+                .orElseThrow(() -> UserStatusNotFoundException.byUserId(user.getId()));
 
-        userStatus.update(dto.newLastActiveAt());
-        userStatusRepository.save(userStatus);
+        userStatus.updateLastActiveAt(request.newLastActiveAt());
 
-        return new UserStatusResponse(
-                userStatus.getId(),
-                userStatus.getUserId(),
-                userStatus.isOnline(),
-                userStatus.getLastActiveAt(),
-                userStatus.getCreatedAt(),
-                userStatus.getUpdatedAt()
-        );
+        return userStatusMapper.toResponse(userStatus);
     }
 
     @Override
-    public void delete(UUID id) {
-        getUserStatusOrThrow(id);
-        userStatusRepository.deleteById(id);
+    @Transactional
+    public void delete(UUID userStatusId) {
+        UserStatus userStatus = getUserStatusByIdOrThrow(userStatusId);
+        userStatusRepository.delete(userStatus);
     }
 
-    private UserStatus getUserStatusOrThrow(UUID id) {
-        return userStatusRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("UserStatus with id " + id + " not found"));
+    private User getUserOrThrow(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    private UserStatus getUserStatusByIdOrThrow(UUID userStatusId) {
+        return userStatusRepository.findById(userStatusId)
+                .orElseThrow(() -> new UserStatusNotFoundException(userStatusId));
     }
 }

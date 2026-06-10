@@ -1,9 +1,11 @@
 package com.sprint.mission.discodeit.dto.readstatus;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.time.Instant;
-import java.util.UUID;
 
 public record ReadStatusUpdateRequest(
+        @NotNull(message = "마지막으로 읽은 시간은 필수입니다.")
         Instant newLastReadAt
 ) {
 }

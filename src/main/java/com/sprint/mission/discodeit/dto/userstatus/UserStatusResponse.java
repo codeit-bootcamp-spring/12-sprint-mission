@@ -6,9 +6,6 @@ import java.util.UUID;
 public record UserStatusResponse(
         UUID id,
         UUID userId,
-        boolean online,
-        Instant lastActiveAt,
-        Instant createdAt,
-        Instant updatedAt
+        Instant lastActiveAt
 ) {
 }

@@ -179,3 +179,4 @@ gradle-app.setting
 
 /file-data-map/
 .discodeit/
+.logs/

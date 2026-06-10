@@ -1,1 +1,3 @@
 rootProject.name = '12-sprint-mission'
+
+include 'discodeit-admin'
