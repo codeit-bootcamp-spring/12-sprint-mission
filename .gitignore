@@ -58,3 +58,5 @@ bin/
 $RECYCLE.BIN/
 
 data
+.logs
+.discodeit

@@ -1,28 +1,24 @@
 package com.sprint.mission.discodeit.dto.user;
 
+import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
 import com.sprint.mission.discodeit.entity.User;
-import java.time.Instant;
 import java.util.UUID;
 
 public record UserResponse(
     UUID id,
-    Instant createdAt,
-    Instant updatedAt,
     String username,
     String email,
-    String password,
-    UUID profileId
+    BinaryContentResponse profile,
+    boolean online
 ) {
 
-    public static UserResponse from(User user) {
-        return new UserResponse(
-            user.getId(),
-            user.getCreatedAt(),
-            user.getUpdatedAt(),
-            user.getUserName(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getProfileImageId()
-        );
-    }
+  public static UserResponse from(User user) {
+    return new UserResponse(
+        user.getId(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getProfile() == null ? null : BinaryContentResponse.from(user.getProfile()),
+        user.getStatus().isOnline()
+    );
+  }
 }

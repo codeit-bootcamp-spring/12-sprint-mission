@@ -1,25 +1,30 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.util.UUID;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Entity
+@Table(name = "binary_contents")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BinaryContent extends BaseEntity {
 
+    @Column(nullable = false, length = 255)
     private String fileName;
+    @Column(nullable = false, length = 100)
     private String contentType;
-    private byte[] data;
-    private UUID userId;
-    private UUID messageId;
+    @Column(nullable = false)
+    private Long size;
 
-    public BinaryContent(String fileName, String contentType, byte[] data, UUID userId,
-        UUID messageId) {
+    public BinaryContent(String fileName, String contentType, Long size) {
         super();
         this.fileName = fileName;
         this.contentType = contentType;
-        this.data = data;
-        this.userId = userId;
-        this.messageId = messageId;
+        this.size = size;
     }
 
 }

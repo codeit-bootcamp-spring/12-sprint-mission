@@ -1,0 +1,44 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  spring:
+    boot:
+      admin:
+        client:
+          url: ${SPRING_BOOT_ADMIN_CLIENT_URL}
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/discodeit}
+    username: ${SPRING_DATASOURCE_USERNAME:discodeit_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:discodeit1234}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+        highlight_sql: false
+    show-sql: false
+
+  sql:
+    init:
+      mode: never
+
+sql:
+  init:
+    mode: never
+
+logging:
+  level:
+    com.sprint.mission.discodeit: info
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

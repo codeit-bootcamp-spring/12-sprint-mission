@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.service;
 
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.user.UserDto;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.dto.user.UserUpdateRequest;
 
@@ -13,9 +12,7 @@ public interface UserService {
 
     UserResponse create(UserCreateRequest request, MultipartFile profile);
 
-    UserResponse find(UUID id);
-
-    List<UserDto> findAll();
+    List<UserResponse> findAll();
 
     UserResponse update(UUID userId, UserUpdateRequest request, MultipartFile profile);
 

@@ -1,58 +1,73 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.util.UUID;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Entity
+@Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends UpdatableBaseEntity {
 
-    private String email;
-    private String userName;
-    private String password;
-    private UUID profileImageId;
+  @Column(unique = true, nullable = false, length = 100)
+  private String email;
+  @Column(unique = true, nullable = false, length = 50)
+  private String username;
+  @Column(nullable = false, length = 60)
+  private String password;
 
-    public User(String email, String userName, String password, UUID profileImageId) {
-        super();
-        this.email = email;
-        this.userName = userName;
-        this.password = password;
-        this.profileImageId = profileImageId;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "profile_id", unique = true)
+  private BinaryContent profile;
+
+  @OneToOne(
+      mappedBy = "user",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY
+  )
+  private UserStatus status;
+
+  public User(String email, String username, String password, BinaryContent profile) {
+    super();
+    this.email = email;
+    this.username = username;
+    this.password = password;
+    this.profile = profile;
+  }
+
+  public void initStatus() {
+    this.status = new UserStatus(this);
+  }
+
+  public void updateEmail(String email) {
+    this.email = email;
+  }
+
+  public void updateUsername(String username) {
+    this.username = username;
+  }
+
+  public void changeProfile(String email, String username, BinaryContent profile) {
+    if (email != null && !email.isBlank()) {
+      this.email = email;
     }
 
-    public void updateEmail(String email) {
-        this.email = email;
-        updateUpdatedAt();
+    if (username != null && !username.isBlank()) {
+      this.username = username;
     }
 
-    public void updateUserName(String userName) {
-        this.userName = userName;
-        updateUpdatedAt();
+    if (profile != null) {
+      this.profile = profile;
     }
-
-    public void updateProfileImageId(UUID profileImageId) {
-        this.profileImageId = profileImageId;
-        updateUpdatedAt();
-    }
-
-    public void changeProfile(String email, String userName, UUID profileImageId) {
-        if (email != null) {
-            this.email = email;
-        }
-
-        if (userName != null) {
-            this.userName = userName;
-        }
-
-        if (profileImageId != null) {
-            this.profileImageId = profileImageId;
-        }
-
-        updateUpdatedAt();
-    }
-
-    public void removeProfileImg() {
-        this.profileImageId = null;
-        updateUpdatedAt();
-    }
+  }
 
 }

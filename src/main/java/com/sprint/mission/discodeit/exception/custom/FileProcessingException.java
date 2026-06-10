@@ -1,8 +1,0 @@
-package com.sprint.mission.discodeit.exception.custom;
-
-public class FileProcessingException extends RuntimeException {
-    public FileProcessingException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-}

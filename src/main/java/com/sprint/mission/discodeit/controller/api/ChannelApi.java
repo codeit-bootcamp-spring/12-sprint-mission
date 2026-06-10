@@ -1,9 +1,8 @@
 package com.sprint.mission.discodeit.controller.api;
 
-import com.sprint.mission.discodeit.dto.channel.ChannelFindResponse;
+import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.channel.ChannelPrivateCreateRequest;
 import com.sprint.mission.discodeit.dto.channel.ChannelPublicCreateRequest;
-import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.channel.ChannelUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,7 +41,7 @@ public interface ChannelApi {
 
     @Operation(summary = "User가 참여 중인 Channel 목록 조회")
     @ApiResponse(responseCode = "200", description = "Channel 목록 조회 성공")
-    ResponseEntity<List<ChannelFindResponse>> findAllByUserId(
+    ResponseEntity<List<ChannelResponse>> findAllByUserId(
         UUID userId
     );
 }

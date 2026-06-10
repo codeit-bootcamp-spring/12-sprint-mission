@@ -1,11 +1,10 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.auth.LoginRequest;
-import com.sprint.mission.discodeit.dto.auth.LoginResponse;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.exception.ErrorCode;
-import com.sprint.mission.discodeit.exception.custom.BadRequestException;
-import com.sprint.mission.discodeit.exception.custom.ResourceNotFoundException;
+import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
+import com.sprint.mission.discodeit.exception.user.WrongPasswordException;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +13,19 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BasicAuthService implements AuthService {
-    private final UserRepository userRepository;
 
-    @Override
-    public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.email()).orElseThrow(
-            () -> new ResourceNotFoundException(ErrorCode.USER_EMAIL_NOT_FOUND.format(request.email()))
-        );
+  private final UserRepository userRepository;
 
-        if(!user.getPassword().equals(request.password())){
-            throw new BadRequestException(ErrorCode.WRONG_PASSWORD.getMessage());
-        }
+  @Override
+  public UserResponse login(LoginRequest request) {
+    User user = userRepository.findByEmail(request.email()).orElseThrow(
+        () -> UserNotFoundException.withEmail(request.email())
+    );
 
-        return LoginResponse.from(user);
+    if (!user.getPassword().equals(request.password())) {
+      throw new WrongPasswordException(request.email());
     }
+
+    return UserResponse.from(user);
+  }
 }

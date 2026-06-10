@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.controller.api;
 
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.user.UserDto;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.dto.user.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.userstatus.UserStatusResponse;
@@ -38,7 +37,7 @@ public interface UserApi {
 
     @Operation(summary = "전체 User 목록 조회")
     @ApiResponse(responseCode = "200", description = "User 목록 조회 성공")
-    ResponseEntity<List<UserDto>> findAll();
+    ResponseEntity<List<UserResponse>> findAll();
 
     @Operation(summary = "User 온라인 상태 업데이트")
     @ApiResponse(responseCode = "200", description = "User 온라인 상태가 성공적으로 업데이트됨")

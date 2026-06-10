@@ -6,21 +6,15 @@ import java.util.UUID;
 
 public record UserStatusResponse(
     UUID id,
-    Instant createdAt,
-    Instant updatedAt,
     UUID userId,
-    Instant lastActiveAt,
-    boolean online
+    Instant lastActiveAt
 ) {
 
-    public static UserStatusResponse from(UserStatus userStatus) {
-        return new UserStatusResponse(
-            userStatus.getId(),
-            userStatus.getCreatedAt(),
-            userStatus.getUpdatedAt(),
-            userStatus.getUserId(),
-            userStatus.getUpdatedAt(),
-            userStatus.isOnline()
-        );
-    }
+  public static UserStatusResponse from(UserStatus userStatus) {
+    return new UserStatusResponse(
+        userStatus.getId(),
+        userStatus.getUser().getId(),
+        userStatus.getLastActiveAt()
+    );
+  }
 }

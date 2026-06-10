@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.dto.message;
 
-import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.Message;
 import java.time.Instant;
 import java.util.List;
@@ -12,21 +13,21 @@ public record MessageResponse(
     Instant updatedAt,
     String content,
     UUID channelId,
-    UUID authorId,
-    List<UUID> attachmentIds
+    UserResponse author,
+    List<BinaryContentResponse> attachments
 ) {
 
-    public static MessageResponse from(Message message, List<BinaryContent> attachmentIds) {
-        return new MessageResponse(
-            message.getId(),
-            message.getCreatedAt(),
-            message.getUpdatedAt(),
-            message.getContent(),
-            message.getChannelId(),
-            message.getUserId(),
-            attachmentIds.stream()
-                .map(BinaryContent::getId)
-                .toList()
-        );
-    }
+  public static MessageResponse from(Message message) {
+    return new MessageResponse(
+        message.getId(),
+        message.getCreatedAt(),
+        message.getUpdatedAt(),
+        message.getContent(),
+        message.getChannel().getId(),
+        UserResponse.from(message.getAuthor()),
+        message.getAttachments().stream()
+            .map(BinaryContentResponse::from)
+            .toList()
+    );
+  }
 }
