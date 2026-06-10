@@ -1,0 +1,10 @@
+pluginManagement {
+	repositories {
+		maven { url = 'https://repo.spring.io/snapshot' }
+		gradlePluginPortal()
+	}
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version '2.2.0'
+    }
+}
+rootProject.name = 'discodeit'
