@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public interface MessageApi {
   ResponseEntity<MessageDto> update(
       @Parameter(name = "messageId", description = "수정할 Message ID")
       @PathVariable UUID messageId,
-      @RequestBody MessageUpdateRequest request);
+      @RequestBody @Valid MessageUpdateRequest request);
 
   @Operation(summary = "Message 삭제", operationId = "delete_1")
   @ApiResponses({

@@ -185,3 +185,4 @@ api-docs.json
 .agents/
 CLAUDE.md
 skills-lock.json
+.logs

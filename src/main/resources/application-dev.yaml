@@ -1,0 +1,47 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:parsingdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql   # DDL (테이블 생성)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      # 접속 : http://localhost:8080/h2-console
+      # JDBC URL : jdbc:h2:mem:parsingdb
+
+  boot:
+    admin:
+      client:
+        url: http://localhost:9090
+        enabled: true
+        instance:
+          name: discodeit-dev
+          service-url: http://localhost:8080
+
+logging:
+  level:
+    # Hibernate SQL
+    org.hibernate.SQL: off
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql: trace
+
+    # Spring Web
+    org.springframework.web: trace
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    com.sprint.mission.discodeit: debug
+

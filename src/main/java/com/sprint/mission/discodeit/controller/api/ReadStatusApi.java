@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public interface ReadStatusApi {
           content = @Content(examples = @ExampleObject(value = "Channel | User with id {channelId | userId} not found"))
       )
   })
-  ResponseEntity<ReadStatusDto> create(@RequestBody ReadStatusCreateRequest request);
+  ResponseEntity<ReadStatusDto> create(@RequestBody @Valid ReadStatusCreateRequest request);
 
   @Operation(summary = "Message 읽음 상태 수정", operationId = "update_1")
   @ApiResponses({
@@ -42,7 +43,7 @@ public interface ReadStatusApi {
   ResponseEntity<ReadStatusDto> update(
       @Parameter(name = "readStatusId", description = "수정할 읽음 상태 ID")
       @PathVariable UUID readStatusId,
-      @RequestBody ReadStatusUpdateRequest request);
+      @RequestBody @Valid ReadStatusUpdateRequest request);
 
   @Operation(summary = "User의 Message 읽음 상태 목록 조회", operationId = "findAllByUserId")
   @ApiResponse(responseCode = "200", description = "Message 읽음 상태 목록 조회 성공")
