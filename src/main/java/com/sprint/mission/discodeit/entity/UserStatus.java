@@ -1,38 +1,52 @@
 package com.sprint.mission.discodeit.entity;
 
-import lombok.Getter;
-
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.time.Duration;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "user_statuses")
 @Getter
-public class UserStatus implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private String id;
-    private String userId;
-    private Instant lastSeenAt;
-    private Instant createdAt;
-    private Instant updatedAt;
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserStatus extends BaseUpdatableEntity {
 
-    public boolean isOnline() {
-        Instant now = Instant.now();
-        if (lastSeenAt == null) {
-            return false;
-        }
-        Duration duration = Duration.between(lastSeenAt, now);
-        return duration.toMinutes() <= 5;
+  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false, unique = true)
+  private User user;
+  @Column(columnDefinition = "timestamp with time zone", nullable = false)
+  private Instant lastActiveAt;
+
+  public UserStatus(User user, Instant lastActiveAt) {
+    setUser(user);
+    this.lastActiveAt = lastActiveAt;
+  }
+
+  public void update(Instant lastActiveAt) {
+    if (lastActiveAt != null && !lastActiveAt.equals(this.lastActiveAt)) {
+      this.lastActiveAt = lastActiveAt;
     }
-    public UserStatus(String id, String userId, Instant lastSeenAt) {
-        this.id = id;
-        this.userId = userId;
-        this.lastSeenAt = lastSeenAt;
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
-        }
-    public void updateLastSeenAt() {
-        this.lastSeenAt = Instant.now();
-        }
+  }
+
+  public Boolean isOnline() {
+    Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
+    return lastActiveAt.isAfter(instantFiveMinutesAgo);
+  }
+
+  protected void setUser(User user) {
+    if (user == null) {
+      throw new IllegalArgumentException("User must not be null");
+    }
+    this.user = user;
+    user.setStatus(this);
+  }
 }
-
-

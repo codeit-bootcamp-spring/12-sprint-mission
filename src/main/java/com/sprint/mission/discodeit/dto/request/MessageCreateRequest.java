@@ -1,20 +1,19 @@
 package com.sprint.mission.discodeit.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.springframework.lang.Nullable;
-
-import java.util.List;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Getter
-@AllArgsConstructor
-public class MessageCreateRequest {
-    private final String content;
-    private final UUID channelId;
-    private final UUID authorId;
+public record MessageCreateRequest(
 
-    @Nullable
-    private final List<BinaryContentCreateRequest> attachments;
+    @NotNull(message = "작성자 ID는 필수입니다.")
+    UUID authorId,
+
+    @NotNull(message = "채널 ID는 필수입니다.")
+    UUID channelId,
+
+    @NotBlank(message = "메시지 내용은 비어 있을 수 없습니다.")
+    String content
+) {
+
 }
-
