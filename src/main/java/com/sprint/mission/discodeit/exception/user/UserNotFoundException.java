@@ -1,33 +1,23 @@
 package com.sprint.mission.discodeit.exception.user;
 
-import com.sprint.mission.discodeit.exception.ErrorCode;
-
 import java.util.UUID;
+
+import com.sprint.mission.discodeit.exception.ErrorCode;
 
 public class UserNotFoundException extends UserException {
     public UserNotFoundException() {
         super(ErrorCode.USER_NOT_FOUND);
     }
-
-    public UserNotFoundException(Throwable cause) {
-        super(ErrorCode.USER_NOT_FOUND, cause);
+    
+    public static UserNotFoundException withId(UUID userId) {
+        UserNotFoundException exception = new UserNotFoundException();
+        exception.addDetail("userId", userId);
+        return exception;
     }
-
+    
     public static UserNotFoundException withUsername(String username) {
         UserNotFoundException exception = new UserNotFoundException();
         exception.addDetail("username", username);
         return exception;
     }
-
-    public static UserNotFoundException withEmail(String email) {
-        UserNotFoundException exception = new UserNotFoundException();
-        exception.addDetail("email", email);
-        return exception;
-    }
-
-    public static UserNotFoundException withId(UUID id) {
-        UserNotFoundException exception = new UserNotFoundException();
-        exception.addDetail("UserId", id);
-        return exception;
-    }
-}
+} 

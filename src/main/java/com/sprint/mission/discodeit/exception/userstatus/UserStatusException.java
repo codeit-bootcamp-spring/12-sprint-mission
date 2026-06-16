@@ -11,4 +11,4 @@ public class UserStatusException extends DiscodeitException {
     public UserStatusException(ErrorCode errorCode, Throwable cause) {
         super(errorCode, cause);
     }
-}
+} 
