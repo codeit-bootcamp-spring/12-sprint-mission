@@ -39,6 +39,14 @@ public class GlobalExceptionHandler {
         .body(ErrorResponse.of(e, HttpStatus.NOT_FOUND.value()));
   }
 
+  // 401: Unauthorized (로그인 실패)
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleUnauthorized(DiscodeitException e) {
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        .body(ErrorResponse.of(e, HttpStatus.UNAUTHORIZED.value()));
+  }
+
   // 400: Bad Request (중복, PRIVATE 채널 수정 등)
   @ExceptionHandler({
       UserAlreadyExistsException.class,

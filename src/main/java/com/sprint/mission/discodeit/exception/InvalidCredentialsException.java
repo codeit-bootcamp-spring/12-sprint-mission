@@ -1,7 +1,10 @@
 package com.sprint.mission.discodeit.exception;
 
-public class InvalidCredentialsException extends RuntimeException {
-    public InvalidCredentialsException(String message) {
-        super(message);
-    }
+import java.util.Map;
+
+public class InvalidCredentialsException extends DiscodeitException {
+
+  public InvalidCredentialsException(String username) {
+    super(ErrorCode.INVALID_CREDENTIALS, Map.of("username", username));
+  }
 }
