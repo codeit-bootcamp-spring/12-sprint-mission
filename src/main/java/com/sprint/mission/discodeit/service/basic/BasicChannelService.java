@@ -82,9 +82,8 @@ public class BasicChannelService implements ChannelService {
         .map(rs -> rs.getChannel().getId())
         .toList();
 
-    List<Channel> channels = channelRepository.findAll().stream()
-        .filter(c -> c.getType() == ChannelType.PUBLIC || myChannelIds.contains(c.getId()))
-        .toList();
+    // PUBLIC 채널 + 참여 중인 PRIVATE 채널을 DB에서 바로 필터링하여 조회
+    List<Channel> channels = channelRepository.findPublicOrIn(ChannelType.PUBLIC, myChannelIds);
 
     List<UUID> channelIds = channels.stream().map(Channel::getId).toList();
 

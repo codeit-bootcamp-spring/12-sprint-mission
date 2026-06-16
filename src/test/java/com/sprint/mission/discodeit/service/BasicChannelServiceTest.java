@@ -165,7 +165,7 @@ class BasicChannelServiceTest {
     // given
     UUID userId = UUID.randomUUID();
     given(readStatusRepository.findAllByUser_Id(userId)).willReturn(List.of());
-    given(channelRepository.findAll()).willReturn(List.of(publicChannel, privateChannel));
+    given(channelRepository.findPublicOrIn(any(), any())).willReturn(List.of(publicChannel));
     given(messageRepository.findLastMessageAtByChannelIds(any())).willReturn(List.of());
     given(readStatusRepository.findAllByChannel_IdIn(any())).willReturn(List.of());
     given(channelMapper.toDto(any(), any(), any())).willReturn(channelDto);
