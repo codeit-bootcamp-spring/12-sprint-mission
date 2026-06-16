@@ -20,10 +20,10 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
       + "WHERE m.channel.id IN :channelIds GROUP BY m.channel.id")
   List<Object[]> findLastMessageAtByChannelIds(@Param("channelIds") List<UUID> channelIds);
 
-  // 커서 기반 페이지네이션: createdAt < cursor 조건 + JOIN FETCH로 N+1 방지
+  // 커서 기반 페이지네이션: author는 fetch join, attachments는 @BatchSize로 별도 조회
+  // attachments를 fetch join하면 OneToMany + Pageable 조합으로 메모리 페이징 발생
   @Query("SELECT m FROM Message m "
       + "LEFT JOIN FETCH m.author "
-      + "LEFT JOIN FETCH m.attachments "
       + "WHERE m.channel.id = :channelId "
       + "AND (:cursor IS NULL OR m.createdAt < :cursor) "
       + "ORDER BY m.createdAt DESC")

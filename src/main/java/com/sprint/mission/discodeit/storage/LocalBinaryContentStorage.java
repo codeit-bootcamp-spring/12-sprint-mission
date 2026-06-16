@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.storage;
 
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
+import com.sprint.mission.discodeit.exception.storage.StorageException;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,7 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
     try {
       Files.createDirectories(root);
     } catch (IOException e) {
-      throw new RuntimeException("스토리지 디렉토리 초기화 실패: " + root, e);
+      throw new StorageException("init");
     }
   }
 
@@ -46,7 +47,7 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
       Files.write(resolvePath(id), bytes);
       return id;
     } catch (IOException e) {
-      throw new RuntimeException("파일 저장 실패: " + id, e);
+      throw new StorageException("put", id);
     }
   }
 
@@ -55,7 +56,7 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
     try {
       return Files.newInputStream(resolvePath(id));
     } catch (IOException e) {
-      throw new RuntimeException("파일 읽기 실패: " + id, e);
+      throw new StorageException("get", id);
     }
   }
 

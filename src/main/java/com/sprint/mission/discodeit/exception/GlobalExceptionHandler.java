@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.exception;
 
 import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentNotFoundException;
+import com.sprint.mission.discodeit.exception.storage.StorageException;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
 import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
@@ -78,6 +79,14 @@ public class GlobalExceptionHandler {
         HttpStatus.BAD_REQUEST.value()
     );
     return ResponseEntity.badRequest().body(response);
+  }
+
+  // 500: 스토리지 오류
+  @ExceptionHandler(StorageException.class)
+  public ResponseEntity<ErrorResponse> handleStorage(DiscodeitException e) {
+    log.error("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ErrorResponse.of(e, HttpStatus.INTERNAL_SERVER_ERROR.value()));
   }
 
   // 500: 그 외 예외
