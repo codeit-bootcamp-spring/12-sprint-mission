@@ -89,10 +89,12 @@ public class BasicUserService implements UserService {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new UserNotFoundException(userId));
 
-    if (userRepository.existsByEmail(userUpdateRequest.newEmail())) {
+    if (!user.getEmail().equals(userUpdateRequest.newEmail())
+        && userRepository.existsByEmail(userUpdateRequest.newEmail())) {
       throw new UserAlreadyExistsException("email", userUpdateRequest.newEmail());
     }
-    if (userRepository.existsByUsername(userUpdateRequest.newUsername())) {
+    if (!user.getUsername().equals(userUpdateRequest.newUsername())
+        && userRepository.existsByUsername(userUpdateRequest.newUsername())) {
       throw new UserAlreadyExistsException("username", userUpdateRequest.newUsername());
     }
 
