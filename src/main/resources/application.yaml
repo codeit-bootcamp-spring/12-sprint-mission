@@ -9,6 +9,10 @@ spring:
       maxRequestSize: 30MB
   jpa:
     open-in-view: false
+  boot:
+    admin:
+      client:
+        url: http://localhost:9090
 
 management:
   endpoints:
