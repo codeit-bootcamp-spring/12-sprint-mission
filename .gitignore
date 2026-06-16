@@ -40,3 +40,7 @@ bin/
 
 ### Discodeit ###
 .discodeit
+
+*.logs
+logs/
+log/

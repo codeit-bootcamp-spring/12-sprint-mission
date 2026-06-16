@@ -45,3 +45,12 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// 레거시 File/JCF 구현체와 JavaApplication은 현재 JPA 기반 인터페이스와 호환되지 않아 제외
+sourceSets.main.java.exclude(
+    'com/sprint/mission/discodeit/repository/file/**',
+    'com/sprint/mission/discodeit/repository/jcf/**',
+    'com/sprint/mission/discodeit/service/file/**',
+    'com/sprint/mission/discodeit/service/jcf/**',
+    'com/sprint/mission/discodeit/JavaApplication.java'
+)

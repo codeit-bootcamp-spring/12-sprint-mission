@@ -1,77 +1,106 @@
 package com.sprint.mission.discodeit.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
-import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
-import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
-import com.sprint.mission.discodeit.service.UserService;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 @SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 class UserIntegrationTest {
 
-  @Autowired UserService userService;
+  @Autowired MockMvc mockMvc;
+  @Autowired ObjectMapper objectMapper;
 
-  @Test
-  @DisplayName("사용자 생성 후 전체 조회 성공")
-  void createAndFindAll() {
-    UserCreateRequest req = new UserCreateRequest("integuser", "integ@email.com", "password123!");
-    UserDto created = userService.create(req, Optional.empty());
+  private MockMultipartFile userPart(UserCreateRequest req) throws Exception {
+    return new MockMultipartFile(
+        "userCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
+        objectMapper.writeValueAsBytes(req));
+  }
 
-    assertThat(created).isNotNull();
-    assertThat(created.username()).isEqualTo("integuser");
-
-    List<UserDto> all = userService.findAll();
-    assertThat(all).anyMatch(u -> u.username().equals("integuser"));
+  private String createUserAndGetId(String username, String email) throws Exception {
+    MockMultipartFile part = userPart(new UserCreateRequest(username, email, "password123!"));
+    MvcResult result = mockMvc.perform(multipart("/api/users").file(part))
+        .andExpect(status().isCreated())
+        .andReturn();
+    JsonNode json = objectMapper.readTree(result.getResponse().getContentAsString());
+    return json.get("id").asText();
   }
 
   @Test
-  @DisplayName("이메일 중복 사용자 생성 시 예외 발생")
-  void createDuplicateEmail_throws() {
-    userService.create(new UserCreateRequest("user1", "dup@email.com", "password123!"),
-        Optional.empty());
+  @DisplayName("POST /api/users - 사용자 생성 성공 후 GET /api/users 목록 조회")
+  void createAndFindAll() throws Exception {
+    mockMvc.perform(multipart("/api/users")
+            .file(userPart(new UserCreateRequest("integuser", "integ@email.com", "password123!"))))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.username").value("integuser"))
+        .andExpect(jsonPath("$.email").value("integ@email.com"));
 
-    assertThatThrownBy(() ->
-        userService.create(new UserCreateRequest("user2", "dup@email.com", "password123!"),
-            Optional.empty()))
-        .isInstanceOf(UserAlreadyExistsException.class);
+    mockMvc.perform(get("/api/users"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[?(@.username == 'integuser')]").exists());
   }
 
   @Test
-  @DisplayName("사용자 수정 성공")
-  void updateUser_success() {
-    UserDto created = userService.create(
-        new UserCreateRequest("before", "before@email.com", "password123!"), Optional.empty());
+  @DisplayName("POST /api/users - 이메일 중복 시 400 반환")
+  void createDuplicateEmail_returns400() throws Exception {
+    mockMvc.perform(multipart("/api/users")
+            .file(userPart(new UserCreateRequest("user1", "dup@email.com", "password123!"))))
+        .andExpect(status().isCreated());
 
-    UserDto updated = userService.update(created.id(),
-        new UserUpdateRequest("after", "after@email.com", "newpassword!"), Optional.empty());
-
-    assertThat(updated.username()).isEqualTo("after");
+    mockMvc.perform(multipart("/api/users")
+            .file(userPart(new UserCreateRequest("user2", "dup@email.com", "password123!"))))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("DUPLICATE_USER"));
   }
 
   @Test
-  @DisplayName("사용자 삭제 후 조회 시 예외 발생")
-  void deleteUser_thenNotFound() {
-    UserDto created = userService.create(
-        new UserCreateRequest("todelete", "todelete@email.com", "password123!"), Optional.empty());
+  @DisplayName("PATCH /api/users/{userId} - 사용자 수정 성공")
+  void updateUser_success() throws Exception {
+    String userId = createUserAndGetId("before", "before@email.com");
 
-    userService.delete(created.id());
+    MockMultipartFile updatePart = new MockMultipartFile(
+        "userUpdateRequest", "", MediaType.APPLICATION_JSON_VALUE,
+        objectMapper.writeValueAsBytes(new UserUpdateRequest("after", "after@email.com", "newpassword1!")));
 
-    assertThatThrownBy(() -> userService.find(created.id()))
-        .isInstanceOf(UserNotFoundException.class);
+    mockMvc.perform(multipart("/api/users/{userId}", userId)
+            .file(updatePart)
+            .with(req -> { req.setMethod("PATCH"); return req; }))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.username").value("after"));
+  }
+
+  @Test
+  @DisplayName("DELETE /api/users/{userId} - 삭제 성공 후 목록에서 제거 확인")
+  void deleteUser_thenRemovedFromList() throws Exception {
+    String userId = createUserAndGetId("todelete", "todelete@email.com");
+
+    mockMvc.perform(delete("/api/users/{userId}", userId))
+        .andExpect(status().isNoContent());
+
+    // 두 번 삭제하면 404
+    mockMvc.perform(delete("/api/users/{userId}", userId))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value("USER_NOT_FOUND"));
   }
 }

@@ -80,6 +80,18 @@ public class FileUserStatusRepository implements UserStatusRepository {
     }
 
     @Override
+    public Optional<UserStatus> findByUser_Id(UUID userId) {
+        return findAll().stream()
+                .filter(us -> us.getUser().getId().equals(userId))
+                .findFirst();
+    }
+
+    @Override
+    public void deleteByUser_Id(UUID userId) {
+        findByUser_Id(userId).ifPresent(us -> deleteById(us.getId()));
+    }
+
+    @Override
     public void deleteById(UUID id) {
         try {
             Files.deleteIfExists(resolvePath(id));

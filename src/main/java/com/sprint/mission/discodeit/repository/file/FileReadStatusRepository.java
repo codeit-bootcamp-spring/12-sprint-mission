@@ -80,6 +80,39 @@ public class FileReadStatusRepository implements ReadStatusRepository {
     }
 
     @Override
+    public List<ReadStatus> findAllByUser_Id(UUID userId) {
+        return findAll().stream()
+                .filter(rs -> rs.getUser().getId().equals(userId))
+                .toList();
+    }
+
+    @Override
+    public List<ReadStatus> findAllByChannel_Id(UUID channelId) {
+        return findAll().stream()
+                .filter(rs -> rs.getChannel().getId().equals(channelId))
+                .toList();
+    }
+
+    @Override
+    public List<ReadStatus> findAllByChannel_IdIn(List<UUID> channelIds) {
+        return findAll().stream()
+                .filter(rs -> channelIds.contains(rs.getChannel().getId()))
+                .toList();
+    }
+
+    @Override
+    public Optional<ReadStatus> findByUser_IdAndChannel_Id(UUID userId, UUID channelId) {
+        return findAll().stream()
+                .filter(rs -> rs.getUser().getId().equals(userId) && rs.getChannel().getId().equals(channelId))
+                .findFirst();
+    }
+
+    @Override
+    public void deleteAllByChannel_Id(UUID channelId) {
+        findAllByChannel_Id(channelId).forEach(rs -> deleteById(rs.getId()));
+    }
+
+    @Override
     public void deleteById(UUID id) {
         try {
             Files.deleteIfExists(resolvePath(id));

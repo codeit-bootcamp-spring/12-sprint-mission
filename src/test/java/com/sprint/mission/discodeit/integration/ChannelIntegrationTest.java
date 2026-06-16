@@ -1,83 +1,112 @@
 package com.sprint.mission.discodeit.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.sprint.mission.discodeit.dto.data.ChannelDto;
-import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
-import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
-import com.sprint.mission.discodeit.service.ChannelService;
-import com.sprint.mission.discodeit.service.UserService;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 class ChannelIntegrationTest {
 
-  @Autowired ChannelService channelService;
-  @Autowired UserService userService;
+  @Autowired MockMvc mockMvc;
+  @Autowired ObjectMapper objectMapper;
 
-  @Test
-  @DisplayName("PUBLIC 채널 생성 및 조회 성공")
-  void createPublicChannel_success() {
-    ChannelDto created = channelService.create(
-        new PublicChannelCreateRequest("general", "General channel"));
+  private String createUser(String username, String email) throws Exception {
+    MockMultipartFile part = new MockMultipartFile(
+        "userCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
+        objectMapper.writeValueAsBytes(new UserCreateRequest(username, email, "password123!")));
+    MvcResult result = mockMvc.perform(multipart("/api/users").file(part))
+        .andExpect(status().isCreated())
+        .andReturn();
+    return objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asText();
+  }
 
-    assertThat(created).isNotNull();
-    assertThat(created.type()).isEqualTo(ChannelType.PUBLIC);
-    assertThat(created.name()).isEqualTo("general");
+  private String createPublicChannel(String name) throws Exception {
+    MvcResult result = mockMvc.perform(post("/api/channels/public")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new PublicChannelCreateRequest(name, null))))
+        .andExpect(status().isCreated())
+        .andReturn();
+    return objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asText();
   }
 
   @Test
-  @DisplayName("PRIVATE 채널 수정 시 예외 발생")
-  void updatePrivateChannel_throws() {
-    UserDto user = userService.create(
-        new UserCreateRequest("chuser", "chuser@email.com", "password123!"), Optional.empty());
-    ChannelDto privateChannel = channelService.create(
-        new PrivateChannelCreateRequest(List.of(user.id())));
-
-    assertThatThrownBy(() ->
-        channelService.update(privateChannel.id(),
-            new PublicChannelUpdateRequest("new name", "desc")))
-        .isInstanceOf(PrivateChannelUpdateException.class);
+  @DisplayName("POST /api/channels/public - PUBLIC 채널 생성 성공")
+  void createPublicChannel_success() throws Exception {
+    mockMvc.perform(post("/api/channels/public")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new PublicChannelCreateRequest("general", "General channel"))))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.type").value("PUBLIC"))
+        .andExpect(jsonPath("$.name").value("general"));
   }
 
   @Test
-  @DisplayName("채널 삭제 후 조회 시 404 예외 발생")
-  void deleteChannel_thenNotFound() {
-    ChannelDto created = channelService.create(
-        new PublicChannelCreateRequest("temp", null));
+  @DisplayName("POST /api/channels/private - PRIVATE 채널 수정 시 400 반환")
+  void updatePrivateChannel_returns400() throws Exception {
+    String userId = createUser("chuser", "chuser@email.com");
 
-    channelService.delete(created.id());
+    MvcResult result = mockMvc.perform(post("/api/channels/private")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new PrivateChannelCreateRequest(List.of(java.util.UUID.fromString(userId))))))
+        .andExpect(status().isCreated())
+        .andReturn();
+    String channelId = objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asText();
 
-    assertThatThrownBy(() -> channelService.find(created.id()))
-        .isInstanceOf(ChannelNotFoundException.class);
+    mockMvc.perform(patch("/api/channels/{channelId}", channelId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new PublicChannelUpdateRequest("new name", "desc"))))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("PRIVATE_CHANNEL_UPDATE"));
   }
 
   @Test
-  @DisplayName("userId로 채널 목록 조회 - PUBLIC 채널 포함")
-  void findAllByUserId_includesPublicChannels() {
-    UserDto user = userService.create(
-        new UserCreateRequest("listuser", "listuser@email.com", "password123!"), Optional.empty());
-    channelService.create(new PublicChannelCreateRequest("pub1", null));
-    channelService.create(new PublicChannelCreateRequest("pub2", null));
+  @DisplayName("DELETE /api/channels/{channelId} - 삭제 후 재삭제 시 404 반환")
+  void deleteChannel_thenNotFound() throws Exception {
+    String channelId = createPublicChannel("temp");
 
-    List<ChannelDto> channels = channelService.findAllByUserId(user.id());
-    assertThat(channels.stream().anyMatch(c -> c.type() == ChannelType.PUBLIC)).isTrue();
+    mockMvc.perform(delete("/api/channels/{channelId}", channelId))
+        .andExpect(status().isNoContent());
+
+    mockMvc.perform(delete("/api/channels/{channelId}", channelId))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value("CHANNEL_NOT_FOUND"));
+  }
+
+  @Test
+  @DisplayName("GET /api/channels?userId - PUBLIC 채널 포함 목록 조회 성공")
+  void findAllByUserId_includesPublicChannels() throws Exception {
+    String userId = createUser("listuser", "listuser@email.com");
+    createPublicChannel("pub1");
+    createPublicChannel("pub2");
+
+    mockMvc.perform(get("/api/channels").param("userId", userId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[?(@.type == 'PUBLIC')]").exists());
   }
 }
