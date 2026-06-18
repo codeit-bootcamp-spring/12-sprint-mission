@@ -9,11 +9,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     open-in-view: false
   profiles:
-    active:
-      - dev
+    active: dev
 
 management:
   endpoints:
