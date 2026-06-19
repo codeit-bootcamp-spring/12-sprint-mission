@@ -16,11 +16,6 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-discodeit:
-  storage:
-    type: local
-    local:
-      root-path: .discodeit/storage
 
 logging:
   level:
