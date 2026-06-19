@@ -2,10 +2,6 @@ server:
   port: 80
 
 spring:
-  boot:
-    admin:
-      client:
-        url: ${SPRING_BOOT_ADMIN_CLIENT_URL}
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/discodeit
     username: ${DB_USERNAME:discodeit_user}

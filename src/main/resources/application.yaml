@@ -9,11 +9,7 @@ spring:
       maxRequestSize: 30MB
   jpa:
     open-in-view: false
-  boot:
-    admin:
-      client:
-        instance:
-          name: discodeit
+
 
 management:
   endpoints:

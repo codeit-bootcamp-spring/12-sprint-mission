@@ -1,0 +1,37 @@
+services:
+  discodeit:
+    build: .                      # 로컬 Dockerfile에서 빌드
+    image: discodeit:local
+    ports:
+      - "8081:80"                 # 호스트 8081 → 컨테이너 80
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres           # postgres 서비스 이름으로 접속
+    volumes:
+      - storage-data:/var/discodeit/storage   # BinaryContentStorage 영속화
+    depends_on:
+      postgres:
+        condition: service_healthy            # DB 준비된 뒤 앱 기동
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"               # 호스트 로컬 Postgres(5432)와 안 겹치게 5433
+    volumes:
+      - postgres-data:/var/lib/postgresql/data                              # DB 데이터 영속화
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql  # 최초 기동 시 자동 실행
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  storage-data:
+  postgres-data:
