@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
   // 공통 예외 처리부
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
-    log.error("예상치 못한 오류 발생 : {}", e.getMessage());
-    ErrorResponse errorResponse = new ErrorResponse(e, 500);
+    log.error("예상치 못한 오류 발생 : {}", e.getMessage(), e);
+    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
     return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
   }
 
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleValidationException(
       MethodArgumentNotValidException e) {
-    log.error("요청 유효성 검사 실패 : {}", e.getMessage());
+    log.error("요청 유효성 검사 실패 : {}", e.getMessage(), e);
 
     Map<String, Object> validationErrors = new LinkedHashMap<>();
     e.getBindingResult().getAllErrors().forEach(error -> {

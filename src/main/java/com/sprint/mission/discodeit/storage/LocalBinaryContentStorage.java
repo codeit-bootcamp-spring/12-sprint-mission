@@ -25,7 +25,7 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
 
   private final Path DIRECTORY;
 
-  public LocalBinaryContentStorage(@Value("${discodeit.storage.root-path}") Path directory) {
+  public LocalBinaryContentStorage(@Value("${discodeit.storage.local.root-path}") Path directory) {
     this.DIRECTORY = directory;
   }
 
