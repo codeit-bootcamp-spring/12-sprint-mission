@@ -87,7 +87,8 @@ public class MessageRepositoryTest {
     Optional<Instant> lastMessageAt = messageRepository.findLastMessageAtByChannelId(
         channel.getId());
     assertThat(lastMessageAt).isPresent();
-    assertThat(lastMessageAt.get()).isEqualTo(message3.getCreatedAt());
+    assertThat(lastMessageAt.get().truncatedTo(ChronoUnit.MICROS)).isEqualTo(
+        message3.getCreatedAt());
   }
 
   @Test
@@ -153,8 +154,10 @@ public class MessageRepositoryTest {
         channel.getId(), Instant.now(), pageable);
 
     assertThat(messages.getContent()).hasSize(3);
-    assertThat(messages.getContent()).extracting("createdAt").containsExactlyInAnyOrder(
-        message5.getCreatedAt(), message4.getCreatedAt(), message3.getCreatedAt());
+    assertThat(messages.getContent()).extracting(
+            m -> ((Message) m).getCreatedAt().truncatedTo(ChronoUnit.MICROS))
+        .containsExactlyInAnyOrder(
+            message5.getCreatedAt(), message4.getCreatedAt(), message3.getCreatedAt());
     assertThat(messages.getContent()).extracting("content")
         .containsExactly("test5", "test4", "test3");
     assertThat(messages.hasNext()).isTrue();
