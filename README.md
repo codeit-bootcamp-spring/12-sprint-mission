@@ -1,1 +1,1 @@
-[![codecov](https://codecov.io/gh/seongjuun/12-sprint-mission/branch/main/graph/badge.svg)](https://codecov.io/gh/seongjuun/12-sprint-mission)
+[![codecov](https://codecov.io/gh/seongjuun/12-sprint-mission/graph/badge.svg?token=2DRIYVG39Q)](https://codecov.io/gh/seongjuun/12-sprint-mission)
