@@ -45,7 +45,7 @@ public class MessageRepositoryTest {
         .channel(channel)
         .content(content)
         .attachments(new ArrayList<>())
-        .createdAt(createdAt)
+        .createdAt(createdAt.truncatedTo(ChronoUnit.MICROS))
         .build();
     return messageRepository.save(message);
   }
@@ -73,7 +73,7 @@ public class MessageRepositoryTest {
   public void findLastMessageAtByChannelId() {
     User user = createUser("testUser", "test@test.com");
     Channel channel = createChannel(ChannelType.PUBLIC, "testChannel");
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MICROS);
     Instant fiveMinutesAgo = now.minus(5, ChronoUnit.MINUTES);
     Instant tenMinutesAgo = now.minus(10, ChronoUnit.MINUTES);
     Instant twentyMinutesAgo = now.minus(20, ChronoUnit.MINUTES);
@@ -133,7 +133,7 @@ public class MessageRepositoryTest {
   public void findMessagesByChannelIdBeforeCursor() {
     User user = createUser("testUser", "test@test.com");
     Channel channel = createChannel(ChannelType.PUBLIC, "testChannel");
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MICROS);
     Instant fiveMinutesAgo = now.minus(5, ChronoUnit.MINUTES);
     Instant tenMinutesAgo = now.minus(10, ChronoUnit.MINUTES);
     Instant twentyMinutesAgo = now.minus(20, ChronoUnit.MINUTES);
