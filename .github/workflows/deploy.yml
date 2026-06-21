@@ -83,6 +83,7 @@ jobs:
             --cluster "${{ vars.ECS_CLUSTER }}" \
             --service "${{ vars.ECS_SERVICE }}" \
             --desired-count 0
+            --region "${{ vars.AWS_REGION }}"
 
       - name: 기존 태스크 종료 대기
         run: |
