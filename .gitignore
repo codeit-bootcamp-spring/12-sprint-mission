@@ -47,3 +47,4 @@ log/
 
 ### Env ###
 .env
+discodeit.env
