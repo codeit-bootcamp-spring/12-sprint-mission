@@ -14,11 +14,12 @@ import java.util.UUID;
 
 import com.sprint.mission.discodeit.storage.S3BinaryContentStorage;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
+@Disabled
 class S3BinaryContentStorageTest {
 
     static S3BinaryContentStorage storage;

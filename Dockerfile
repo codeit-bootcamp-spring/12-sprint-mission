@@ -1,8 +1,13 @@
-# ---- Build stage: 소스를 받아서 Gradle Wrapper로 빌드 ----
 FROM amazoncorretto:17 AS builder
 WORKDIR /app
-COPY . .
-RUN chmod +x gradlew && ./gradlew clean build -x test
+
+COPY gradlew settings.gradle build.gradle ./
+COPY gradle gradle
+RUN chmod +x gradlew && ./gradlew dependencies --no-daemon || true
+
+COPY src src
+RUN ./gradlew clean build -x test --no-daemon
+
 
 # ---- Runtime stage: 빌드된 jar만 실행 ----
 FROM amazoncorretto:17
