@@ -23,3 +23,11 @@ management:
   info:
     env:
       enabled: false
+
+aws:
+  access-key: ${AWS_S3_ACCESS_KEY}
+  secret-key: ${AWS_S3_SECRET_KEY}
+  region: ${AWS_S3_REGION}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+    presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600}
