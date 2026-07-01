@@ -1,10 +1,6 @@
 package com.sprint.mission.discodeit.storage.local;
 
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
-import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentAlreadyExistException;
-import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentDownloadException;
-import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentNotFoundException;
-import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentUploadException;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
@@ -50,12 +46,12 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
   public UUID put(UUID binaryContentId, byte[] bytes) {
     Path filePath = resolvePath(binaryContentId);
     if (Files.exists(filePath)) {
-      throw new BinaryContentAlreadyExistException();
+      throw new IllegalArgumentException("File with key " + binaryContentId + " already exists");
     }
     try (OutputStream outputStream = Files.newOutputStream(filePath)) {
       outputStream.write(bytes);
     } catch (IOException e) {
-      throw BinaryContentUploadException.withId(binaryContentId);
+      throw new RuntimeException(e);
     }
     return binaryContentId;
   }
@@ -63,12 +59,13 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
   public InputStream get(UUID binaryContentId) {
     Path filePath = resolvePath(binaryContentId);
     if (Files.notExists(filePath)) {
-      throw BinaryContentNotFoundException.withId(binaryContentId);
+      throw new NoSuchElementException("File with key " + binaryContentId + " does not exist");
     }
     try {
       return Files.newInputStream(filePath);
     } catch (IOException e) {
-      throw BinaryContentDownloadException.withId(binaryContentId);
+      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 

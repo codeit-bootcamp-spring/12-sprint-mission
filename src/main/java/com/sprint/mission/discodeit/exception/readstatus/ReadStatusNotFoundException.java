@@ -8,21 +8,10 @@ public class ReadStatusNotFoundException extends ReadStatusException {
     public ReadStatusNotFoundException() {
         super(ErrorCode.READ_STATUS_NOT_FOUND);
     }
-
-    public ReadStatusNotFoundException(Throwable cause) {
-        super(ErrorCode.READ_STATUS_NOT_FOUND, cause);
-    }
-
-    public static ReadStatusNotFoundException withUserIdAndChannelId(UUID userId, UUID channelId) {
+    
+    public static ReadStatusNotFoundException withId(UUID readStatusId) {
         ReadStatusNotFoundException exception = new ReadStatusNotFoundException();
-        exception.addDetail("userId", userId);
-        exception.addDetail("channelId", channelId);
+        exception.addDetail("readStatusId", readStatusId);
         return exception;
     }
-
-    public static ReadStatusNotFoundException withId(UUID id) {
-        ReadStatusNotFoundException exception = new ReadStatusNotFoundException();
-        exception.addDetail("ReadStatusId", id);
-        return exception;
-    }
-}
+} 
