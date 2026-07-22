@@ -12,8 +12,7 @@ spring:
       ddl-auto: validate
     open-in-view: false
   profiles:
-    active:
-      - dev
+    active: dev
   config:
     import: optional:file:.env[.properties]
 
@@ -61,3 +60,4 @@ discodeit:
 logging:
   level:
     root: info
+    org.springframework.security : trace
