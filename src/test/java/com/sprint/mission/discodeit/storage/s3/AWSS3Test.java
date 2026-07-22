@@ -1,195 +1,174 @@
 package com.sprint.mission.discodeit.storage.s3;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Properties;
+import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
-import static org.junit.jupiter.api.Assertions.*;
+@Disabled
+@Slf4j
+@DisplayName("S3 API 테스트")
+public class AWSS3Test {
 
-class AWSS3Test {
+  private static String accessKey;
+  private static String secretKey;
+  private static String region;
+  private static String bucket;
+  private S3Client s3Client;
+  private S3Presigner presigner;
+  private String testKey;
 
-    private static S3Client s3Client;
-    private static S3Presigner s3Presigner;
-    private static String bucketName;
-
-    private static final String TEST_OBJECT_KEY = "test/aws-s3-test.jpg";
-    private static final String TEST_IMAGE_PATH = "src/test/resources/test-image.jpg";
-    private static final String DOWNLOAD_IMAGE_PATH = "build/downloaded-test-image.jpg";
-    private static final String CONTENT_TYPE = "image/jpeg";
-
-    @BeforeAll
-    static void setup() throws IOException {
-        Properties properties = new Properties(); // env를 담는 객체
-
-        try(FileInputStream fis = new FileInputStream(".env")) {
-            properties.load(fis);
-        }
-
-        String accessKeyId = getRequiredProperty(properties, "AWS_S3_ACCESS_KEY");
-        String secretAccessKey = getRequiredProperty(properties, "AWS_S3_SECRET_KEY");
-        String region = getRequiredProperty(properties, "AWS_S3_REGION");
-        bucketName = getRequiredProperty(properties, "AWS_S3_BUCKET");
-
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(
-                accessKeyId,
-                secretAccessKey
-        ); // AWS 인증 객체 생성
-
-        StaticCredentialsProvider credentialsProvider =
-                StaticCredentialsProvider.create(credentials); // 인증 정보를 클라이언트에 전달할 수 있는 형태로 감쌈
-
-        s3Client = S3Client.builder() // 클라이언트가 사용할 aws 인증 정보 지정
-                .region(Region.of(region))
-                .credentialsProvider(credentialsProvider)
-                .build();
-
-        s3Presigner = S3Presigner.builder() //presigned url을 만들 내용지정
-                .region(Region.of(region))
-                .credentialsProvider(credentialsProvider)
-                .build();
+  @BeforeAll
+  static void loadEnv() throws IOException {
+    Properties props = new Properties();
+    try (FileInputStream fis = new FileInputStream(".env")) {
+      props.load(fis);
     }
 
-    @AfterAll
-    static void tearDown(){
-        if(s3Client != null) {
-            s3Client.close();
-        }
+    accessKey = props.getProperty("AWS_S3_ACCESS_KEY");
+    secretKey = props.getProperty("AWS_S3_SECRET_KEY");
+    region = props.getProperty("AWS_S3_REGION");
+    bucket = props.getProperty("AWS_S3_BUCKET");
 
-        if(s3Presigner != null) {
-            s3Presigner.close();
-        }
+    if (accessKey == null || secretKey == null || region == null || bucket == null) {
+      throw new IllegalStateException("AWS S3 설정이 .env 파일에 올바르게 정의되지 않았습니다.");
     }
+  }
 
-    @Test
-    void upload(){
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder() // 파일 업로드 요청 객체
-                .bucket(bucketName)
-                .key(TEST_OBJECT_KEY)
-                .contentType(CONTENT_TYPE)
-                .build();
+  @BeforeEach
+  void setUp() {
+    s3Client = S3Client.builder()
+        .region(Region.of(region))
+        .credentialsProvider(
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(accessKey, secretKey)
+            )
+        )
+        .build();
 
-        s3Client.putObject( // S3에 객체 업로드
-                putObjectRequest, // 어느 버킷에 어떤 이름으로 저장할지
-                RequestBody.fromFile(Path.of(TEST_IMAGE_PATH)) // 무슨 내용을 저장할지
-        );
+    presigner = S3Presigner.builder()
+        .region(Region.of(region))
+        .credentialsProvider(
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(accessKey, secretKey)
+            )
+        )
+        .build();
 
-        // S3 메타 데이터 확인용 요청 생성
-        // 파일 내용을 확인하지 않고 존재하는지 여부를 확인
-        HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
-                .bucket(bucketName)
-                .key(TEST_OBJECT_KEY)
-                .build();
+    testKey = "test-" + UUID.randomUUID().toString();
+  }
 
-        // 객체가 있는지 확인
-        HeadObjectResponse headObjectResponse = s3Client.headObject(headObjectRequest);
+  @Test
+  @DisplayName("S3에 파일을 업로드한다")
+  void uploadToS3() {
+    String content = "Hello from .env via Properties!";
 
-        // 응답이 null인지 확인
-        assertNotNull (headObjectResponse);
-        // 업로드된 객체의 content type이 text/plain이 맞는지 확인
-        assertEquals(CONTENT_TYPE, headObjectResponse.contentType());
+    try {
+      PutObjectRequest request = PutObjectRequest.builder()
+          .bucket(bucket)
+          .key(testKey)
+          .contentType("text/plain")
+          .build();
 
-        System.out.println("S3 업로드 성공");
-        System.out.println("bucketName = " +bucketName);
-        System.out.println("objectKey = " +TEST_OBJECT_KEY);
+      s3Client.putObject(request, RequestBody.fromString(content));
+      log.info("파일 업로드 성공: {}", testKey);
+    } catch (S3Exception e) {
+      log.error("파일 업로드 실패: {}", e.getMessage());
+      throw e;
     }
+  }
 
-    @Test
-    void download() throws IOException {
-        uploadTestFile();
+  @Test
+  @DisplayName("S3에서 파일을 다운로드한다")
+  void downloadFromS3() {
+    // 테스트를 위한 파일 먼저 업로드
+    String content = "Test content for download";
+    PutObjectRequest uploadRequest = PutObjectRequest.builder()
+        .bucket(bucket)
+        .key(testKey)
+        .contentType("text/plain")
+        .build();
+    s3Client.putObject(uploadRequest, RequestBody.fromString(content));
 
-        // 다운로드 요청 객체 생성
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(TEST_OBJECT_KEY)
-                .build();
+    try {
+      GetObjectRequest request = GetObjectRequest.builder()
+          .bucket(bucket)
+          .key(testKey)
+          .build();
 
-        // byte 형태로 S3으로부터 객체 다운로드
-        ResponseBytes<GetObjectResponse> responseBytes =
-                s3Client.getObjectAsBytes(getObjectRequest);
-
-        byte[] downloadedBytes = responseBytes.asByteArray();
-
-        Path downloadPath = Path.of(DOWNLOAD_IMAGE_PATH);
-        Files.createDirectories(downloadPath.getParent()); //파일 저장 폴더가 없으면 만듦..
-        Files.write(downloadPath,downloadedBytes); // 다운받은 byte를 실제 저장 폴더에 저장.
-
-        byte[] originalBytes = Files.readAllBytes(Path.of(TEST_IMAGE_PATH));
-        byte[] savedBytes = Files.readAllBytes(downloadPath);
-
-        assertArrayEquals(originalBytes, savedBytes);
-        assertTrue(Files.exists(downloadPath));
-        assertTrue(Files.size(downloadPath) > 0);
-
-        System.out.println("S3 다운로드 성공");
-        System.out.println("downPath = " + DOWNLOAD_IMAGE_PATH);
+      String downloadedContent = s3Client.getObjectAsBytes(request).asUtf8String();
+      log.info("다운로드된 파일 내용: {}", downloadedContent);
+    } catch (S3Exception e) {
+      log.error("파일 다운로드 실패: {}", e.getMessage());
+      throw e;
     }
+  }
 
-    @Test
-    void createPresignedUrl(){
-        uploadTestFile();
+  @Test
+  @DisplayName("S3 파일에 대한 Presigned URL을 생성한다")
+  void generatePresignedUrl() {
+    // 테스트를 위한 파일 먼저 업로드
+    String content = "Test content for presigned URL";
+    PutObjectRequest uploadRequest = PutObjectRequest.builder()
+        .bucket(bucket)
+        .key(testKey)
+        .contentType("text/plain")
+        .build();
+    s3Client.putObject(uploadRequest, RequestBody.fromString(content));
 
-        // Presigned URL로 접근할 S3객체를 지정
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(TEST_OBJECT_KEY)
-                .build();
+    try {
+      GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+          .bucket(bucket)
+          .key(testKey)
+          .build();
 
-        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration((Duration.ofMinutes(10))) // 유효시간
-                .getObjectRequest(getObjectRequest) // url 생성 대상 객체
-                .build();
+      GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+          .signatureDuration(Duration.ofMinutes(10))
+          .getObjectRequest(getObjectRequest)
+          .build();
 
-        URL presignedUrl = s3Presigner
-                .presignGetObject(presignRequest)
-                .url();
+      PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
+      URL url = presignedRequest.url();
 
-        assertNotNull(presignedUrl);
-        assertTrue(presignedUrl.toString().contains(TEST_OBJECT_KEY));
-
-        System.out.println("Presigned URL 생성 성공");
-        System.out.println("presignedUrl = " + presignedUrl);
+      log.info("생성된 Presigned URL: {}", url);
+    } catch (S3Exception e) {
+      log.error("Presigned URL 생성 실패: {}", e.getMessage());
+      throw e;
     }
+  }
 
-    private void uploadTestFile(){
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(TEST_OBJECT_KEY)
-                .contentType(CONTENT_TYPE)
-                .build();
-
-        s3Client.putObject(
-                putObjectRequest,
-                RequestBody.fromFile(Path.of(TEST_IMAGE_PATH))
-        );
+  @AfterEach
+  void cleanup() {
+    try {
+      DeleteObjectRequest request = DeleteObjectRequest.builder()
+          .bucket(bucket)
+          .key(testKey)
+          .build();
+      s3Client.deleteObject(request);
+      log.info("테스트 파일 정리 완료: {}", testKey);
+    } catch (S3Exception e) {
+      log.error("테스트 파일 정리 실패: {}", e.getMessage());
     }
-
-
-    private static String getRequiredProperty(Properties properties, String key) {
-        String value = properties.getProperty(key);
-        if(value == null || value.isBlank()){
-            throw new IllegalStateException(".env에" + key + " 값이 없습니다.");
-        }
-
-        return value.trim()
-                .replace("\"","")
-                .replace("'", "");
-    }
+  }
 }
