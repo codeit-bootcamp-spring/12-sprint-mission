@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class AuthController implements AuthApi {
     return ResponseEntity.status(HttpStatus.OK).body(userDetails.getUserDto());
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/role")
   public ResponseEntity<UserDto> updateRole(@RequestBody UserRoleUpdateRequest userRoleUpdateRequest){
     log.info("사용자 권한 수정");
