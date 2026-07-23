@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.AuthApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,12 @@ public class AuthController implements AuthApi {
   public ResponseEntity<UserDto> getCurrentUser(@AuthenticationPrincipal DiscodeitUserDetails userDetails){
     log.info("내 정보 조회");
     return ResponseEntity.status(HttpStatus.OK).body(userDetails.getUserDto());
+  }
+
+  @PutMapping("/role")
+  public ResponseEntity<UserDto> updateRole(@RequestBody UserRoleUpdateRequest userRoleUpdateRequest){
+    log.info("사용자 권한 수정");
+    UserDto updatedRoleUser = authService.updateRole(userRoleUpdateRequest);
+    return ResponseEntity.status(HttpStatus.OK).body(updatedRoleUser);
   }
 }
