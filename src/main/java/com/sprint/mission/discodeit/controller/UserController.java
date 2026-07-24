@@ -2,13 +2,10 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.UserApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
-import com.sprint.mission.discodeit.dto.data.UserStatusDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.UserStatusService;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController implements UserApi {
 
   private final UserService userService;
-  private final UserStatusService userStatusService;
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Override
@@ -84,17 +80,6 @@ public class UserController implements UserApi {
     List<UserDto> users = userService.findAll();
     log.info("User 목록 조회 응답: userCount={}", users.size());
     return ResponseEntity.ok(users);
-  }
-
-  @PatchMapping("/{userId}/userStatus")
-  @Override
-  public ResponseEntity<UserStatusDto> updateStatus(
-      @PathVariable UUID userId,
-      @RequestBody @Valid UserStatusUpdateRequest request) {
-    log.debug("UserStatus 업데이트 요청: userId={}, request={}", userId, request);
-    UserStatusDto userStatus = userStatusService.updateByUserId(userId, request);
-    log.info("UserStatus 업데이트 응답: userId={}, newStatus={}", userId, userStatus);
-    return ResponseEntity.ok(userStatus);
   }
 
   private BinaryContentCreateRequest resolveProfileRequest(MultipartFile file) {

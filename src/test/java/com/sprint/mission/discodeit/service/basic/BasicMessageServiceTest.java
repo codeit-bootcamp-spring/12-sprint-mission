@@ -19,6 +19,7 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
@@ -102,9 +103,9 @@ public class BasicMessageServiceTest {
     channel = new Channel(ChannelType.PUBLIC, "test channel", "test description");
     ReflectionTestUtils.setField(channel, "id", channelId);
 
-    author = new User("testauthor", "test@test.com", "password1234!", null);
+    author = new User("testauthor", "test@test.com", "password1234!", null, Role.USER);
     ReflectionTestUtils.setField(author, "id", authorId);
-    authorDto = new UserDto(authorId, "testauthor", "test@test.com", null, true);
+    authorDto = new UserDto(authorId, "testauthor", "test@test.com", null, true, Role.USER);
 
     binaryContent = new BinaryContent("testfile.png", 1000L, "image/png");
     ReflectionTestUtils.setField(binaryContent, "id", binaryContentId);

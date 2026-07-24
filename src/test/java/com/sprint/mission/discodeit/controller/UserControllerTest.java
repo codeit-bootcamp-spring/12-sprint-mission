@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,14 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.f4b6a3.uuid.UuidCreator;
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
-import com.sprint.mission.discodeit.dto.data.UserStatusDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.UserStatusService;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -51,9 +47,6 @@ class UserControllerTest {
   private UserService userService;
 
   @MockitoBean
-  private UserStatusService userStatusService;
-
-  @MockitoBean
   private JpaMetamodelMappingContext jpaMetamodelMappingContext;
 
   // ── create ──────────────────────────────────────────────────────────────
@@ -64,7 +57,8 @@ class UserControllerTest {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
     BinaryContentDto avatarDto = new BinaryContentDto(UuidCreator.getTimeOrderedEpoch(),
         "avatar.png", 1024L, "image/png");
-    UserDto userDto = new UserDto(userId, "testUser", "test@test.com", avatarDto, false);
+    UserDto userDto = new UserDto(userId, "testUser", "test@test.com", avatarDto, false,
+        Role.USER);
     given(userService.create(any(UserCreateRequest.class), any())).willReturn(userDto);
 
     MockMultipartFile requestPart = new MockMultipartFile(
@@ -100,7 +94,8 @@ class UserControllerTest {
   @DisplayName("사용자 수정 성공 - 200")
   void update() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
-    UserDto updatedUser = new UserDto(userId, "updatedUser", "updated@test.com", null, false);
+    UserDto updatedUser = new UserDto(userId, "updatedUser", "updated@test.com", null, false,
+        Role.USER);
     given(userService.update(eq(userId), any(UserUpdateRequest.class), any())).willReturn(
         updatedUser);
 
@@ -170,7 +165,7 @@ class UserControllerTest {
   @DisplayName("사용자 목록 조회 성공 - 200")
   void findAll() throws Exception {
     UUID userId = UuidCreator.getTimeOrderedEpoch();
-    UserDto userDto = new UserDto(userId, "testUser", "test@test.com", null, true);
+    UserDto userDto = new UserDto(userId, "testUser", "test@test.com", null, true, Role.USER);
     given(userService.findAll()).willReturn(List.of(userDto));
 
     mockMvc.perform(get("/api/users"))
@@ -187,37 +182,5 @@ class UserControllerTest {
     mockMvc.perform(get("/api/users"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isEmpty());
-  }
-
-  // ── updateStatus ─────────────────────────────────────────────────────────
-
-  @Test
-  @DisplayName("사용자 상태 업데이트 성공 - 200")
-  void updateStatus() throws Exception {
-    UUID userId = UuidCreator.getTimeOrderedEpoch();
-    Instant now = Instant.now();
-    UserStatusDto statusDto = new UserStatusDto(UuidCreator.getTimeOrderedEpoch(), userId, now);
-    given(userStatusService.updateByUserId(eq(userId),
-        any(UserStatusUpdateRequest.class))).willReturn(statusDto);
-
-    mockMvc.perform(patch("/api/users/{userId}/userStatus", userId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(new UserStatusUpdateRequest(now))))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.userId").value(userId.toString()));
-  }
-
-  @Test
-  @DisplayName("사용자 상태 업데이트 실패 - 404 (존재하지 않는 사용자)")
-  void updateStatus_notFound() throws Exception {
-    UUID userId = UuidCreator.getTimeOrderedEpoch();
-    given(userStatusService.updateByUserId(eq(userId), any(UserStatusUpdateRequest.class)))
-        .willThrow(UserNotFoundException.withId(userId));
-
-    mockMvc.perform(patch("/api/users/{userId}/userStatus", userId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(new UserStatusUpdateRequest(Instant.now()))))
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.code").value("USER_NOT_FOUND"));
   }
 }

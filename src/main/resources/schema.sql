@@ -28,7 +28,8 @@ CREATE TABLE "users"
     "username"   varchar(50)              NOT NULL UNIQUE, -- UK, NN
     "email"      varchar(100)             NOT NULL UNIQUE, -- UK, NN
     "password"   varchar(60)              NOT NULL,
-    "profile_id" UUID UNIQUE              NULL             -- UK, FK 지정 예정 (탈퇴 시 NULL 처리를 위해 NULL 허용)
+    "profile_id" UUID UNIQUE              NULL,            -- UK, FK 지정 예정 (탈퇴 시 NULL 처리를 위해 NULL 허용)
+    "role"       varchar(20)              NOT NULL
 );
 
 CREATE TABLE "channels"
@@ -56,15 +57,6 @@ CREATE TABLE "message_attachments"
     "message_id"    UUID NOT NULL,
     "attachment_id" UUID NOT NULL UNIQUE,
     PRIMARY KEY ("message_id", "attachment_id")
-);
-
-CREATE TABLE "user_statuses"
-(
-    "id"             UUID PRIMARY KEY,
-    "created_at"     timestamp with time zone NOT NULL,
-    "updated_at"     timestamp with time zone NULL,
-    "user_id"        UUID                     NOT NULL UNIQUE, -- 1:1 관계를 위한 UK
-    "last_active_at" timestamp with time zone NOT NULL
 );
 
 CREATE TABLE "read_statuses"
@@ -101,11 +93,6 @@ ALTER TABLE "message_attachments"
 ALTER TABLE "message_attachments"
     ADD CONSTRAINT "FK_ma_attachment_id"
         FOREIGN KEY ("attachment_id") REFERENCES "binary_contents" ("id") ON DELETE CASCADE;
-
--- user_statuses 테이블
-ALTER TABLE "user_statuses"
-    ADD CONSTRAINT "FK_us_user_id"
-        FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE;
 
 -- read_statuses 테이블
 ALTER TABLE "read_statuses"

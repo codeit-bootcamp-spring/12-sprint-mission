@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.integration;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -22,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@WithMockUser(roles = "ADMIN")
 @Transactional
 class MessageApiIntegrationTest {
 
@@ -59,7 +62,8 @@ class MessageApiIntegrationTest {
 
     mockMvc.perform(multipart("/api/messages")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.content").value("안녕하세요!"))
         .andExpect(jsonPath("$.channelId").value(channelId));
@@ -78,7 +82,8 @@ class MessageApiIntegrationTest {
 
     mockMvc.perform(multipart("/api/messages")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isBadRequest());
   }
 
@@ -91,7 +96,7 @@ class MessageApiIntegrationTest {
     String channelId = createChannel("update-msg-channel");
     String messageId = createMessage("원본 내용", channelId, userId);
 
-    mockMvc.perform(patch("/api/messages/{messageId}", messageId)
+    mockMvc.perform(patch("/api/messages/{messageId}", messageId).with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
                 new MessageUpdateRequest("수정된 내용"))))
@@ -102,7 +107,7 @@ class MessageApiIntegrationTest {
   @Test
   @DisplayName("메시지 수정 실패 - 404 (존재하지 않는 메시지)")
   void update_notFound() throws Exception {
-    mockMvc.perform(patch("/api/messages/{messageId}", UUID.randomUUID())
+    mockMvc.perform(patch("/api/messages/{messageId}", UUID.randomUUID()).with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
                 new MessageUpdateRequest("수정 내용"))))
@@ -118,14 +123,14 @@ class MessageApiIntegrationTest {
     String channelId = createChannel("delete-msg-channel");
     String messageId = createMessage("삭제할 메시지", channelId, userId);
 
-    mockMvc.perform(delete("/api/messages/{messageId}", messageId))
+    mockMvc.perform(delete("/api/messages/{messageId}", messageId).with(csrf()))
         .andExpect(status().isNoContent());
   }
 
   @Test
   @DisplayName("메시지 삭제 실패 - 404 (존재하지 않는 메시지)")
   void delete_notFound() throws Exception {
-    mockMvc.perform(delete("/api/messages/{messageId}", UUID.randomUUID()))
+    mockMvc.perform(delete("/api/messages/{messageId}", UUID.randomUUID()).with(csrf()))
         .andExpect(status().isNotFound());
   }
 
@@ -168,7 +173,8 @@ class MessageApiIntegrationTest {
 
     MvcResult result = mockMvc.perform(multipart("/api/users")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andReturn();
 
@@ -177,7 +183,7 @@ class MessageApiIntegrationTest {
   }
 
   private String createChannel(String name) throws Exception {
-    MvcResult result = mockMvc.perform(post("/api/channels/public")
+    MvcResult result = mockMvc.perform(post("/api/channels/public").with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(
                 new PublicChannelCreateRequest(name, null))))
@@ -197,7 +203,8 @@ class MessageApiIntegrationTest {
 
     MvcResult result = mockMvc.perform(multipart("/api/messages")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andReturn();
 

@@ -3,9 +3,8 @@ package com.sprint.mission.discodeit.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -27,12 +26,7 @@ public class UserRepositoryTest {
 
   private User createUser(String username, String email) {
     BinaryContent profile = new BinaryContent(username + ".jpg", 1024L, "image/png");
-    User user = new User(username, email, "password1234!", profile);
-    UserStatus status = UserStatus.builder()
-        .user(user)
-        .lastActiveAt(Instant.now())
-        .build();
-    user.setUserStatus(status);
+    User user = new User(username, email, "password1234!", profile, Role.USER);
     return userRepository.save(user);
   }
 
@@ -115,10 +109,9 @@ public class UserRepositoryTest {
     em.flush();
     em.clear();
 
-    List<User> users = userRepository.findAllWithProfileAndUserStatus();
+    List<User> users = userRepository.findAllWithProfile();
     assertThat(users).hasSize(2);
     assertThat(users.get(0).getProfile()).isNotNull();
-    assertThat(users.get(0).getUserStatus()).isNotNull();
     assertThat(users).extracting(User::getUsername)
         .containsExactlyInAnyOrder("testUser1", "testUser2");
   }

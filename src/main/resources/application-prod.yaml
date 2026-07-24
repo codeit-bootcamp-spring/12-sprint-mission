@@ -1,10 +1,13 @@
 server:
-  port: 80
+  port: 8080
 spring:
   config:
     activate:
       on-profile: prod
-
+  #  sql:
+  #    init:
+  #      mode: always
+  #      schema-locations: classpath:schema.sql
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver

@@ -2,13 +2,17 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.AuthApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
-import com.sprint.mission.discodeit.dto.request.LoginRequest;
+import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.AuthService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +25,24 @@ public class AuthController implements AuthApi {
 
   private final AuthService authService;
 
-  @PostMapping("/login")
+  @GetMapping("/csrf-token")
+  public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken) {
+    String tokenValue = csrfToken.getToken();
+    log.debug("CSRF 토큰 요청: {}", tokenValue);
+    return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(null);
+  }
+
   @Override
-  public ResponseEntity<UserDto> login(@RequestBody @Valid LoginRequest loginRequest) {
-    log.debug("로그인 요청: {}", loginRequest);
-    UserDto user = authService.login(loginRequest);
-    log.info("로그인 응답: userId={}", user.id());
-    return ResponseEntity.ok(user);
+  @GetMapping("/me")
+  public ResponseEntity<UserDto> me(@AuthenticationPrincipal DiscodeitUserDetails userDetails) {
+    log.debug("내정보 조회");
+    return ResponseEntity.status(HttpStatus.OK).body(userDetails.getUserDto());
+  }
+
+  @Override
+  @PutMapping("/role")
+  public ResponseEntity<UserDto> updateRole(@RequestBody UserRoleUpdateRequest request) {
+    log.debug("역할 수정");
+    return ResponseEntity.ok(authService.updateRole(request));
   }
 }

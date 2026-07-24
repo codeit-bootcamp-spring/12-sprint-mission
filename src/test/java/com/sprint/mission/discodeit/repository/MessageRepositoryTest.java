@@ -6,8 +6,8 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -52,12 +52,7 @@ public class MessageRepositoryTest {
 
   private User createUser(String username, String email) {
     BinaryContent profile = new BinaryContent(username + ".jpg", 1024L, "image/png");
-    User user = new User(username, email, "password1234!", profile);
-    UserStatus status = UserStatus.builder()
-        .user(user)
-        .lastActiveAt(Instant.now())
-        .build();
-    user.setUserStatus(status);
+    User user = new User(username, email, "password1234!", profile, Role.USER);
     return userRepository.save(user);
   }
 

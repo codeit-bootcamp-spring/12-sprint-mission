@@ -16,6 +16,7 @@ import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
@@ -28,6 +29,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,6 +62,11 @@ public class BasicChannelServiceTest {
   @Mock
   private ChannelMapper channelMapper;
 
+  private final RoleHierarchy roleHierarchy = RoleHierarchyImpl.withDefaultRolePrefix()
+      .role("ADMIN").implies("CHANNEL_MANAGER")
+      .role("CHANNEL_MANAGER").implies("USER")
+      .build();
+
   @InjectMocks
   private BasicChannelService channelService;
 
@@ -74,10 +86,20 @@ public class BasicChannelServiceTest {
     name = "Test Channel";
     description = "This is a test channel.";
     now = Instant.now();
-    user = new User("testUser", "test@test.com", "password1234!", null);
+    user = new User("testUser", "test@test.com", "password1234!", null, Role.USER);
     channel = new Channel(ChannelType.PUBLIC, name, description);
     ReflectionTestUtils.setField(channel, "id", channelId);
     channelDto = new ChannelDto(channelId, ChannelType.PUBLIC, name, description, List.of(), now);
+
+    SecurityContextHolder.getContext().setAuthentication(
+        new TestingAuthenticationToken(userId, null,
+            List.of(new SimpleGrantedAuthority("ROLE_CHANNEL_MANAGER"))));
+    ReflectionTestUtils.setField(channelService, "roleHierarchy", roleHierarchy);
+  }
+
+  @AfterEach
+  public void tearDown() {
+    SecurityContextHolder.clearContext();
   }
 
   // ── create ──────────────────────────────────────────────────────────────
