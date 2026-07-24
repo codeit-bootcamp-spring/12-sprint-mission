@@ -1,3 +1,10 @@
+/*DROP TABLE IF EXISTS message_attachments CASCADE;
+DROP TABLE IF EXISTS read_statuses CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS channels CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS binary_contents CASCADE;*/
+
 -- 테이블
 -- User
 CREATE TABLE users
@@ -9,7 +16,7 @@ CREATE TABLE users
     email      varchar(100) UNIQUE      NOT NULL,
     password   varchar(60)              NOT NULL,
     profile_id uuid,
-    role       varchar(20)              NOT NULL
+    role       varchar(20)              NOT NULL DEFAULT 'USER'
 );
 
 -- BinaryContent
@@ -21,16 +28,6 @@ CREATE TABLE binary_contents
     size         bigint                   NOT NULL,
     content_type varchar(100)             NOT NULL
 --     ,bytes        bytea        NOT NULL
-);
-
--- UserStatus
-CREATE TABLE user_statuses
-(
-    id             uuid PRIMARY KEY,
-    created_at     timestamp with time zone NOT NULL,
-    updated_at     timestamp with time zone,
-    user_id        uuid UNIQUE              NOT NULL,
-    last_active_at timestamp with time zone NOT NULL
 );
 
 -- Channel
@@ -83,9 +80,6 @@ ALTER TABLE users
         FOREIGN KEY (profile_id)
             REFERENCES binary_contents (id)
             ON DELETE SET NULL;
-
-ALTER TABLE users
-    ADD role varchar(20) NOT NULL;
 
 -- UserStatus (1) -> User (1)
 ALTER TABLE user_statuses

@@ -2,12 +2,8 @@ package com.sprint.mission.discodeit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.sprint.mission.discodeit.entity.BinaryContent;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.ReadStatus;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.entity.*;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -45,9 +41,7 @@ class ReadStatusRepositoryTest {
    */
   private User createTestUser(String username, String email) {
     BinaryContent profile = new BinaryContent("profile.jpg", 1024L, "image/jpeg");
-    User user = new User(username, email, "password123!@#", profile);
-    // UserStatus 생성 및 연결
-    UserStatus status = new UserStatus(user, Instant.now());
+    User user = new User(username, email, "password123!@#", profile, Role.USER);
     return userRepository.save(user);
   }
 
@@ -116,7 +110,6 @@ class ReadStatusRepositoryTest {
     // 사용자 정보가 함께 로드되었는지 확인 (FETCH JOIN)
     for (ReadStatus status : readStatuses) {
       assertThat(Hibernate.isInitialized(status.getUser())).isTrue();
-      assertThat(Hibernate.isInitialized(status.getUser().getStatus())).isTrue();
       assertThat(Hibernate.isInitialized(status.getUser().getProfile())).isTrue();
     }
   }

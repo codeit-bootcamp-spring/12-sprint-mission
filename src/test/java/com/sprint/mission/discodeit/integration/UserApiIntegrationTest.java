@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.service.UserService;
 import java.time.Instant;
@@ -267,9 +266,7 @@ class UserApiIntegrationTest {
     UUID userId = createdUser.id();
 
     Instant newLastActiveAt = Instant.now();
-    UserStatusUpdateRequest statusUpdateRequest = new UserStatusUpdateRequest(
-        newLastActiveAt
-    );
+
     String requestBody = objectMapper.writeValueAsString(statusUpdateRequest);
 
     // When & Then
@@ -285,9 +282,6 @@ class UserApiIntegrationTest {
   void updateUserStatus_Failure_UserNotFound() throws Exception {
     // Given
     UUID nonExistentUserId = UUID.randomUUID();
-    UserStatusUpdateRequest statusUpdateRequest = new UserStatusUpdateRequest(
-        Instant.now()
-    );
     String requestBody = objectMapper.writeValueAsString(statusUpdateRequest);
 
     // When & Then

@@ -8,15 +8,21 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,17 +32,33 @@ public class BasicAuthService implements AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    @Value("${discodeit.admin.username") String username;
-    @Value("${discodeit.admin.email") String email;
-    @Value("${discodeit.admin.password") String password;
+    private final SessionRegistry sessionRegistry;
+
+    @Value("${discodeit.admin.username}") String username;
+    @Value("${discodeit.admin.email}") String email;
+    @Value("${discodeit.admin.password}") String password;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDto updateRole(UserRoleUpdateRequest request) {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(UserNotFoundException::new);
+        UUID userId = user.getId();
 
         user.updateRole(request.newRole());
 
+        sessionRegistry.getAllPrincipals().stream()
+                .filter(DiscodeitUserDetails.class::isInstance)
+                .map(DiscodeitUserDetails.class::cast)
+                .filter(principal ->
+                        principal.getUserDto().id().equals(userId)
+                )
+                .flatMap(principal ->
+                        sessionRegistry
+                                .getAllSessions(principal,false) // false : 만료된 세션 포함 X
+                                .stream()
+                )
+                .forEach(SessionInformation::expireNow); // 전부 만료시킴
         return userMapper.toDto(user);
     }
 

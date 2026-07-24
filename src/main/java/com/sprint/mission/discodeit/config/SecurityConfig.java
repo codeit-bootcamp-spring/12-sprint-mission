@@ -17,6 +17,8 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,21 +26,23 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            LoginSuccessHandler loginSuccessHandler,
-                                           LoginFailureHandler loginFailureHandler
+                                           LoginFailureHandler loginFailureHandler,
+                                           SessionRegistry sessionRegistry
     ) throws Exception {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/error","/index.html","/favicon.ico").permitAll()
+                        .requestMatchers("/","/error","/index.html","/favicon.ico","/assets/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/auth/logout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/auth/csrf-token").permitAll()
@@ -62,8 +66,14 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                         .accessDeniedHandler(new AccessDeniedHandlerImpl())
                 )
-        .build();
-
+                .sessionManagement(management -> management
+                        .sessionConcurrency(concurrency -> concurrency
+                                .maximumSessions(1)
+                                .maxSessionsPreventsLogin(true)
+                                .sessionRegistry(sessionRegistry)
+                        )
+                )
+        ;
         return http.build();
     }
 
@@ -90,8 +100,19 @@ public class SecurityConfig {
     @Bean
     static MethodSecurityExpressionHandler methodSecurityExpressionHandler(
             RoleHierarchy roleHierarchy){
-        DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler()
+        DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
         handler.setRoleHierarchy(roleHierarchy);
         return handler;
+    }
+
+    // 세션 만료 혹은 제거시 이벤트 발행 && sessionregistry가 세션을 정리할 수 있게 함.
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher(){
+        return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry(){
+        return new SessionRegistryImpl();
     }
 }
