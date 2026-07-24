@@ -55,7 +55,7 @@ class BasicUserServiceTest {
 
     user = new User(username, email, password, null, Role.USER);
     ReflectionTestUtils.setField(user, "id", userId);
-    userDto = new UserDto(userId, username, email, null, Role.USER);
+    userDto = new UserDto(userId, username, email, null, true, Role.USER);
   }
 
   @Test

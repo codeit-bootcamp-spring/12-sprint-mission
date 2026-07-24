@@ -107,7 +107,7 @@ class ChannelControllerTest {
     List<UserDto> participants = new ArrayList<>();
     for (UUID userId : participantIds) {
       participants.add(new UserDto(userId, "user-" + userId.toString().substring(0, 5),
-          "user" + userId.toString().substring(0, 5) + "@example.com", null, Role.USER));
+          "user" + userId.toString().substring(0, 5) + "@example.com", null, true, Role.USER));
     }
 
     ChannelDto createdChannel = new ChannelDto(
@@ -254,7 +254,7 @@ class ChannelControllerTest {
             ChannelType.PRIVATE,
             null,
             null,
-            List.of(new UserDto(userId, "user1", "user1@example.com", null, Role.USER)),
+            List.of(new UserDto(userId, "user1", "user1@example.com", null, true,Role.USER)),
             Instant.now().minusSeconds(3600)
         )
     );

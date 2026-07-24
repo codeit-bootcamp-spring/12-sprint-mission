@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
+import com.sprint.mission.discodeit.service.OnlineStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OnlineStatusService {
+public class BasicOnlineStatusService implements OnlineStatusService {
 
     private final SessionRegistry sessionRegistry;
 
@@ -34,7 +35,7 @@ public class OnlineStatusService {
                 .anyMatch(this::hasActiveSession);
     }
 
-    private boolean hasActiveSession(DiscodeitUserDetails principal) {
+    public boolean hasActiveSession(DiscodeitUserDetails principal) {
         return !sessionRegistry
                 .getAllSessions(principal, false)
                 .isEmpty();

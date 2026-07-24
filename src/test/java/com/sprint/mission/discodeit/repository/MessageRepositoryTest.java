@@ -82,17 +82,8 @@ class MessageRepositoryTest {
   @DisplayName("채널 ID와 생성 시간으로 메시지를 페이징하여 조회할 수 있다")
   void findAllByChannelIdWithAuthor_ReturnsMessagesWithAuthor() {
     // given
-    User user = createTestUser("testUser", "test@example.com");
     Channel channel = createTestChannel(ChannelType.PUBLIC, "테스트채널");
-
     Instant now = Instant.now();
-    Instant fiveMinutesAgo = now.minus(5, ChronoUnit.MINUTES);
-    Instant tenMinutesAgo = now.minus(10, ChronoUnit.MINUTES);
-
-    // 채널에 세 개의 메시지 생성 (시간 순서대로)
-    Message message1 = createTestMessage("첫 번째 메시지", channel, user, tenMinutesAgo);
-    Message message2 = createTestMessage("두 번째 메시지", channel, user, fiveMinutesAgo);
-    Message message3 = createTestMessage("세 번째 메시지", channel, user, now);
 
     // 영속성 컨텍스트 초기화
     entityManager.flush();
