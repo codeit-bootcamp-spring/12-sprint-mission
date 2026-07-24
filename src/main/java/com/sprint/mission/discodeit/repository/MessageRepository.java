@@ -30,4 +30,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
   Optional<Instant> findLastMessageAtByChannelId(@Param("channelId") UUID channelId);
 
   void deleteAllByChannelId(UUID channelId);
+
+  boolean existsByIdAndAuthor_Id(UUID id, UUID authorId);
 }
