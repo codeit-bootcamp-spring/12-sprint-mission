@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class BasicAuthService implements AuthService {
 
     private final UserRepository userRepository;

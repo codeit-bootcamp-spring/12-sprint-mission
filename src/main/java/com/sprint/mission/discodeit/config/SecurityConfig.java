@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.config;
 
 import com.sprint.mission.discodeit.entity.Role;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetailsService;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
@@ -37,7 +38,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            LoginSuccessHandler loginSuccessHandler,
                                            LoginFailureHandler loginFailureHandler,
-                                           SessionRegistry sessionRegistry
+                                           SessionRegistry sessionRegistry,
+                                           DiscodeitUserDetailsService userDetailsService
     ) throws Exception {
 
         http
@@ -60,6 +62,9 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID","remember-me")
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
                 )
                 .exceptionHandling(ex -> ex
@@ -69,11 +74,19 @@ public class SecurityConfig {
                 .sessionManagement(management -> management
                         .sessionConcurrency(concurrency -> concurrency
                                 .maximumSessions(1)
-                                .maxSessionsPreventsLogin(true)
+                                .maxSessionsPreventsLogin(false) //rememberMe 설정 시 false 혹은 maximum을 2로 해야 정상 실행
                                 .sessionRegistry(sessionRegistry)
                         )
                 )
-        ;
+                .rememberMe(remember -> remember
+                        .key("remember-me-key")
+                        .rememberMeParameter("remember-me")
+                        .rememberMeCookieName("remember-me")
+                        .tokenValiditySeconds(60 * 30)
+                        .userDetailsService(userDetailsService)
+                        .useSecureCookie(false)
+                );
+
         return http.build();
     }
 
@@ -105,7 +118,7 @@ public class SecurityConfig {
         return handler;
     }
 
-    // 세션 만료 혹은 제거시 이벤트 발행 && sessionregistry가 세션을 정리할 수 있게 함.
+    // 세션 만료 혹은 제거시 이벤트 발행 && session registry가 세션을 정리할 수 있게 함.
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher(){
         return new HttpSessionEventPublisher();

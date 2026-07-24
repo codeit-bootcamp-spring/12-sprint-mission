@@ -51,7 +51,7 @@ public class User extends BaseUpdatableEntity {
     }
 
     public void updateRole(Role newRole) {
-        if (this.role == null) {
+        if (newRole != null) {
             this.role = newRole;
         }
     }
