@@ -1,6 +1,8 @@
 package com.sprint.mission.discodeit.dto.user;
 
 import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
+import org.springframework.context.annotation.Role;
+
 import java.util.UUID;
 
 public record UserResponse(
@@ -8,7 +10,8 @@ public record UserResponse(
     String username,
     String email,
     BinaryContentResponse profile,
-    Boolean online
+    Boolean online,
+    Role role
 ) {
 
 }

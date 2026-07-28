@@ -1,24 +1,15 @@
 package com.sprint.mission.discodeit.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)  // JPA를 위한 기본 생성자
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseUpdatableEntity {
+
 
   @Column(length = 50, nullable = false, unique = true)
   private String username;
@@ -34,22 +25,31 @@ public class User extends BaseUpdatableEntity {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserStatus status;
 
+  @Enumerated(EnumType.STRING)
+  @Column(length = 30, nullable = false)
+  private Role role;
+
+
   public User(String username, String email, String password, BinaryContent profile) {
     this.username = username;
     this.email = email;
     this.password = password;
     this.profile = profile;
-  }
+    this.role = Role.USER;
 
+  }
+  public void updateRole(Role role) {
+    this.role = role;
+  }
   public void update(String newUsername, String newEmail, String newPassword,
-      BinaryContent newProfile) {
-    if (newUsername != null && !newUsername.equals(this.username)) {
+                     BinaryContent newProfile) {
+    if (newUsername != null) {
       this.username = newUsername;
     }
-    if (newEmail != null && !newEmail.equals(this.email)) {
+    if (newEmail != null) {
       this.email = newEmail;
     }
-    if (newPassword != null && !newPassword.equals(this.password)) {
+    if (newPassword != null) {
       this.password = newPassword;
     }
     if (newProfile != null) {
@@ -57,3 +57,4 @@ public class User extends BaseUpdatableEntity {
     }
   }
 }
+

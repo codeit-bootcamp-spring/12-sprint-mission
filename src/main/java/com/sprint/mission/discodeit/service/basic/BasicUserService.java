@@ -2,9 +2,11 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
@@ -39,10 +41,9 @@ public class BasicUserService implements UserService {
   @Transactional
   @Override
   public UserResponse create(UserCreateRequest userCreateRequest,
-      Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
+                             Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     String username = userCreateRequest.username();
     String email = userCreateRequest.email();
-
 
     if (userRepository.existsByEmail(email)) {
       throw UserAlreadyExistsException.withEmail(email);
@@ -52,17 +53,17 @@ public class BasicUserService implements UserService {
     }
 
     BinaryContent nullableProfile = optionalProfileCreateRequest
-        .map(profileRequest -> {
-          BinaryContent binaryContent = new BinaryContent(
-              profileRequest.fileName(),
-              (long) profileRequest.bytes().length,
-              profileRequest.contentType()
-          );
-          binaryContentRepository.save(binaryContent);
-          binaryContentStorage.put(binaryContent.getId(), profileRequest.bytes());
-          return binaryContent;
-        })
-        .orElse(null);
+            .map(profileRequest -> {
+              BinaryContent binaryContent = new BinaryContent(
+                      profileRequest.fileName(),
+                      (long) profileRequest.bytes().length,
+                      profileRequest.contentType()
+              );
+              binaryContentRepository.save(binaryContent);
+              binaryContentStorage.put(binaryContent.getId(), profileRequest.bytes());
+              return binaryContent;
+            })
+            .orElse(null);
 
     String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
 
@@ -70,72 +71,80 @@ public class BasicUserService implements UserService {
     UserStatus userStatus = new UserStatus(user, Instant.now());
 
     userRepository.save(user);
-    userStatusRepository.save(userStatus); // 누락 수정
+    userStatusRepository.save(userStatus);
     return userMapper.toResponse(user);
   }
 
   @Override
   public UserResponse findById(UUID id) {
     return userRepository.findById(id)
-        .map(userMapper::toResponse)
-        .orElseThrow(
-            () -> new NoSuchElementException("User with id " + id + " not found")); // null 반환 수정
+            .map(userMapper::toResponse)
+            .orElseThrow(
+                    () -> new NoSuchElementException("User with id " + id + " not found"));
   }
 
   @Override
   public List<UserResponse> findAll() {
     return userRepository.findAllWithProfileAndStatus()
-        .stream()
-        .map(userMapper::toResponse)
-        .toList();
+            .stream()
+            .map(userMapper::toResponse)
+            .toList();
+  }
+
+  @Transactional
+  @Override
+  public UserResponse updateRole(UserRoleUpdateRequest request) {
+    User user = userRepository.findById(request.userId())
+            .orElseThrow(() -> UserNotFoundException.withId(request.userId()));
+
+    user.updateRole(request.newRole());
+    return userMapper.toResponse(user);
   }
 
   @Transactional
   @Override
   public UserResponse update(UUID userId, UserUpdateRequest userUpdateRequest,
-      Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
+                             Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
 
     String newUsername = userUpdateRequest.newUsername();
     String newEmail = userUpdateRequest.newEmail();
+
     if (newEmail != null && !newEmail.equals(user.getEmail())
-            && userRepository.existsByEmail(newEmail))
+            && userRepository.existsByEmail(newEmail)) {
       throw new IllegalArgumentException("User with email " + newEmail + " already exists");
-
+    }
     if (newUsername != null && !newUsername.equals(user.getUsername())
-          && userRepository.existsByUsername(newUsername)) {
-      // update API 중복 검사 username 체크 이슈로 username + email 모두 변경
-
+            && userRepository.existsByUsername(newUsername)) {
       throw new IllegalArgumentException("User with username " + newUsername + " already exists");
     }
 
     BinaryContent nullableProfile = optionalProfileCreateRequest
-        .map(profileRequest -> {
-          BinaryContent binaryContent = new BinaryContent(
-              profileRequest.fileName(),
-              (long) profileRequest.bytes().length,
-              profileRequest.contentType()
-          );
-          binaryContentRepository.save(binaryContent);
-          binaryContentStorage.put(binaryContent.getId(), profileRequest.bytes());
-          return binaryContent;
-        })
-        .orElse(null);
+            .map(profileRequest -> {
+              BinaryContent binaryContent = new BinaryContent(
+                      profileRequest.fileName(),
+                      (long) profileRequest.bytes().length,
+                      profileRequest.contentType()
+              );
+              binaryContentRepository.save(binaryContent);
+              binaryContentStorage.put(binaryContent.getId(), profileRequest.bytes());
+              return binaryContent;
+            })
+            .orElse(null);
 
     String encodedNewPassword = userUpdateRequest.newPassword() != null
             ? passwordEncoder.encode(userUpdateRequest.newPassword())
-            : null;  //
+            : null;
 
     user.update(newUsername, newEmail, encodedNewPassword, nullableProfile);
-
     return userMapper.toResponse(user);
   }
 
   @Transactional
   @Override
   public void delete(UUID userId) {
-    if (!userRepository.existsById(userId)) { // 조건 반전 수정
+    if (!userRepository.existsById(userId)) {
       throw UserNotFoundException.withId(userId);
     }
     userRepository.deleteById(userId);
