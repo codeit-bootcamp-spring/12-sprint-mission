@@ -21,6 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class BasicUserService implements UserService {
   private final UserMapper userMapper;
   private final BinaryContentRepository binaryContentRepository;
   private final BinaryContentStorage binaryContentStorage;
+  private final PasswordEncoder passwordEncoder;
 
   @Transactional
   @Override
@@ -40,6 +42,7 @@ public class BasicUserService implements UserService {
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     String username = userCreateRequest.username();
     String email = userCreateRequest.email();
+
 
     if (userRepository.existsByEmail(email)) {
       throw UserAlreadyExistsException.withEmail(email);
@@ -61,7 +64,9 @@ public class BasicUserService implements UserService {
         })
         .orElse(null);
 
-    User user = new User(username, email, userCreateRequest.password(), nullableProfile);
+    String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
+
+    User user = new User(username, email, encodedPassword, nullableProfile);
     UserStatus userStatus = new UserStatus(user, Instant.now());
 
     userRepository.save(user);
@@ -94,10 +99,14 @@ public class BasicUserService implements UserService {
 
     String newUsername = userUpdateRequest.newUsername();
     String newEmail = userUpdateRequest.newEmail();
-    if (userRepository.existsByEmail(newEmail)) {
+    if (newEmail != null && !newEmail.equals(user.getEmail())
+            && userRepository.existsByEmail(newEmail))
       throw new IllegalArgumentException("User with email " + newEmail + " already exists");
-    }
-    if (userRepository.existsByUsername(newUsername)) {
+
+    if (newUsername != null && !newUsername.equals(user.getUsername())
+          && userRepository.existsByUsername(newUsername)) {
+      // update API 중복 검사 username 체크 이슈로 username + email 모두 변경
+
       throw new IllegalArgumentException("User with username " + newUsername + " already exists");
     }
 
@@ -114,7 +123,12 @@ public class BasicUserService implements UserService {
         })
         .orElse(null);
 
-    user.update(newUsername, newEmail, userUpdateRequest.newPassword(), nullableProfile);
+    String encodedNewPassword = userUpdateRequest.newPassword() != null
+            ? passwordEncoder.encode(userUpdateRequest.newPassword())
+            : null;  //
+
+    user.update(newUsername, newEmail, encodedNewPassword, nullableProfile);
+
     return userMapper.toResponse(user);
   }
 
