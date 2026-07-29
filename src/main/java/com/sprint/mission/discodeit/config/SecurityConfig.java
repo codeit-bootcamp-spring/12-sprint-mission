@@ -24,7 +24,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableMethodSecurity
 public class SecurityConfig {
 
@@ -88,7 +88,15 @@ public class SecurityConfig {
         handler.setRoleHierarchy(roleHierarchy);
         return handler;
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
+
+
+
 
 
 
