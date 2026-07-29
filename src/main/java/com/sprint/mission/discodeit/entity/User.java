@@ -3,6 +3,8 @@ package com.sprint.mission.discodeit.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -23,6 +25,9 @@ public class User extends UpdatableBaseEntity {
   private String username;
   @Column(nullable = false, length = 60)
   private String password;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 20)
+  private UserRole role;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "profile_id", unique = true)
@@ -37,10 +42,21 @@ public class User extends UpdatableBaseEntity {
   private UserStatus status;
 
   public User(String email, String username, String password, BinaryContent profile) {
+    this(email, username, password, UserRole.USER, profile);
+  }
+
+  public User(
+      String email,
+      String username,
+      String password,
+      UserRole role,
+      BinaryContent profile
+  ) {
     super();
     this.email = email;
     this.username = username;
     this.password = password;
+    this.role = role;
     this.profile = profile;
   }
 
@@ -54,6 +70,10 @@ public class User extends UpdatableBaseEntity {
 
   public void updateUsername(String username) {
     this.username = username;
+  }
+
+  public void changeRole(UserRole role) {
+    this.role = role;
   }
 
   public void changeProfile(String email, String username, BinaryContent profile) {

@@ -8,8 +8,8 @@ public class ChannelNotFoundException extends ChannelException {
 
   public ChannelNotFoundException(UUID channelId) {
     super(
-        ErrorCode.MESSAGE_NOT_FOUND,
-        ErrorCode.MESSAGE_NOT_FOUND.format(channelId),
+        ErrorCode.CHANNEL_NOT_FOUND,
+        ErrorCode.CHANNEL_NOT_FOUND.format(channelId),
         Map.of("channelId", channelId)
     );
   }

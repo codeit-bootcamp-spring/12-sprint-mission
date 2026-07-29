@@ -2,11 +2,10 @@ server:
   port: ${SERVER_PORT:8080}
 
 spring:
-  spring:
-    boot:
-      admin:
-        client:
-          url: ${SPRING_BOOT_ADMIN_CLIENT_URL}
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_CLIENT_URL}
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/discodeit}
@@ -34,8 +33,6 @@ sql:
 logging:
   level:
     com.sprint.mission.discodeit: info
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
 
 management:
   endpoints:

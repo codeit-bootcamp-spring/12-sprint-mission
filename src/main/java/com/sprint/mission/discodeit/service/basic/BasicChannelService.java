@@ -25,6 +25,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -37,6 +39,7 @@ public class BasicChannelService implements ChannelService {
   private final MessageRepository messageRepository;
 
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public ChannelResponse createPublic(ChannelPublicCreateRequest request) {
     Channel channel = Channel.createPublic(
         request.name(),
@@ -99,6 +102,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public ChannelResponse update(UUID channelId, ChannelUpdateRequest request) {
     Channel channel = getChannelOrThrow(channelId);
 
@@ -118,6 +122,8 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @Transactional
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public void delete(UUID id) {
     getChannelOrThrow(id);
 

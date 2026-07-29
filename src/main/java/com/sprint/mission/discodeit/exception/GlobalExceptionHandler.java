@@ -2,12 +2,14 @@ package com.sprint.mission.discodeit.exception;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -41,6 +43,23 @@ public class GlobalExceptionHandler {
 
     return ResponseEntity
         .status(exception.getErrorCode().getStatus())
+        .body(response);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleException(Exception exception) {
+    log.error("Unexpected server error occurred", exception);
+
+    ErrorResponse response = ErrorResponse.of(
+        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        "INTERNAL_SERVER_ERROR",
+        "서버 오류가 발생했습니다.",
+        "InternalServerException",
+        Map.of()
+    );
+
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(response);
   }
 

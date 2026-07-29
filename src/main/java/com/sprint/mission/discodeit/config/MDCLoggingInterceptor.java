@@ -24,6 +24,8 @@ public class MDCLoggingInterceptor implements HandlerInterceptor {
     // 로그 출력 예시가 8자라 예시에 맞게 설정함
     String requestId = UUID.randomUUID().toString().substring(0, 8);
 
+    // 클라이언트가 받은 헤더 값으로 서버 로그 바로 역추적 가능해
+    // 실무에서 장애 문의 대응할 때 해당 패턴 많이 사용함
     MDC.put(MDC_REQUEST_ID, requestId);
     MDC.put(MDC_REQUEST_METHOD, request.getMethod());
     MDC.put(MDC_REQUEST_URI, request.getRequestURI());
