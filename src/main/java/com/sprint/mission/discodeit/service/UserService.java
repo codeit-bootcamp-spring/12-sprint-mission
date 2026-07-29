@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,8 @@ public interface UserService {
   UserResponse update(UUID userId, UserUpdateRequest request,
                       Optional<BinaryContentCreateRequest> binaryContentCreateRequest);
 
-  UserResponse updateRole(UserRoleUpdateRequest request);   // ← 선언만
+  @PreAuthorize("hasRole('ADMIN')")
+  UserResponse updateRole(UserRoleUpdateRequest request);
 
   void delete(UUID userId);
 }

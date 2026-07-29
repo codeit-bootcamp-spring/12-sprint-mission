@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.dto.user;
 
 import com.sprint.mission.discodeit.dto.binarycontent.BinaryContentResponse;
-import org.springframework.context.annotation.Role;
+import com.sprint.mission.discodeit.entity.Role;
 
 import java.util.UUID;
 
