@@ -64,6 +64,9 @@ class AuthApiIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username", is("loginuser")))
             .andExpect(jsonPath("$.email", is("login@example.com")));
+
+        mockMvc.perform(post("/api/auth/logout").session(session).with(csrf()))
+            .andExpect(status().isNoContent());
     }
 
     @Test
