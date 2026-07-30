@@ -15,12 +15,15 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableMethodSecurity
@@ -30,7 +33,8 @@ public class SecurityConfig {
             HttpSecurity http,
             LoginSuccessHandler loginSuccessHandler,
             LoginFailureHandler loginFailureHandler,
-            Http403ForbiddenAccessDeniedHandler forbiddenAccessDeniedHandler
+            Http403ForbiddenAccessDeniedHandler forbiddenAccessDeniedHandler,
+            SessionRegistry sessionRegistry
     ) throws Exception {
         http
                 .csrf(csrf -> csrf
@@ -56,7 +60,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
-                        .accessDeniedHandler(forbiddenAccessDeniedHandler));
+                        .accessDeniedHandler(forbiddenAccessDeniedHandler))
+                .sessionManagement(session -> session
+                        .sessionConcurrency(concurrency -> concurrency
+                                .maximumSessions(1)
+                                .sessionRegistry(sessionRegistry))
+                );
         return http.build();
     }
 
@@ -85,4 +94,13 @@ public class SecurityConfig {
         return handler;
     }
 
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 }

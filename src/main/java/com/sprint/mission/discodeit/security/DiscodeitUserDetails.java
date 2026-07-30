@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
@@ -30,5 +31,21 @@ public class DiscodeitUserDetails implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DiscodeitUserDetails details)) {
+            return false;
+        }
+        return Objects.equals(userDto.id(), details.userDto.id());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userDto.id());
     }
 }
