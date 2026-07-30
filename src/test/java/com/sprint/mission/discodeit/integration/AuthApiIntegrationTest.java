@@ -1,6 +1,8 @@
 package com.sprint.mission.discodeit.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,9 @@ class AuthApiIntegrationTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SessionRegistry sessionRegistry;
 
     @Test
     @DisplayName("로그인 API 통합 테스트 - 성공")
@@ -69,6 +75,10 @@ class AuthApiIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username", is("loginuser")))
             .andExpect(jsonPath("$.email", is("login@example.com")));
+
+        mockMvc.perform(get("/api/users").session(session))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[?(@.username == 'loginuser')].online", hasItem(true)));
 
         mockMvc.perform(post("/api/auth/logout").session(session).with(csrf()))
             .andExpect(status().isNoContent());
@@ -130,6 +140,55 @@ class AuthApiIntegrationTest {
                     """.formatted(user.id())))
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.status", is(403)));
+    }
+
+    @Test
+    @DisplayName("동일한 계정은 동시에 로그인할 수 없다")
+    void concurrentLogin_Prevented() throws Exception {
+        userService.create(
+            new UserCreateRequest("singleuser", "single@example.com", "Password1!"),
+            Optional.empty()
+        );
+
+        mockMvc.perform(post("/api/auth/login")
+                .with(csrf())
+                .param("username", "singleuser")
+                .param("password", "Password1!"))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/auth/login")
+                .with(csrf())
+                .param("username", "singleuser")
+                .param("password", "Password1!"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("권한 변경 시 로그인 세션을 만료한다")
+    void updateRole_ExpiresSession() throws Exception {
+        UserDto user = userService.create(
+            new UserCreateRequest("sessionuser", "session@example.com", "Password1!"),
+            Optional.empty()
+        );
+
+        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+                .with(csrf())
+                .param("username", "sessionuser")
+                .param("password", "Password1!"))
+            .andExpect(status().isOk())
+            .andReturn();
+        MockHttpSession session = (MockHttpSession) loginResult.getRequest().getSession(false);
+
+        mockMvc.perform(put("/api/auth/role")
+                .with(csrf())
+                .contentType("application/json")
+                .content("""
+                    {"userId":"%s","newRole":"CHANNEL_MANAGER"}
+                    """.formatted(user.id())))
+            .andExpect(status().isOk());
+
+        assertThat(sessionRegistry.getSessionInformation(session.getId()).isExpired()).isTrue();
     }
 
     @Test

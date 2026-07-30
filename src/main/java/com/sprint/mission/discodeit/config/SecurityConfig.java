@@ -21,6 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableMethodSecurity
@@ -36,7 +39,8 @@ public class SecurityConfig {
       HttpSecurity http,
       LoginSuccessHandler loginSuccessHandler,
       LoginFailureHandler loginFailureHandler,
-      ObjectMapper objectMapper
+      ObjectMapper objectMapper,
+      SessionRegistry sessionRegistry
   ) throws Exception {
     return http
         .csrf(csrf -> csrf
@@ -60,6 +64,13 @@ public class SecurityConfig {
             .accessDeniedHandler((request, response, exception) ->
                 writeError(response, exception, HttpStatus.FORBIDDEN, objectMapper))
         )
+        .sessionManagement(management -> management
+            .sessionConcurrency(concurrency -> concurrency
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+                .sessionRegistry(sessionRegistry)
+            )
+        )
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
             .successHandler(loginSuccessHandler)
@@ -80,6 +91,16 @@ public class SecurityConfig {
         ROLE_ADMIN > ROLE_CHANNEL_MANAGER
         ROLE_CHANNEL_MANAGER > ROLE_USER
         """);
+  }
+
+  @Bean
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
+
+  @Bean
+  public HttpSessionEventPublisher httpSessionEventPublisher() {
+    return new HttpSessionEventPublisher();
   }
 
   @Bean
