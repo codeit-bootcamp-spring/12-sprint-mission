@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface MessageRepository extends JpaRepository<Message, UUID> {
 
+  boolean existsByIdAndAuthorId(UUID messageId, UUID authorId);
+
   @Query("SELECT m FROM Message m "
       + "LEFT JOIN FETCH m.author a "
       + "LEFT JOIN FETCH a.profile "
