@@ -16,6 +16,7 @@ import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.service.UserService;
+import jakarta.servlet.http.Cookie;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -150,17 +151,45 @@ class AuthApiIntegrationTest {
             Optional.empty()
         );
 
+        MvcResult firstLogin = mockMvc.perform(post("/api/auth/login")
+                .with(csrf())
+                .param("username", "singleuser")
+                .param("password", "Password1!"))
+            .andExpect(status().isOk())
+            .andReturn();
+        MockHttpSession firstSession =
+            (MockHttpSession) firstLogin.getRequest().getSession(false);
+
         mockMvc.perform(post("/api/auth/login")
                 .with(csrf())
                 .param("username", "singleuser")
                 .param("password", "Password1!"))
             .andExpect(status().isOk());
 
-        mockMvc.perform(post("/api/auth/login")
+        assertThat(sessionRegistry.getSessionInformation(firstSession.getId()).isExpired()).isTrue();
+    }
+
+    @Test
+    @DisplayName("remember-me 쿠키로 세션 없이 인증을 복구한다")
+    void rememberMe_RestoresAuthentication() throws Exception {
+        userService.create(
+            new UserCreateRequest("rememberuser", "remember@example.com", "Password1!"),
+            Optional.empty()
+        );
+
+        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                 .with(csrf())
-                .param("username", "singleuser")
-                .param("password", "Password1!"))
-            .andExpect(status().isUnauthorized());
+                .param("username", "rememberuser")
+                .param("password", "Password1!")
+                .param("remember-me", "true"))
+            .andExpect(status().isOk())
+            .andReturn();
+        Cookie rememberMe = loginResult.getResponse().getCookie("remember-me");
+
+        assertThat(rememberMe).isNotNull();
+        mockMvc.perform(get("/api/auth/me").cookie(rememberMe))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.username", is("rememberuser")));
     }
 
     @Test
