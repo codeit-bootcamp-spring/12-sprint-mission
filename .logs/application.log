@@ -9518,3 +9518,1348 @@ org.springframework.web.servlet.resource.NoResourceFoundException: No static res
 26-08-02 01:48:03.376 [SpringApplicationShutdownHook] [32mINFO [0;39m o.s.o.j.LocalContainerEntityManagerFactoryBean [ |  | ] - Closing JPA EntityManagerFactory for persistence unit 'default'
 26-08-02 01:48:03.381 [SpringApplicationShutdownHook] [32mINFO [0;39m com.zaxxer.hikari.HikariDataSource   [ |  | ] - HikariPool-1 - Shutdown initiated...
 26-08-02 01:48:03.385 [SpringApplicationShutdownHook] [32mINFO [0;39m com.zaxxer.hikari.HikariDataSource   [ |  | ] - HikariPool-1 - Shutdown completed.
+26-08-02 01:53:30.115 [background-preinit] [32mINFO [0;39m o.h.validator.internal.util.Version  [ |  | ] - HV000001: Hibernate Validator 8.0.1.Final
+26-08-02 01:53:30.167 [main] [32mINFO [0;39m c.s.m.discodeit.DiscodeitApplication [ |  | ] - Starting DiscodeitApplication using Java 17.0.18 with PID 11769 (/Users/minjijeon/work_space_sprint/12-sprint-mission/build/classes/java/main started by minjijeon in /Users/minjijeon/work_space_sprint/12-sprint-mission)
+26-08-02 01:53:30.168 [main] [32mDEBUG[0;39m c.s.m.discodeit.DiscodeitApplication [ |  | ] - Running with Spring Boot v3.4.0, Spring v6.2.0
+26-08-02 01:53:30.168 [main] [32mINFO [0;39m c.s.m.discodeit.DiscodeitApplication [ |  | ] - The following 1 profile is active: "dev"
+26-08-02 01:53:31.193 [main] [32mINFO [0;39m o.s.d.r.c.RepositoryConfigurationDelegate [ |  | ] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+26-08-02 01:53:31.234 [main] [32mINFO [0;39m o.s.d.r.c.RepositoryConfigurationDelegate [ |  | ] - Finished Spring Data repository scanning in 33 ms. Found 6 JPA repository interfaces.
+26-08-02 01:53:31.680 [main] [32mINFO [0;39m o.s.b.w.e.tomcat.TomcatWebServer     [ |  | ] - Tomcat initialized with port 8080 (http)
+26-08-02 01:53:31.686 [main] [32mINFO [0;39m o.a.coyote.http11.Http11NioProtocol  [ |  | ] - Initializing ProtocolHandler ["http-nio-8080"]
+26-08-02 01:53:31.687 [main] [32mINFO [0;39m o.a.catalina.core.StandardService    [ |  | ] - Starting service [Tomcat]
+26-08-02 01:53:31.687 [main] [32mINFO [0;39m o.a.catalina.core.StandardEngine     [ |  | ] - Starting Servlet engine: [Apache Tomcat/10.1.33]
+26-08-02 01:53:31.718 [main] [32mINFO [0;39m o.a.c.c.C.[Tomcat].[localhost].[/]   [ |  | ] - Initializing Spring embedded WebApplicationContext
+26-08-02 01:53:31.719 [main] [32mINFO [0;39m o.s.b.w.s.c.ServletWebServerApplicationContext [ |  | ] - Root WebApplicationContext: initialization completed in 1479 ms
+26-08-02 01:53:31.839 [main] [32mINFO [0;39m com.zaxxer.hikari.HikariDataSource   [ |  | ] - HikariPool-1 - Starting...
+26-08-02 01:53:31.966 [main] [32mINFO [0;39m com.zaxxer.hikari.pool.HikariPool    [ |  | ] - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@16949dfa
+26-08-02 01:53:31.967 [main] [32mINFO [0;39m com.zaxxer.hikari.HikariDataSource   [ |  | ] - HikariPool-1 - Start completed.
+26-08-02 01:53:32.009 [main] [32mINFO [0;39m o.h.jpa.internal.util.LogHelper      [ |  | ] - HHH000204: Processing PersistenceUnitInfo [name: default]
+26-08-02 01:53:32.040 [main] [32mINFO [0;39m org.hibernate.Version                [ |  | ] - HHH000412: Hibernate ORM core version 6.6.2.Final
+26-08-02 01:53:32.055 [main] [32mINFO [0;39m o.h.c.i.RegionFactoryInitiator       [ |  | ] - HHH000026: Second-level cache disabled
+26-08-02 01:53:32.201 [main] [32mINFO [0;39m o.s.o.j.p.SpringPersistenceUnitInfo  [ |  | ] - No LoadTimeWeaver setup: ignoring JPA class transformer
+26-08-02 01:53:32.261 [main] [32mINFO [0;39m o.hibernate.orm.connections.pooling  [ |  | ] - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 18.3
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+26-08-02 01:53:32.789 [main] [32mINFO [0;39m o.h.e.t.j.p.i.JtaPlatformInitiator   [ |  | ] - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+26-08-02 01:53:32.832 [main] [32mINFO [0;39m o.s.o.j.LocalContainerEntityManagerFactoryBean [ |  | ] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+26-08-02 01:53:33.062 [main] [32mINFO [0;39m o.s.d.j.r.query.QueryEnhancerFactory [ |  | ] - Hibernate is in classpath; If applicable, HQL parser will be used.
+26-08-02 01:53:33.384 [main] [32mTRACE[0;39m o.s.s.c.a.a.c.AuthenticationConfiguration$EnableGlobalAuthenticationAutowiredConfigurer [ |  | ] - Eagerly initializing {securityConfig=com.sprint.mission.discodeit.config.SecurityConfig$$SpringCGLIB$$0@c53dfb2}
+26-08-02 01:53:33.389 [main] [32mINFO [0;39m o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer [ |  | ] - Global AuthenticationManager configured with UserDetailsService bean with name discodeitUserDetailsService
+26-08-02 01:53:33.428 [main] [32mINFO [0;39m o.s.b.a.w.s.WelcomePageHandlerMapping [ |  | ] - Adding welcome page: class path resource [static/index.html]
+26-08-02 01:53:33.580 [main] [32mINFO [0;39m o.s.b.a.e.web.EndpointLinksResolver  [ |  | ] - Exposing 4 endpoints beneath base path '/actuator'
+26-08-02 01:53:33.631 [main] [32mDEBUG[0;39m o.s.s.web.DefaultSecurityFilterChain [ |  | ] - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CsrfFilter, LogoutFilter, UsernamePasswordAuthenticationFilter, DefaultResourcesFilter, DefaultLoginPageGeneratingFilter, DefaultLogoutPageGeneratingFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter
+26-08-02 01:53:33.901 [main] [32mINFO [0;39m o.a.coyote.http11.Http11NioProtocol  [ |  | ] - Starting ProtocolHandler ["http-nio-8080"]
+26-08-02 01:53:33.913 [main] [32mINFO [0;39m o.s.b.w.e.tomcat.TomcatWebServer     [ |  | ] - Tomcat started on port 8080 (http) with context path '/'
+26-08-02 01:53:33.924 [main] [32mINFO [0;39m c.s.m.discodeit.DiscodeitApplication [ |  | ] - Started DiscodeitApplication in 4.315 seconds (process running for 4.889)
+26-08-02 01:53:34.141 [http-nio-8080-exec-1] [32mINFO [0;39m o.a.c.c.C.[Tomcat].[localhost].[/]   [ |  | ] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+26-08-02 01:53:34.141 [http-nio-8080-exec-1] [32mINFO [0;39m o.s.web.servlet.DispatcherServlet    [ |  | ] - Initializing Servlet 'dispatcherServlet'
+26-08-02 01:53:34.144 [http-nio-8080-exec-1] [32mINFO [0;39m o.s.web.servlet.DispatcherServlet    [ |  | ] - Completed initialization in 3 ms
+26-08-02 01:53:34.163 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.163 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /
+26-08-02 01:53:34.164 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.166 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.167 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.167 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.168 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.170 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.171 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.171 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.171 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.171 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.173 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /
+26-08-02 01:53:34.176 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [1bd33c2c35b94faca4848ea14123635e | GET | /] - Request started
+26-08-02 01:53:34.184 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.184 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Securing GET /index.html
+26-08-02 01:53:34.184 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.184 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.184 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [1bd33c2c35b94faca4848ea14123635e | GET | /] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [1bd33c2c35b94faca4848ea14123635e | GET | /] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [1bd33c2c35b94faca4848ea14123635e | GET | /] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.185 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [1bd33c2c35b94faca4848ea14123635e | GET | /] - Secured GET /index.html
+26-08-02 01:53:34.186 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [09280b2f057d49da8b5d9bf0b50d9e29 | GET | /index.html] - Request started
+26-08-02 01:53:34.190 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [09280b2f057d49da8b5d9bf0b50d9e29 | GET | /index.html] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.191 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [09280b2f057d49da8b5d9bf0b50d9e29 | GET | /index.html] - Request completed
+26-08-02 01:53:34.191 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:34.192 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.192 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.193 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.193 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.196 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [ |  | ] - Request completed
+26-08-02 01:53:34.205 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.205 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.205 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /assets/index-pvm8va9e.js
+26-08-02 01:53:34.205 [http-nio-8080-exec-2] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /assets/index-kQJbKSsj.css
+26-08-02 01:53:34.205 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.205 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.206 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.206 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.206 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.206 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.206 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.206 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.206 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.207 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.207 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.207 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.207 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.208 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.208 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.208 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.208 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.208 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.208 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.208 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.209 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.209 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.208 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.209 [http-nio-8080-exec-2] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /assets/index-kQJbKSsj.css
+26-08-02 01:53:34.209 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.211 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.212 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /assets/index-pvm8va9e.js
+26-08-02 01:53:34.222 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [c786d4b0af2a41da9c9410703f766ee3 | GET | /assets/index-pvm8va9e.js] - Request started
+26-08-02 01:53:34.222 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [ce21777b4aaa4ae084b8ec25101e2487 | GET | /assets/index-kQJbKSsj.css] - Request started
+26-08-02 01:53:34.223 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [c786d4b0af2a41da9c9410703f766ee3 | GET | /assets/index-pvm8va9e.js] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.223 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [ce21777b4aaa4ae084b8ec25101e2487 | GET | /assets/index-kQJbKSsj.css] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.224 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [ce21777b4aaa4ae084b8ec25101e2487 | GET | /assets/index-kQJbKSsj.css] - Request completed
+26-08-02 01:53:34.224 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:34.224 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.224 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.224 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.253 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.253 [http-nio-8080-exec-2] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /.well-known/appspecific/com.chrome.devtools.json
+26-08-02 01:53:34.253 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.254 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.254 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [c786d4b0af2a41da9c9410703f766ee3 | GET | /assets/index-pvm8va9e.js] - Request completed
+26-08-02 01:53:34.254 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.255 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:34.255 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.256 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.256 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.256 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.256 [http-nio-8080-exec-2] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /.well-known/appspecific/com.chrome.devtools.json
+26-08-02 01:53:34.257 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [27c9d4a7cc274dab958926678975f18a | GET | /.well-known/appspecific/com.chrome.devtools.json] - Request started
+26-08-02 01:53:34.274 [http-nio-8080-exec-2] [31mERROR[0;39m c.s.m.d.e.GlobalExceptionHandler     [27c9d4a7cc274dab958926678975f18a | GET | /.well-known/appspecific/com.chrome.devtools.json] - 예상치 못한 오류 발생: No static resource .well-known/appspecific/com.chrome.devtools.json.
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource .well-known/appspecific/com.chrome.devtools.json.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585)
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter.doFilterInternal(DefaultLogoutPageGeneratingFilter.java:58)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:220)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:206)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultResourcesFilter.doFilter(DefaultResourcesFilter.java:72)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26-08-02 01:53:34.298 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.298 [http-nio-8080-exec-3] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/auth/csrf-token
+26-08-02 01:53:34.298 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.298 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.298 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.300 [http-nio-8080-exec-4] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/auth/me
+26-08-02 01:53:34.300 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.300 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.300 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.301 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.301 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.302 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.300 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.302 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.302 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.303 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.303 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.303 [http-nio-8080-exec-3] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/auth/csrf-token
+26-08-02 01:53:34.303 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.304 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.304 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [386669d1f2cd46559c5f8f1ff6cf38a5 | GET | /api/auth/csrf-token] - Request started
+26-08-02 01:53:34.305 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.305 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.305 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.305 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.305 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.305 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.306 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.306 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.306 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.306 [http-nio-8080-exec-4] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/auth/me
+26-08-02 01:53:34.306 [http-nio-8080-exec-4] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - Request started
+26-08-02 01:53:34.315 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - No HttpSession currently exists
+26-08-02 01:53:34.315 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.315 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.315 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.315 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.controller.AuthController    [386669d1f2cd46559c5f8f1ff6cf38a5 | GET | /api/auth/csrf-token] - CSRF 토큰 요청: _O2o_LImx4Kv2QzVIfukSEJHQveph4yOlJPeHNGNFqpwg-FLmtjNxYYepLCC4D-2RNaQKnJwb8-Rsumjp6O_JbO0J50WtNct
+26-08-02 01:53:34.316 [http-nio-8080-exec-4] [31mERROR[0;39m c.s.m.d.e.GlobalExceptionHandler     [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - 예상치 못한 오류 발생: Cannot invoke "com.sprint.mission.discodeit.security.DiscodeitUserDetails.getUserDto()" because "userDetails" is null
+java.lang.NullPointerException: Cannot invoke "com.sprint.mission.discodeit.security.DiscodeitUserDetails.getUserDto()" because "userDetails" is null
+	at com.sprint.mission.discodeit.controller.AuthController.me(AuthController.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter.doFilterInternal(DefaultLogoutPageGeneratingFilter.java:58)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:220)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:206)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultResourcesFilter.doFilter(DefaultResourcesFilter.java:72)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26-08-02 01:53:34.322 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [386669d1f2cd46559c5f8f1ff6cf38a5 | GET | /api/auth/csrf-token] - Request completed
+26-08-02 01:53:34.322 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:34.322 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.322 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.322 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.323 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [ |  | ] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.339 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [27c9d4a7cc274dab958926678975f18a | GET | /.well-known/appspecific/com.chrome.devtools.json] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.339 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.340 [http-nio-8080-exec-4] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [e0e29e8fcb784fccbed5dc592dccedb7 | GET | /api/auth/me] - Request completed
+26-08-02 01:53:34.340 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [27c9d4a7cc274dab958926678975f18a | GET | /.well-known/appspecific/com.chrome.devtools.json] - Request completed
+26-08-02 01:53:34.340 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:34.340 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.340 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.340 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:34.509 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:34.511 [http-nio-8080-exec-5] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /favicon.ico
+26-08-02 01:53:34.511 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:34.512 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:34.512 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:34.512 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:34.512 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:34.513 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:34.513 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:34.513 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:34.513 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:34.514 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:34.515 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:34.515 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:34.515 [http-nio-8080-exec-5] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /favicon.ico
+26-08-02 01:53:34.518 [http-nio-8080-exec-5] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [7a29aa16a0674281b2b7d12717001424 | GET | /favicon.ico] - Request started
+26-08-02 01:53:34.529 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [7a29aa16a0674281b2b7d12717001424 | GET | /favicon.ico] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:34.529 [http-nio-8080-exec-5] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [7a29aa16a0674281b2b7d12717001424 | GET | /favicon.ico] - Request completed
+26-08-02 01:53:34.529 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:34.529 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.530 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:34.530 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:40.632 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:40.634 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing POST /api/auth/login?remember-me=false
+26-08-02 01:53:40.634 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:40.637 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:40.639 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:40.640 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:40.640 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:40.641 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:40.642 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:40.642 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:40.680 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.authentication.ProviderManager [ |  | ] - Authenticating request with DaoAuthenticationProvider (1/1)
+26-08-02 01:53:40.863 [http-nio-8080-exec-6] [32mDEBUG[0;39m org.hibernate.SQL                    [ |  | ] - 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.password,
+        u1_0.profile_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+26-08-02 01:53:40.866 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [ |  | ] - binding parameter (1:VARCHAR) <- [테스트1]
+26-08-02 01:53:40.894 [http-nio-8080-exec-6] [32mDEBUG[0;39m org.hibernate.SQL                    [ |  | ] - 
+    select
+        us1_0.id,
+        us1_0.created_at,
+        us1_0.last_active_at,
+        us1_0.updated_at,
+        us1_0.user_id 
+    from
+        user_statuses us1_0 
+    where
+        us1_0.user_id=?
+26-08-02 01:53:40.894 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [ |  | ] - binding parameter (1:UUID) <- [86b0c178-4485-4059-9126-38d23d12b4fa]
+26-08-02 01:53:40.998 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.s.a.d.DaoAuthenticationProvider  [ |  | ] - Authenticated user
+26-08-02 01:53:40.999 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.s.CompositeSessionAuthenticationStrategy [ |  | ] - Preparing session with ChangeSessionIdAuthenticationStrategy (1/2)
+26-08-02 01:53:40.999 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.s.CompositeSessionAuthenticationStrategy [ |  | ] - Preparing session with CsrfAuthenticationStrategy (2/2)
+26-08-02 01:53:41.001 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.s.w.c.CsrfAuthenticationStrategy [ |  | ] - Replaced CSRF Token
+26-08-02 01:53:41.008 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Stored SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] to HttpSession [org.apache.catalina.session.StandardSessionFacade@632b546d]
+26-08-02 01:53:41.008 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Set SecurityContextHolder to UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.013 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [ |  | ] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/auth/csrf-token
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.018 [http-nio-8080-exec-7] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/auth/csrf-token
+26-08-02 01:53:41.019 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [80478d182ea4497db61765c251fd84e7 | GET | /api/auth/csrf-token] - Request started
+26-08-02 01:53:41.019 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.controller.AuthController    [80478d182ea4497db61765c251fd84e7 | GET | /api/auth/csrf-token] - CSRF 토큰 요청: PlvpN7wpfL-NKMudb-aIBEbwcZ_BPAMabvE_kwQZ4Ls0PZRxDmyIVNlKGdygGfqqXcu8YSfEXP32BDI3C8YJpTV81dgHW_JI
+26-08-02 01:53:41.021 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [80478d182ea4497db61765c251fd84e7 | GET | /api/auth/csrf-token] - Request completed
+26-08-02 01:53:41.021 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.021 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.021 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [ |  | ] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.035 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.036 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.036 [http-nio-8080-exec-10] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/readStatuses?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.036 [http-nio-8080-exec-8] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/channels?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.036 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.036 [http-nio-8080-exec-9] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/users
+26-08-02 01:53:41.036 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.036 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.036 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.037 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.037 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.037 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.037 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.038 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.038 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.040 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.040 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.040 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.041 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.041 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.041 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.041 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.041 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/users
+26-08-02 01:53:41.041 [http-nio-8080-exec-3] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/users
+26-08-02 01:53:41.041 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.041 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.041 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.041 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.041 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.041 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.041 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.041 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.041 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.042 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.042 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.042 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.043 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.044 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.043 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.044 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-9] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/users
+26-08-02 01:53:41.043 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.045 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.045 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-9] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [7ce93e385bdd4753b7a196485903babe | GET | /api/users] - Request started
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.045 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.046 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/users
+26-08-02 01:53:41.046 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-3] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/users
+26-08-02 01:53:41.046 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [c1f31950c419486dbe2a62019855a6a1 | GET | /api/users] - Request started
+26-08-02 01:53:41.046 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [9f11b6b531694e09a6ae5b06528377fe | GET | /api/users] - Request started
+26-08-02 01:53:41.046 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.046 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.046 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.046 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.047 [http-nio-8080-exec-8] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/channels?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.047 [http-nio-8080-exec-10] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/readStatuses?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.047 [http-nio-8080-exec-8] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - Request started
+26-08-02 01:53:41.047 [http-nio-8080-exec-10] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - Request started
+26-08-02 01:53:41.097 [http-nio-8080-exec-8] [32mINFO [0;39m c.s.m.d.controller.ChannelController [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - 사용자별 채널 목록 조회 요청: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.098 [http-nio-8080-exec-10] [32mINFO [0;39m c.s.m.d.c.ReadStatusController       [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 요청: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.099 [http-nio-8080-exec-9] [32mDEBUG[0;39m c.s.m.d.s.basic.BasicUserService     [7ce93e385bdd4753b7a196485903babe | GET | /api/users] - 모든 사용자 조회 시작
+26-08-02 01:53:41.099 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.s.basic.BasicUserService     [c1f31950c419486dbe2a62019855a6a1 | GET | /api/users] - 모든 사용자 조회 시작
+26-08-02 01:53:41.099 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.s.basic.BasicUserService     [9f11b6b531694e09a6ae5b06528377fe | GET | /api/users] - 모든 사용자 조회 시작
+26-08-02 01:53:41.100 [http-nio-8080-exec-10] [32mDEBUG[0;39m c.s.m.d.s.b.BasicReadStatusService   [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 시작: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.103 [http-nio-8080-exec-3] [32mDEBUG[0;39m org.hibernate.SQL                    [c1f31950c419486dbe2a62019855a6a1 | GET | /api/users] - 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.password,
+        p1_0.id,
+        p1_0.content_type,
+        p1_0.created_at,
+        p1_0.file_name,
+        p1_0.size,
+        s1_0.id,
+        s1_0.created_at,
+        s1_0.last_active_at,
+        s1_0.updated_at,
+        s1_0.user_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    left join
+        binary_contents p1_0 
+            on p1_0.id=u1_0.profile_id 
+    join
+        user_statuses s1_0 
+            on u1_0.id=s1_0.user_id
+26-08-02 01:53:41.103 [http-nio-8080-exec-1] [32mDEBUG[0;39m org.hibernate.SQL                    [9f11b6b531694e09a6ae5b06528377fe | GET | /api/users] - 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.password,
+        p1_0.id,
+        p1_0.content_type,
+        p1_0.created_at,
+        p1_0.file_name,
+        p1_0.size,
+        s1_0.id,
+        s1_0.created_at,
+        s1_0.last_active_at,
+        s1_0.updated_at,
+        s1_0.user_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    left join
+        binary_contents p1_0 
+            on p1_0.id=u1_0.profile_id 
+    join
+        user_statuses s1_0 
+            on u1_0.id=s1_0.user_id
+26-08-02 01:53:41.104 [http-nio-8080-exec-10] [32mDEBUG[0;39m org.hibernate.SQL                    [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - 
+    select
+        rs1_0.id,
+        rs1_0.channel_id,
+        rs1_0.created_at,
+        rs1_0.last_read_at,
+        rs1_0.updated_at,
+        rs1_0.user_id 
+    from
+        read_statuses rs1_0 
+    where
+        rs1_0.user_id=?
+26-08-02 01:53:41.104 [http-nio-8080-exec-8] [32mDEBUG[0;39m org.hibernate.SQL                    [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - 
+    select
+        rs1_0.id,
+        rs1_0.channel_id,
+        rs1_0.created_at,
+        rs1_0.last_read_at,
+        rs1_0.updated_at,
+        rs1_0.user_id 
+    from
+        read_statuses rs1_0 
+    where
+        rs1_0.user_id=?
+26-08-02 01:53:41.104 [http-nio-8080-exec-10] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - binding parameter (1:UUID) <- [86b0c178-4485-4059-9126-38d23d12b4fa]
+26-08-02 01:53:41.104 [http-nio-8080-exec-9] [32mDEBUG[0;39m org.hibernate.SQL                    [7ce93e385bdd4753b7a196485903babe | GET | /api/users] - 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.password,
+        p1_0.id,
+        p1_0.content_type,
+        p1_0.created_at,
+        p1_0.file_name,
+        p1_0.size,
+        s1_0.id,
+        s1_0.created_at,
+        s1_0.last_active_at,
+        s1_0.updated_at,
+        s1_0.user_id,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    left join
+        binary_contents p1_0 
+            on p1_0.id=u1_0.profile_id 
+    join
+        user_statuses s1_0 
+            on u1_0.id=s1_0.user_id
+26-08-02 01:53:41.105 [http-nio-8080-exec-8] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - binding parameter (1:UUID) <- [86b0c178-4485-4059-9126-38d23d12b4fa]
+26-08-02 01:53:41.114 [http-nio-8080-exec-10] [32mINFO [0;39m c.s.m.d.s.b.BasicReadStatusService   [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 완료: userId=86b0c178-4485-4059-9126-38d23d12b4fa, 조회된 항목 수=0
+26-08-02 01:53:41.115 [http-nio-8080-exec-1] [32mINFO [0;39m c.s.m.d.s.basic.BasicUserService     [9f11b6b531694e09a6ae5b06528377fe | GET | /api/users] - 모든 사용자 조회 완료: 총 3명
+26-08-02 01:53:41.116 [http-nio-8080-exec-3] [32mINFO [0;39m c.s.m.d.s.basic.BasicUserService     [c1f31950c419486dbe2a62019855a6a1 | GET | /api/users] - 모든 사용자 조회 완료: 총 3명
+26-08-02 01:53:41.116 [http-nio-8080-exec-9] [32mINFO [0;39m c.s.m.d.s.basic.BasicUserService     [7ce93e385bdd4753b7a196485903babe | GET | /api/users] - 모든 사용자 조회 완료: 총 3명
+26-08-02 01:53:41.119 [http-nio-8080-exec-10] [32mDEBUG[0;39m c.s.m.d.c.ReadStatusController       [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 응답: count=0
+26-08-02 01:53:41.120 [http-nio-8080-exec-8] [32mDEBUG[0;39m org.hibernate.SQL                    [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.name,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        channels c1_0 
+    where
+        c1_0.type=? 
+        or c1_0.id in (?)
+26-08-02 01:53:41.121 [http-nio-8080-exec-8] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - binding parameter (1:VARCHAR) <- [PUBLIC]
+26-08-02 01:53:41.121 [http-nio-8080-exec-8] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - binding parameter (2:UUID) <- [null]
+26-08-02 01:53:41.122 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [7ce93e385bdd4753b7a196485903babe | GET | /api/users] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.122 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [9f11b6b531694e09a6ae5b06528377fe | GET | /api/users] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.122 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [c1f31950c419486dbe2a62019855a6a1 | GET | /api/users] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.122 [http-nio-8080-exec-9] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [7ce93e385bdd4753b7a196485903babe | GET | /api/users] - Request completed
+26-08-02 01:53:41.122 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [c1f31950c419486dbe2a62019855a6a1 | GET | /api/users] - Request completed
+26-08-02 01:53:41.122 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.122 [http-nio-8080-exec-1] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [9f11b6b531694e09a6ae5b06528377fe | GET | /api/users] - Request completed
+26-08-02 01:53:41.122 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.122 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.122 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.122 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.123 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.123 [http-nio-8080-exec-9] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.123 [http-nio-8080-exec-10] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [0c511bbb88ff4e75b899f22a72dd82df | GET | /api/readStatuses] - Request completed
+26-08-02 01:53:41.124 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.124 [http-nio-8080-exec-10] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.136 [http-nio-8080-exec-8] [32mDEBUG[0;39m org.hibernate.SQL                    [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - 
+    select
+        m1_0.created_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first 1 rows only
+26-08-02 01:53:41.137 [http-nio-8080-exec-8] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - binding parameter (1:UUID) <- [6349e6b7-ccee-4d81-b8f4-22f32c89710f]
+26-08-02 01:53:41.138 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.138 [http-nio-8080-exec-4] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483
+26-08-02 01:53:41.138 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.139 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483
+26-08-02 01:53:41.140 [http-nio-8080-exec-8] [32mDEBUG[0;39m org.hibernate.SQL                    [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - 
+    select
+        m1_0.created_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first 1 rows only
+26-08-02 01:53:41.140 [http-nio-8080-exec-8] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - binding parameter (1:UUID) <- [9b699b1f-dd06-4d4f-aa1c-a51d2e5dde31]
+26-08-02 01:53:41.140 [http-nio-8080-exec-4] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - Request started
+26-08-02 01:53:41.141 [http-nio-8080-exec-4] [32mINFO [0;39m c.s.m.d.c.BinaryContentController    [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - 바이너리 컨텐츠 조회 요청: id=662b1d42-ebfd-4af7-8e42-563b9e6af483
+26-08-02 01:53:41.143 [http-nio-8080-exec-4] [32mDEBUG[0;39m c.s.m.d.s.b.BasicBinaryContentService [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - 바이너리 컨텐츠 조회 시작: id=662b1d42-ebfd-4af7-8e42-563b9e6af483
+26-08-02 01:53:41.144 [http-nio-8080-exec-8] [32mDEBUG[0;39m c.s.m.d.controller.ChannelController [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - 사용자별 채널 목록 조회 응답: count=2
+26-08-02 01:53:41.166 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.166 [http-nio-8080-exec-8] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [52679d40dcbf4a529b4fc91c27b5d620 | GET | /api/channels] - Request completed
+26-08-02 01:53:41.166 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.167 [http-nio-8080-exec-8] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/readStatuses?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.173 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.174 [http-nio-8080-exec-2] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/readStatuses?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.175 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - Request started
+26-08-02 01:53:41.175 [http-nio-8080-exec-2] [32mINFO [0;39m c.s.m.d.c.ReadStatusController       [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 요청: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.175 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.s.b.BasicReadStatusService   [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 시작: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:41.177 [http-nio-8080-exec-2] [32mDEBUG[0;39m org.hibernate.SQL                    [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - 
+    select
+        rs1_0.id,
+        rs1_0.channel_id,
+        rs1_0.created_at,
+        rs1_0.last_read_at,
+        rs1_0.updated_at,
+        rs1_0.user_id 
+    from
+        read_statuses rs1_0 
+    where
+        rs1_0.user_id=?
+26-08-02 01:53:41.177 [http-nio-8080-exec-4] [32mDEBUG[0;39m org.hibernate.SQL                    [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - 
+    select
+        bc1_0.id,
+        bc1_0.content_type,
+        bc1_0.created_at,
+        bc1_0.file_name,
+        bc1_0.size 
+    from
+        binary_contents bc1_0 
+    where
+        bc1_0.id=?
+26-08-02 01:53:41.177 [http-nio-8080-exec-2] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - binding parameter (1:UUID) <- [86b0c178-4485-4059-9126-38d23d12b4fa]
+26-08-02 01:53:41.177 [http-nio-8080-exec-4] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - binding parameter (1:UUID) <- [662b1d42-ebfd-4af7-8e42-563b9e6af483]
+26-08-02 01:53:41.178 [http-nio-8080-exec-2] [32mINFO [0;39m c.s.m.d.s.b.BasicReadStatusService   [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 완료: userId=86b0c178-4485-4059-9126-38d23d12b4fa, 조회된 항목 수=0
+26-08-02 01:53:41.179 [http-nio-8080-exec-4] [32mINFO [0;39m c.s.m.d.s.b.BasicBinaryContentService [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - 바이너리 컨텐츠 조회 완료: id=662b1d42-ebfd-4af7-8e42-563b9e6af483, fileName=woody.png
+26-08-02 01:53:41.179 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.c.ReadStatusController       [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 응답: count=0
+26-08-02 01:53:41.179 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.180 [http-nio-8080-exec-2] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [48b21c63309048ce9df6003737e085c7 | GET | /api/readStatuses] - Request completed
+26-08-02 01:53:41.180 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.180 [http-nio-8080-exec-2] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.179 [http-nio-8080-exec-4] [32mDEBUG[0;39m c.s.m.d.c.BinaryContentController    [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - 바이너리 컨텐츠 조회 응답: BinaryContentDto[id=662b1d42-ebfd-4af7-8e42-563b9e6af483, fileName=woody.png, size=341902, contentType=image/png]
+26-08-02 01:53:41.186 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.186 [http-nio-8080-exec-4] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [98e25cc693ec40ef994472437a052f11 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483] - Request completed
+26-08-02 01:53:41.186 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.186 [http-nio-8080-exec-4] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:41.190 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:41.190 [http-nio-8080-exec-5] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download
+26-08-02 01:53:41.190 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:41.190 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:41.190 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - Request started
+26-08-02 01:53:41.191 [http-nio-8080-exec-5] [32mINFO [0;39m c.s.m.d.c.BinaryContentController    [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - 바이너리 컨텐츠 다운로드 요청: id=662b1d42-ebfd-4af7-8e42-563b9e6af483
+26-08-02 01:53:41.192 [http-nio-8080-exec-5] [32mDEBUG[0;39m c.s.m.d.s.b.BasicBinaryContentService [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - 바이너리 컨텐츠 조회 시작: id=662b1d42-ebfd-4af7-8e42-563b9e6af483
+26-08-02 01:53:41.192 [http-nio-8080-exec-5] [32mDEBUG[0;39m org.hibernate.SQL                    [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - 
+    select
+        bc1_0.id,
+        bc1_0.content_type,
+        bc1_0.created_at,
+        bc1_0.file_name,
+        bc1_0.size 
+    from
+        binary_contents bc1_0 
+    where
+        bc1_0.id=?
+26-08-02 01:53:41.192 [http-nio-8080-exec-5] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - binding parameter (1:UUID) <- [662b1d42-ebfd-4af7-8e42-563b9e6af483]
+26-08-02 01:53:41.193 [http-nio-8080-exec-5] [32mINFO [0;39m c.s.m.d.s.b.BasicBinaryContentService [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - 바이너리 컨텐츠 조회 완료: id=662b1d42-ebfd-4af7-8e42-563b9e6af483, fileName=woody.png
+26-08-02 01:53:41.194 [http-nio-8080-exec-5] [31mERROR[0;39m c.s.m.d.e.GlobalExceptionHandler     [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - 예상치 못한 오류 발생: File with key 662b1d42-ebfd-4af7-8e42-563b9e6af483 does not exist
+java.util.NoSuchElementException: File with key 662b1d42-ebfd-4af7-8e42-563b9e6af483 does not exist
+	at com.sprint.mission.discodeit.storage.local.LocalBinaryContentStorage.get(LocalBinaryContentStorage.java:62)
+	at com.sprint.mission.discodeit.storage.local.LocalBinaryContentStorage.download(LocalBinaryContentStorage.java:78)
+	at com.sprint.mission.discodeit.controller.BinaryContentController.download(BinaryContentController.java:55)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter.doFilterInternal(DefaultLogoutPageGeneratingFilter.java:58)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:220)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:206)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.ui.DefaultResourcesFilter.doFilter(DefaultResourcesFilter.java:72)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26-08-02 01:53:41.197 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:41.197 [http-nio-8080-exec-5] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [6e2056bcd524414e89909cea5a817ce6 | GET | /api/binaryContents/662b1d42-ebfd-4af7-8e42-563b9e6af483/download] - Request completed
+26-08-02 01:53:41.197 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:41.197 [http-nio-8080-exec-5] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:44.032 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:44.032 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/channels?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.032 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:44.032 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:44.032 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:44.032 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:44.033 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:44.034 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:44.034 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:44.034 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:44.034 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:44.034 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:44.034 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:44.035 [http-nio-8080-exec-6] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/channels?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.035 [http-nio-8080-exec-6] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - Request started
+26-08-02 01:53:44.036 [http-nio-8080-exec-6] [32mINFO [0;39m c.s.m.d.controller.ChannelController [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - 사용자별 채널 목록 조회 요청: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.039 [http-nio-8080-exec-6] [32mDEBUG[0;39m org.hibernate.SQL                    [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - 
+    select
+        rs1_0.id,
+        rs1_0.channel_id,
+        rs1_0.created_at,
+        rs1_0.last_read_at,
+        rs1_0.updated_at,
+        rs1_0.user_id 
+    from
+        read_statuses rs1_0 
+    where
+        rs1_0.user_id=?
+26-08-02 01:53:44.039 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - binding parameter (1:UUID) <- [86b0c178-4485-4059-9126-38d23d12b4fa]
+26-08-02 01:53:44.043 [http-nio-8080-exec-6] [32mDEBUG[0;39m org.hibernate.SQL                    [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.description,
+        c1_0.name,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        channels c1_0 
+    where
+        c1_0.type=? 
+        or c1_0.id in (?)
+26-08-02 01:53:44.054 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - binding parameter (1:VARCHAR) <- [PUBLIC]
+26-08-02 01:53:44.054 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - binding parameter (2:UUID) <- [null]
+26-08-02 01:53:44.057 [http-nio-8080-exec-6] [32mDEBUG[0;39m org.hibernate.SQL                    [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - 
+    select
+        m1_0.created_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first 1 rows only
+26-08-02 01:53:44.057 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - binding parameter (1:UUID) <- [6349e6b7-ccee-4d81-b8f4-22f32c89710f]
+26-08-02 01:53:44.060 [http-nio-8080-exec-6] [32mDEBUG[0;39m org.hibernate.SQL                    [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - 
+    select
+        m1_0.created_at 
+    from
+        messages m1_0 
+    where
+        m1_0.channel_id=? 
+    order by
+        m1_0.created_at desc 
+    fetch
+        first 1 rows only
+26-08-02 01:53:44.060 [http-nio-8080-exec-6] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - binding parameter (1:UUID) <- [9b699b1f-dd06-4d4f-aa1c-a51d2e5dde31]
+26-08-02 01:53:44.062 [http-nio-8080-exec-6] [32mDEBUG[0;39m c.s.m.d.controller.ChannelController [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - 사용자별 채널 목록 조회 응답: count=2
+26-08-02 01:53:44.063 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:44.064 [http-nio-8080-exec-6] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [0d9b9eec68e149dab1acc4adb3eba4bf | GET | /api/channels] - Request completed
+26-08-02 01:53:44.064 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:44.065 [http-nio-8080-exec-6] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:44.069 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:44.069 [http-nio-8080-exec-7] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/readStatuses?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.069 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:44.069 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:44.069 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:44.070 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:44.071 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:44.071 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:44.071 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:44.071 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:44.071 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:44.072 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:44.072 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:44.072 [http-nio-8080-exec-7] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/readStatuses?userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.072 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - Request started
+26-08-02 01:53:44.073 [http-nio-8080-exec-7] [32mINFO [0;39m c.s.m.d.c.ReadStatusController       [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 요청: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.073 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.s.b.BasicReadStatusService   [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 시작: userId=86b0c178-4485-4059-9126-38d23d12b4fa
+26-08-02 01:53:44.074 [http-nio-8080-exec-7] [32mDEBUG[0;39m org.hibernate.SQL                    [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - 
+    select
+        rs1_0.id,
+        rs1_0.channel_id,
+        rs1_0.created_at,
+        rs1_0.last_read_at,
+        rs1_0.updated_at,
+        rs1_0.user_id 
+    from
+        read_statuses rs1_0 
+    where
+        rs1_0.user_id=?
+26-08-02 01:53:44.074 [http-nio-8080-exec-7] [32mTRACE[0;39m org.hibernate.orm.jdbc.bind          [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - binding parameter (1:UUID) <- [86b0c178-4485-4059-9126-38d23d12b4fa]
+26-08-02 01:53:44.075 [http-nio-8080-exec-7] [32mINFO [0;39m c.s.m.d.s.b.BasicReadStatusService   [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 완료: userId=86b0c178-4485-4059-9126-38d23d12b4fa, 조회된 항목 수=0
+26-08-02 01:53:44.075 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.c.ReadStatusController       [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - 사용자별 읽음 상태 목록 조회 응답: count=0
+26-08-02 01:53:44.076 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:44.077 [http-nio-8080-exec-7] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [cf70b4afee1f4f89841c332658704bec | GET | /api/readStatuses] - Request completed
+26-08-02 01:53:44.077 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:44.077 [http-nio-8080-exec-7] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Did not set SecurityContextHolder since already authenticated UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]
+26-08-02 01:53:45.571 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:45.572 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing POST /api/auth/logout
+26-08-02 01:53:45.572 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:45.572 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:45.573 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:45.573 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:45.573 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:45.574 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:45.575 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]] from SPRING_SECURITY_CONTEXT
+26-08-02 01:53:45.575 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Logging out [UsernamePasswordAuthenticationToken [Principal=com.sprint.mission.discodeit.security.DiscodeitUserDetails@1b9458e9, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[]]]
+26-08-02 01:53:45.576 [http-nio-8080-exec-1] [32mDEBUG[0;39m o.s.s.w.a.l.SecurityContextLogoutHandler [ |  | ] - Invalidated session 5B0C833A8D2E42A5EA6D5DDB67ECAAF4
+26-08-02 01:53:45.582 [http-nio-8080-exec-1] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [ |  | ] - Not injecting HSTS header since it did not match request to [Is Secure]
+26-08-02 01:53:45.589 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Trying to match request against DefaultSecurityFilterChain defined as 'filterChain' in [class path resource [com/sprint/mission/discodeit/config/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Csrf, Logout, UsernamePasswordAuthentication, DefaultResources, DefaultLoginPageGenerating, DefaultLogoutPageGenerating, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, ExceptionTranslation] (1/1)
+26-08-02 01:53:45.589 [http-nio-8080-exec-3] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Securing GET /api/auth/csrf-token
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DisableEncodeUrlFilter (1/14)
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking WebAsyncManagerIntegrationFilter (2/14)
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderFilter (3/14)
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking HeaderWriterFilter (4/14)
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking CsrfFilter (5/14)
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.csrf.CsrfFilter     [ |  | ] - Did not protect against CSRF since request did not match CsrfNotRequired [TRACE, HEAD, GET, OPTIONS]
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking LogoutFilter (6/14)
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.logout.LogoutFilter        [ |  | ] - Did not match request to Ant [pattern='/api/auth/logout', POST]
+26-08-02 01:53:45.590 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking UsernamePasswordAuthenticationFilter (7/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.UsernamePasswordAuthenticationFilter [ |  | ] - Did not match request to Ant [pattern='/api/auth/login', POST]
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultResourcesFilter (8/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLoginPageGeneratingFilter (9/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking DefaultLogoutPageGeneratingFilter (10/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.u.DefaultLogoutPageGeneratingFilter [ |  | ] - Did not render default logout page since request did not match [Ant [pattern='/logout', GET]]
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking RequestCacheAwareFilter (11/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.s.HttpSessionRequestCache    [ |  | ] - matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking SecurityContextHolderAwareRequestFilter (12/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking AnonymousAuthenticationFilter (13/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Invoking ExceptionTranslationFilter (14/14)
+26-08-02 01:53:45.591 [http-nio-8080-exec-3] [32mDEBUG[0;39m o.s.security.web.FilterChainProxy    [ |  | ] - Secured GET /api/auth/csrf-token
+26-08-02 01:53:45.592 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [0decbb6ff4fb47e39ecf7b8fd38cee13 | GET | /api/auth/csrf-token] - Request started
+26-08-02 01:53:45.596 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.controller.AuthController    [0decbb6ff4fb47e39ecf7b8fd38cee13 | GET | /api/auth/csrf-token] - CSRF 토큰 요청: SgPtrgLUmJ1oXxTMjSI8NVuXZsLePTnwlMn7UfcpN49ku_X1LmffnjLmqKpFPiL-6A8IDT_zS_vmDwrd9f_DaJMdUrpS2s3E
+26-08-02 01:53:45.601 [http-nio-8080-exec-3] [32mDEBUG[0;39m c.s.m.d.config.MDCLoggingInterceptor [0decbb6ff4fb47e39ecf7b8fd38cee13 | GET | /api/auth/csrf-token] - Request completed
+26-08-02 01:53:45.601 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.HttpSessionSecurityContextRepository [ |  | ] - No HttpSession currently exists
+26-08-02 01:53:45.601 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:45.601 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.c.SupplierDeferredSecurityContext [ |  | ] - Created SecurityContextImpl [Null authentication]
+26-08-02 01:53:45.601 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.a.AnonymousAuthenticationFilter [ |  | ] - Set SecurityContextHolder to AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
+26-08-02 01:53:45.602 [http-nio-8080-exec-3] [32mTRACE[0;39m o.s.s.w.h.writers.HstsHeaderWriter   [ |  | ] - Not injecting HSTS header since it did not match request to [Is Secure]
