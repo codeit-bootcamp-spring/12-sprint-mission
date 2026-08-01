@@ -29,4 +29,8 @@ public class SessionManager {
             activeList.forEach(SessionInformation::expireNow);
         }
     }
+
+    public boolean isOnline(UUID userId) {
+        return !getActiveSessionByUserId(userId).isEmpty();
+    }
 }
