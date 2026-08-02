@@ -18,12 +18,15 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +39,8 @@ public class SecurityConfig {
   private final ObjectMapper objectMapper;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry)
+      throws Exception {
     return http
         .csrf(csrf -> csrf
             .ignoringRequestMatchers("/api/auth/logout")
@@ -71,12 +75,25 @@ public class SecurityConfig {
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
             .successHandler(loginSuccessHandler)
-            .failureHandler(loginFailureHandler))
+            .failureHandler(loginFailureHandler)
+        )
         .logout(logout -> logout
             .logoutUrl("/api/auth/logout")
             .logoutSuccessHandler(
-                new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)))
+                new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
+        )
+        .sessionManagement(session -> session
+            .sessionFixation().migrateSession()
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(false)
+            .sessionRegistry(sessionRegistry)
+        )
         .build();
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 
   @Bean
@@ -114,7 +131,13 @@ public class SecurityConfig {
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
   }
+
+  @Bean
+  public HttpSessionEventPublisher httpSessionEventPublisher() {
+    return new HttpSessionEventPublisher();
+  }
+
 }

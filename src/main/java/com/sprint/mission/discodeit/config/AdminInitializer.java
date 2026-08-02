@@ -2,9 +2,7 @@ package com.sprint.mission.discodeit.config;
 
 import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -37,7 +35,6 @@ public class AdminInitializer implements ApplicationRunner {
     );
 
     admin.updateRole(Role.ADMIN);
-    new UserStatus(admin, Instant.now());
 
     userRepository.save(admin);
 

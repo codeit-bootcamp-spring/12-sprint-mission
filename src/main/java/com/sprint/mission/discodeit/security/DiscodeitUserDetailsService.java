@@ -22,7 +22,7 @@ public class DiscodeitUserDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
     return new DiscodeitUserDetails( // SpringSecurity 에 반환
-        userMapper.toDto(user),
+        userMapper.toDto(user, false),
         user.getPassword()
     );
   }

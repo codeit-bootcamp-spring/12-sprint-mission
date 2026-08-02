@@ -40,7 +40,7 @@ public abstract class ChannelMapper {
       readStatusRepository.findAllByChannelIdWithUser(channel.getId())
           .stream()
           .map(ReadStatus::getUser)
-          .map(userMapper::toDto)
+          .map(user -> userMapper.toDto(user, false))
           .forEach(participants::add);
     }
     return participants;

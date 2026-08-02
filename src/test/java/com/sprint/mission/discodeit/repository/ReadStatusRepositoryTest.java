@@ -7,7 +7,6 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -135,7 +134,8 @@ class ReadStatusRepositoryTest {
     entityManager.clear();
 
     // when
-    Boolean exists = readStatusRepository.findByUserIdAndChannelId(user.getId(), channel.getId()).isPresent();
+    Boolean exists = readStatusRepository.findByUserIdAndChannelId(user.getId(), channel.getId())
+        .isPresent();
 
     // then
     assertThat(exists).isTrue();
@@ -155,7 +155,8 @@ class ReadStatusRepositoryTest {
     // 읽음 상태를 생성하지 않음
 
     // when
-    Boolean exists = readStatusRepository.findByUserIdAndChannelId(user.getId(), channel.getId()).isPresent();
+    Boolean exists = readStatusRepository.findByUserIdAndChannelId(user.getId(), channel.getId())
+        .isPresent();
 
     // then
     assertThat(exists).isFalse();
@@ -189,11 +190,13 @@ class ReadStatusRepositoryTest {
 
     // then
     // 해당 채널의 읽음 상태는 삭제되었는지 확인
-    List<ReadStatus> channelReadStatuses = readStatusRepository.findAllByChannelIdWithUser(channel.getId());
+    List<ReadStatus> channelReadStatuses = readStatusRepository.findAllByChannelIdWithUser(
+        channel.getId());
     assertThat(channelReadStatuses).isEmpty();
 
     // 다른 채널의 읽음 상태는 그대로인지 확인
-    List<ReadStatus> otherChannelReadStatuses = readStatusRepository.findAllByChannelIdWithUser(otherChannel.getId());
+    List<ReadStatus> otherChannelReadStatuses = readStatusRepository.findAllByChannelIdWithUser(
+        otherChannel.getId());
     assertThat(otherChannelReadStatuses).hasSize(1);
   }
 } 
