@@ -22,6 +22,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class BasicUserService implements UserService {
   private final UserStatusRepository userStatusRepository;
   private final BinaryContentStorage binaryContentStorage;
   private final UserMapper userMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public UserDto create(UserCreateRequest userCreateRequest,
@@ -58,8 +60,9 @@ public class BasicUserService implements UserService {
         })
         .orElse(null);
 
+    // 비밀번호는 해시로만 저장
     User user = new User(userCreateRequest.username(), userCreateRequest.email(),
-        userCreateRequest.password(), profile);
+        passwordEncoder.encode(userCreateRequest.password()), profile);
     User savedUser = userRepository.save(user);
 
     // UserStatus도 함께 생성 (유저 생성 시 온라인 상태 초기화)
@@ -111,8 +114,13 @@ public class BasicUserService implements UserService {
         })
         .orElse(null);
 
+    // 비밀번호를 변경하는 경우에도 해시로 저장
+    String newPassword = userUpdateRequest.newPassword() == null
+        ? null
+        : passwordEncoder.encode(userUpdateRequest.newPassword());
+
     user.update(userUpdateRequest.newUsername(), userUpdateRequest.newEmail(),
-        userUpdateRequest.newPassword(), newProfile);
+        newPassword, newProfile);
     log.info("User updated: id={}", userId);
     return userMapper.toDto(userRepository.save(user));
   }
