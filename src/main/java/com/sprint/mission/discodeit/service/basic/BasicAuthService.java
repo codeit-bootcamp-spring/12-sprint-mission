@@ -1,33 +1,42 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.request.LoginRequest;
+import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.RoleUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.SessionManager;
 import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
+import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BasicAuthService implements AuthService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final SessionManager sessionManager;
 
-  @Override
-  public User login(LoginRequest loginRequest) {
-    String username = loginRequest.username();
-    String password = loginRequest.password();
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    @Override
+    public UserDto updateRole(RoleUpdateRequest request) {
+        UUID userId = request.userId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> UserNotFoundException.withId(userId));
 
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(
-            () -> new NoSuchElementException("User with username " + username + " not found"));
+        user.updateRole(request.newRole());
 
-    if (!user.getPassword().equals(password)) {
-      throw new IllegalArgumentException("Wrong password");
+        sessionManager.invalidateSessionsByUserId(userId);
+
+        return userMapper.toDto(user);
     }
-
-    return user;
-  }
 }
