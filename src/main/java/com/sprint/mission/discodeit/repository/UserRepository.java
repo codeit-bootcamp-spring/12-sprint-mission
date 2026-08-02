@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.repository;
 
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   // 로그인 시 UserDetails를 만들 때 profile/status까지 함께 조회
   @EntityGraph(attributePaths = {"profile", "status"})
   Optional<User> findByUsername(String username);
+
+  boolean existsByRole(Role role);
 
   boolean existsByEmail(String email);
 

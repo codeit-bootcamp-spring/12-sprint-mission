@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -21,9 +22,10 @@ public class DiscodeitUserDetails implements UserDetails {
   private final UserDto userDto;
   private final String password;
 
+  // hasRole('ADMIN') 형태로 검사하므로 ROLE_ 접두사를 붙여준다
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of();
+    return List.of(new SimpleGrantedAuthority("ROLE_" + userDto.role().name()));
   }
 
   @Override

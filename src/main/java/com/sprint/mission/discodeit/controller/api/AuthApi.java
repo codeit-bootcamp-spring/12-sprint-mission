@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.controller.api;
 
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,4 +32,16 @@ public interface AuthApi {
       @ApiResponse(responseCode = "401", description = "인증되지 않은 요청")
   })
   ResponseEntity<UserDto> me(@Parameter(hidden = true) DiscodeitUserDetails userDetails);
+
+  @Operation(summary = "사용자 권한 수정")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "권한 수정 성공",
+          content = @Content(schema = @Schema(implementation = UserDto.class))
+      ),
+      @ApiResponse(responseCode = "403", description = "ADMIN 권한이 없음"),
+      @ApiResponse(responseCode = "404", description = "User를 찾을 수 없음")
+  })
+  ResponseEntity<UserDto> updateRole(
+      @Parameter(description = "권한 수정 정보") UserRoleUpdateRequest request);
 }
