@@ -10,6 +10,7 @@ import com.sprint.mission.discodeit.service.AuthService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,10 @@ public class BasicAuthService implements AuthService {
         .orElseThrow(() -> new UserNotFoundException(userId));
   }
 
+  // 사용자 권한 수정은 관리자만 가능
   @Override
   @Transactional
+  @PreAuthorize("hasRole('ADMIN')")
   public UserDto updateRole(UserRoleUpdateRequest request) {
     User user = userRepository.findById(request.userId())
         .orElseThrow(() -> new UserNotFoundException(request.userId()));

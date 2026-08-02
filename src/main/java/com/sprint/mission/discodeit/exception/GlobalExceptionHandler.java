@@ -11,6 +11,7 @@ import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.exception.userstatus.DuplicateUserStatusException;
 import com.sprint.mission.discodeit.exception.userstatus.UserStatusNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -79,6 +80,15 @@ public class GlobalExceptionHandler {
         HttpStatus.BAD_REQUEST.value()
     );
     return ResponseEntity.badRequest().body(response);
+  }
+
+  // 403: 권한 없음 (Method Security에서 던진 예외가 Controller 밖으로 전파된 경우)
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e) {
+    log.warn("접근 권한 없음: {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        .body(ErrorResponse.of(e, "ACCESS_DENIED", "접근 권한이 없습니다.",
+            HttpStatus.FORBIDDEN.value()));
   }
 
   // 500: 스토리지 오류

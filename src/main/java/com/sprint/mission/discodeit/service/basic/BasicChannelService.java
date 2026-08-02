@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,9 @@ public class BasicChannelService implements ChannelService {
   private final ChannelMapper channelMapper;
   private final UserMapper userMapper;
 
+  // 퍼블릭 채널 생성/수정/삭제는 채널 매니저 이상만 가능
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public ChannelDto create(PublicChannelCreateRequest request) {
     Channel channel = new Channel(ChannelType.PUBLIC, request.name(), request.description());
     Channel saved = channelRepository.save(channel);
@@ -115,6 +118,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public ChannelDto update(UUID channelId, PublicChannelUpdateRequest request) {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> new ChannelNotFoundException(channelId));
@@ -127,6 +131,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public void delete(UUID channelId) {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> new ChannelNotFoundException(channelId));
