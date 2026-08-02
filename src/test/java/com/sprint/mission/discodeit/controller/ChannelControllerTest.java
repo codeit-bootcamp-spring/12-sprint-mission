@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,12 +28,15 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(value = ChannelController.class,
     excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JpaAuditingConfig.class))
 @Import(GlobalExceptionHandler.class)
+// 시큐리티 필터가 함께 적용되므로 인증된 사용자로 요청하고, 변경 요청에는 CSRF 토큰을 포함한다
+@WithMockUser
 class ChannelControllerTest {
 
   @Autowired MockMvc mockMvc;
@@ -50,6 +54,7 @@ class ChannelControllerTest {
 
     PublicChannelCreateRequest req = new PublicChannelCreateRequest("general", "desc");
     mockMvc.perform(post("/api/channels/public")
+            .with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(req)))
         .andExpect(status().isCreated())
@@ -64,7 +69,7 @@ class ChannelControllerTest {
     org.mockito.BDDMockito.willThrow(new ChannelNotFoundException(channelId))
         .given(channelService).delete(channelId);
 
-    mockMvc.perform(delete("/api/channels/{channelId}", channelId))
+    mockMvc.perform(delete("/api/channels/{channelId}", channelId).with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value("CHANNEL_NOT_FOUND"));
   }

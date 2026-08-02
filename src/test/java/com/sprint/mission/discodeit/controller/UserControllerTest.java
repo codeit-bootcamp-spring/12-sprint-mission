@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,6 +38,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(value = UserController.class,
     excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JpaAuditingConfig.class))
 @Import(GlobalExceptionHandler.class)
+// 시큐리티 필터가 함께 적용되므로 인증된 사용자로 요청하고, 변경 요청에는 CSRF 토큰을 포함한다
+@WithMockUser
 class UserControllerTest {
 
   @Autowired MockMvc mockMvc;
@@ -69,7 +73,8 @@ class UserControllerTest {
         objectMapper.writeValueAsBytes(req));
 
     mockMvc.perform(multipart("/api/users")
-            .file(requestPart))
+            .file(requestPart)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.username").value("newuser"));
   }
@@ -81,7 +86,7 @@ class UserControllerTest {
     org.mockito.BDDMockito.willThrow(new UserNotFoundException(userId))
         .given(userService).delete(userId);
 
-    mockMvc.perform(delete("/api/users/{userId}", userId))
+    mockMvc.perform(delete("/api/users/{userId}", userId).with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value("USER_NOT_FOUND"));
   }

@@ -1,5 +1,7 @@
 package com.sprint.mission.discodeit.integration;
 
+import static com.sprint.mission.discodeit.support.SecurityTestSupport.asUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -13,6 +15,7 @@ import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +28,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -38,23 +42,30 @@ class MessageIntegrationTest {
 
   private String userId;
   private String channelId;
+  private RequestPostProcessor author;
 
   @BeforeEach
   void setUp() throws Exception {
     MockMultipartFile userPart = new MockMultipartFile(
         "userCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
-        objectMapper.writeValueAsBytes(new UserCreateRequest("msguser", "msguser@email.com", "password123!")));
-    MvcResult userResult = mockMvc.perform(multipart("/api/users").file(userPart))
+        objectMapper.writeValueAsBytes(
+            new UserCreateRequest("msguser", "msguser@email.com", "password123!")));
+    MvcResult userResult = mockMvc.perform(multipart("/api/users").file(userPart).with(csrf()))
         .andExpect(status().isCreated())
         .andReturn();
     userId = objectMapper.readTree(userResult.getResponse().getContentAsString()).get("id").asText();
+    author = asUser(userId, "msguser", Role.USER);
 
     MvcResult channelResult = mockMvc.perform(post("/api/channels/public")
+            .with(asUser(UUID.randomUUID(), "manager", Role.CHANNEL_MANAGER))
+            .with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(new PublicChannelCreateRequest("test-channel", null))))
+            .content(objectMapper.writeValueAsString(
+                new PublicChannelCreateRequest("test-channel", null))))
         .andExpect(status().isCreated())
         .andReturn();
-    channelId = objectMapper.readTree(channelResult.getResponse().getContentAsString()).get("id").asText();
+    channelId = objectMapper.readTree(channelResult.getResponse().getContentAsString())
+        .get("id").asText();
   }
 
   private String createMessage(String content) throws Exception {
@@ -62,7 +73,10 @@ class MessageIntegrationTest {
         "messageCreateRequest", "", MediaType.APPLICATION_JSON_VALUE,
         objectMapper.writeValueAsBytes(new MessageCreateRequest(content,
             UUID.fromString(channelId), UUID.fromString(userId))));
-    MvcResult result = mockMvc.perform(multipart("/api/messages").file(part))
+    MvcResult result = mockMvc.perform(multipart("/api/messages")
+            .file(part)
+            .with(author)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andReturn();
     return objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asText();
@@ -76,18 +90,20 @@ class MessageIntegrationTest {
         objectMapper.writeValueAsBytes(new MessageCreateRequest("Hello World",
             UUID.fromString(channelId), UUID.fromString(userId))));
 
-    mockMvc.perform(multipart("/api/messages").file(part))
+    mockMvc.perform(multipart("/api/messages").file(part).with(author).with(csrf()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.content").value("Hello World"))
         .andExpect(jsonPath("$.channelId").value(channelId));
   }
 
   @Test
-  @DisplayName("PATCH /api/messages/{messageId} - 메시지 수정 성공")
+  @DisplayName("PATCH /api/messages/{messageId} - 작성자는 메시지 수정 성공")
   void updateMessage_success() throws Exception {
     String messageId = createMessage("Original");
 
     mockMvc.perform(patch("/api/messages/{messageId}", messageId)
+            .with(author)
+            .with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(new MessageUpdateRequest("Updated"))))
         .andExpect(status().isOk())
@@ -95,14 +111,28 @@ class MessageIntegrationTest {
   }
 
   @Test
+  @DisplayName("PATCH /api/messages/{messageId} - 작성자가 아니면 403 반환")
+  void updateMessage_notAuthor_returns403() throws Exception {
+    String messageId = createMessage("Original");
+
+    mockMvc.perform(patch("/api/messages/{messageId}", messageId)
+            .with(asUser(UUID.randomUUID(), "other", Role.USER))
+            .with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new MessageUpdateRequest("Hacked"))))
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.code").value("ACCESS_DENIED"));
+  }
+
+  @Test
   @DisplayName("DELETE /api/messages/{messageId} - 삭제 후 재삭제 시 404 반환")
   void deleteMessage_thenNotFound() throws Exception {
     String messageId = createMessage("ToDelete");
 
-    mockMvc.perform(delete("/api/messages/{messageId}", messageId))
+    mockMvc.perform(delete("/api/messages/{messageId}", messageId).with(author).with(csrf()))
         .andExpect(status().isNoContent());
 
-    mockMvc.perform(delete("/api/messages/{messageId}", messageId))
+    mockMvc.perform(delete("/api/messages/{messageId}", messageId).with(author).with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value("MESSAGE_NOT_FOUND"));
   }
@@ -113,7 +143,7 @@ class MessageIntegrationTest {
     createMessage("msg1");
     createMessage("msg2");
 
-    mockMvc.perform(get("/api/messages").param("channelId", channelId))
+    mockMvc.perform(get("/api/messages").param("channelId", channelId).with(author))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content").isArray())
         .andExpect(jsonPath("$.content.length()").value(2))
