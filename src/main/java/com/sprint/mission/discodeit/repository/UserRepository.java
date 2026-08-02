@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   @EntityGraph(attributePaths = {"profile", "status"})
   Optional<User> findById(UUID id);
 
+  // 로그인 시 UserDetails를 만들 때 profile/status까지 함께 조회
+  @EntityGraph(attributePaths = {"profile", "status"})
   Optional<User> findByUsername(String username);
 
   boolean existsByEmail(String email);
