@@ -31,4 +31,11 @@ public interface AuthApi {
       )
   })
   ResponseEntity<UserDto> login(@Parameter(description = "로그인 정보") LoginRequest loginRequest);
+
+  @Operation(summary = "CSRF 토큰 발급")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "203", description = "CSRF 토큰이 쿠키(XSRF-TOKEN)로 발급됨")
+  })
+  ResponseEntity<Void> getCsrfToken(
+      @Parameter(hidden = true) org.springframework.security.web.csrf.CsrfToken csrfToken);
 }
