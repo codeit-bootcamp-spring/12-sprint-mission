@@ -8,8 +8,6 @@ import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 import com.sprint.mission.discodeit.exception.readstatus.ReadStatusNotFoundException;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
-import com.sprint.mission.discodeit.exception.userstatus.DuplicateUserStatusException;
-import com.sprint.mission.discodeit.exception.userstatus.UserStatusNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.HttpStatus;
@@ -32,8 +30,7 @@ public class GlobalExceptionHandler {
       ChannelNotFoundException.class,
       MessageNotFoundException.class,
       BinaryContentNotFoundException.class,
-      ReadStatusNotFoundException.class,
-      UserStatusNotFoundException.class
+      ReadStatusNotFoundException.class
   })
   public ResponseEntity<ErrorResponse> handleNotFound(DiscodeitException e) {
     log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
@@ -52,7 +49,6 @@ public class GlobalExceptionHandler {
   // 400: Bad Request (중복, PRIVATE 채널 수정 등)
   @ExceptionHandler({
       UserAlreadyExistsException.class,
-      DuplicateUserStatusException.class,
       PrivateChannelUpdateException.class
   })
   public ResponseEntity<ErrorResponse> handleBadRequest(DiscodeitException e) {

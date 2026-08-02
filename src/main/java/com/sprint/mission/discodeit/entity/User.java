@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.entity;
 
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,10 +36,6 @@ public class User extends BaseUpdatableEntity {
   @OneToOne
   @JoinColumn(name = "profile_id", unique = true)
   private BinaryContent profile;
-
-  // 1:1 양방향 - User 삭제 시 UserStatus도 삭제 (cascade + orphanRemoval)
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private UserStatus status;
 
   // 회원가입으로 만들어지는 사용자는 항상 USER 권한
   public User(String username, String email, String password, BinaryContent profile) {
@@ -85,9 +80,5 @@ public class User extends BaseUpdatableEntity {
       this.role = newRole;
       this.updatedAt = Instant.now();
     }
-  }
-
-  public void assignStatus(UserStatus status) {
-    this.status = status;
   }
 }

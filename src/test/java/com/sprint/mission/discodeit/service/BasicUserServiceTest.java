@@ -10,17 +10,15 @@ import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,9 +35,9 @@ class BasicUserServiceTest {
 
   @Mock UserRepository userRepository;
   @Mock BinaryContentRepository binaryContentRepository;
-  @Mock UserStatusRepository userStatusRepository;
   @Mock BinaryContentStorage binaryContentStorage;
   @Mock UserMapper userMapper;
+  @Mock org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
   @InjectMocks BasicUserService userService;
 
@@ -51,7 +49,7 @@ class BasicUserServiceTest {
   void setUp() {
     userId = UUID.randomUUID();
     user = new User("testuser", "test@email.com", "password123!", null);
-    userDto = new UserDto(userId, "testuser", "test@email.com", null, true);
+    userDto = new UserDto(userId, "testuser", "test@email.com", null, true, Role.USER);
   }
 
   // ── create ──────────────────────────────────────────────────
@@ -61,12 +59,11 @@ class BasicUserServiceTest {
   void create_success() {
     // given
     UserCreateRequest req = new UserCreateRequest("testuser", "test@email.com", "password123!");
-    UserStatus status = new UserStatus(user, Instant.now());
 
     given(userRepository.existsByEmail(req.email())).willReturn(false);
     given(userRepository.existsByUsername(req.username())).willReturn(false);
+    given(passwordEncoder.encode(req.password())).willReturn("encoded-password");
     given(userRepository.save(any(User.class))).willReturn(user);
-    given(userStatusRepository.save(any(UserStatus.class))).willReturn(status);
     given(userMapper.toDto(any(User.class))).willReturn(userDto);
 
     // when
@@ -113,6 +110,7 @@ class BasicUserServiceTest {
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
     given(userRepository.existsByEmail(req.newEmail())).willReturn(false);
     given(userRepository.existsByUsername(req.newUsername())).willReturn(false);
+    given(passwordEncoder.encode(req.newPassword())).willReturn("encoded-password");
     given(userRepository.save(any(User.class))).willReturn(user);
     given(userMapper.toDto(any(User.class))).willReturn(userDto);
 

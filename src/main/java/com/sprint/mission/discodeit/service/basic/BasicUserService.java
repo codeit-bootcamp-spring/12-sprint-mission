@@ -6,16 +6,13 @@ import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +33,6 @@ public class BasicUserService implements UserService {
 
   private final UserRepository userRepository;
   private final BinaryContentRepository binaryContentRepository;
-  private final UserStatusRepository userStatusRepository;
   private final BinaryContentStorage binaryContentStorage;
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
@@ -65,11 +61,6 @@ public class BasicUserService implements UserService {
     User user = new User(userCreateRequest.username(), userCreateRequest.email(),
         passwordEncoder.encode(userCreateRequest.password()), profile);
     User savedUser = userRepository.save(user);
-
-    // UserStatus도 함께 생성 (유저 생성 시 온라인 상태 초기화)
-    UserStatus userStatus = new UserStatus(savedUser, Instant.now());
-    userStatusRepository.save(userStatus);
-    savedUser.assignStatus(userStatus);
 
     log.info("User created: id={}, username={}", savedUser.getId(), savedUser.getUsername());
     return userMapper.toDto(savedUser);

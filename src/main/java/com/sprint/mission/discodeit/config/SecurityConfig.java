@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.RestAccessDeniedHandler;
 import com.sprint.mission.discodeit.security.RestAuthenticationEntryPoint;
+import com.sprint.mission.discodeit.security.RestSessionInformationExpiredStrategy;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,10 +18,13 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableMethodSecurity
@@ -57,15 +61,37 @@ public class SecurityConfig {
     return handler;
   }
 
+  // 로그인 중인 사용자의 세션 정보를 관리 (온라인 여부 판단, 세션 강제 만료에 사용)
+  @Bean
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
+
+  // HttpSession이 만료/무효화되면 SessionRegistry의 SessionInformation도 함께 정리되도록 이벤트 발행
+  @Bean
+  public HttpSessionEventPublisher httpSessionEventPublisher() {
+    return new HttpSessionEventPublisher();
+  }
+
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,
       LoginSuccessHandler loginSuccessHandler,
       LoginFailureHandler loginFailureHandler,
       RestAuthenticationEntryPoint authenticationEntryPoint,
-      RestAccessDeniedHandler accessDeniedHandler
+      RestAccessDeniedHandler accessDeniedHandler,
+      RestSessionInformationExpiredStrategy sessionExpiredStrategy,
+      SessionRegistry sessionRegistry
   ) throws Exception {
     http
+        // 동일 계정 동시 로그인 차단: 새로 로그인하면 기존 세션을 만료시킨다
+        .sessionManagement(management -> management
+            .sessionConcurrency(concurrency -> concurrency
+                .maximumSessions(1)
+                .sessionRegistry(sessionRegistry)
+                .expiredSessionStrategy(sessionExpiredStrategy)
+            )
+        )
         .authorizeHttpRequests(auth -> auth
             // 인증 없이 접근해야 하는 요청
             .requestMatchers(HttpMethod.GET, "/api/auth/csrf-token").permitAll()

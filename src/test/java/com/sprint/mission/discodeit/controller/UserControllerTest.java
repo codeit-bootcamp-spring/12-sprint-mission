@@ -12,10 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.config.JpaAuditingConfig;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.exception.GlobalExceptionHandler;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.UserStatusService;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,13 +42,12 @@ class UserControllerTest {
   @Autowired ObjectMapper objectMapper;
 
   @MockitoBean UserService userService;
-  @MockitoBean UserStatusService userStatusService;
 
   @Test
   @DisplayName("GET /api/users - 사용자 목록 조회 성공")
   void findAll_success() throws Exception {
     UUID userId = UUID.randomUUID();
-    UserDto dto = new UserDto(userId, "testuser", "test@email.com", null, true);
+    UserDto dto = new UserDto(userId, "testuser", "test@email.com", null, true, Role.USER);
     given(userService.findAll()).willReturn(List.of(dto));
 
     mockMvc.perform(get("/api/users"))
@@ -61,7 +60,7 @@ class UserControllerTest {
   @DisplayName("POST /api/users - 사용자 생성 성공")
   void create_success() throws Exception {
     UUID userId = UUID.randomUUID();
-    UserDto dto = new UserDto(userId, "newuser", "new@email.com", null, true);
+    UserDto dto = new UserDto(userId, "newuser", "new@email.com", null, true, Role.USER);
     given(userService.create(any(UserCreateRequest.class), any(Optional.class))).willReturn(dto);
 
     UserCreateRequest req = new UserCreateRequest("newuser", "new@email.com", "password123!");

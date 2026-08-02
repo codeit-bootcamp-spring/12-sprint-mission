@@ -21,9 +21,6 @@ public enum ErrorCode {
   // ReadStatus
   READ_STATUS_NOT_FOUND("읽음 상태를 찾을 수 없습니다."),
   DUPLICATE_READ_STATUS("이미 존재하는 읽음 상태입니다."),
-  // UserStatus
-  USER_STATUS_NOT_FOUND("유저 상태를 찾을 수 없습니다."),
-  DUPLICATE_USER_STATUS("이미 존재하는 유저 상태입니다."),
   // Storage
   STORAGE_FAILURE("파일 저장/읽기에 실패했습니다.");
 

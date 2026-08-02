@@ -10,16 +10,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-  // N+1 문제 해결: User 조회 시 profile(@OneToOne), status(@OneToOne)를 JOIN으로 한 번에 로딩
-  // @EntityGraph 없이 findAll() 하면 각 User마다 profile/status를 개별 SELECT → N+1 발생
-  @EntityGraph(attributePaths = {"profile", "status"})
+  // N+1 문제 해결: User 조회 시 profile(@OneToOne)을 JOIN으로 한 번에 로딩
+  // @EntityGraph 없이 findAll() 하면 각 User마다 profile을 개별 SELECT → N+1 발생
+  @EntityGraph(attributePaths = {"profile"})
   List<User> findAll();
 
-  @EntityGraph(attributePaths = {"profile", "status"})
+  @EntityGraph(attributePaths = {"profile"})
   Optional<User> findById(UUID id);
 
-  // 로그인 시 UserDetails를 만들 때 profile/status까지 함께 조회
-  @EntityGraph(attributePaths = {"profile", "status"})
+  // 로그인 시 UserDetails를 만들 때 profile까지 함께 조회
+  @EntityGraph(attributePaths = {"profile"})
   Optional<User> findByUsername(String username);
 
   boolean existsByRole(Role role);
