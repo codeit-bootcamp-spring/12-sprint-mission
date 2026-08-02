@@ -22,6 +22,8 @@ logging:
     com.sprint.mission.discodeit: debug
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+    # 요청마다 통과하는 시큐리티 필터 목록을 확인하기 위해 trace로 설정
+    org.springframework.security: trace
 
 info:
   config:
