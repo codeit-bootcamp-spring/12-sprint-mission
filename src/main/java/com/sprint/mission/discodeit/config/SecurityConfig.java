@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.config;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,13 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 public class SecurityConfig {
+
+  // 서버를 재시작해도 발급된 remember-me 토큰이 유지되도록 키를 고정한다
+  @Value("${discodeit.security.remember-me.key}")
+  private String rememberMeKey;
+
+  @Value("${discodeit.security.remember-me.validity-seconds}")
+  private int rememberMeValiditySeconds;
 
   // 비밀번호는 평문 저장 없이 BCrypt 해시로만 저장한다 (salt 포함 60자)
   @Bean
@@ -39,6 +47,12 @@ public class SecurityConfig {
             .loginProcessingUrl("/api/auth/login")
             .successHandler(loginSuccessHandler)
             .failureHandler(loginFailureHandler)
+        )
+        // 로그인 유지: 세션이 만료돼도 remember-me 쿠키로 자동 재인증
+        .rememberMe(rememberMe -> rememberMe
+            .key(rememberMeKey)
+            .rememberMeParameter("remember-me")
+            .tokenValiditySeconds(rememberMeValiditySeconds)
         )
         // 로그아웃 흐름은 LogoutFilter가 그대로 처리하고, 처리 URL과 성공 응답만 대체한다
         .logout(logout -> logout
