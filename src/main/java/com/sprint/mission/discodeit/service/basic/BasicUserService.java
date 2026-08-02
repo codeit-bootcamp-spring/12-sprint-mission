@@ -38,8 +38,8 @@ public class BasicUserService implements UserService {
   private final SessionManager sessionManager;
 
 
-  @Transactional
   @Override
+  @Transactional
   public UserDto create(UserCreateRequest userCreateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     log.debug("사용자 생성 시작: {}", userCreateRequest);
@@ -75,8 +75,8 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(user, sessionManager.isOnline(user.getId()));
   }
 
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public UserDto find(UUID userId) {
     log.debug("사용자 조회 시작: id={}", userId);
 
@@ -88,8 +88,8 @@ public class BasicUserService implements UserService {
     return userDto;
   }
 
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public List<UserDto> findAll() {
     log.debug("모든 사용자 조회 시작");
     List<UserDto> userDtos = userRepository.findAllWithProfile()
@@ -101,8 +101,9 @@ public class BasicUserService implements UserService {
     return userDtos;
   }
 
-  @Transactional
   @Override
+  @Transactional
+  @PreAuthorize("principal.userDto.id() == #userId")
   public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     log.debug("사용자 수정 시작: id={}, request={}", userId, userUpdateRequest);
@@ -145,9 +146,9 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(user, sessionManager.isOnline(user.getId()));
   }
 
+  @Override
   @PreAuthorize("hasRole('ADMIN')")
   @Transactional
-  @Override
   public UserDto updateRole(UserRoleUpdateRequest userRoleUpdateRequest) {
     UUID userId = userRoleUpdateRequest.userId();
 
@@ -163,8 +164,9 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(user, false);
   }
 
-  @Transactional
   @Override
+  @Transactional
+  @PreAuthorize("principal.userDto.id() == #userId")
   public void delete(UUID userId) {
     log.debug("사용자 삭제 시작: id={}", userId);
 
