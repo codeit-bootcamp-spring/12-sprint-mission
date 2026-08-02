@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,7 +97,9 @@ public class BasicMessageService implements MessageService {
     return pageResponseMapper.fromSlice(dtoSlice, nextCursor);
   }
 
+  // 메시지 수정/삭제는 작성자만 가능
   @Override
+  @PreAuthorize("@messageAuthorizer.isAuthor(#messageId, principal.userId)")
   public MessageDto update(UUID messageId, MessageUpdateRequest request) {
     Message message = messageRepository.findById(messageId)
         .orElseThrow(() -> new MessageNotFoundException(messageId));
@@ -106,6 +109,7 @@ public class BasicMessageService implements MessageService {
   }
 
   @Override
+  @PreAuthorize("@messageAuthorizer.isAuthor(#messageId, principal.userId)")
   public void delete(UUID messageId) {
     Message message = messageRepository.findById(messageId)
         .orElseThrow(() -> new MessageNotFoundException(messageId));

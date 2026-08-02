@@ -22,6 +22,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,7 +89,9 @@ public class BasicUserService implements UserService {
     return userRepository.findAll().stream().map(userMapper::toDto).toList();
   }
 
+  // 사용자 정보 수정/삭제는 본인만 가능
   @Override
+  @PreAuthorize("#userId == principal.userId")
   public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     User user = userRepository.findById(userId)
@@ -126,6 +129,7 @@ public class BasicUserService implements UserService {
   }
 
   @Override
+  @PreAuthorize("#userId == principal.userId")
   public void delete(UUID userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new UserNotFoundException(userId));
