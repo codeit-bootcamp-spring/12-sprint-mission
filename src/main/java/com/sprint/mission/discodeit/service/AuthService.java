@@ -3,11 +3,8 @@ package com.sprint.mission.discodeit.service;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.security.jwt.JwtInformation;
-import java.util.UUID;
 
 public interface AuthService {
-
-  UserDto me(UUID userId);
 
   UserDto updateRole(UserRoleUpdateRequest request);
 

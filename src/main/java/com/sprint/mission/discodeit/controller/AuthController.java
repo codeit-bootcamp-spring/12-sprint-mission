@@ -4,7 +4,6 @@ import com.sprint.mission.discodeit.controller.api.AuthApi;
 import com.sprint.mission.discodeit.dto.data.JwtDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
-import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.security.jwt.JwtInformation;
 import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import com.sprint.mission.discodeit.service.AuthService;
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,13 +40,6 @@ public class AuthController implements AuthApi {
     return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
   }
 
-  // 인증에 성공한 요청이면 SecurityFilterChain이 세션의 인증 정보를 Principal로 주입해준다
-  @GetMapping(path = "me")
-  @Override
-  public ResponseEntity<UserDto> me(@AuthenticationPrincipal DiscodeitUserDetails userDetails) {
-    UserDto user = authService.me(userDetails.getUserDto().id());
-    return ResponseEntity.status(HttpStatus.OK).body(user);
-  }
 
   // 엑세스 토큰이 없거나 만료된 상태에서 호출되므로 인증을 요구하지 않는다.
   // 신원 확인은 HttpOnly 쿠키에 담긴 리프레시 토큰으로만 한다.

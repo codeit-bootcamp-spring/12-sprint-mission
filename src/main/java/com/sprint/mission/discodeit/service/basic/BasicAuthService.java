@@ -29,13 +29,6 @@ public class BasicAuthService implements AuthService {
   private final JwtRegistry jwtRegistry;
   private final JwtTokenProvider jwtTokenProvider;
 
-  // 토큰에 담긴 사용자 정보는 발급 시점의 스냅샷이라 최신 정보가 아닐 수 있으므로 DB에서 다시 조회한다
-  @Override
-  public UserDto me(UUID userId) {
-    return userRepository.findById(userId)
-        .map(userMapper::toDto)
-        .orElseThrow(() -> new UserNotFoundException(userId));
-  }
 
   // 사용자 권한 수정은 관리자만 가능
   @Override

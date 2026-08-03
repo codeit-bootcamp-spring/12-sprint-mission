@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.data.JwtDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
-import com.sprint.mission.discodeit.service.AuthService;
+import com.sprint.mission.discodeit.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
   private final ObjectMapper objectMapper;
   private final JwtTokenProvider jwtTokenProvider;
   private final JwtRegistry jwtRegistry;
-  private final AuthService authService;
+  private final UserService userService;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -46,7 +46,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
     // (등록 순서를 뒤집으면 로그인 응답의 online이 항상 false가 된다)
     jwtRegistry.registerJwtInformation(jwtInformation);
 
-    UserDto user = authService.me(userDetails.getUserId());
+    UserDto user = userService.find(userDetails.getUserId());
 
     response.addHeader(HttpHeaders.SET_COOKIE,
         jwtTokenProvider.createRefreshTokenCookie(jwtInformation.getRefreshToken()).toString());
