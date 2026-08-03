@@ -4,7 +4,10 @@ import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.RestAccessDeniedHandler;
 import com.sprint.mission.discodeit.security.RestAuthenticationEntryPoint;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtAuthenticationFilter;
 import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
+import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
@@ -56,7 +60,9 @@ public class SecurityConfig {
       JwtLoginSuccessHandler jwtLoginSuccessHandler,
       LoginFailureHandler loginFailureHandler,
       RestAuthenticationEntryPoint authenticationEntryPoint,
-      RestAccessDeniedHandler accessDeniedHandler
+      RestAccessDeniedHandler accessDeniedHandler,
+      JwtTokenProvider jwtTokenProvider,
+      JwtRegistry jwtRegistry
   ) throws Exception {
     http
         // 인증 상태를 토큰으로만 판단하므로 서버는 세션을 만들지도, 참조하지도 않는다
@@ -95,7 +101,12 @@ public class SecurityConfig {
         .exceptionHandling(ex -> ex
             .authenticationEntryPoint(authenticationEntryPoint)
             .accessDeniedHandler(accessDeniedHandler)
-        );
+        )
+        // 로그인 요청을 처리하는 UsernamePasswordAuthenticationFilter보다 앞에 두어,
+        // 이미 토큰을 가진 요청은 로그인 절차를 거치지 않고 인증되도록 한다.
+        // @Component로 등록하지 않는 이유는 Boot가 서블릿 필터 체인에도 자동 등록해 두 번 실행되기 때문이다.
+        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, jwtRegistry),
+            UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
