@@ -74,6 +74,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/auth/csrf-token").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/logout").permitAll()
+            // 엑세스 토큰이 없거나 만료된 상태에서 호출되는 API
+            .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
             // API가 아닌 요청 (정적 리소스, Swagger, Actuator)
             .requestMatchers("/", "/index.html", "/favicon.ico", "/assets/**", "/error").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/actuator/**").permitAll()

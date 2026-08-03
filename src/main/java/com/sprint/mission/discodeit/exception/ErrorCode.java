@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
   // Auth
   INVALID_CREDENTIALS("아이디 또는 비밀번호가 올바르지 않습니다."),
+  INVALID_REFRESH_TOKEN("유효하지 않은 리프레시 토큰입니다. 다시 로그인해 주세요."),
   // User
   USER_NOT_FOUND("사용자를 찾을 수 없습니다."),
   DUPLICATE_USER("이미 존재하는 사용자입니다."),

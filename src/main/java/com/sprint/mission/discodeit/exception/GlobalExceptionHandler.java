@@ -38,8 +38,11 @@ public class GlobalExceptionHandler {
         .body(ErrorResponse.of(e, HttpStatus.NOT_FOUND.value()));
   }
 
-  // 401: Unauthorized (로그인 실패)
-  @ExceptionHandler(InvalidCredentialsException.class)
+  // 401: Unauthorized (로그인 실패, 리프레시 토큰 무효)
+  @ExceptionHandler({
+      InvalidCredentialsException.class,
+      InvalidRefreshTokenException.class
+  })
   public ResponseEntity<ErrorResponse> handleUnauthorized(DiscodeitException e) {
     log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
