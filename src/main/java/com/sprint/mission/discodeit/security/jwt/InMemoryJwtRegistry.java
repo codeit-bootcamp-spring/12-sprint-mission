@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -121,6 +122,8 @@ public class InMemoryJwtRegistry implements JwtRegistry {
         });
   }
 
+  // 만료된 항목은 조회에 걸리지 않을 뿐 메모리에는 계속 남으므로 주기적으로 비운다
+  @Scheduled(fixedDelay = 1000 * 60 * 5)
   @Override
   public void clearExpiredJwtInformation() {
     int before = origin.values().stream().mapToInt(Queue::size).sum();
