@@ -47,6 +47,10 @@ info:
       max-request-size: ${spring.servlet.multipart.maxRequestSize}
 
 discodeit:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600}
+    refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:1209600}
   admin:
     username: ${ADMIN_USERNAME:admin}
     email: ${ADMIN_EMAIL:admin@discodeit.com}
