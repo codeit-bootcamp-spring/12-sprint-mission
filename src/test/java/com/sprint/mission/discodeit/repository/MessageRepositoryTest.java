@@ -56,20 +56,29 @@ class MessageRepositoryTest {
   }
 
   @Test
-  @DisplayName("커서 기반 페이지네이션 - cursor null이면 최신 메시지부터")
-  void findByChannelIdWithCursor_noCursor() {
-    Slice<Message> slice = messageRepository.findByChannelIdWithCursor(
-        channel.getId(), null, PageRequest.of(0, 10));
+  @DisplayName("커서 기반 페이지네이션 - 첫 페이지는 최신 메시지부터")
+  void findFirstPageByChannelId_success() {
+    Slice<Message> slice = messageRepository.findFirstPageByChannelId(
+        channel.getId(), PageRequest.of(0, 10));
     assertThat(slice.getContent()).hasSize(2);
   }
 
   @Test
   @DisplayName("커서 기반 페이지네이션 - cursor 이전 메시지만 반환")
-  void findByChannelIdWithCursor_withCursor() {
+  void findNextPageByChannelId_success() {
     // 미래 시각을 cursor로 설정하면 저장된 메시지 모두가 cursor 이전이므로 조회됨
     Instant future = Instant.now().plusSeconds(3600);
-    Slice<Message> slice = messageRepository.findByChannelIdWithCursor(
+    Slice<Message> slice = messageRepository.findNextPageByChannelId(
         channel.getId(), future, PageRequest.of(0, 10));
     assertThat(slice.getContent()).hasSize(2);
+  }
+
+  @Test
+  @DisplayName("커서 기반 페이지네이션 - cursor 이후 메시지는 제외")
+  void findNextPageByChannelId_excludesNewerMessages() {
+    Instant past = Instant.now().minusSeconds(3600);
+    Slice<Message> slice = messageRepository.findNextPageByChannelId(
+        channel.getId(), past, PageRequest.of(0, 10));
+    assertThat(slice.getContent()).isEmpty();
   }
 }

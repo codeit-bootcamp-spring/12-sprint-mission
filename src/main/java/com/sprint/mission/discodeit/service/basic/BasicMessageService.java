@@ -85,8 +85,10 @@ public class BasicMessageService implements MessageService {
     log.debug("Fetching messages for channelId={}, cursor={}, size={}", channelId, cursor, size);
     // 커서 기반 페이지네이션: cursor 이전 메시지를 createdAt DESC로 조회
     // JOIN FETCH로 author, attachments를 한 번의 쿼리로 로딩 (N+1 방지)
-    Slice<Message> slice = messageRepository.findByChannelIdWithCursor(
-        channelId, cursor, PageRequest.of(0, size));
+    PageRequest pageRequest = PageRequest.of(0, size);
+    Slice<Message> slice = cursor == null
+        ? messageRepository.findFirstPageByChannelId(channelId, pageRequest)
+        : messageRepository.findNextPageByChannelId(channelId, cursor, pageRequest);
 
     // 다음 페이지 커서: 현재 결과의 마지막 메시지 createdAt
     Instant nextCursor = slice.hasNext()

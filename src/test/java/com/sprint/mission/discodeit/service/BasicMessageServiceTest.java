@@ -184,7 +184,7 @@ class BasicMessageServiceTest {
         PageRequest.of(0, 50), false);
     PageResponse<MessageDto> expected = new PageResponse<>(List.of(messageDto), null, 50, false, null);
 
-    given(messageRepository.findByChannelIdWithCursor(channelId, null, PageRequest.of(0, 50)))
+    given(messageRepository.findFirstPageByChannelId(channelId, PageRequest.of(0, 50)))
         .willReturn(slice);
     given(messageMapper.toDto(any(Message.class))).willReturn(messageDto);
     // 제네릭 메서드는 doReturn으로 타입 소거 문제 우회
@@ -207,7 +207,7 @@ class BasicMessageServiceTest {
         PageRequest.of(0, 2), true);
     PageResponse<MessageDto> expected = new PageResponse<>(List.of(messageDto), cursor, 2, true, null);
 
-    given(messageRepository.findByChannelIdWithCursor(channelId, cursor, PageRequest.of(0, 2)))
+    given(messageRepository.findNextPageByChannelId(channelId, cursor, PageRequest.of(0, 2)))
         .willReturn(slice);
     given(messageMapper.toDto(any(Message.class))).willReturn(messageDto);
     org.mockito.Mockito.doReturn(expected).when(pageResponseMapper).fromSlice(any(), any());
