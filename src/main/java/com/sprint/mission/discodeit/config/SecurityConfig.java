@@ -1,12 +1,10 @@
 package com.sprint.mission.discodeit.config;
 
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
-import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.RestAccessDeniedHandler;
 import com.sprint.mission.discodeit.security.RestAuthenticationEntryPoint;
-import com.sprint.mission.discodeit.security.RestSessionInformationExpiredStrategy;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
-import org.springframework.beans.factory.annotation.Value;
+import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +15,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -24,18 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-
-  // 서버를 재시작해도 발급된 remember-me 토큰이 유지되도록 키를 고정한다
-  @Value("${discodeit.security.remember-me.key}")
-  private String rememberMeKey;
-
-  @Value("${discodeit.security.remember-me.validity-seconds}")
-  private int rememberMeValiditySeconds;
 
   // 비밀번호는 평문 저장 없이 BCrypt 해시로만 저장한다 (salt 포함 60자)
   @Bean
@@ -67,30 +58,18 @@ public class SecurityConfig {
     return new SessionRegistryImpl();
   }
 
-  // HttpSession이 만료/무효화되면 SessionRegistry의 SessionInformation도 함께 정리되도록 이벤트 발행
-  @Bean
-  public HttpSessionEventPublisher httpSessionEventPublisher() {
-    return new HttpSessionEventPublisher();
-  }
-
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,
-      LoginSuccessHandler loginSuccessHandler,
+      JwtLoginSuccessHandler jwtLoginSuccessHandler,
       LoginFailureHandler loginFailureHandler,
       RestAuthenticationEntryPoint authenticationEntryPoint,
-      RestAccessDeniedHandler accessDeniedHandler,
-      RestSessionInformationExpiredStrategy sessionExpiredStrategy,
-      SessionRegistry sessionRegistry
+      RestAccessDeniedHandler accessDeniedHandler
   ) throws Exception {
     http
-        // 동일 계정 동시 로그인 차단: 새로 로그인하면 기존 세션을 만료시킨다
+        // 인증 상태를 토큰으로만 판단하므로 서버는 세션을 만들지도, 참조하지도 않는다
         .sessionManagement(management -> management
-            .sessionConcurrency(concurrency -> concurrency
-                .maximumSessions(1)
-                .sessionRegistry(sessionRegistry)
-                .expiredSessionStrategy(sessionExpiredStrategy)
-            )
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(auth -> auth
             // 인증 없이 접근해야 하는 요청
@@ -110,14 +89,8 @@ public class SecurityConfig {
         // 로그인은 UsernamePasswordAuthenticationFilter가 처리한다 (기존 AuthService.login 대체)
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
-            .successHandler(loginSuccessHandler)
+            .successHandler(jwtLoginSuccessHandler)
             .failureHandler(loginFailureHandler)
-        )
-        // 로그인 유지: 세션이 만료돼도 remember-me 쿠키로 자동 재인증
-        .rememberMe(rememberMe -> rememberMe
-            .key(rememberMeKey)
-            .rememberMeParameter("remember-me")
-            .tokenValiditySeconds(rememberMeValiditySeconds)
         )
         // 로그아웃 흐름은 LogoutFilter가 그대로 처리하고, 처리 URL과 성공 응답만 대체한다
         .logout(logout -> logout
