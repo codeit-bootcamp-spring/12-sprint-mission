@@ -72,6 +72,18 @@ public class JwtTokenProvider {
     }
   }
 
+  public boolean validateAccessToken(String token) {
+    try {
+      return ACCESS.equals(parseAndValidate(token).getClaim(TOKEN_TYPE));
+    } catch (IllegalArgumentException exception) {
+      return false;
+    }
+  }
+
+  public String getSubject(String token) {
+    return parseAndValidate(token).getSubject();
+  }
+
   private String generateToken(UserDetails userDetails, String type, long expiration) {
     List<String> roles = userDetails.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
