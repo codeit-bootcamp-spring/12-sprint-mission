@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.security.RestAuthenticationEntryPoint;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
 import com.sprint.mission.discodeit.security.jwt.JwtAuthenticationFilter;
 import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtLogoutHandler;
 import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
 import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +62,7 @@ public class SecurityConfig {
       LoginFailureHandler loginFailureHandler,
       RestAuthenticationEntryPoint authenticationEntryPoint,
       RestAccessDeniedHandler accessDeniedHandler,
+      JwtLogoutHandler jwtLogoutHandler,
       JwtTokenProvider jwtTokenProvider,
       JwtRegistry jwtRegistry
   ) throws Exception {
@@ -92,9 +94,10 @@ public class SecurityConfig {
             .successHandler(jwtLoginSuccessHandler)
             .failureHandler(loginFailureHandler)
         )
-        // 로그아웃 흐름은 LogoutFilter가 그대로 처리하고, 처리 URL과 성공 응답만 대체한다
+        // 로그아웃 흐름은 LogoutFilter가 그대로 처리하고, 처리 URL과 토큰 무효화, 성공 응답만 대체한다
         .logout(logout -> logout
             .logoutUrl("/api/auth/logout")
+            .addLogoutHandler(jwtLogoutHandler)
             // 디폴트(SimpleUrlLogoutSuccessHandler)는 리다이렉트하므로 204만 반환하도록 대체
             .logoutSuccessHandler(
                 new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
