@@ -2,8 +2,8 @@ package com.sprint.mission.discodeit.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.exception.ErrorResponse;
+import com.sprint.mission.discodeit.security.JwtLoginSuccessHandler;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
-import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,8 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,10 +38,9 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,
-      LoginSuccessHandler loginSuccessHandler,
+      JwtLoginSuccessHandler jwtLoginSuccessHandler,
       LoginFailureHandler loginFailureHandler,
-      ObjectMapper objectMapper,
-      SessionRegistry sessionRegistry
+      ObjectMapper objectMapper
   ) throws Exception {
     return http
         .csrf(csrf -> csrf
@@ -65,16 +64,12 @@ public class SecurityConfig {
             .accessDeniedHandler((request, response, exception) ->
                 writeError(response, exception, HttpStatus.FORBIDDEN, objectMapper))
         )
-        .sessionManagement(management -> management
-            .sessionConcurrency(concurrency -> concurrency
-                .maximumSessions(1)
-                .sessionRegistry(sessionRegistry)
-            )
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .rememberMe(Customizer.withDefaults())
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
-            .successHandler(loginSuccessHandler)
+            .successHandler(jwtLoginSuccessHandler)
             .failureHandler(loginFailureHandler)
         )
         .logout(logout -> logout
