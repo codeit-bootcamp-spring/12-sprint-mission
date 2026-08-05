@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ public class DiscodeitUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final SessionRegistry sessionRegistry;
 
     @Transactional(readOnly = true)
     @Override
@@ -26,6 +28,6 @@ public class DiscodeitUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException
                         ("User not found with username: " + username));
 
-        return new DiscodeitUserDetails(userMapper.toDto(user), user.getPassword());
+        return new DiscodeitUserDetails(userMapper.toResponse(user, sessionRegistry), user.getPassword());
     }
 }

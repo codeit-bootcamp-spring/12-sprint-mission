@@ -9,7 +9,6 @@ import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.UserStatusService;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController implements UserApi {
 
   private final UserService userService;
-  private final UserStatusService userStatusService;
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<UserResponse> create(
@@ -109,15 +107,5 @@ public class UserController implements UserApi {
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
-  }
-
-  @PatchMapping("/{userId}/userStatus")
-  public ResponseEntity<UserStatusDto> updateUserStatusByUserId(
-      @PathVariable UUID userId,
-      @RequestBody @Valid UserStatusUpdateRequest request) {
-    UserStatusDto updated = userStatusService.updateByUserId(userId, request);
-    return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(updated);
   }
 }

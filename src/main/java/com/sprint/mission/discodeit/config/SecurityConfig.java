@@ -27,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity(debug = true) //배포 전 제거 필요
@@ -51,7 +52,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            LoginSuccessHandler loginSuccessHandler,
                                            LoginFailureHandler loginFailureHandler,
-                                           CustomAccessDeniedHandler customAccessDeniedHandler) throws Exception {
+                                           CustomAccessDeniedHandler customAccessDeniedHandler,
+                                           SessionRegistry sessionRegistry ) throws Exception {
         http
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
@@ -73,10 +75,9 @@ public class SecurityConfig {
                                 .accessDeniedHandler(customAccessDeniedHandler)
                         )
                 .sessionManagement(session -> session
-                        .maximumSessions((-1) // 동시 제한 없음
+                        .maximumSessions(-1) // 동시 제한 없음
                         .sessionRegistry(sessionRegistry)
-
-                        )
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/csrf-token").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
@@ -88,7 +89,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
 
 
-                ));
+                );
 
 
 
@@ -119,6 +120,11 @@ public class SecurityConfig {
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }
 

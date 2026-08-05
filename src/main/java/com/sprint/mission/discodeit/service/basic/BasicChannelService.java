@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +35,15 @@ public class BasicChannelService implements ChannelService {
   private final MessageRepository messageRepository;
   private final UserRepository userRepository;
   private final ChannelMapper channelMapper;
+  private final SessionRegistry sessionRegistry;
 
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
   @Override
   public ChannelResponse create(PublicChannelCreateRequest request) {
     Channel channel = new Channel(ChannelType.PUBLIC, request.name(), null);
     channelRepository.save(channel);
-    return channelMapper.toDto(channel);
+    return channelMapper.toResponse(channel,sessionRegistry);
   }
 
   @Transactional
@@ -53,14 +57,15 @@ public class BasicChannelService implements ChannelService {
         .toList();
     readStatusRepository.saveAll(readStatuses);
 
-    return channelMapper.toDto(channel);
+    return channelMapper.toResponse(channel,sessionRegistry);
   }
 
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional(readOnly = true)
   @Override
   public ChannelResponse find(UUID channelId) {
     return channelRepository.findById(channelId)
-        .map(channelMapper::toDto)
+        .map((Channel channel) -> channelMapper.toResponse(channel,sessionRegistry))
         .orElseThrow(
             () -> ChannelNotFoundException.withId(channelId));
   }
@@ -75,10 +80,11 @@ public class BasicChannelService implements ChannelService {
 
     return channelRepository.findAllByTypeOrIdIn(ChannelType.PUBLIC, mySubscribedChannelIds)
         .stream()
-        .map(channelMapper::toDto)
+        .map((Channel channel) -> channelMapper.toResponse(channel,sessionRegistry))
         .toList();
   }
 
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
   @Override
   public ChannelResponse update(UUID channelId, PublicChannelUpdateRequest request) {
@@ -91,9 +97,10 @@ public class BasicChannelService implements ChannelService {
       throw PrivateChannelUpdateException.forChannel(channelId);
     }
     channel.update(newName, newDescription);
-    return channelMapper.toDto(channel);
+    return channelMapper.toResponse(channel,sessionRegistry);
   }
 
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
   @Override
   public void delete(UUID channelId) {

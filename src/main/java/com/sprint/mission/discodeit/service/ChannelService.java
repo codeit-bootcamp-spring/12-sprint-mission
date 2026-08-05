@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface ChannelService {
 
 
-  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
+
   ChannelResponse create(PublicChannelCreateRequest request);
 
   ChannelResponse create(PrivateChannelCreateRequest request);
@@ -21,9 +21,7 @@ public interface ChannelService {
 
   List<ChannelResponse> findAllByUserId(UUID userId);
 
-  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   ChannelResponse update(UUID channelId, PublicChannelUpdateRequest request);
 
-  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   void delete(UUID channelId);
 }

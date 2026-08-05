@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.security.core.session.SessionRegistry;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {BinaryContentMapper.class})
 public interface UserMapper {
 
   @Mapping(target = "online", source = "user", qualifiedByName = "isOnline")
@@ -19,7 +19,7 @@ public interface UserMapper {
   default boolean isOnline(User user, @Context SessionRegistry sessionRegistry) {
     return sessionRegistry.getAllPrincipals().stream()
             .filter(p -> p instanceof DiscodeitUserDetails d
-                    && d.getUserDto().id().equals(user.getId()))
+                    && d.getUserResponse().id().equals(user.getId()))
             .anyMatch(p -> !sessionRegistry.getAllSessions(p, false).isEmpty());
   }
 }

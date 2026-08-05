@@ -1,49 +1,52 @@
 package com.sprint.mission.discodeit.mapper;
 
 import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
-import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionRegistry;
+
+import java.time.Instant;
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public abstract class ChannelMapper {
 
   @Autowired
-  private MessageRepository messageRepository;
+  protected MessageRepository messageRepository;
   @Autowired
-  private ReadStatusRepository readStatusRepository;
+  protected ReadStatusRepository readStatusRepository;
   @Autowired
-  private UserMapper userMapper;
+  protected UserMapper userMapper;
 
-  @Mapping(target = "participants", expression = "java(resolveParticipants(channel))")
-  @Mapping(target = "lastMessageAt", expression = "java(resolveLastMessageAt(channel))")
-  abstract public ChannelResponse toDto(Channel channel);
+  @Mapping(target = "participants",
+          expression = "java(resolveParticipants(channel, sessionRegistry))")
+  @Mapping(target = "lastMessageAt",
+          expression = "java(resolveLastMessageAt(channel))")
+  public abstract ChannelResponse toResponse(Channel channel,
+                                             @Context SessionRegistry sessionRegistry);
 
   protected Instant resolveLastMessageAt(Channel channel) {
-    return messageRepository.findLastMessageAtByChannelId(
-            channel.getId())
-        .orElse(Instant.MIN);
+    return messageRepository.findLastMessageAtByChannelId(channel.getId())
+            .orElse(Instant.MIN);
   }
 
-  protected List<UserResponse> resolveParticipants(Channel channel) {
-    List<UserResponse> participants = new ArrayList<>();
-    if (channel.getType().equals(ChannelType.PRIVATE)) {
-      readStatusRepository.findAllByChannelIdWithUser(channel.getId())
-          .stream()
-          .map(ReadStatus::getUser)
-          .map(userMapper::toResponse)
-          .forEach(participants::add);
+  protected List<UserResponse> resolveParticipants(Channel channel,
+                                                   SessionRegistry sessionRegistry) {
+    if (!ChannelType.PRIVATE.equals(channel.getType())) {
+      return List.of();
     }
-    return participants;
+    return readStatusRepository.findAllByChannelIdWithUser(channel.getId())
+            .stream()
+            .map(ReadStatus::getUser)
+            .map(user -> userMapper.toResponse(user, sessionRegistry))
+            .toList();
   }
 }

@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class BasicUserService implements UserService {
   private final BinaryContentRepository binaryContentRepository;
   private final BinaryContentStorage binaryContentStorage;
   private final PasswordEncoder passwordEncoder;
+  private final SessionRegistry sessionRegistry;
 
   @Transactional
   @Override
@@ -67,18 +69,16 @@ public class BasicUserService implements UserService {
 
     String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
 
-    User user = new User(username, email, encodedPassword, nullableProfile, Role.ADMIN);
-    UserStatus userStatus = new UserStatus(user, Instant.now());
+    User user = new User(username, email, encodedPassword, nullableProfile, Role.USER);
 
     userRepository.save(user);
-    userStatusRepository.save(userStatus);
-    return userMapper.toResponse(user);
+    return userMapper.toResponse(user, sessionRegistry);
   }
 
   @Override
   public UserResponse findById(UUID id) {
     return userRepository.findById(id)
-            .map(userMapper::toResponse)
+            .map((User user) -> userMapper.toResponse(user,sessionRegistry))
             .orElseThrow(
                     () -> new NoSuchElementException("User with id " + id + " not found"));
   }
@@ -87,7 +87,7 @@ public class BasicUserService implements UserService {
   public List<UserResponse> findAll() {
     return userRepository.findAllWithProfileAndStatus()
             .stream()
-            .map(userMapper::toResponse)
+            .map((User user) -> userMapper.toResponse(user,sessionRegistry))
             .toList();
   }
 
@@ -98,7 +98,7 @@ public class BasicUserService implements UserService {
             .orElseThrow(() -> UserNotFoundException.withId(request.userId()));
 
     user.updateRole(request.newRole());
-    return userMapper.toResponse(user);
+    return userMapper.toResponse(user, sessionRegistry);
   }
 
   @Transactional
@@ -138,7 +138,7 @@ public class BasicUserService implements UserService {
             : null;
 
     user.update(newUsername, newEmail, encodedNewPassword, nullableProfile);
-    return userMapper.toResponse(user);
+    return userMapper.toResponse(user, sessionRegistry);
   }
 
   @Transactional

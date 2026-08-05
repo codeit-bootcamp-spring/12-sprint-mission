@@ -1,31 +1,10 @@
 spring:
   application:
     name: discodeit
-  info:
-    app:
-      name: Discodeit
-      version: 1.7.0
-    java:
-      version: 17
-    spring-boot:
-      version: 3.4.0
-    datasource:
-      url: jdbc:postgresql://localhost:5432/discodeit
-      driver-class-name: org.postgresql.Driver
-    jpa:
-      hibernate:
-        ddl-auto: validate
-    storage:
-      type: local
-      path: .discodeit/storage
+  servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 30MB
-
-  servlet:
-    multipart:
-      maxFileSize: 10MB
-      maxRequestSize: 30MB
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/discodeit
@@ -37,7 +16,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    #        default_batch_fetch_size: 100
     open-in-view: false
 
 logging:
@@ -48,18 +26,17 @@ logging:
     org.springframework.security: trace
 
 discodeit:
-    admin:
-      username: admin
-      email: admin@discodeit.com
-      password: ${ADMIN_PASSWORD:admin1234}  # 환경변수 우선, 없으면 기본값
-storage:
+  storage:
     type: local
     local:
       root-path: .discodeit/storage
+  admin:
+    username: admin
+    email: admin@discodeit.com
+    password: ${ADMIN_PASSWORD:admin1234}
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics,loggers
-
