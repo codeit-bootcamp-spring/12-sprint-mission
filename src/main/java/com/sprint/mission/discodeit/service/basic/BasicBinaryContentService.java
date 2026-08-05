@@ -37,7 +37,11 @@ public class BasicBinaryContentService implements BinaryContentService {
     BinaryContent binaryContent = binaryContentRepository.save(
         binaryContentMapper.toEntity(request));
 
-    binaryContentStorage.put(binaryContent.getId(), request.bytes());
+    binaryContentStorage.put(
+        binaryContent.getId(),
+        request.bytes(),
+        binaryContent.getContentType()
+    );
     return binaryContentMapper.toDto(binaryContent);
   }
 
@@ -75,6 +79,7 @@ public class BasicBinaryContentService implements BinaryContentService {
     if (!binaryContentRepository.existsById(binaryContentId)) {
       throw BinaryContentNotFoundException.withBinaryContentId(binaryContentId);
     }
+    binaryContentStorage.delete(binaryContentId);
     binaryContentRepository.deleteById(binaryContentId);
   }
 }

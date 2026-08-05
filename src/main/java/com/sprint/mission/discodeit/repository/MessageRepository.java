@@ -18,7 +18,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
           join fetch m.channel c
           left join fetch m.author a
           left join fetch a.profile
-          left join fetch a.status
           left join fetch m.attachments
           where m.id = :messageId
       """)
@@ -38,7 +37,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
       join fetch m.channel c
       left join fetch m.author a
       left join fetch a.profile
-      left join fetch a.status
       left join fetch m.attachments
       where m.id in :messageIds
       """)

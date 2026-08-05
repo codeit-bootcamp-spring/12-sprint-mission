@@ -36,9 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
-data/
-data_repo/
-local_storage/
+.DS_Store
+.discodeit/
 .logs/
 
 .env

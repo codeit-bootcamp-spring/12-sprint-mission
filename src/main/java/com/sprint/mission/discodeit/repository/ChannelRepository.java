@@ -15,7 +15,6 @@ public interface ChannelRepository extends JpaRepository<Channel, UUID> {
       left join fetch c.readStatuses rs
       left join fetch rs.user u
       left join fetch u.profile
-      left join fetch u.status
       where c.type = "PUBLIC"
         or c.id in(
                 select rs2.channel.id

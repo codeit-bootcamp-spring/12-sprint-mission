@@ -23,7 +23,7 @@ spring:
         url: ${SPRING_BOOT_ADMIN_CLIENT_URL:http://localhost:9090}
 
 server:
-  port: 8080
+  port: 80
 
 springdoc:
   swagger-ui:
@@ -37,9 +37,3 @@ logging:
     org.hibernate.SQL: off
     org.hibernate.orm.jdbc.bind: off
     org.springframework.web: info
-
-discodeit:
-  storage:
-    local:
-      root-path: local_storage
-    type: local

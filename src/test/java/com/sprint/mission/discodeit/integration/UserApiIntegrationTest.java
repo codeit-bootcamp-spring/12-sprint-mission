@@ -1,9 +1,9 @@
 package com.sprint.mission.discodeit.integration;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,24 +11,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.user.UserDto;
 import com.sprint.mission.discodeit.dto.user.UserUpdateRequest;
-import com.sprint.mission.discodeit.dto.userStatus.UserStatusUpdateRequest;
+import com.sprint.mission.discodeit.entity.Role;
+import com.sprint.mission.discodeit.security.TestSecuritySupport;
 import com.sprint.mission.discodeit.service.UserService;
-import java.time.Instant;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Transactional
 public class UserApiIntegrationTest {
@@ -50,6 +50,12 @@ public class UserApiIntegrationTest {
         new UserCreateRequest("test1", "test1@test.com", "password1!"),
         Optional.empty()
     );
+    TestSecuritySupport.authenticate(userDto.id(), Role.USER);
+  }
+
+  @AfterEach
+  void tearDown() {
+    TestSecuritySupport.clear();
   }
 
   @Test
@@ -96,13 +102,19 @@ public class UserApiIntegrationTest {
 
     mockMvc.perform(get("/api/users"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.size()").value(2))
-        .andExpect(jsonPath("$[0].id").value(userDto.id().toString()))
-        .andExpect(jsonPath("$[0].username").value(userDto.username()))
-        .andExpect(jsonPath("$[0].email").value(userDto.email()))
-        .andExpect(jsonPath("$[1].id").value(userDto1.id().toString()))
-        .andExpect(jsonPath("$[1].username").value(userDto1.username()))
-        .andExpect(jsonPath("$[1].email").value(userDto1.email()));
+        .andExpect(jsonPath("$.size()").value(3))
+        .andExpect(jsonPath("$[*].id").value(hasItems(
+            userDto.id().toString(),
+            userDto1.id().toString()
+        )))
+        .andExpect(jsonPath("$[*].username").value(hasItems(
+            userDto.username(),
+            userDto1.username()
+        )))
+        .andExpect(jsonPath("$[*].email").value(hasItems(
+            userDto.email(),
+            userDto1.email()
+        )));
   }
 
   @Test
@@ -135,31 +147,62 @@ public class UserApiIntegrationTest {
   }
 
   @Test
+  @DisplayName("update_user_forbidden_when_not_self")
+  public void updateUser_forbidden_when_not_self() throws Exception {
+    UserDto otherUserDto = userService.create(
+        new UserCreateRequest("test2", "test2@test.com", "password2!"),
+        Optional.empty()
+    );
+    TestSecuritySupport.authenticate(otherUserDto.id(), Role.USER);
+
+    UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
+        "updated_name",
+        "updated_email@update.com",
+        "updated_password1!"
+    );
+
+    MockMultipartFile userUpdateRequestPart = new MockMultipartFile(
+        "userUpdateRequest",
+        "",
+        "application/json",
+        objectMapper.writeValueAsBytes(userUpdateRequest)
+    );
+
+    mockMvc.perform(multipart("/api/users/{userId}", userDto.id())
+            .file(userUpdateRequestPart)
+            .with(request -> {
+              request.setMethod("PATCH");
+              return request;
+            }))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   @DisplayName("delete_user")
   public void deleteUser() throws Exception {
     mockMvc.perform(get("/api/users"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.size()").value(1));
+        .andExpect(jsonPath("$.size()").value(2));
 
     mockMvc.perform(delete("/api/users/{userId}", userDto.id()))
         .andExpect(status().isNoContent());
 
     mockMvc.perform(get("/api/users"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.size()").value(0));
+        .andExpect(jsonPath("$.size()").value(1));
   }
 
   @Test
-  @DisplayName("update_user_status")
-  void updateUserStatus() throws Exception {
-    UserStatusUpdateRequest request = new UserStatusUpdateRequest(
-        Instant.now()
+  @DisplayName("delete_user_forbidden_when_not_self")
+  public void deleteUser_forbidden_when_not_self() throws Exception {
+    UserDto otherUserDto = userService.create(
+        new UserCreateRequest("test2", "test2@test.com", "password2!"),
+        Optional.empty()
     );
+    TestSecuritySupport.authenticate(otherUserDto.id(), Role.USER);
 
-    mockMvc.perform(patch("/api/users/{userId}/userStatus", userDto.id())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.userId").value(userDto.id().toString()));
+    mockMvc.perform(delete("/api/users/{userId}", userDto.id()))
+        .andExpect(status().isForbidden());
   }
+
 }

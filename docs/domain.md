@@ -1,7 +1,6 @@
 ## 연관관계
 
 - User : BinaryContent | 1:1 | User -> BinaryContent | 주인: User
-- User : UserStatus | 1:1 | User <-> UserStatus | 주인: UserStatus
 - User : ReadStatus | 1:N | User <-> ReadStatus | 주인: ReadStatus
 - Channel : ReadStatus | 1:N | Channel <-> ReadStatus | 주인: ReadStatus
 - Channel : Message | 1:N | Message -> Channel | 주인: Message
@@ -63,10 +62,3 @@
     - User user
     - Channel channel
     - Instant lastReadAt
-
-### UserStatus
-
-- 상속: BaseUpdatableEntity
-- 필드
-    - User user
-    - Instant lastActiveAt

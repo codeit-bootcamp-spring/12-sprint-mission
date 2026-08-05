@@ -8,15 +8,13 @@ import lombok.Getter;
 public enum ErrorCode {
   // Auth
   INVALID_USERNAME_OR_PASSWORD(401, "아이디 또는 비밀번호가 올바르지 않습니다."),
+  UNAUTHORIZED(401, "인증이 필요합니다."),
+  ACCESS_DENIED(403, "접근 권한이 없습니다."),
 
   // User
   USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다."),
   USERNAME_DUPLICATED(409, "이미 사용 중인 사용자 이름입니다."),
   EMAIL_DUPLICATED(409, "이미 사용 중인 이메일입니다."),
-
-  // UserStatus
-  USER_STATUS_NOT_FOUND(404, "사용자 상태를 찾을 수 없습니다."),
-  USER_STATUS_DUPLICATED(409, "사용자 상태가 이미 존재합니다."),
 
   // Channel
   CHANNEL_NOT_FOUND(404, "채널을 찾을 수 없습니다."),

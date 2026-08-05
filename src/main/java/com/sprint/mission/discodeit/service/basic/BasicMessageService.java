@@ -31,8 +31,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Slf4j
 @Service
@@ -124,6 +127,7 @@ public class BasicMessageService implements MessageService {
 
   @Override
   @Transactional
+  @PreAuthorize("@basicMessageService.isAuthor(#messageId, principal.userDto.id)")
   public MessageDto update(UUID messageId, MessageUpdateRequest messageUpdateRequest,
       List<BinaryContentCreateRequest> attachmentRequests) {
     if (messageId == null) {
@@ -138,13 +142,24 @@ public class BasicMessageService implements MessageService {
 
     message.setContent(messageUpdateRequest.newContent());
 
+    List<UUID> oldAttachmentIds = List.of();
+
     if (!attachmentRequests.isEmpty()) {
+      oldAttachmentIds = message.getAttachments().stream()
+          .map(BinaryContent::getId)
+          .toList();
+
       List<BinaryContent> attachments = createAttachments(attachmentRequests);
-      message.setAttachments(attachments);
+      message.updateAttachments(attachments);
     }
 
     Message updatedMessage = messageRepository.save(message);
     MessageDto messageDto = messageMapper.toDto(updatedMessage);
+
+    if (!oldAttachmentIds.isEmpty()) {
+      List<UUID> deleteOldAttachmentIds = oldAttachmentIds;
+      deleteBinaryContentsAfterCommit(deleteOldAttachmentIds);
+    }
 
     log.info("메시지 업데이트 완료: messageId={}, attachmentCount={}",
         messageDto.id(),
@@ -156,16 +171,23 @@ public class BasicMessageService implements MessageService {
 
   @Override
   @Transactional
+  @PreAuthorize("@basicMessageService.isAuthor(#messageId, principal.userDto.id)")
   public void delete(UUID messageId) {
     if (messageId == null) {
       throw new IllegalArgumentException("messageId is null.");
     }
 
-    Message message = messageRepository.findById(messageId)
+    Message message = messageRepository.findDetailById(messageId)
         .orElseThrow(() -> MessageNotFoundException.withMessageId(messageId));
 
+    List<UUID> attachmentIds = message.getAttachments().stream()
+        .map(BinaryContent::getId)
+        .toList();
+
     messageRepository.delete(message);
-    
+
+    deleteBinaryContentsAfterCommit(attachmentIds);
+
     log.info("메시지 삭제 완료: messageId={}", messageId);
   }
 
@@ -184,8 +206,11 @@ public class BasicMessageService implements MessageService {
 
       BinaryContent binaryContent = binaryContentRepository.save(
           binaryContentMapper.toEntity(attachmentRequest));
-      binaryContentStorage.put(binaryContent.getId(), attachmentRequest.bytes());
-
+      binaryContentStorage.put(
+          binaryContent.getId(),
+          attachmentRequest.bytes(),
+          binaryContent.getContentType()
+      );
       log.info(
           "메시지 첨부파일 업로드 완료: binaryContentId={}, contentType={}, size={}",
           binaryContent.getId(),
@@ -196,5 +221,32 @@ public class BasicMessageService implements MessageService {
     }
 
     return attachments;
+  }
+
+  private void deleteBinaryContentsAfterCommit(List<UUID> binaryContentIds) {
+    if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+      binaryContentIds.forEach(binaryContentStorage::delete);
+      return;
+    }
+
+    TransactionSynchronizationManager.registerSynchronization(
+        new TransactionSynchronization() {
+          @Override
+          public void afterCommit() {
+            binaryContentIds.forEach(binaryContentStorage::delete);
+          }
+        }
+    );
+  }
+
+  public boolean isAuthor(UUID messageId, UUID userId) {
+    if (messageId == null || userId == null) {
+      return false;
+    }
+
+    return messageRepository.findById(messageId)
+        .map(message -> message.getAuthor() != null
+            && message.getAuthor().getId().equals(userId))
+        .orElse(false);
   }
 }

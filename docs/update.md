@@ -167,3 +167,70 @@
     - JaCoCo 기반 테스트 커버리지 리포트 생성 및 커버리지 개선
 
 </details>
+
+<details>
+<summary style="font-size: 20px; font-weight: bold;">Sprint 8</summary>
+
+### Sprint 8
+
+- Docker 기반 애플리케이션 실행 환경 구성
+- Docker Compose를 통해 애플리케이션과 db 컨테이너를 올려 테스트 환경 구축
+- AWS S3를 통한 클라우드 storage 구축
+- AWS RDS를 통한 DB 구축
+- EC2에 SSH 접근을 통한 RDS 접근 및 DB 설정
+- 퍼블릭 ECR 구성
+- ECS 구성
+    - 클러스터 -> 태스크 정의 -> 서비스 생성
+    - 태스크 인바운드 규칙 설정
+
+- 심화
+    - 멀티 스테이지를 활용하여 이미지 크기 감소
+      ```aiignore
+      # 런타임 x                         | 1.4gb
+      # 런타임 amazoncorretto:17         | 850mb
+      # 런타임 amazoncorretto:17-al2023  | 830mb
+      # 런타임 amazoncorretto:17-alpine  | 600mb
+      ```
+    - Github Actions를 통한 CI/CD 구축
+    - CI로 테스트 코드 실행을 한 후 CodeCov로 커버리지 체크
+    - CD를 통해 이미지를 빌드하고 해당 이미지로 서비스 업데이트
+
+</details>
+
+<details>
+<summary style="font-size: 20px; font-weight: bold;">Sprint 9</summary>
+
+### Sprint 9
+
+- 멘토님의 리뷰를 참고하여 수정
+    - S3.delete()에 try-catch를 추가하여 예외 처리 패턴 일관화
+    - 정합성 부분 해결 시도
+        - DB가 커밋 성공 후 s3 정리 하는 방식으로 진행
+            - 이벤트 기반으로 `AFTER_COMMIT`후 `REQUIRES_NEW`이 아닌 트랜잭션동기화 방식으로 시도.
+    - AWS 환경변수를 `env:` 블록에 넣는 방식으로 변경
+    - 메시지 엔티티의 `orphanRemoval`로 DB는 삭제 되지만 실제 파일은 다른 곳에 책임이 있음.
+        - `BinaryContent`는 메타데이터, `Storage`에서 실제 파일을 관리한다고 주석으로 처리.
+    - `.dockerignore`부분은 추후 추가하겠습니다.
+    - s3에서 `put()`동작시 contentType도 추가하여 저장하도록 변경
+    - postgreSQL 버전을 17로 변경
+- 스프링 시큐리티 적용
+    - csrf 보호
+    - 로그인, 로그아웃
+    - 권한에 따른 접근 제어
+- 사용자에 대해 Role을 추가
+    - `ADMIN`, `CHANNEL_MANAGER`, `USER`
+    - 스키마에 role 추가
+    - 디폴트 값으로 USER 적용
+    - 실행시 `ADMIN`이 없으면 어드민 계정을 초기화
+    - 채널 생성, 수정, 삭제를 `CHANNEL_MANAGER`에 부여
+    - 사용자 권한 설정은 `ADMIN`에 부여
+    - `RoleHierarchy`를 활용해 권한의 계층 부여
+
+- 심화
+    - 세션 설정으로 동일한 계정으로 로그인 제어
+    - 권한이 변경된 사용자의 세션 무효화
+    - `UserStatus`제거 및 로그인 여부를 세션으로 관리
+    - `Remember-me`를 이용하여 인증 유지
+    - `SpEL`을 활용하여 사용자 수정, 삭제와 메시지 수정, 삭제는 본인만 가능
+
+</details>

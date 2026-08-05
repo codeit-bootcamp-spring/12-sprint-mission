@@ -1,13 +1,9 @@
 DROP TABLE IF EXISTS message_attachments;
 DROP TABLE IF EXISTS read_statuses;
-DROP TABLE IF EXISTS user_statuses;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS channels;
 DROP TABLE IF EXISTS binary_contents;
-DROP TYPE IF EXISTS channel_type;
-
-CREATE TYPE channel_type AS ENUM ('PUBLIC', 'PRIVATE');
 
 CREATE TABLE binary_contents
 (
@@ -25,7 +21,7 @@ CREATE TABLE channels
 	updated_at  TIMESTAMP WITH TIME ZONE NULL,
 	name        varchar(100)             NULL,
 	description varchar(500)             NULL,
-	type        channel_type             NOT NULL
+	type        varchar(20)              NOT NULL
 );
 
 CREATE TABLE users
@@ -37,21 +33,11 @@ CREATE TABLE users
 	email      varchar(100)             NOT NULL,
 	password   varchar(60)              NOT NULL,
 	profile_id uuid                     NULL,
+	role       varchar(20)              NOT NULL,
 	CONSTRAINT fk_users_profile_id FOREIGN KEY (profile_id) REFERENCES binary_contents (id) ON DELETE SET NULL,
 	CONSTRAINT uk_users_username UNIQUE (username),
 	CONSTRAINT uk_users_email UNIQUE (email),
 	CONSTRAINT uk_users_profile_id UNIQUE (profile_id)
-);
-
-CREATE TABLE user_statuses
-(
-	id             uuid PRIMARY KEY,
-	created_at     TIMESTAMP WITH TIME ZONE NOT NULL,
-	updated_at     TIMESTAMP WITH TIME ZONE NULL,
-	user_id        uuid                     NOT NULL,
-	last_active_at TIMESTAMP WITH TIME ZONE NOT NULL,
-	CONSTRAINT fk_user_statuses_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-	CONSTRAINT uk_user_statuses UNIQUE (user_id)
 );
 
 CREATE TABLE read_statuses

@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.repository;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
@@ -65,10 +65,10 @@ public class ChannelRepositoryTest {
 
     List<Channel> channels = channelRepository
         .findAllByUserIdAndPublicChannelsWithParticipants(UUID.randomUUID());
-
-    assertThat(channels.size()).isEqualTo(2);
-    assertThat(channels.get(0).getName()).isEqualTo("channel1");
-    assertThat(channels.get(1).getName()).isEqualTo("channel2");
+    
+    assertThat(channels)
+        .extracting(Channel::getName)
+        .containsExactlyInAnyOrder("channel1", "channel2");
   }
 
   @Test

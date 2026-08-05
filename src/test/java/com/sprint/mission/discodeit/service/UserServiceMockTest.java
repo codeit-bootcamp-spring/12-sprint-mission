@@ -25,6 +25,7 @@ import com.sprint.mission.discodeit.mapper.BinaryContentMapper;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.SessionManager;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.nio.charset.StandardCharsets;
@@ -37,6 +38,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceMockTest {
@@ -55,6 +57,12 @@ public class UserServiceMockTest {
 
   @Mock
   private BinaryContentMapper binaryContentMapper;
+
+  @Mock
+  private PasswordEncoder passwordEncoder;
+
+  @Mock
+  private SessionManager sessionManager;
 
   @InjectMocks
   private BasicUserService userService;
@@ -129,9 +137,10 @@ public class UserServiceMockTest {
 
     given(userRepository.existsByUsername(any())).willReturn(false);
     given(userRepository.existsByEmail(any())).willReturn(false);
+    given(passwordEncoder.encode(userCreateRequest.password())).willReturn("encoded-password");
     given(binaryContentMapper.toEntity(any())).willReturn(profile);
     given(binaryContentRepository.save(any())).willReturn(profile);
-    given(userMapper.toEntity(userCreateRequest, profile)).willReturn(user);
+    given(userMapper.toEntity(any(UserCreateRequest.class), eq(profile))).willReturn(user);
     given(userRepository.save(any())).willReturn(user);
     given(userMapper.toDto(any())).willReturn(userDto);
 
@@ -142,7 +151,11 @@ public class UserServiceMockTest {
 
     verify(userRepository, times(1)).save(user);
     verify(binaryContentStorage, times(1))
-        .put(eq(profile.getId()), aryEq(binaryContentCreateRequest.bytes()));
+        .put(
+            eq(profile.getId()),
+            aryEq(binaryContentCreateRequest.bytes()),
+            eq(binaryContentCreateRequest.contentType())
+        );
   }
 
   @Test
@@ -178,6 +191,7 @@ public class UserServiceMockTest {
 
     given(userRepository.findDetailById(any())).willReturn(Optional.of(user));
     given(userRepository.existsByEmail(any())).willReturn(false);
+    given(passwordEncoder.encode(userUpdateRequest.newPassword())).willReturn("encoded-password");
     given(userRepository.save(any())).willReturn(user);
     given(userMapper.toDto(any())).willReturn(userDto);
 
@@ -186,7 +200,7 @@ public class UserServiceMockTest {
     assertThat(result).isEqualTo(userDto);
     assertEquals(userUpdateRequest.newUsername(), user.getUsername());
     assertEquals(userUpdateRequest.newEmail(), user.getEmail());
-    assertEquals(userUpdateRequest.newPassword(), user.getPassword());
+    assertEquals("encoded-password", user.getPassword());
   }
 
   @Test

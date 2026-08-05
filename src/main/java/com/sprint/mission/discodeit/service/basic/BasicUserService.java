@@ -3,10 +3,10 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.binaryContent.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.user.UserDto;
+import com.sprint.mission.discodeit.dto.user.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.dto.user.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.EmailAlreadyExistsException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.exception.user.UsernameAlreadyExistsException;
@@ -14,17 +14,21 @@ import com.sprint.mission.discodeit.mapper.BinaryContentMapper;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.SessionManager;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
-import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Slf4j
 @Service
@@ -36,6 +40,8 @@ public class BasicUserService implements UserService {
   private final BinaryContentStorage binaryContentStorage;
   private final UserMapper userMapper;
   private final BinaryContentMapper binaryContentMapper;
+  private final PasswordEncoder passwordEncoder;
+  private final SessionManager sessionManager;
 
   @Override
   @Transactional
@@ -55,12 +61,14 @@ public class BasicUserService implements UserService {
 
     BinaryContent binaryContent = createProfile(profileCreateRequest);
 
-    User user = userMapper.toEntity(userCreateRequest, binaryContent);
-    UserStatus userStatus = UserStatus.builder()
-        .user(user)
-        .lastActiveAt(Instant.now())
-        .build();
-    user.setStatus(userStatus);
+//    매퍼 변경을 하지 않고 dto 추가 생성 및 인코딩
+    UserCreateRequest passwordEncodedRequest = new UserCreateRequest(
+        userCreateRequest.username(),
+        userCreateRequest.email(),
+        passwordEncoder.encode(userCreateRequest.password())
+    );
+
+    User user = userMapper.toEntity(passwordEncodedRequest, binaryContent);
 
     User savedUser = userRepository.save(user);
     UserDto userDto = userMapper.toDto(savedUser);
@@ -96,6 +104,7 @@ public class BasicUserService implements UserService {
 
   @Override
   @Transactional
+  @PreAuthorize("#userId.equals(principal.userDto.id)")
   public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
       Optional<BinaryContentCreateRequest> profileCreateRequest) {
     if (userId == null) {
@@ -128,7 +137,7 @@ public class BasicUserService implements UserService {
     }
 
     if (userUpdateRequest.newPassword() != null) {
-      user.setPassword(userUpdateRequest.newPassword());
+      user.setPassword(passwordEncoder.encode(userUpdateRequest.newPassword()));
     }
 
     BinaryContent oldProfileImage = null;
@@ -141,7 +150,9 @@ public class BasicUserService implements UserService {
 
     User savedUser = userRepository.save(user);
     if (oldProfileImage != null) {
+      UUID oldProfileImageId = oldProfileImage.getId();
       binaryContentRepository.delete(oldProfileImage);
+      deleteBinaryContentAfterCommit(oldProfileImageId);
     }
 
     UserDto userDto = userMapper.toDto(savedUser);
@@ -158,8 +169,26 @@ public class BasicUserService implements UserService {
     return userDto;
   }
 
+  //  role 변경은 도메인 메서드로 진행
   @Override
   @Transactional
+  @PreAuthorize("hasRole('ADMIN')")
+  public UserDto updateRole(UserRoleUpdateRequest userRoleUpdateRequest) {
+    if (userRoleUpdateRequest == null) {
+      throw new IllegalArgumentException("userRoleUpdateRequest is null.");
+    }
+    User user = userRepository.findDetailById(userRoleUpdateRequest.userId())
+        .orElseThrow(() -> UserNotFoundException.withUserId(userRoleUpdateRequest.userId()));
+
+    user.updateRole(userRoleUpdateRequest.newRole());
+    sessionManager.invalidateSessionsByUserId(user.getId());
+
+    return userMapper.toDto(userRepository.save(user));
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("#userId.equals(principal.userDto.id)")
   public void delete(UUID userId) {
     if (userId == null) {
       throw new IllegalArgumentException("userId is null.");
@@ -172,8 +201,12 @@ public class BasicUserService implements UserService {
 
     userRepository.delete(user);
 
+    sessionManager.invalidateSessionsByUserId(user.getId());
+
     if (profile != null) {
+      UUID profileId = profile.getId();
       binaryContentRepository.delete(profile);
+      deleteBinaryContentAfterCommit(profileId);
     }
 
     log.info("사용자 삭제 완료: userId={}", userId);
@@ -202,7 +235,11 @@ public class BasicUserService implements UserService {
 
       binaryContent = binaryContentRepository.save(
           binaryContentMapper.toEntity(binaryContentCreateRequest));
-      binaryContentStorage.put(binaryContent.getId(), binaryContentCreateRequest.bytes());
+      binaryContentStorage.put(
+          binaryContent.getId(),
+          binaryContentCreateRequest.bytes(),
+          binaryContent.getContentType()
+      );
 
       log.info(
           "프로필 이미지 업로드 완료: binaryContentId={}, contentType={}, size={}",
@@ -213,5 +250,21 @@ public class BasicUserService implements UserService {
     }
 
     return binaryContent;
+  }
+
+  private void deleteBinaryContentAfterCommit(UUID binaryContentId) {
+    if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+      binaryContentStorage.delete(binaryContentId);
+      return;
+    }
+
+    TransactionSynchronizationManager.registerSynchronization(
+        new TransactionSynchronization() {
+          @Override
+          public void afterCommit() {
+            binaryContentStorage.delete(binaryContentId);
+          }
+        }
+    );
   }
 }

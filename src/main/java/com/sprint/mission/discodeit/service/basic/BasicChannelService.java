@@ -32,6 +32,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +51,11 @@ public class BasicChannelService implements ChannelService {
   private final ChannelMapper channelMapper;
   private final MessageRepository messageRepository;
   private final UserMapper userMapper;
+  private final RoleHierarchy roleHierarchy;
 
   @Override
   @Transactional
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public ChannelDto create(PublicChannelCreateRequest request) {
     if (request == null) {
       throw new IllegalArgumentException("request is null.");
@@ -173,6 +180,8 @@ public class BasicChannelService implements ChannelService {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> ChannelNotFoundException.withChannelId(channelId));
 
+    validateChannelManagerIfPublic(channel);
+
     if (channel.getType() == ChannelType.PRIVATE) {
       throw PrivateChannelUpdateNotAllowedException.withChannelId(channelId);
     }
@@ -210,6 +219,8 @@ public class BasicChannelService implements ChannelService {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> ChannelNotFoundException.withChannelId(channelId));
 
+    validateChannelManagerIfPublic(channel);
+
     channelRepository.delete(channel);
 
     log.info("채널 삭제 완료: channelId={}", channelId);
@@ -236,5 +247,21 @@ public class BasicChannelService implements ChannelService {
         .toList();
 
     return channelMapper.toDto(channel, lastMessageAt, participants);
+  }
+
+  private void validateChannelManagerIfPublic(Channel channel) {
+    if (channel.getType() != ChannelType.PUBLIC) {
+      return;
+    }
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    boolean hasChannelManager = authentication != null
+        && roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities()).stream()
+        .anyMatch(auth -> auth.getAuthority().equals("ROLE_CHANNEL_MANAGER"));
+
+    if (!hasChannelManager) {
+      throw new AccessDeniedException("CHANNEL_MANAGER 권한 필요.");
+    }
   }
 }

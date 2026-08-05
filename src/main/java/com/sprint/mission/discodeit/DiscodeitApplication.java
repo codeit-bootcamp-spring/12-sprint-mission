@@ -13,10 +13,8 @@ public class DiscodeitApplication {
     ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class,
         args);
     String activeProfiles = String.join(", ", context.getEnvironment().getActiveProfiles());
-    String port = context.getEnvironment().getProperty("server.port", "8080");
 
     System.out.printf("Active profile: %s%n",
         activeProfiles.isBlank() ? "default" : activeProfiles);
-    System.out.printf("Application URL: http://localhost:%s/%n", port);
   }
 }

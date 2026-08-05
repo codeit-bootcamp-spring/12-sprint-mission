@@ -3,11 +3,13 @@ spring:
     name: discodeit
     version: 1.7.0
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:prod}
   servlet:
     multipart:
       maxFileSize: 100MB
       maxRequestSize: 300MB
+  config:
+    import: optional:dotenv:.
 
   jpa:
     hibernate:
@@ -30,6 +32,17 @@ spring:
         instance:
           name: ${spring.application.name}
 
+discodeit:
+  storage:
+    type: ${STORAGE_TYPE:local}
+    local:
+      root-path: ${STORAGE_LOCAL_ROOT_PATH:.discodeit/storage}
+    s3:
+      access-key: ${AWS_S3_ACCESS_KEY}
+      secret-key: ${AWS_S3_SECRET_KEY}
+      region: ${AWS_S3_REGION}
+      bucket: ${AWS_S3_BUCKET}
+      presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600} # (기본값: 10분)
 
 # log
 logging:

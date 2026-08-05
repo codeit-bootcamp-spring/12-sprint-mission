@@ -14,11 +14,14 @@ import com.sprint.mission.discodeit.dto.message.MessageDto;
 import com.sprint.mission.discodeit.dto.message.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.user.UserDto;
+import com.sprint.mission.discodeit.entity.Role;
+import com.sprint.mission.discodeit.security.TestSecuritySupport;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Transactional
 public class MessageApiIntegrationTest {
@@ -63,6 +66,7 @@ public class MessageApiIntegrationTest {
         new UserCreateRequest("test_user", "test@test.com", "password1!"),
         Optional.empty()
     );
+    TestSecuritySupport.authenticate(userDto.id(), Role.CHANNEL_MANAGER);
 
     channelDto = channelService.create(
         new PublicChannelCreateRequest("test_channel", "description")
@@ -72,6 +76,11 @@ public class MessageApiIntegrationTest {
         new MessageCreateRequest(channelDto.id(), userDto.id(), "content")
         , List.of()
     );
+  }
+
+  @AfterEach
+  void tearDown() {
+    TestSecuritySupport.clear();
   }
 
   @Test
@@ -170,6 +179,108 @@ public class MessageApiIntegrationTest {
   }
 
   @Test
+  @DisplayName("update_message_forbidden_when_not_author")
+  void updateMessage_forbidden_when_not_author() throws Exception {
+    UserDto otherUserDto = userService.create(
+        new UserCreateRequest("other_user", "other@test.com", "password2!"),
+        Optional.empty()
+    );
+    TestSecuritySupport.authenticate(otherUserDto.id(), Role.USER);
+
+    MessageUpdateRequest messageUpdateRequest = new MessageUpdateRequest(
+        "newContent"
+    );
+
+    MockMultipartFile messageUpdateRequestPart = new MockMultipartFile(
+        "messageUpdateRequest",
+        "",
+        "application/json",
+        objectMapper.writeValueAsBytes(messageUpdateRequest)
+    );
+
+    mockMvc.perform(multipart("/api/messages/{messageId}", messageDto.id())
+            .file(messageUpdateRequestPart)
+            .with(request -> {
+              request.setMethod("PATCH");
+              return request;
+            }))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  @DisplayName("update_message_with_attachments")
+  void updateMessage_with_attachments() throws Exception {
+    MessageCreateRequest beforeMessageCreateRequest = new MessageCreateRequest(
+        channelDto.id(),
+        userDto.id(),
+        "content"
+    );
+
+    MockMultipartFile beforeMessageCreateRequestPart = new MockMultipartFile(
+        "messageCreateRequest",
+        "",
+        "application/json",
+        objectMapper.writeValueAsBytes(beforeMessageCreateRequest)
+    );
+
+    MockMultipartFile attachments = new MockMultipartFile(
+        "attachments",
+        "before_attachments.png",
+        "image/png",
+        "before_attachments".getBytes()
+    );
+
+    String createResponse = mockMvc.perform(multipart("/api/messages")
+            .file(beforeMessageCreateRequestPart)
+            .file(attachments))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.content").value(beforeMessageCreateRequest.content()))
+        .andExpect(jsonPath("$.channelId").value(beforeMessageCreateRequest.channelId().toString()))
+        .andExpect(jsonPath("$.author.id").value(beforeMessageCreateRequest.authorId().toString()))
+        .andExpect(jsonPath("$.attachments[0].fileName").value(attachments.getOriginalFilename()))
+        .andExpect(jsonPath("$.attachments[0].size").value(attachments.getSize()))
+        .andExpect(jsonPath("$.attachments[0].contentType").value(attachments.getContentType()))
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+
+    MessageDto beforeMessageDto = objectMapper.readValue(createResponse, MessageDto.class);
+
+    MessageUpdateRequest messageUpdateRequest = new MessageUpdateRequest(
+        "newContent"
+    );
+
+    MockMultipartFile messageUpdateRequestPart = new MockMultipartFile(
+        "messageUpdateRequest",
+        "",
+        "application/json",
+        objectMapper.writeValueAsBytes(messageUpdateRequest)
+    );
+
+    MockMultipartFile upAttachments = new MockMultipartFile(
+        "attachments",
+        "after_attachments.txt",
+        "text/plain",
+        "after_attachments".getBytes()
+    );
+
+    mockMvc.perform(multipart("/api/messages/{messageId}", beforeMessageDto.id())
+            .file(messageUpdateRequestPart)
+            .file(upAttachments)
+            .with(request -> {
+              request.setMethod("PATCH");
+              return request;
+            }))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(beforeMessageDto.id().toString()))
+        .andExpect(jsonPath("$.content").value(messageUpdateRequest.newContent()))
+        .andExpect(jsonPath("$.attachments.size()").value(1))
+        .andExpect(jsonPath("$.attachments[0].fileName").value(upAttachments.getOriginalFilename()))
+        .andExpect(jsonPath("$.attachments[0].contentType").value(upAttachments.getContentType()))
+        .andExpect(jsonPath("$.attachments[0].size").value(upAttachments.getBytes().length));
+  }
+
+  @Test
   @DisplayName("delete_message")
   void deleteMessage() throws Exception {
     mockMvc.perform(get("/api/messages")
@@ -184,5 +295,18 @@ public class MessageApiIntegrationTest {
             .param("channelId", channelDto.id().toString()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content.size()").value(0));
+  }
+
+  @Test
+  @DisplayName("delete_message_forbidden_when_not_author")
+  void deleteMessage_forbidden_when_not_author() throws Exception {
+    UserDto otherUserDto = userService.create(
+        new UserCreateRequest("other_user", "other@test.com", "password2!"),
+        Optional.empty()
+    );
+    TestSecuritySupport.authenticate(otherUserDto.id(), Role.USER);
+
+    mockMvc.perform(delete("/api/messages/{messageId}", messageDto.id()))
+        .andExpect(status().isForbidden());
   }
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -70,11 +71,30 @@ public class MessageController {
     );
   }
 
+  //  현재 수정이 메시지 수정만 처리해서 Json 업데이트 추가
+  @PatchMapping(
+      value = "/{messageId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<MessageDto> updateMessageJson(
+      @PathVariable UUID messageId,
+      @RequestBody @Valid MessageUpdateRequest messageUpdateRequest
+  ) {
+    log.debug("메시지 수정 API 요청: messageId={}, attachmentCount={}, totalAttachmentSize={}",
+        messageId
+    );
+
+    MessageDto messageDto = messageService.update(messageId,
+        messageUpdateRequest, List.of());
+
+    return ResponseEntity.ok(messageDto);
+  }
+
   @PatchMapping(
       value = "/{messageId}",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
-  public ResponseEntity<MessageDto> updateMessage(
+  public ResponseEntity<MessageDto> updateMessageMultipart(
       @PathVariable UUID messageId,
       @RequestPart("messageUpdateRequest") @Valid MessageUpdateRequest messageUpdateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments

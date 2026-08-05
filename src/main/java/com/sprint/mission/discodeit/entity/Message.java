@@ -72,4 +72,17 @@ public class Message extends BaseUpdatableEntity {
     this.attachments = new ArrayList<>(List.copyOf(attachments));
     this.content = content;
   }
+
+  //  orphanRemoval = true이기 때문에 clear할 경우 BinaryContent row가 DB에서 삭제.
+//  실제 파일 삭제는 서비스 계층에서 별도로 처리중.
+//  현재는 BinaryContent는 메타데이터 관리, Storage는 파일을 관리.
+//  추후 로직을 정리할 경우 BinaryContent와 Storage 부분을 참고하여 수정 필요.
+  public void updateAttachments(List<BinaryContent> attachments) {
+    if (attachments == null) {
+      throw new IllegalArgumentException("attachments is null.");
+    }
+
+    this.attachments.clear();
+    this.attachments.addAll(attachments);
+  }
 }

@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 
 import com.sprint.mission.discodeit.dto.channel.ChannelDto;
@@ -18,6 +19,7 @@ import com.sprint.mission.discodeit.dto.user.UserDto;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.channel.ChannelNameAlreadyExistsException;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
@@ -29,11 +31,13 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.TestSecuritySupport;
 import com.sprint.mission.discodeit.service.basic.BasicChannelService;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,6 +45,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 
 @ExtendWith(MockitoExtension.class)
 public class ChannelServiceMockTest {
@@ -62,6 +67,9 @@ public class ChannelServiceMockTest {
 
   @Mock
   private UserMapper userMapper;
+
+  @Mock
+  private RoleHierarchy roleHierarchy;
 
   @InjectMocks
   private BasicChannelService channelService;
@@ -143,6 +151,15 @@ public class ChannelServiceMockTest {
         null,
         participants
     );
+
+    TestSecuritySupport.authenticate(userId1, Role.CHANNEL_MANAGER);
+    lenient().when(roleHierarchy.getReachableGrantedAuthorities(any()))
+        .thenAnswer(invocation -> invocation.getArgument(0));
+  }
+
+  @AfterEach
+  void tearDown() {
+    TestSecuritySupport.clear();
   }
 
   @Test
