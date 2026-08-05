@@ -1,34 +1,53 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.login.LoginRequestDto;
-import com.sprint.mission.discodeit.dto.login.LoginResponseDto;
+import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.AuthService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class BasicAuthService implements AuthService {
+
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final SessionRegistry sessionRegistry;
 
-    public BasicAuthService(
-            @Qualifier("jCFUserRepository") UserRepository userRepository
-    ) {
-        this.userRepository = userRepository;
-    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    @Transactional
+    public UserDto updateRole(UserRoleUpdateRequest request) {
 
-    public LoginResponseDto login(LoginRequestDto dto) {
-        User user = userRepository.findByUsername(dto.username())
-                .orElseThrow(()->new NoSuchElementException("존재하지 않는 사용자입니다. username : " + dto.username()));
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() ->
+                        UserNotFoundException.withId(request.userId()));
 
-        if (!user.getPassword().equals(dto.password())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        user.updateRole(request.newRole());
+        userRepository.save(user);
 
-        return new LoginResponseDto(user.getId(), user.getUsername(), user.getEmail());
+        sessionRegistry.getAllPrincipals().stream()
+                .filter(principal ->
+                        principal instanceof DiscodeitUserDetails userDetails
+                                && userDetails.getUserDto().id()
+                                .equals(request.userId())
+                )
+                .forEach(principal ->
+                        sessionRegistry.getAllSessions(principal, false)
+                                .forEach(SessionInformation::expireNow)
+                );
 
+        return userMapper.toDto(user);
     }
 }

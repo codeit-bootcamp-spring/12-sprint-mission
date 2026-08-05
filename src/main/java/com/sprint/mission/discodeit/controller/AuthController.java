@@ -1,0 +1,53 @@
+package com.sprint.mission.discodeit.controller;
+
+import com.sprint.mission.discodeit.controller.api.AuthApi;
+import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
+import com.sprint.mission.discodeit.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController implements AuthApi {
+
+  private final AuthService authService;
+
+  @GetMapping("me")
+  public ResponseEntity<UserDto> me() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    }
+    UserDto userDto = ((DiscodeitUserDetails) authentication.getPrincipal()).getUserDto();
+    return ResponseEntity.status(HttpStatus.OK).body(userDto);
+  }
+
+  @PutMapping("role")
+  public ResponseEntity<UserDto> updateRole(
+          @RequestBody @Valid UserRoleUpdateRequest request) {
+    return ResponseEntity.status(HttpStatus.OK).body(authService.updateRole(request));
+
+  }
+
+  @GetMapping("csrf-token")
+  public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken) {
+    String tokenValue = csrfToken.getToken();
+    log.debug("CSRF 토큰 요청: {}", tokenValue);
+
+    return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+            .build();
+  }
+
+}

@@ -179,3 +179,8 @@ gradle-app.setting
 
 ### User Custom Ignore ###
 my_dir/
+.logs/
+.discodeit/
+src/main/resources/fe_bundle_*.zip
+
+.env

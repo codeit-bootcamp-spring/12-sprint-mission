@@ -1,39 +1,29 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
-
+@Entity
+@Table(name = "binary_contents")
 @Getter
-public class BinaryContent implements Serializable {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class BinaryContent extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-    private final UUID id;
-    private final Instant createdAt;
-    private final UUID authorId;
-    private final UUID messageId;
-    private final UUID userId;
-    private final byte[] imageContent;
+  @Column(nullable = false)
+  private String fileName;
+  @Column(nullable = false)
+  private Long size;
+  @Column(length = 100, nullable = false)
+  private String contentType;
 
-    public BinaryContent(UUID userId, UUID authorId, UUID messageId, byte[] imageContent) {
-        this.id = UUID.randomUUID();
-        this.createdAt = Instant.now();
-        this.userId = userId;
-        this.authorId = authorId;
-        this.messageId = messageId;
-        this.imageContent = imageContent;
-
-    }
-
-    public static BinaryContent createProfileImage(UUID userId, byte[] imageContent) {
-        return new BinaryContent(userId, null, null, imageContent);
-    }
-
-    public static BinaryContent createMessageImage(UUID authorId, UUID messageId, byte[] imageContent) {
-        return new BinaryContent(null, authorId, messageId, imageContent);
-    }
-
-
+  public BinaryContent(String fileName, Long size, String contentType) {
+    this.fileName = fileName;
+    this.size = size;
+    this.contentType = contentType;
+  }
 }
