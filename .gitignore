@@ -186,3 +186,6 @@ api-docs.json
 CLAUDE.md
 skills-lock.json
 .logs
+.env
+gradle
+discodeit.env

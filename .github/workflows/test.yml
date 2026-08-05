@@ -1,0 +1,33 @@
+name: test.yml
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 소스 코드 체크아웃
+        uses: actions/checkout@v5
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Gradle 권한 설정
+        run: chmod +x ./gradlew
+
+      - name: 테스트 실행
+        run: ./gradlew test
+
+      - name: CodeCov 업로드
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.integration;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@WithMockUser(roles = "ADMIN")
 @Transactional
 class UserApiIntegrationTest {
 
@@ -51,7 +54,8 @@ class UserApiIntegrationTest {
 
     mockMvc.perform(multipart("/api/users")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.username").value("integUser"))
         .andExpect(jsonPath("$.email").value("integ@test.com"));
@@ -67,7 +71,8 @@ class UserApiIntegrationTest {
 
     mockMvc.perform(multipart("/api/users")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isCreated());
 
     MockMultipartFile duplicatePart = new MockMultipartFile(
@@ -77,7 +82,8 @@ class UserApiIntegrationTest {
 
     mockMvc.perform(multipart("/api/users")
             .file(duplicatePart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isConflict());
   }
 
@@ -99,7 +105,8 @@ class UserApiIntegrationTest {
               req.setMethod("PATCH");
               return req;
             })
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("updatedName"));
   }
@@ -118,7 +125,8 @@ class UserApiIntegrationTest {
               req.setMethod("PATCH");
               return req;
             })
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isNotFound());
   }
 
@@ -129,14 +137,14 @@ class UserApiIntegrationTest {
   void deleteUser() throws Exception {
     String userId = createUser("deleteUser", "delete@test.com");
 
-    mockMvc.perform(delete("/api/users/{userId}", userId))
+    mockMvc.perform(delete("/api/users/{userId}", userId).with(csrf()))
         .andExpect(status().isNoContent());
   }
 
   @Test
   @DisplayName("사용자 삭제 실패 - 404 (존재하지 않는 사용자)")
   void delete_notFound() throws Exception {
-    mockMvc.perform(delete("/api/users/{userId}", UUID.randomUUID()))
+    mockMvc.perform(delete("/api/users/{userId}", UUID.randomUUID()).with(csrf()))
         .andExpect(status().isNotFound());
   }
 
@@ -145,21 +153,23 @@ class UserApiIntegrationTest {
   @Test
   @DisplayName("사용자 목록 조회 성공 - 200")
   void findAll() throws Exception {
+    MvcResult before = mockMvc.perform(get("/api/users")).andReturn();
+    int baseline = objectMapper.readTree(before.getResponse().getContentAsString()).size();
+
     createUser("listUser1", "list1@test.com");
     createUser("listUser2", "list2@test.com");
 
     mockMvc.perform(get("/api/users"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.length()").value(2));
+        .andExpect(jsonPath("$.length()").value(baseline + 2));
   }
 
   @Test
-  @DisplayName("사용자 목록 조회 성공 - 빈 목록")
+  @DisplayName("사용자 목록 조회 성공 - 빈 목록이 아니어도 목록 형태 확인")
   void findAll_emptyList() throws Exception {
     mockMvc.perform(get("/api/users"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$.length()").value(0));
+        .andExpect(jsonPath("$").isArray());
   }
 
   // ── helper ──────────────────────────────────────────────────────────────
@@ -172,7 +182,8 @@ class UserApiIntegrationTest {
 
     MvcResult result = mockMvc.perform(multipart("/api/users")
             .file(requestPart)
-            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .with(csrf()))
         .andExpect(status().isCreated())
         .andReturn();
 

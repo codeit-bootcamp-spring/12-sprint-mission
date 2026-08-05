@@ -14,6 +14,7 @@ import com.sprint.mission.discodeit.dto.request.ReadStatusUpdateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.readStatus.ReadStatusAlreadyExistException;
@@ -76,7 +77,7 @@ public class BasicReadStatusServiceTest {
     username = "testUser";
     password = "password1234!";
     email = "test@test.com";
-    user = new User(username, email, password, null);
+    user = new User(username, email, password, null, Role.USER);
     ReflectionTestUtils.setField(user, "id", userId);
     channelName = "Test Channel";
     description = "This is a test channel.";

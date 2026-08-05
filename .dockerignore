@@ -1,0 +1,7 @@
+.gradle
+build
+.git
+uploads
+.logs
+.gitignore
+*.md

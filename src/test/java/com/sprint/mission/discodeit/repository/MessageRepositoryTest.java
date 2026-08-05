@@ -6,8 +6,8 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -45,19 +45,14 @@ public class MessageRepositoryTest {
         .channel(channel)
         .content(content)
         .attachments(new ArrayList<>())
-        .createdAt(createdAt)
+        .createdAt(createdAt.truncatedTo(ChronoUnit.MILLIS))
         .build();
     return messageRepository.save(message);
   }
 
   private User createUser(String username, String email) {
     BinaryContent profile = new BinaryContent(username + ".jpg", 1024L, "image/png");
-    User user = new User(username, email, "password1234!", profile);
-    UserStatus status = UserStatus.builder()
-        .user(user)
-        .lastActiveAt(Instant.now())
-        .build();
-    user.setUserStatus(status);
+    User user = new User(username, email, "password1234!", profile, Role.USER);
     return userRepository.save(user);
   }
 
@@ -73,7 +68,7 @@ public class MessageRepositoryTest {
   public void findLastMessageAtByChannelId() {
     User user = createUser("testUser", "test@test.com");
     Channel channel = createChannel(ChannelType.PUBLIC, "testChannel");
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Instant fiveMinutesAgo = now.minus(5, ChronoUnit.MINUTES);
     Instant tenMinutesAgo = now.minus(10, ChronoUnit.MINUTES);
     Instant twentyMinutesAgo = now.minus(20, ChronoUnit.MINUTES);
@@ -87,7 +82,8 @@ public class MessageRepositoryTest {
     Optional<Instant> lastMessageAt = messageRepository.findLastMessageAtByChannelId(
         channel.getId());
     assertThat(lastMessageAt).isPresent();
-    assertThat(lastMessageAt.get()).isEqualTo(message3.getCreatedAt());
+    assertThat(lastMessageAt.get().truncatedTo(ChronoUnit.MILLIS)).isEqualTo(
+        message3.getCreatedAt().truncatedTo(ChronoUnit.MILLIS));
   }
 
   @Test
@@ -133,7 +129,7 @@ public class MessageRepositoryTest {
   public void findMessagesByChannelIdBeforeCursor() {
     User user = createUser("testUser", "test@test.com");
     Channel channel = createChannel(ChannelType.PUBLIC, "testChannel");
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Instant fiveMinutesAgo = now.minus(5, ChronoUnit.MINUTES);
     Instant tenMinutesAgo = now.minus(10, ChronoUnit.MINUTES);
     Instant twentyMinutesAgo = now.minus(20, ChronoUnit.MINUTES);
@@ -153,8 +149,12 @@ public class MessageRepositoryTest {
         channel.getId(), Instant.now(), pageable);
 
     assertThat(messages.getContent()).hasSize(3);
-    assertThat(messages.getContent()).extracting("createdAt").containsExactlyInAnyOrder(
-        message5.getCreatedAt(), message4.getCreatedAt(), message3.getCreatedAt());
+    assertThat(messages.getContent()).extracting(
+            m -> ((Message) m).getCreatedAt().truncatedTo(ChronoUnit.MILLIS))
+        .containsExactlyInAnyOrder(
+            message5.getCreatedAt().truncatedTo(ChronoUnit.MILLIS),
+            message4.getCreatedAt().truncatedTo(ChronoUnit.MILLIS),
+            message3.getCreatedAt().truncatedTo(ChronoUnit.MILLIS));
     assertThat(messages.getContent()).extracting("content")
         .containsExactly("test5", "test4", "test3");
     assertThat(messages.hasNext()).isTrue();

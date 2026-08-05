@@ -9,7 +9,7 @@ import static org.mockito.BDDMockito.verify;
 
 import com.github.f4b6a3.uuid.UuidCreator;
 import com.sprint.mission.discodeit.dto.data.UserDto;
-import com.sprint.mission.discodeit.dto.request.LoginRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.user.InvalidCredentialsException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
@@ -51,46 +51,9 @@ public class BasicAuthServiceTest {
     username = "testUser";
     password = "password1234!";
     email = "test@test.com";
-    user = new User(username, email, password, null);
+    user = new User(username, email, password, null, Role.USER);
     ReflectionTestUtils.setField(user, "id", userId);
-    userDto = new UserDto(userId, username, email, null, true);
+    userDto = new UserDto(userId, username, email, null, true, Role.USER);
   }
 
-  // ── login ──────────────────────────────────────────────────────────────
-
-  @Test
-  @DisplayName("로그인 테스트(성공)")
-  public void login() {
-    LoginRequest loginRequest = new LoginRequest(username, password);
-
-    given(userRepository.findByUsername(any(String.class)))
-        .willReturn(Optional.of(user));
-    given(userMapper.toDto(any(User.class)))
-        .willReturn(userDto);
-
-    UserDto result = authService.login(loginRequest);
-
-    assertThat(result).isEqualTo(userDto);
-    verify(userRepository).findByUsername(username);
-    verify(userMapper).toDto(user);
-  }
-
-  @Test
-  @DisplayName("로그인 테스트(실패 - 사용자 없음)")
-  public void login_userNotFound() {
-    LoginRequest loginRequest = new LoginRequest(username, password);
-    given(userRepository.findByUsername(any(String.class))).willReturn(Optional.empty());
-    assertThatThrownBy(() -> authService.login(loginRequest))
-        .isInstanceOf(UserNotFoundException.class);
-    verify(userRepository).findByUsername(username);
-  }
-
-  @Test
-  @DisplayName("로그인 테스트(실패 - 비밀번호 불일치)")
-  public void login_passwordMismatch() {
-    LoginRequest loginRequest = new LoginRequest(username, "wrongPassword");
-    given(userRepository.findByUsername(any(String.class))).willReturn(Optional.of(user));
-    assertThatThrownBy(() -> authService.login(loginRequest))
-        .isInstanceOf(InvalidCredentialsException.class);
-  }
 }

@@ -11,13 +11,14 @@ import com.github.f4b6a3.uuid.UuidCreator;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.repository.UserStatusRepository;
+import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,13 +40,16 @@ public class BasicUserServiceTest {
   private UserRepository userRepository;
 
   @Mock
-  private UserStatusRepository userStatusRepository;
-
-  @Mock
   private BinaryContentRepository binaryContentRepository;
 
   @Mock
   private UserMapper userMapper;
+
+  @Mock
+  private BinaryContentStorage binaryContentStorage;
+
+  @Mock
+  private PasswordEncoder passwordEncoder;
 
   @InjectMocks
   private BasicUserService userService;
@@ -64,9 +69,9 @@ public class BasicUserServiceTest {
     password = "qwer1234!";
     email = "test@test.com";
     now = Instant.now();
-    user = new User(username, email, password, null);
+    user = new User(username, email, password, null, Role.USER);
     ReflectionTestUtils.setField(user, "id", id);
-    userDto = new UserDto(id, username, email, null, true);
+    userDto = new UserDto(id, username, email, null, true, Role.USER);
   }
 
   // ── create ──────────────────────────────────────────────────────────────
@@ -77,6 +82,7 @@ public class BasicUserServiceTest {
     UserCreateRequest request = new UserCreateRequest(username, email, password);
     given(userRepository.existsByEmail(email)).willReturn(false);
     given(userRepository.existsByUsername(username)).willReturn(false);
+    given(passwordEncoder.encode(password)).willReturn(password);
     given(userRepository.save(any())).willReturn(user);
     given(userMapper.toDto(user)).willReturn(userDto);
 
@@ -133,7 +139,7 @@ public class BasicUserServiceTest {
   @DisplayName("사용자 목록 조회 테스트(성공)")
   public void findAll() {
     List<UserDto> userDtoList = List.of(userDto);
-    given(userRepository.findAllWithProfileAndUserStatus()).willReturn(List.of(user));
+    given(userRepository.findAllWithProfile()).willReturn(List.of(user));
     given(userMapper.toDto(user)).willReturn(userDto);
 
     List<UserDto> result = userService.findAll();
@@ -151,7 +157,7 @@ public class BasicUserServiceTest {
     String newPassword = "newPass1234!";
 
     UserUpdateRequest request = new UserUpdateRequest(newUsername, newEmail, newPassword);
-    UserDto updatedUserDto = new UserDto(id, newUsername, newEmail, null, true);
+    UserDto updatedUserDto = new UserDto(id, newUsername, newEmail, null, true, Role.USER);
 
     given(userRepository.findById(id)).willReturn(Optional.of(user));
 

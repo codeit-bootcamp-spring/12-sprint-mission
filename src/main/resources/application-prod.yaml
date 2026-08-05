@@ -1,26 +1,22 @@
+server:
+  port: 8080
 spring:
   config:
     activate:
       on-profile: prod
-
+  #  sql:
+  #    init:
+  #      mode: always
+  #      schema-locations: classpath:schema.sql
   datasource:
-    url: jdbc:postgresql://192.168.1.140:54320/discodeit
+    url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
-    username: discodeit_user
-    password: discodeit1234
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: false
-
-  boot:
-    admin:
-      client:
-        url: ${SPRING_BOOT_ADMIN_CLIENT_URL:http://localhost:9090}
-        enabled: true
-        instance:
-          name: discodeit-prod
-          service-url: ${SPRING_BOOT_ADMIN_SERVICE_URL:http://localhost:8080}
 
 logging:
   level:

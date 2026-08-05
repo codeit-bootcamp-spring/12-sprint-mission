@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.channel.ChannelAccessDeniedException;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
 import com.sprint.mission.discodeit.mapper.ChannelMapper;
@@ -15,12 +16,18 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.ChannelService;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +43,29 @@ public class BasicChannelService implements ChannelService {
   private final MessageRepository messageRepository;
   private final UserRepository userRepository;
   private final ChannelMapper channelMapper;
+  private final RoleHierarchy roleHierarchy;
+
+  private boolean isChannelManager() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    for (GrantedAuthority authority : roleHierarchy.getReachableGrantedAuthorities(
+        auth.getAuthorities())) {
+      if (authority.getAuthority().equals("ROLE_CHANNEL_MANAGER")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private UUID currentUserId() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth.getPrincipal() instanceof DiscodeitUserDetails userDetails) {
+      return userDetails.getUserDto().id();
+    }
+    return null;
+  }
 
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
   public ChannelDto create(PublicChannelCreateRequest request) {
     log.debug("PublicChannel 생성 시작: request={}", request);
@@ -49,6 +77,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
   public ChannelDto create(PrivateChannelCreateRequest request) {
     log.debug("PrivateChannel 생성 시작: request={}", request);
@@ -104,10 +133,15 @@ public class BasicChannelService implements ChannelService {
               log.warn("Channel 업데이트 실패(채널 없음): channelId={}", channelId);
               return ChannelNotFoundException.withId(channelId);
             });
-    if (channel.getType().equals(ChannelType.PRIVATE)) {
+    if (channel.getType() == ChannelType.PUBLIC) {
+      if (!isChannelManager()) {
+        throw ChannelAccessDeniedException.withChannelIdAndUserId(channelId, currentUserId());
+      }
+    } else if (channel.getType().equals(ChannelType.PRIVATE)) {
       log.warn("Channel 업데이트 실패(비공개 채널): channelId={}", channelId);
       throw PrivateChannelUpdateException.withChannelId(channelId);
     }
+
     channel.update(newName, newDescription);
     log.info("Channel 업데이트 완료: channelId={}, newName={}", channelId, newName);
     return channelMapper.toDto(channelRepository.save(channel));
@@ -124,7 +158,11 @@ public class BasicChannelService implements ChannelService {
               return ChannelNotFoundException.withId(channelId);
             }
         );
-
+    if (channel.getType() == ChannelType.PUBLIC) {
+      if (!isChannelManager()) {
+        throw ChannelAccessDeniedException.withChannelIdAndUserId(channelId, currentUserId());
+      }
+    }
     messageRepository.deleteAllByChannelId(channel.getId());
     readStatusRepository.deleteAllByChannelId(channel.getId());
 

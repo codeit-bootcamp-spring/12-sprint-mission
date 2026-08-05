@@ -1,1 +1,1 @@
-# README 샘플
+[![codecov](https://codecov.io/gh/seongjuun/12-sprint-mission/graph/badge.svg?token=2DRIYVG39Q)](https://codecov.io/gh/seongjuun/12-sprint-mission)

@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,8 +19,8 @@ public class GlobalExceptionHandler {
   // 공통 예외 처리부
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
-    log.error("예상치 못한 오류 발생 : {}", e.getMessage());
-    ErrorResponse errorResponse = new ErrorResponse(e, 500);
+    log.error("예상치 못한 오류 발생 : {}", e.getMessage(), e);
+    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
     return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
   }
 
@@ -33,13 +34,20 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(httpStatus).body(errorResponse);
   }
 
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e) {
+    log.warn("접근 거부 : {}", e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.FORBIDDEN.value());
+    return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+  }
+
   // 도메인 예외를 HttpStatus 번호로 매핑하는 코드
   private HttpStatus parseHttpStatus(DiscodeitException e) {
     ErrorCode code = e.getErrorCode();
     return switch (code) {
       case USER_NOT_FOUND, CHANNEL_NOT_FOUND, MESSAGE_NOT_FOUND, READ_STATUS_NOT_FOUND,
-           USER_STATUS_NOT_FOUND, BINARY_CONTENT_NOT_FOUND -> HttpStatus.NOT_FOUND;
-      case USER_DUPLICATE, USER_STATUS_DUPLICATE, READ_STATUS_DUPLICATE -> HttpStatus.CONFLICT;
+           BINARY_CONTENT_NOT_FOUND -> HttpStatus.NOT_FOUND;
+      case USER_DUPLICATE, READ_STATUS_DUPLICATE -> HttpStatus.CONFLICT;
       case INVALID_USER_CREDENTIALS -> HttpStatus.UNAUTHORIZED;
       case INVALID_REQUEST, PRIVATE_CHANNEL_UPDATE -> HttpStatus.BAD_REQUEST;
       case CHANNEL_ACCESS_DENIED -> HttpStatus.FORBIDDEN;
@@ -52,7 +60,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleValidationException(
       MethodArgumentNotValidException e) {
-    log.error("요청 유효성 검사 실패 : {}", e.getMessage());
+    log.error("요청 유효성 검사 실패 : {}", e.getMessage(), e);
 
     Map<String, Object> validationErrors = new LinkedHashMap<>();
     e.getBindingResult().getAllErrors().forEach(error -> {

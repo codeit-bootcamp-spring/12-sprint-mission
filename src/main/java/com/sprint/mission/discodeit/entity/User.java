@@ -4,6 +4,8 @@ import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -49,19 +51,17 @@ public class User extends BaseUpdatableEntity {
   @NonNull
   @OneToMany(mappedBy = "user")
   private List<ReadStatus> readStatuses = new ArrayList<>();
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false, length = 20)
+  private Role role;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private UserStatus userStatus;
-
-  public User(String username, String email, String password, BinaryContent profile) {
+  public User(String username, String email, String password, BinaryContent profile, Role role) {
     this.username = username;
     this.email = email;
     this.password = password;
     this.profile = profile;
-  }
-
-  public void setUserStatus(@NonNull UserStatus userStatus) {
-    this.userStatus = userStatus;
+    this.role = role;
   }
 
   public void update(String newUsername, String newEmail, String newPassword,
@@ -78,5 +78,9 @@ public class User extends BaseUpdatableEntity {
     if (newProfile != null) {
       this.profile = newProfile;
     }
+  }
+
+  public void updateRole(Role role) {
+    this.role = role;
   }
 }
