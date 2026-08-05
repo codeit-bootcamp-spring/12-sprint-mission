@@ -4,11 +4,8 @@ package com.sprint.mission.discodeit.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.entity.*;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +41,7 @@ class MessageRepositoryTest {
   @BeforeEach
   void setUp() {
     savedChannel = channelRepository.save(new Channel(ChannelType.PUBLIC, "공지", null));
-    savedUser = userRepository.save(new User("JaneDoe", "JaneDoe@codeit.com", "pw", null));
+    savedUser = userRepository.save(new User("JaneDoe", "JaneDoe@codeit.com", "pw", null, Role.ADMIN));
     // UserStatus 필수 - JOIN FETCH a.status
     userStatusRepository.save(new UserStatus(savedUser, Instant.now()));
 

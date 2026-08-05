@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import java.time.Instant;
@@ -30,7 +31,7 @@ class UserRepositoryTest {
 
   @BeforeEach
   void setUp() {
-    savedUser = userRepository.save(new User("JaneDoe", "JaneDoe@codeit.com", "password123", null));
+    savedUser = userRepository.save(new User("JaneDoe", "JaneDoe@codeit.com", "password123", null, Role.ADMIN));
     userStatusRepository.save(new UserStatus(savedUser, Instant.now()));
   }
 
@@ -99,7 +100,7 @@ class UserRepositoryTest {
   @DisplayName("프로필과 상태 포함 전체 조회 - JOIN FETCH")
   void findAllWithProfileAndStatus_success() {
     // given - 추가 유저 저장
-    User user2 = userRepository.save(new User("JohnDoe", "JohnDoe@codeit.com", "pw", null));
+    User user2 = userRepository.save(new User("JohnDoe", "JohnDoe@codeit.com", "pw", null, Role.ADMIN));
     userStatusRepository.save(new UserStatus(user2, Instant.now()));
 
     // when
@@ -115,7 +116,7 @@ class UserRepositoryTest {
   @DisplayName("프로필과 상태 포함 전체 조회 - UserStatus 없는 유저는 제외")
   void findAllWithProfileAndStatus_excludeWithoutStatus() {
     // given - UserStatus 없는 유저 저장
-    userRepository.save(new User("상태없음", "nostatus@codeit.com", "pw", null));
+    userRepository.save(new User("상태없음", "nostatus@codeit.com", "pw", null, Role.ADMIN));
 
     // when
     List<User> result = userRepository.findAllWithProfileAndStatus();

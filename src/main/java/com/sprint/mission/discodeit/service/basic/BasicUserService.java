@@ -67,7 +67,7 @@ public class BasicUserService implements UserService {
 
     String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
 
-    User user = new User(username, email, encodedPassword, nullableProfile);
+    User user = new User(username, email, encodedPassword, nullableProfile, Role.ADMIN);
     UserStatus userStatus = new UserStatus(user, Instant.now());
 
     userRepository.save(user);

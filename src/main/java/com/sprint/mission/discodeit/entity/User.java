@@ -30,7 +30,7 @@ public class User extends BaseUpdatableEntity {
   private Role role;
 
 
-  public User(String username, String email, String password, BinaryContent profile) {
+  public User(String username, String email, String password, BinaryContent profile, Role admin) {
     this.username = username;
     this.email = email;
     this.password = password;

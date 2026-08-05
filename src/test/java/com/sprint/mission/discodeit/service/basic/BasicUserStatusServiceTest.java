@@ -3,7 +3,6 @@ package com.sprint.mission.discodeit.service.basic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -11,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import com.sprint.mission.discodeit.dto.data.UserStatusDto;
 import com.sprint.mission.discodeit.dto.request.UserStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
@@ -60,7 +60,7 @@ class BasicUserStatusServiceTest {
     userId = UUID.randomUUID();
     lastActiveAt = Instant.now();
 
-    user = new User("testUser", "test@example.com", "password", null);
+    user = new User("testUser", "test@example.com", "password", null, Role.ADMIN);
     ReflectionTestUtils.setField(user, "id", userId);
     
     userStatus = new UserStatus(user, lastActiveAt);

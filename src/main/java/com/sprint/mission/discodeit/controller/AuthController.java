@@ -27,12 +27,19 @@ public class AuthController {
         return ResponseEntity.ok(userDetails.getUserDto());
     }
 
+    @GetMapping("/api/auth/csrf-token")
+    public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken) {
+        csrfToken.getToken(); //지연 토큰 장제 초기화 - Cookie Rendering
+        return ResponseEntity.noContent().build();
+    }
+
 
     @PutMapping("/role")
     public ResponseEntity<UserResponse> updateRole(
             @RequestBody @Valid UserRoleUpdateRequest request) {
             return ResponseEntity.ok(userService.updateRole(request));
         }
+
 
 
 }

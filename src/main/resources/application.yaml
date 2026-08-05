@@ -48,7 +48,11 @@ logging:
     org.springframework.security: trace
 
 discodeit:
-  storage:
+    admin:
+      username: admin
+      email: admin@discodeit.com
+      password: ${ADMIN_PASSWORD:admin1234}  # 환경변수 우선, 없으면 기본값
+storage:
     type: local
     local:
       root-path: .discodeit/storage
@@ -58,3 +62,4 @@ management:
     web:
       exposure:
         include: health,info,metrics,loggers
+

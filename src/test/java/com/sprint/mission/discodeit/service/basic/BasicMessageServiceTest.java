@@ -14,11 +14,7 @@ import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
-import com.sprint.mission.discodeit.entity.BinaryContent;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.*;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
@@ -93,7 +89,7 @@ class BasicMessageServiceTest {
     channel = new Channel(ChannelType.PUBLIC, "testChannel", "testDescription");
     ReflectionTestUtils.setField(channel, "id", channelId);
 
-    author = new User("testUser", "test@example.com", "password", null);
+    author = new User("testUser", "test@example.com", "password", null, Role.ADMIN);
     ReflectionTestUtils.setField(author, "id", authorId);
 
     attachment = new BinaryContent("test.txt", 100L, "text/plain");
