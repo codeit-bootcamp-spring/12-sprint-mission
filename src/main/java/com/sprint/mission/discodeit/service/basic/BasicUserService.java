@@ -14,6 +14,7 @@ import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.config.JwtRegistry;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class BasicUserService implements UserService {
     private final BinaryContentRepository binaryContentRepository;
     private final BinaryContentStorage binaryContentStorage;
     private final PasswordEncoder passwordEncoder;
+    private final JwtRegistry jwtRegistry;
 
     @Override
     public UserResponse create(UserCreateRequest request, MultipartFile profile) {
@@ -61,13 +63,13 @@ public class BasicUserService implements UserService {
                 savedUser.getId(),
                 savedUser.getUsername()
         );
-        return UserResponse.from(savedUser);
+        return toUserResponse(savedUser);
     }
 
     @Override
     public List<UserResponse> findAll() {
         return userRepository.findAll().stream()
-                .map(user -> UserResponse.from(user))
+                .map(this::toUserResponse)
                 .toList();
     }
 
@@ -97,7 +99,7 @@ public class BasicUserService implements UserService {
         log.info("사용자 수정 완료. userId={}",
                 user.getId()
         );
-        return UserResponse.from(user);
+        return toUserResponse(user);
     }
 
   @Override
@@ -106,7 +108,9 @@ public class BasicUserService implements UserService {
         User user = getUserOrThrow(request.userId());
         user.changeRole(request.role());
 
-        return UserResponse.from(userRepository.save(user));
+        UserResponse response = toUserResponse(userRepository.save(user));
+        jwtRegistry.invalidateJwtInformationByUserId(user.getId());
+        return response;
     }
 
     @Override
@@ -128,6 +132,18 @@ public class BasicUserService implements UserService {
     private User getUserOrThrow(UUID userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userId)
+        );
+    }
+
+    private UserResponse toUserResponse(User user) {
+        UserResponse response = UserResponse.from(user);
+        return new UserResponse(
+                response.id(),
+                response.username(),
+                response.email(),
+                response.profile(),
+                jwtRegistry.hasActiveJwtInformationByUserId(user.getId()),
+                response.role()
         );
     }
 

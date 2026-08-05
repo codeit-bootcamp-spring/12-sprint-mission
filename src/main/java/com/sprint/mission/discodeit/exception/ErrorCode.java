@@ -34,6 +34,13 @@ public enum ErrorCode {
   READSTATUS_ALREADY_EXIST(HttpStatus.CONFLICT,
       "ReadStatus with userId %s and channelId %s already exists"),
 
+  // jwt
+  JWT_INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 JWT 토큰입니다."),
+  JWT_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 JWT 토큰입니다."),
+  JWT_INVALID_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, "JWT 토큰의 용도가 올바르지 않습니다."),
+  JWT_TOKEN_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "JWT 토큰 생성에 실패했습니다."),
+  JWT_INVALID_CONFIGURATION(HttpStatus.INTERNAL_SERVER_ERROR, "JWT 설정이 올바르지 않습니다."),
+
   FILE_PROCESSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 처리 중 오류 발생");
 
   private final HttpStatus status;

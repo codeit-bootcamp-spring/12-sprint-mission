@@ -22,6 +22,12 @@ discodeit:
     local:
       root-path: .discodeit/storage
 
+jwt:
+  # Production environments should supply this through JWT_SECRET.
+  secret: ${JWT_SECRET:change-this-development-secret-key-to-a-secure-value}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}   # 1시간
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:1209600000}    # 14일
+
 logging:
   level:
     root: info
