@@ -1,27 +1,21 @@
 package com.sprint.mission.discodeit.exception;
 
-import java.time.Instant;
 import java.util.Map;
 
 public record ErrorResponse(
-    Instant timestamp,
-    String code,
-    String message,
-    Map<String, Object> details,
-    String exceptionType,
-    int status
+        String code,
+    String message
 ) {
 
   public static ErrorResponse from(DiscodeitException exception) {
     ErrorCode errorCode = exception.getErrorCode();
 
     return new ErrorResponse(
-        exception.getTimestamp(),
-        errorCode.name(),                       // code
-        exception.getMessage(),                 // message
-        exception.getDetails(),                 // details
-        exception.getClass().getSimpleName(),   // exceptionType
-        errorCode.getStatus().value()           // status
+            errorCode.name(),                       // code
+        exception.getMessage()                 // message
+            // details
+            // exceptionType
+            // status
     );
   }
 
@@ -33,12 +27,8 @@ public record ErrorResponse(
       Map<String, Object> details
   ) {
     return new ErrorResponse(
-        Instant.now(),
-        code,
-        message,
-        details == null ? Map.of() : details,
-        exceptionType,
-        status
+            code,
+        message
     );
   }
 }

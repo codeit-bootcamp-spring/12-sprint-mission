@@ -10,10 +10,7 @@ import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.*;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
 import com.sprint.mission.discodeit.mapper.PageResponseMapper;
 import com.sprint.mission.discodeit.mapper.PageResponseMapperImpl;
@@ -71,7 +68,7 @@ class MessageServiceTest {
     MessageCreateRequest request = new MessageCreateRequest(channelId, authorId, "안녕하세요");
 
     Channel mockChannel = new Channel(ChannelType.PUBLIC, "공지", null);
-    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null);
+    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null, Role.ADMIN);
     Message mockMessage = new Message("안녕하세요", mockChannel, mockAuthor, List.of());
     MessageResponse mockResponse = new MessageResponse(
         UUID.randomUUID(), Instant.now(), Instant.now(), "안녕하세요", channelId, null, List.of()
@@ -134,7 +131,7 @@ class MessageServiceTest {
     UUID channelId = UUID.randomUUID();
     MessageUpdateRequest request = new MessageUpdateRequest("수정된 내용");
     Channel mockChannel = new Channel(ChannelType.PUBLIC, "공지", null);
-    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null);
+    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null, Role.ADMIN);
     Message mockMessage = new Message("원본 내용", mockChannel, mockAuthor, List.of());
     MessageResponse mockResponse = new MessageResponse(
         messageId, Instant.now(), Instant.now(), "수정된 내용", channelId, null, List.of()
@@ -202,7 +199,7 @@ class MessageServiceTest {
     Instant cursor = Instant.now();
 
     Channel mockChannel = new Channel(ChannelType.PUBLIC, "공지", null);
-    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null);
+    User mockAuthor = new User("홍길동", "hong@example.com", "pw", null, Role.ADMIN);
     Message mockMessage = new Message("메시지", mockChannel, mockAuthor, List.of());
     SliceImpl<Message> mockSlice = new SliceImpl<>(List.of(mockMessage), pageable, false);
 

@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
@@ -52,7 +53,7 @@ class UserServiceTest {
   void create_success() {
     // given
     UserCreateRequest request = new UserCreateRequest("홍길동", "hong@example.com", "password123");
-    User mockUser = new User("홍길동", "hong@example.com", "password123", null);
+    User mockUser = new User("홍길동", "hong@example.com", "password123", null, Role.ADMIN);
     UserResponse mockResponse = new UserResponse(UUID.randomUUID(), "홍길동", "hong@example.com", null,
         false);
 
@@ -106,7 +107,7 @@ class UserServiceTest {
     // given
     UUID userId = UUID.randomUUID();
     UserUpdateRequest request = new UserUpdateRequest("새이름", "new@example.com", "newPassword");
-    User mockUser = new User("홍길동", "hong@example.com", "password123", null);
+    User mockUser = new User("홍길동", "hong@example.com", "password123", null, Role.ADMIN);
     UserResponse mockResponse = new UserResponse(userId, "새이름", "new@example.com", null, false);
 
     given(userRepository.findById(userId)).willReturn(Optional.of(mockUser));

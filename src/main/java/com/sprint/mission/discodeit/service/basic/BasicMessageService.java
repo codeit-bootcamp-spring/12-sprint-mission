@@ -27,6 +27,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ public class BasicMessageService implements MessageService {
   private final BinaryContentStorage binaryContentStorage;
   private final BinaryContentRepository binaryContentRepository;
   private final PageResponseMapper pageResponseMapper;
+  private final SessionRegistry sessionRegistry;
 
   @Transactional
   @Override
@@ -81,14 +83,14 @@ public class BasicMessageService implements MessageService {
     );
 
     messageRepository.save(message);
-    return messageMapper.toDto(message);
+    return messageMapper.toResponse(message,sessionRegistry);
   }
 
   @Transactional(readOnly = true)
   @Override
   public MessageResponse find(UUID messageId) {
     return messageRepository.findById(messageId)
-        .map(messageMapper::toDto)
+        .map((Message message) -> messageMapper.toResponse(message,sessionRegistry))
         .orElseThrow(
             () -> MessageNotFoundException.withId(messageId));
   }
@@ -101,7 +103,7 @@ public class BasicMessageService implements MessageService {
             channelId,
             Optional.ofNullable(createAt).orElse(Instant.now()),
             pageable)
-        .map(messageMapper::toDto);
+        .map((Message message) -> messageMapper.toResponse(message, sessionRegistry));
 
     Instant nextCursor = null;
     if (!slice.getContent().isEmpty()) {
@@ -119,7 +121,7 @@ public class BasicMessageService implements MessageService {
         .orElseThrow(
             () -> MessageNotFoundException.withId(messageId));
     message.update(newContent);
-    return messageMapper.toDto(message);
+    return messageMapper.toResponse(message,sessionRegistry);
   }
 
   @Transactional

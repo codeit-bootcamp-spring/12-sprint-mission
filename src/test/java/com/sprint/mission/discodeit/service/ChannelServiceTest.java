@@ -11,10 +11,7 @@ import com.sprint.mission.discodeit.dto.channel.ChannelResponse;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.ReadStatus;
-import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.*;
 import com.sprint.mission.discodeit.mapper.ChannelMapper;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
@@ -95,8 +92,8 @@ class ChannelServiceTest {
 
     Channel mockChannel = new Channel(ChannelType.PRIVATE, null, null);
     List<User> mockUsers = List.of(
-        new User("user1", "user1@example.com", "pw", null),
-        new User("user2", "user2@example.com", "pw", null)
+        new User("user1", "user1@example.com", "pw", null, Role.ADMIN),
+        new User("user2", "user2@example.com", "pw", null, Role.ADMIN)
     );
     ChannelResponse mockResponse = new ChannelResponse(UUID.randomUUID(), ChannelType.PRIVATE, null,
         null, null, null);

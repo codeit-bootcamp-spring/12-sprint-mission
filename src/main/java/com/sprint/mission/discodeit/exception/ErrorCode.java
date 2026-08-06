@@ -14,6 +14,7 @@ public enum ErrorCode {
   USER_ID_AND_MESSAGE_ID_MUST_NOT_BE_NULL(HttpStatus.BAD_REQUEST,
       "userId and messageId shouldn't be both assigned null"),
   WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "Wrong password"),
+  INVALID_USER_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid username or password"),
 
   //Channel
   CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "Channel with id %s not found"),
