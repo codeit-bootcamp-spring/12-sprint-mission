@@ -12,6 +12,9 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +31,8 @@ public class JwtTokenProvider {
   private final byte[] secret;
   private final long accessTokenExpiration;
   private final long refreshTokenExpiration;
+  // 단일 인스턴스용 재사용 방지 목록. 다중 서버 운영 시 Redis로 교체
+  private final Set<String> usedRefreshTokenIds = ConcurrentHashMap.newKeySet();
 
   public JwtTokenProvider(
       @Value("${discodeit.jwt.secret}") String secret,
@@ -51,16 +56,24 @@ public class JwtTokenProvider {
   }
 
   public String refreshAccessToken(String refreshToken) {
+    String subject = consumeRefreshToken(refreshToken);
     JWTClaimsSet claims = parseAndValidate(refreshToken);
-    if (!REFRESH.equals(claims.getClaim(TOKEN_TYPE))) {
-      throw new IllegalArgumentException("Refresh token required");
-    }
     return generateToken(
-        claims.getSubject(),
+        subject,
         ((List<?>) claims.getClaim(ROLES)).stream().map(String::valueOf).toList(),
         ACCESS,
         accessTokenExpiration
     );
+  }
+
+  public String consumeRefreshToken(String refreshToken) {
+    JWTClaimsSet claims = parseAndValidate(refreshToken);
+    if (!REFRESH.equals(claims.getClaim(TOKEN_TYPE))
+        || claims.getJWTID() == null
+        || !usedRefreshTokenIds.add(claims.getJWTID())) {
+      throw new IllegalArgumentException("Invalid refresh token");
+    }
+    return claims.getSubject();
   }
 
   public boolean validateToken(String token) {
@@ -102,6 +115,7 @@ public class JwtTokenProvider {
         .subject(subject)
         .claim(ROLES, roles)
         .claim(TOKEN_TYPE, type)
+        .jwtID(UUID.randomUUID().toString())
         .issueTime(Date.from(now))
         .expirationTime(Date.from(now.plusSeconds(expiration)))
         .build();
