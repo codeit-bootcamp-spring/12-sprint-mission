@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.entity.Role;
@@ -8,6 +9,12 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class InMemoryJwtRegistryTest {
+
+  @Test
+  void rejectsInvalidMaxActiveJwtCount() {
+    assertThatThrownBy(() -> new InMemoryJwtRegistry(0))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
 
   @Test
   void limitsConcurrentLoginAndRotatesTokens() {

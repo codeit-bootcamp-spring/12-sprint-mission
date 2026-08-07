@@ -21,6 +21,9 @@ public class InMemoryJwtRegistry implements JwtRegistry {
   public InMemoryJwtRegistry(
       @Value("${discodeit.jwt.max-active-count:1}") int maxActiveJwtCount
   ) {
+    if (maxActiveJwtCount < 1) {
+      throw new IllegalArgumentException("maxActiveJwtCount must be at least 1");
+    }
     this.maxActiveJwtCount = maxActiveJwtCount;
   }
 

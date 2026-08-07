@@ -113,11 +113,15 @@ public class BasicUserService implements UserService {
     String newUsername = userUpdateRequest.newUsername();
     String newEmail = userUpdateRequest.newEmail();
 
-    if (userRepository.existsByEmail(newEmail)) {
+    if (newEmail != null
+        && !newEmail.equals(user.getEmail())
+        && userRepository.existsByEmail(newEmail)) {
       throw UserAlreadyExistsException.withEmail(newEmail);
     }
 
-    if (userRepository.existsByUsername(newUsername)) {
+    if (newUsername != null
+        && !newUsername.equals(user.getUsername())
+        && userRepository.existsByUsername(newUsername)) {
       throw UserAlreadyExistsException.withUsername(newUsername);
     }
 
@@ -136,7 +140,9 @@ public class BasicUserService implements UserService {
         .orElse(null);
 
     String newPassword = userUpdateRequest.newPassword();
-    user.update(newUsername, newEmail, newPassword, nullableProfile);
+    String encodedPassword =
+        newPassword == null ? null : passwordEncoder.encode(newPassword);
+    user.update(newUsername, newEmail, encodedPassword, nullableProfile);
 
     log.info("사용자 수정 완료: id={}", userId);
     return userMapper.toDto(user);
@@ -164,6 +170,7 @@ public class BasicUserService implements UserService {
     }
 
     userRepository.deleteById(userId);
+    jwtRegistry.invalidateJwtInformationByUserId(userId);
     log.info("사용자 삭제 완료: id={}", userId);
   }
 }

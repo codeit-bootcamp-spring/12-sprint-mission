@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,7 @@ public class AuthController implements AuthApi {
       response.addCookie(cookie);
 
       return ResponseEntity.ok(new JwtDto(userDetails.getUserDto(), accessToken));
-    } catch (RuntimeException exception) {
+    } catch (AuthenticationException | IllegalArgumentException exception) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(ErrorResponse.of(
               HttpStatus.UNAUTHORIZED.value(),
