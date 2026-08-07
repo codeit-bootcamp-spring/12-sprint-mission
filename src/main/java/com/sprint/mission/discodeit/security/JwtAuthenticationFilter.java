@@ -21,6 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private static final String BEARER_PREFIX = "Bearer ";
 
   private final JwtTokenProvider jwtTokenProvider;
+  private final JwtRegistry jwtRegistry;
   private final UserDetailsService userDetailsService;
 
   @Override
@@ -33,7 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     if (authorization != null && authorization.startsWith(BEARER_PREFIX)) {
       String token = authorization.substring(BEARER_PREFIX.length());
-      if (jwtTokenProvider.validateAccessToken(token)) {
+      if (jwtTokenProvider.validateAccessToken(token)
+          && jwtRegistry.hasActiveJwtInformationByAccessToken(token)) {
         UserDetails userDetails =
             userDetailsService.loadUserByUsername(jwtTokenProvider.getSubject(token));
         UsernamePasswordAuthenticationToken authentication =

@@ -6,6 +6,8 @@ import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.exception.ErrorResponse;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
+import com.sprint.mission.discodeit.security.JwtInformation;
+import com.sprint.mission.discodeit.security.JwtRegistry;
 import com.sprint.mission.discodeit.security.JwtTokenProvider;
 import com.sprint.mission.discodeit.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -36,6 +38,7 @@ public class AuthController implements AuthApi {
   private final UserService userService;
   private final UserDetailsService userDetailsService;
   private final JwtTokenProvider jwtTokenProvider;
+  private final JwtRegistry jwtRegistry;
 
   @GetMapping("csrf-token")
   public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken) {
@@ -45,12 +48,16 @@ public class AuthController implements AuthApi {
 
   @PostMapping("refresh")
   public ResponseEntity<?> refresh(
-      @CookieValue(value = "REFRESH_TOKEN", required = false) String refreshToken,
+      @CookieValue(
+          value = JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME,
+          required = false
+      ) String refreshToken,
       HttpServletRequest request,
       HttpServletResponse response
   ) {
     try {
-      if (refreshToken == null) {
+      if (refreshToken == null
+          || !jwtRegistry.hasActiveJwtInformationByRefreshToken(refreshToken)) {
         throw new BadCredentialsException("Invalid refresh token");
       }
       String username = jwtTokenProvider.consumeRefreshToken(refreshToken);
@@ -58,8 +65,15 @@ public class AuthController implements AuthApi {
           .loadUserByUsername(username);
       String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
       String rotatedRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+      jwtRegistry.rotateJwtInformation(
+          refreshToken,
+          new JwtInformation(userDetails.getUserDto(), accessToken, rotatedRefreshToken)
+      );
 
-      Cookie cookie = new Cookie("REFRESH_TOKEN", rotatedRefreshToken);
+      Cookie cookie = new Cookie(
+          JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME,
+          rotatedRefreshToken
+      );
       cookie.setHttpOnly(true);
       cookie.setSecure(request.isSecure());
       cookie.setPath("/");
@@ -67,10 +81,12 @@ public class AuthController implements AuthApi {
 
       return ResponseEntity.ok(new JwtDto(userDetails.getUserDto(), accessToken));
     } catch (RuntimeException exception) {
-      BadCredentialsException unauthorized =
-          new BadCredentialsException("Invalid refresh token", exception);
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(new ErrorResponse(unauthorized, HttpStatus.UNAUTHORIZED.value()));
+          .body(ErrorResponse.of(
+              HttpStatus.UNAUTHORIZED.value(),
+              HttpStatus.UNAUTHORIZED.name(),
+              "유효하지 않은 리프레시 토큰입니다."
+          ));
     }
   }
 

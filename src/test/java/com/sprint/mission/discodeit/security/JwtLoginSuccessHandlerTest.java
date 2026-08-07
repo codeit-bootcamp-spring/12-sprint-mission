@@ -17,8 +17,9 @@ class JwtLoginSuccessHandlerTest {
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final JwtTokenProvider provider =
       new JwtTokenProvider("test-environment-jwt-secret-key-32", 60, 120);
+  private final JwtRegistry registry = new InMemoryJwtRegistry(1);
   private final JwtLoginSuccessHandler handler =
-      new JwtLoginSuccessHandler(objectMapper, provider);
+      new JwtLoginSuccessHandler(objectMapper, provider, registry);
 
   @Test
   void returnsAccessTokenAndStoresRefreshTokenInCookie() throws Exception {
@@ -40,5 +41,8 @@ class JwtLoginSuccessHandlerTest {
     assertThat(response.getCookie("REFRESH_TOKEN")).isNotNull();
     assertThat(response.getCookie("REFRESH_TOKEN").isHttpOnly()).isTrue();
     assertThat(provider.validateToken(response.getCookie("REFRESH_TOKEN").getValue())).isTrue();
+    assertThat(registry.hasActiveJwtInformationByAccessToken(
+        body.path("accessToken").asText()
+    )).isTrue();
   }
 }

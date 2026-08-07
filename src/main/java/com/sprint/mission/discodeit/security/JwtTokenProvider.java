@@ -12,9 +12,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenProvider {
+
+  public static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
 
   private static final String TOKEN_TYPE = "type";
   private static final String ROLES = "roles";
@@ -31,8 +31,6 @@ public class JwtTokenProvider {
   private final byte[] secret;
   private final long accessTokenExpiration;
   private final long refreshTokenExpiration;
-  // 단일 인스턴스용 재사용 방지 목록. 다중 서버 운영 시 Redis로 교체
-  private final Set<String> usedRefreshTokenIds = ConcurrentHashMap.newKeySet();
 
   public JwtTokenProvider(
       @Value("${discodeit.jwt.secret}") String secret,
@@ -69,8 +67,7 @@ public class JwtTokenProvider {
   public String consumeRefreshToken(String refreshToken) {
     JWTClaimsSet claims = parseAndValidate(refreshToken);
     if (!REFRESH.equals(claims.getClaim(TOKEN_TYPE))
-        || claims.getJWTID() == null
-        || !usedRefreshTokenIds.add(claims.getJWTID())) {
+        || claims.getJWTID() == null) {
       throw new IllegalArgumentException("Invalid refresh token");
     }
     return claims.getSubject();

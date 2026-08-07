@@ -2,6 +2,9 @@ package com.sprint.mission.discodeit.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.entity.Role;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -24,11 +27,18 @@ class JwtAuthenticationFilterTest {
   @Test
   void authenticatesValidBearerAccessToken() throws Exception {
     var user = User.withUsername("tester").password("unused").roles("USER").build();
-    var filter = new JwtAuthenticationFilter(provider, username -> user);
+    var registry = new InMemoryJwtRegistry(1);
+    var filter = new JwtAuthenticationFilter(provider, registry, username -> user);
+    String accessToken = provider.generateAccessToken(user);
+    registry.registerJwtInformation(new JwtInformation(
+        new UserDto(UUID.randomUUID(), "tester", "tester@example.com", null, true, Role.USER),
+        accessToken,
+        provider.generateRefreshToken(user)
+    ));
     var request = new MockHttpServletRequest();
     request.addHeader(
         HttpHeaders.AUTHORIZATION,
-        "Bearer " + provider.generateAccessToken(user)
+        "Bearer " + accessToken
     );
 
     filter.doFilter(request, new MockHttpServletResponse(), new MockFilterChain());

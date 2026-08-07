@@ -16,10 +16,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
-  private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
-
   private final ObjectMapper objectMapper;
   private final JwtTokenProvider jwtTokenProvider;
+  private final JwtRegistry jwtRegistry;
 
   @Override
   public void onAuthenticationSuccess(
@@ -30,8 +29,12 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
     DiscodeitUserDetails principal = (DiscodeitUserDetails) authentication.getPrincipal();
     String accessToken = jwtTokenProvider.generateAccessToken(principal);
     String refreshToken = jwtTokenProvider.generateRefreshToken(principal);
+    jwtRegistry.registerJwtInformation(
+        new JwtInformation(principal.getUserDto(), accessToken, refreshToken)
+    );
 
-    Cookie refreshTokenCookie = new Cookie(REFRESH_TOKEN, refreshToken);
+    Cookie refreshTokenCookie =
+        new Cookie(JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
     refreshTokenCookie.setHttpOnly(true);
     refreshTokenCookie.setSecure(request.isSecure());
     refreshTokenCookie.setPath("/");
