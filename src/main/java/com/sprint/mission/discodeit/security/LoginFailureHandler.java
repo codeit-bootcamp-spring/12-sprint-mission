@@ -27,7 +27,11 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     objectMapper.writeValue(
         response.getOutputStream(),
-        new ErrorResponse(exception, HttpServletResponse.SC_UNAUTHORIZED)
+        ErrorResponse.of(
+            HttpServletResponse.SC_UNAUTHORIZED,
+            "UNAUTHORIZED",
+            "아이디 또는 비밀번호가 올바르지 않습니다."
+        )
     );
   }
 }

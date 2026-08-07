@@ -24,4 +24,15 @@ public class ErrorResponse {
     public ErrorResponse(Exception exception, int status) {
         this(Instant.now(), exception.getClass().getSimpleName(), exception.getMessage(), new HashMap<>(), exception.getClass().getSimpleName(), status);
     }
-} 
+
+    public static ErrorResponse of(int status, String code, String message) {
+        return new ErrorResponse(
+            Instant.now(),
+            code,
+            message,
+            Map.of(),
+            code,
+            status
+        );
+    }
+}
