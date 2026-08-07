@@ -22,13 +22,21 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException exception) {
     return ResponseEntity
         .status(HttpStatus.FORBIDDEN)
-        .body(new ErrorResponse(exception, HttpStatus.FORBIDDEN.value()));
+        .body(ErrorResponse.of(
+            HttpStatus.FORBIDDEN.value(),
+            HttpStatus.FORBIDDEN.name(),
+            "접근 권한이 없습니다."
+        ));
   }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
     log.error("예상치 못한 오류 발생: {}", e.getMessage(), e);
-    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
+    ErrorResponse errorResponse = ErrorResponse.of(
+        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        ErrorCode.INTERNAL_SERVER_ERROR.name(),
+        ErrorCode.INTERNAL_SERVER_ERROR.getMessage()
+    );
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(errorResponse);

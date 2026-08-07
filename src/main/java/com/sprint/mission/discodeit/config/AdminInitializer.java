@@ -32,12 +32,19 @@ public class AdminInitializer implements ApplicationRunner {
   @Override
   @Transactional
   public void run(ApplicationArguments args) {
-    if (userRepository.existsByRole(Role.ADMIN)) {
+    if (userRepository.existsByRole(Role.ADMIN)
+        || userRepository.existsByUsername(username)
+        || userRepository.existsByEmail(email)) {
       return;
     }
 
-    User admin = new User(username, email, passwordEncoder.encode(password), null);
-    admin.updateRole(Role.ADMIN);
+    User admin = new User(
+        username,
+        email,
+        passwordEncoder.encode(password),
+        null,
+        Role.ADMIN
+    );
     userRepository.save(admin);
   }
 }

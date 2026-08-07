@@ -180,3 +180,4 @@ gradle-app.setting
 *.ser
 .idea/
 src/main/resources/application-dev.yaml
+api-docs_*.json

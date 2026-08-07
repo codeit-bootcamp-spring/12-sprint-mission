@@ -2,7 +2,6 @@ package com.sprint.mission.discodeit.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,10 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +39,6 @@ class AuthApiIntegrationTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private SessionRegistry sessionRegistry;
 
     @Test
     @DisplayName("로그인 API 통합 테스트 - 성공")
@@ -65,24 +59,14 @@ class AuthApiIntegrationTest {
                 .param("username", "loginuser")
                 .param("password", "Password1!"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", notNullValue()))
-            .andExpect(jsonPath("$.username", is("loginuser")))
-            .andExpect(jsonPath("$.email", is("login@example.com")))
-            .andExpect(jsonPath("$.role", is("USER")))
+            .andExpect(jsonPath("$.userDto.id", notNullValue()))
+            .andExpect(jsonPath("$.userDto.username", is("loginuser")))
+            .andExpect(jsonPath("$.userDto.email", is("login@example.com")))
+            .andExpect(jsonPath("$.userDto.role", is("USER")))
+            .andExpect(jsonPath("$.accessToken", notNullValue()))
             .andReturn();
 
-        MockHttpSession session = (MockHttpSession) loginResult.getRequest().getSession(false);
-        mockMvc.perform(get("/api/auth/me").session(session))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.username", is("loginuser")))
-            .andExpect(jsonPath("$.email", is("login@example.com")));
-
-        mockMvc.perform(get("/api/users").session(session))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[?(@.username == 'loginuser')].online", hasItem(true)));
-
-        mockMvc.perform(post("/api/auth/logout").session(session).with(csrf()))
-            .andExpect(status().isNoContent());
+        assertThat(loginResult.getResponse().getCookie("REFRESH_TOKEN")).isNotNull();
     }
 
     @Test
@@ -144,80 +128,38 @@ class AuthApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("동일한 계정은 동시에 로그인할 수 없다")
-    void concurrentLogin_Prevented() throws Exception {
+    @DisplayName("리프레시 토큰을 회전하며 액세스 토큰을 재발급한다")
+    void refresh_RotatesRefreshToken() throws Exception {
         userService.create(
-            new UserCreateRequest("singleuser", "single@example.com", "Password1!"),
-            Optional.empty()
-        );
-
-        MvcResult firstLogin = mockMvc.perform(post("/api/auth/login")
-                .with(csrf())
-                .param("username", "singleuser")
-                .param("password", "Password1!"))
-            .andExpect(status().isOk())
-            .andReturn();
-        MockHttpSession firstSession =
-            (MockHttpSession) firstLogin.getRequest().getSession(false);
-
-        mockMvc.perform(post("/api/auth/login")
-                .with(csrf())
-                .param("username", "singleuser")
-                .param("password", "Password1!"))
-            .andExpect(status().isOk());
-
-        assertThat(sessionRegistry.getSessionInformation(firstSession.getId()).isExpired()).isTrue();
-    }
-
-    @Test
-    @DisplayName("remember-me 쿠키로 세션 없이 인증을 복구한다")
-    void rememberMe_RestoresAuthentication() throws Exception {
-        userService.create(
-            new UserCreateRequest("rememberuser", "remember@example.com", "Password1!"),
+            new UserCreateRequest("refreshuser", "refresh@example.com", "Password1!"),
             Optional.empty()
         );
 
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                 .with(csrf())
-                .param("username", "rememberuser")
-                .param("password", "Password1!")
-                .param("remember-me", "true"))
-            .andExpect(status().isOk())
-            .andReturn();
-        Cookie rememberMe = loginResult.getResponse().getCookie("remember-me");
-
-        assertThat(rememberMe).isNotNull();
-        mockMvc.perform(get("/api/auth/me").cookie(rememberMe))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.username", is("rememberuser")));
-    }
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("권한 변경 시 로그인 세션을 만료한다")
-    void updateRole_ExpiresSession() throws Exception {
-        UserDto user = userService.create(
-            new UserCreateRequest("sessionuser", "session@example.com", "Password1!"),
-            Optional.empty()
-        );
-
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
-                .with(csrf())
-                .param("username", "sessionuser")
+                .param("username", "refreshuser")
                 .param("password", "Password1!"))
             .andExpect(status().isOk())
             .andReturn();
-        MockHttpSession session = (MockHttpSession) loginResult.getRequest().getSession(false);
+        Cookie refreshToken = loginResult.getResponse().getCookie("REFRESH_TOKEN");
 
-        mockMvc.perform(put("/api/auth/role")
+        MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
                 .with(csrf())
-                .contentType("application/json")
-                .content("""
-                    {"userId":"%s","newRole":"CHANNEL_MANAGER"}
-                    """.formatted(user.id())))
-            .andExpect(status().isOk());
+                .cookie(refreshToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.userDto.username", is("refreshuser")))
+            .andExpect(jsonPath("$.accessToken", notNullValue()))
+            .andReturn();
 
-        assertThat(sessionRegistry.getSessionInformation(session.getId()).isExpired()).isTrue();
+        Cookie rotated = refreshResult.getResponse().getCookie("REFRESH_TOKEN");
+        assertThat(rotated).isNotNull();
+        assertThat(rotated.getValue()).isNotEqualTo(refreshToken.getValue());
+
+        mockMvc.perform(post("/api/auth/refresh")
+                .with(csrf())
+                .cookie(refreshToken))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.status", is(401)));
     }
 
     @Test

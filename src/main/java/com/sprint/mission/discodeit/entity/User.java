@@ -32,11 +32,22 @@ public class User extends BaseUpdatableEntity {
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   @JoinColumn(name = "profile_id", columnDefinition = "uuid")
   private BinaryContent profile;
+
   public User(String username, String email, String password, BinaryContent profile) {
+    this(username, email, password, profile, Role.USER);
+  }
+
+  public User(
+      String username,
+      String email,
+      String password,
+      BinaryContent profile,
+      Role role
+  ) {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.role = Role.USER;
+    this.role = role;
     this.profile = profile;
   }
 

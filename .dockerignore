@@ -1,0 +1,7 @@
+.git
+.gradle
+.idea
+.logs
+build
+src/main/resources/application-dev.yaml
+src/main/resources/fe_bundle_*.zip

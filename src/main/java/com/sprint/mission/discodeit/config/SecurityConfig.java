@@ -2,8 +2,10 @@ package com.sprint.mission.discodeit.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.exception.ErrorResponse;
+import com.sprint.mission.discodeit.security.JwtAuthenticationFilter;
+import com.sprint.mission.discodeit.security.JwtLoginSuccessHandler;
+import com.sprint.mission.discodeit.security.JwtLogoutHandler;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
-import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.context.annotation.Bean;
@@ -15,16 +17,14 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableMethodSecurity
@@ -38,10 +38,11 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,
-      LoginSuccessHandler loginSuccessHandler,
+      JwtAuthenticationFilter jwtAuthenticationFilter,
+      JwtLoginSuccessHandler jwtLoginSuccessHandler,
+      JwtLogoutHandler jwtLogoutHandler,
       LoginFailureHandler loginFailureHandler,
-      ObjectMapper objectMapper,
-      SessionRegistry sessionRegistry
+      ObjectMapper objectMapper
   ) throws Exception {
     return http
         .csrf(csrf -> csrf
@@ -54,31 +55,41 @@ public class SecurityConfig {
                 HttpMethod.POST,
                 "/api/users",
                 "/api/auth/login",
+                "/api/auth/refresh",
                 "/api/auth/logout"
             ).permitAll()
-            .requestMatchers(request -> !request.getRequestURI().startsWith("/api/")).permitAll()
+            .requestMatchers(
+                "/",
+                "/index.html",
+                "/favicon.ico",
+                "/assets/**",
+                "/error",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/actuator/health",
+                "/actuator/info"
+            ).permitAll()
+            .requestMatchers("/actuator/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         .exceptionHandling(ex -> ex
             .authenticationEntryPoint((request, response, exception) ->
-                writeError(response, exception, HttpStatus.UNAUTHORIZED, objectMapper))
+                writeError(response, HttpStatus.UNAUTHORIZED, objectMapper))
             .accessDeniedHandler((request, response, exception) ->
-                writeError(response, exception, HttpStatus.FORBIDDEN, objectMapper))
+                writeError(response, HttpStatus.FORBIDDEN, objectMapper))
         )
-        .sessionManagement(management -> management
-            .sessionConcurrency(concurrency -> concurrency
-                .maximumSessions(1)
-                .sessionRegistry(sessionRegistry)
-            )
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .rememberMe(Customizer.withDefaults())
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
-            .successHandler(loginSuccessHandler)
+            .successHandler(jwtLoginSuccessHandler)
             .failureHandler(loginFailureHandler)
         )
         .logout(logout -> logout
             .logoutUrl("/api/auth/logout")
+            .addLogoutHandler(jwtLogoutHandler)
             .logoutSuccessHandler(
                 new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)
             )
@@ -95,16 +106,6 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SessionRegistry sessionRegistry() {
-    return new SessionRegistryImpl();
-  }
-
-  @Bean
-  public HttpSessionEventPublisher httpSessionEventPublisher() {
-    return new HttpSessionEventPublisher();
-  }
-
-  @Bean
   static DefaultMethodSecurityExpressionHandler methodSecurityExpressionHandler(
       RoleHierarchy roleHierarchy
   ) {
@@ -116,12 +117,17 @@ public class SecurityConfig {
 
   private static void writeError(
       HttpServletResponse response,
-      Exception exception,
       HttpStatus status,
       ObjectMapper objectMapper
   ) throws IOException {
     response.setStatus(status.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    objectMapper.writeValue(response.getOutputStream(), new ErrorResponse(exception, status.value()));
+    String message = status == HttpStatus.UNAUTHORIZED
+        ? "인증이 필요합니다."
+        : "접근 권한이 없습니다.";
+    objectMapper.writeValue(
+        response.getOutputStream(),
+        ErrorResponse.of(status.value(), status.name(), message)
+    );
   }
 }

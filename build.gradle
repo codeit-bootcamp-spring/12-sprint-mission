@@ -14,6 +14,10 @@ java {
     }
 }
 
+bootJar {
+    archiveFileName = 'app.jar'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -34,6 +38,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
     implementation 'software.amazon.awssdk:s3:2.31.7'
     runtimeOnly 'org.postgresql:postgresql'
 
