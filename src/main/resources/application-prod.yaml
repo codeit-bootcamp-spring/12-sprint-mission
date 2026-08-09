@@ -23,3 +23,10 @@ logging:
   level:
     com.sprint.mission.discodeit: info
     org.hibernate.SQL: warn
+
+# API 문서는 운영에서 노출하지 않는다
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

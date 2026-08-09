@@ -80,7 +80,12 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
             // API가 아닌 요청 (정적 리소스, Swagger, Actuator)
             .requestMatchers("/", "/index.html", "/favicon.ico", "/assets/**", "/error").permitAll()
-            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/actuator/**").permitAll()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            // 로드밸런서 헬스체크는 인증 없이 통과해야 한다
+            .requestMatchers("/actuator/health").permitAll()
+            // 나머지 actuator는 관리자만. loggers는 인증 없이 열어두면 로그 레벨을 바꿀 수 있고,
+            // info는 management.info.env로 DB 접속 정보까지 노출될 수 있다
+            .requestMatchers("/actuator/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         // CSR 환경이므로 CSRF 토큰을 쿠키로 내려주고, JS가 읽을 수 있도록 HttpOnly는 false
