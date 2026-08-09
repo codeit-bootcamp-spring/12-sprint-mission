@@ -80,7 +80,7 @@ public class BasicUserService implements UserService {
     return userRepository.findAll().stream().map(userMapper::toDto).toList();
   }
 
-  // 사용자 정보 수정/삭제는 본인만 가능
+  // 수정은 비밀번호와 이메일까지 바꿀 수 있으므로 관리자에게도 열지 않고 본인으로 한정한다
   @Override
   @PreAuthorize("#userId == principal.userId")
   public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
@@ -119,8 +119,9 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(userRepository.save(user));
   }
 
+  // 삭제는 어뷰징 계정 정리 같은 운영 동작이 필요하므로 RoleHierarchy 의도대로 ADMIN에게도 허용한다
   @Override
-  @PreAuthorize("#userId == principal.userId")
+  @PreAuthorize("hasRole('ADMIN') or #userId == principal.userId")
   public void delete(UUID userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new UserNotFoundException(userId));
