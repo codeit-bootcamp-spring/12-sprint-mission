@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/auth/logout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/auth/csrf-token").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
                         .requestMatchers("/actuator/health","/actuator/info","/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
@@ -83,14 +84,14 @@ public class SecurityConfig {
                                 .sessionRegistry(sessionRegistry)
                         )
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정책 : Stateless
-                )
+/*                ) // cookie의 refresh 토큰이 이걸 대체.
                 .rememberMe(remember -> remember
                         .key(REMEMBER_KEY)
                         .rememberMeParameter("remember-me")
                         .rememberMeCookieName("remember-me")
                         .tokenValiditySeconds(60 * 30)
                         .userDetailsService(userDetailsService)
-                        .useSecureCookie(false)
+                        .useSecureCookie(false)*/
                 );
 
         return http.build();
