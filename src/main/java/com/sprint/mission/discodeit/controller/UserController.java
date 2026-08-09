@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.UserApi;
 import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.exception.storage.InvalidFileUploadException;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
@@ -81,7 +82,7 @@ public class UserController implements UserApi {
           profileFile.getBytes()
       ));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new InvalidFileUploadException(profileFile.getOriginalFilename(), e);
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.exception;
 
 import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentNotFoundException;
+import com.sprint.mission.discodeit.exception.storage.InvalidFileUploadException;
 import com.sprint.mission.discodeit.exception.storage.StorageException;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
@@ -52,7 +53,8 @@ public class GlobalExceptionHandler {
   // 400: Bad Request (중복, PRIVATE 채널 수정 등)
   @ExceptionHandler({
       UserAlreadyExistsException.class,
-      PrivateChannelUpdateException.class
+      PrivateChannelUpdateException.class,
+      InvalidFileUploadException.class
   })
   public ResponseEntity<ErrorResponse> handleBadRequest(DiscodeitException e) {
     log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());

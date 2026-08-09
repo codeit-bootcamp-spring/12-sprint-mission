@@ -14,7 +14,12 @@ public class DiscodeitException extends RuntimeException {
   private final Map<String, Object> details;
 
   public DiscodeitException(ErrorCode errorCode, Map<String, Object> details) {
-    super(errorCode.getMessage());
+    this(errorCode, details, null);
+  }
+
+  // 원인 예외를 감쌀 때 스택트레이스를 잃지 않도록 cause를 전달받는다
+  public DiscodeitException(ErrorCode errorCode, Map<String, Object> details, Throwable cause) {
+    super(errorCode.getMessage(), cause);
     this.errorCode = errorCode;
     this.details = details != null ? details : Map.of();
   }

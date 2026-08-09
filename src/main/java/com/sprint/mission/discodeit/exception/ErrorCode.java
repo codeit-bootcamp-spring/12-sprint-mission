@@ -23,7 +23,8 @@ public enum ErrorCode {
   READ_STATUS_NOT_FOUND("읽음 상태를 찾을 수 없습니다."),
   DUPLICATE_READ_STATUS("이미 존재하는 읽음 상태입니다."),
   // Storage
-  STORAGE_FAILURE("파일 저장/읽기에 실패했습니다.");
+  STORAGE_FAILURE("파일 저장/읽기에 실패했습니다."),
+  INVALID_FILE_UPLOAD("업로드한 파일을 읽을 수 없습니다.");
 
   private final String message;
 }
