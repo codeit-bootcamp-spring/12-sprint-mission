@@ -33,7 +33,9 @@ public class AuthController implements AuthApi {
 
   @GetMapping("/me")
   public ResponseEntity<UserDto> getCurrentUser(@AuthenticationPrincipal DiscodeitUserDetails userDetails){
-    log.info("내 정보 조회");
+    if(userDetails == null) {
+      throw new NullPointerException();
+    }
     return ResponseEntity.status(HttpStatus.OK).body(userDetails.getUserDto());
   }
 

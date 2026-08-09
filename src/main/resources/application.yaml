@@ -62,6 +62,8 @@ discodeit:
     password: ${ADMIN_PASSWORD}
 
 security:
+  remember-me:
+    key : ${REMEMBER_KEY}
   jwt:
     issuer: discodeit
     secret: ${JWT_SECRET_KEY:discodeit-jwt-secret-key-here-220901139119}

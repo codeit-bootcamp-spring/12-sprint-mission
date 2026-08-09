@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
 import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
 import com.sprint.mission.discodeit.service.AuthService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,8 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Value("${security.remember-me.key}") private String REMEMBER_KEY;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -82,7 +85,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정책 : Stateless
                 )
                 .rememberMe(remember -> remember
-                        .key("remember-me-key")
+                        .key(REMEMBER_KEY)
                         .rememberMeParameter("remember-me")
                         .rememberMeCookieName("remember-me")
                         .tokenValiditySeconds(60 * 30)
