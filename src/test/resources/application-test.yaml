@@ -17,6 +17,13 @@ spring:
       mode: never
 
 discodeit:
+  admin:
+    username: admin
+    email: admin@discodeit.com
+    password: admin1234
+  security:
+    jwt:
+      secret: test-only-jwt-secret-key-do-not-use-in-production
   storage:
     type: local
     local:

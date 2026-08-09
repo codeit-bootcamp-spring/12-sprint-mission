@@ -38,3 +38,13 @@ info:
     multipart:
       max-file-size: 10MB
       max-request-size: 30MB
+
+# 로컬 전용 값. 운영에서는 base(application.yaml)의 기본값 없는 플레이스홀더가 적용된다
+discodeit:
+  admin:
+    username: admin
+    email: admin@discodeit.com
+    password: admin1234
+  security:
+    jwt:
+      secret: dev-only-jwt-secret-key-do-not-use-in-production
