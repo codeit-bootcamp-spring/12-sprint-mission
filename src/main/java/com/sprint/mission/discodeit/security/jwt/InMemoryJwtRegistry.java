@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.security.jwt;
 
 import com.sprint.mission.discodeit.dto.data.JwtInformation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Queue;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Component
 @RequiredArgsConstructor
 public class InMemoryJwtRegistry implements JwtRegistry<UUID>{
 
@@ -84,6 +86,20 @@ public class InMemoryJwtRegistry implements JwtRegistry<UUID>{
         });
     }
 
+    @Override
+    public boolean hasActiveJwtInformationByUserId(UUID userId) {
+        return origin.containsKey(userId);
+    }
+
+    @Override
+    public boolean hasActiveJwtInformationAccessToken(String accessToken) {
+        return accessTokenIndexes.contains(accessToken);
+    }
+
+    @Override
+    public boolean hasActiveJwtInformationByRefreshToken(String refreshToken) {
+        return refreshTokenIndexes.contains(refreshToken);
+    }
 
 
     private void addTokenIndex(String accessToken, String refreshToken) {
