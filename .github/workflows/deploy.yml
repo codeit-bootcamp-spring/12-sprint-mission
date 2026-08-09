@@ -1,0 +1,76 @@
+name: CD - Deploy
+
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (Public ECR는 us-east-1)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR Public
+        run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+
+      - name: Build & Push (단일 플랫폼 x86_64)
+        run: |
+          docker build \
+            -t ${{ vars.ECR_REPOSITORY_URI }}:latest \
+            -t ${{ vars.ECR_REPOSITORY_URI }}:${{ github.sha }} \
+            .
+          docker push ${{ vars.ECR_REPOSITORY_URI }}:latest
+          docker push ${{ vars.ECR_REPOSITORY_URI }}:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: 기존 태스크 정의 가져오기
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEFINITION }} \
+            --query 'taskDefinition' > task-def.json
+
+      - name: 새 이미지로 태스크 정의 갱신
+        run: |
+          NEW_IMAGE="${{ vars.ECR_REPOSITORY_URI }}:${{ github.sha }}"
+          jq --arg IMAGE "$NEW_IMAGE" '
+            .containerDefinitions[0].image = $IMAGE
+            | del(.taskDefinitionArn, .revision, .status, .requiresAttributes,
+                  .compatibilities, .registeredAt, .registeredBy)
+          ' task-def.json > new-task-def.json
+
+      - name: 새 태스크 정의 등록
+        id: register
+        run: |
+          ARN=$(aws ecs register-task-definition --cli-input-json file://new-task-def.json \
+            --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "arn=$ARN" >> $GITHUB_OUTPUT
+
+      - name: 기존 서비스 중단 (프리티어 - 인스턴스 1대라 포트 충돌 방지)
+        run: |
+          aws ecs update-service --cluster ${{ vars.ECS_CLUSTER }} \
+            --service ${{ vars.ECS_SERVICE }} --desired-count 0
+          aws ecs wait services-stable --cluster ${{ vars.ECS_CLUSTER }} \
+            --services ${{ vars.ECS_SERVICE }}
+
+      - name: 새 태스크 정의로 서비스 업데이트
+        run: |
+          aws ecs update-service --cluster ${{ vars.ECS_CLUSTER }} \
+            --service ${{ vars.ECS_SERVICE }} \
+            --task-definition ${{ steps.register.outputs.arn }} \
+            --desired-count 1

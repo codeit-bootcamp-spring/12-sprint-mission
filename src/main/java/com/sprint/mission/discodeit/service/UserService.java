@@ -1,21 +1,26 @@
 package com.sprint.mission.discodeit.service;
 
-import com.sprint.mission.discodeit.dto.data.user.UserResponse;
-import com.sprint.mission.discodeit.dto.data.user.UserCreateRequest;
-import com.sprint.mission.discodeit.dto.data.user.UserUpdateRequest;
+import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
 
-    UserResponse create(UserCreateRequest request);
+  // 생성/수정도 UserDto를 반환 - Entity를 직접 노출하지 않음
+  UserDto create(UserCreateRequest userCreateRequest,
+      Optional<BinaryContentCreateRequest> profileCreateRequest);
 
-    UserResponse find(UUID id);
+  UserDto find(UUID userId);
 
-    List<UserResponse> findAll();
+  List<UserDto> findAll();
 
-    UserResponse update(UUID id, UserUpdateRequest request);
+  UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
+      Optional<BinaryContentCreateRequest> profileCreateRequest);
 
-    void delete(UUID id);
+  void delete(UUID userId);
 }

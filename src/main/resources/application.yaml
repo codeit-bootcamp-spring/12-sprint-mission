@@ -1,8 +1,54 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: discodeit
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 30MB
+  jpa:
+    open-in-view: false
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Discodeit
+    version: 2.0-M9
+    java-version: "17"
+    spring-boot-version: "3.4.0"
 
 discodeit:
-  repository:
-    type: file
-    file-directory: .discodeit
+  admin:
+    username: ${ADMIN_USERNAME:admin}
+    email: ${ADMIN_EMAIL:admin@discodeit.com}
+    password: ${ADMIN_PASSWORD:admin1234}
+  security:
+    remember-me:
+      key: ${REMEMBER_ME_KEY:discodeit-remember-me-key}
+      validity-seconds: ${REMEMBER_ME_VALIDITY_SECONDS:1209600}   # 14일
+  storage:
+    type: ${STORAGE_TYPE:local}                              # local | s3 (기본 local)
+    local:
+      root-path: ${STORAGE_LOCAL_ROOT_PATH:.discodeit/storage}
+    s3:
+      access-key: ${AWS_S3_ACCESS_KEY}
+      secret-key: ${AWS_S3_SECRET_KEY}
+      region: ${AWS_S3_REGION}
+      bucket: ${AWS_S3_BUCKET}
+      presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600}   # 초 단위, 기본 10분
+
+logging:
+  level:
+    root: info

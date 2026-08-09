@@ -1,22 +1,30 @@
 package com.sprint.mission.discodeit.repository;
 
+import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository {
-    User save(User user);
+public interface UserRepository extends JpaRepository<User, UUID> {
 
-    Optional<User> findById(UUID id);
+  // N+1 문제 해결: User 조회 시 profile(@OneToOne)을 JOIN으로 한 번에 로딩
+  // @EntityGraph 없이 findAll() 하면 각 User마다 profile을 개별 SELECT → N+1 발생
+  @EntityGraph(attributePaths = {"profile"})
+  List<User> findAll();
 
-    Optional<User> findByUsername(String username);
+  @EntityGraph(attributePaths = {"profile"})
+  Optional<User> findById(UUID id);
 
-    List<User> findAll();
+  // 로그인 시 UserDetails를 만들 때 profile까지 함께 조회
+  @EntityGraph(attributePaths = {"profile"})
+  Optional<User> findByUsername(String username);
 
-    boolean existsById(UUID id);
+  boolean existsByRole(Role role);
 
-    void deleteById(UUID id);
+  boolean existsByEmail(String email);
 
+  boolean existsByUsername(String username);
 }

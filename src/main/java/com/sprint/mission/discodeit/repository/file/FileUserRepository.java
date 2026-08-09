@@ -87,6 +87,16 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
+    public boolean existsByEmail(String email) {
+        return findAll().stream().anyMatch(u -> u.getEmail().equals(email));
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return findAll().stream().anyMatch(u -> u.getUsername().equals(username));
+    }
+
+    @Override
     public void deleteById(UUID id) {
         try {
             Files.deleteIfExists(resolvePath(id));

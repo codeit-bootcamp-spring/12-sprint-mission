@@ -1,22 +1,27 @@
 package com.sprint.mission.discodeit.service;
 
-import com.sprint.mission.discodeit.dto.data.message.MessageCreateRequest;
-import com.sprint.mission.discodeit.dto.data.message.MessageResponse;
-import com.sprint.mission.discodeit.dto.data.message.MessageUpdateRequest;
+import com.sprint.mission.discodeit.dto.data.MessageDto;
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
+import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
+import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
+import com.sprint.mission.discodeit.dto.response.PageResponse;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 public interface MessageService {
 
-    MessageResponse create(MessageCreateRequest request);
+  MessageDto create(MessageCreateRequest messageCreateRequest,
+      List<BinaryContentCreateRequest> binaryContentCreateRequests);
 
-    MessageResponse find(UUID id);
+  MessageDto find(UUID messageId);
 
-    List<MessageResponse> findAllByChannelId(UUID channelId);
+  // cursor: 마지막으로 받은 메시지의 createdAt, null이면 첫 페이지
+  // size: 한 번에 가져올 메시지 수
+  PageResponse<MessageDto> findAllByChannelId(UUID channelId, Instant cursor, int size);
 
-    MessageResponse update(UUID id, MessageUpdateRequest request);
+  MessageDto update(UUID messageId, MessageUpdateRequest request);
 
-    void delete(UUID id);
-
+  void delete(UUID messageId);
 }

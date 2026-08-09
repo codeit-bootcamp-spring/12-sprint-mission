@@ -8,10 +8,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import com.sprint.mission.discodeit.entity.Message;
 import java.io.*;
 import java.nio.file.*;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 @Repository
 @ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
@@ -77,6 +82,28 @@ public class FileMessageRepository implements MessageRepository {
     @Override
     public boolean existsById(UUID id) {
         return Files.exists(resolvePath(id));
+    }
+
+    @Override
+    public List<Message> findAllByChannel_Id(UUID channelId) {
+        return findAll().stream()
+                .filter(m -> m.getChannel().getId().equals(channelId))
+                .toList();
+    }
+
+    @Override
+    public List<Object[]> findLastMessageAtByChannelIds(List<UUID> channelIds) {
+        return List.of();
+    }
+
+    @Override
+    public Slice<Message> findByChannelIdWithCursor(UUID channelId, Instant cursor, Pageable pageable) {
+        return new SliceImpl<>(List.of(), pageable, false);
+    }
+
+    @Override
+    public void deleteAllByChannel_Id(UUID channelId) {
+        findAllByChannel_Id(channelId).forEach(m -> deleteById(m.getId()));
     }
 
     @Override

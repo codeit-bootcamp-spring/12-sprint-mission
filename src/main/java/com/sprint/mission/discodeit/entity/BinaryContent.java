@@ -1,25 +1,31 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
-
+// bytes 제거 - DB에는 메타 정보만 저장, 실제 파일은 BinaryContentStorage에서 관리
 @Getter
-public class BinaryContent implements Serializable {
+@NoArgsConstructor
+@Entity
+@Table(name = "binary_contents")
+public class BinaryContent extends BaseEntity {
 
-    private final UUID id;
-    private final byte[] bytes;
-    private final String fileName;
-    private final String contentType;
-    private final Instant createdAt;
+  @Column(nullable = false)
+  private String fileName;
 
-    public BinaryContent(byte[] bytes, String fileName, String contentType) {
-        this.id = UUID.randomUUID();
-        this.bytes = bytes;
-        this.fileName = fileName;
-        this.contentType = contentType;
-        this.createdAt = Instant.now();
-    }
+  @Column(nullable = false)
+  private Long size;
+
+  @Column(nullable = false)
+  private String contentType;
+
+  public BinaryContent(String fileName, Long size, String contentType) {
+    this.fileName = fileName;
+    this.size = size;
+    this.contentType = contentType;
+  }
 }
