@@ -57,7 +57,7 @@ class BasicReadStatusServiceTest {
     user = new User("testuser", "test@email.com", "password123!", null);
     channel = new Channel(ChannelType.PUBLIC, "general", null);
     readStatus = new ReadStatus(user, channel, Instant.now());
-    readStatusDto = new ReadStatusDto(readStatusId, userId, channelId, Instant.now());
+    readStatusDto = new ReadStatusDto(readStatusId, userId, channelId, Instant.now(), false);
   }
 
   @Test
@@ -127,7 +127,7 @@ class BasicReadStatusServiceTest {
     given(readStatusRepository.save(readStatus)).willReturn(readStatus);
     given(readStatusMapper.toDto(readStatus)).willReturn(readStatusDto);
 
-    ReadStatusDto result = readStatusService.update(readStatusId, new ReadStatusUpdateRequest(Instant.now()));
+    ReadStatusDto result = readStatusService.update(readStatusId, new ReadStatusUpdateRequest(Instant.now(), null));
 
     assertThat(result).isNotNull();
   }

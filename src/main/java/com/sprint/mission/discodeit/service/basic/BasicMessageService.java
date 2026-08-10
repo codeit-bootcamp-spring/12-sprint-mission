@@ -20,6 +20,7 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.event.BinaryContentCreatedEvent;
+import com.sprint.mission.discodeit.event.MessageCreatedEvent;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -69,6 +70,11 @@ public class BasicMessageService implements MessageService {
 
     Message message = new Message(req.content(), channel, author, attachments);
     Message saved = messageRepository.save(message);
+
+    // 알림 생성은 커밋 이후 리스너가 담당한다
+    eventPublisher.publishEvent(new MessageCreatedEvent(
+        saved.getId(), channel.getId(), channel.getName(),
+        author.getId(), author.getUsername(), saved.getContent()));
 
     log.info("Message created: id={}, channelId={}", saved.getId(), req.channelId());
     return messageMapper.toDto(saved);

@@ -17,6 +17,10 @@ public interface ReadStatusRepository extends JpaRepository<ReadStatus, UUID> {
   @EntityGraph(attributePaths = {"user", "user.profile"})
   List<ReadStatus> findAllByChannel_IdIn(List<UUID> channelIds);
 
+  // 알림 대상자 조회: 리스너에서 곧바로 user를 쓰므로 함께 로딩해 N+1을 막는다
+  @EntityGraph(attributePaths = {"user"})
+  List<ReadStatus> findAllByChannel_IdAndNotificationEnabledTrue(UUID channelId);
+
   Optional<ReadStatus> findByUser_IdAndChannel_Id(UUID userId, UUID channelId);
 
   void deleteAllByChannel_Id(UUID channelId);
