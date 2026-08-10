@@ -16,10 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import jakarta.servlet.http.Cookie;
 
 @Slf4j
 @Component
 public class JwtTokenProvider {
+
+  public static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
 
   private final long accessTokenExpirationMs;
   private final long refreshTokenExpirationMs;
@@ -138,5 +141,15 @@ public class JwtTokenProvider {
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid token");
     }
+  }
+
+  public Cookie generateRefreshTokenCookie(String refreshToken) {
+    Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
+    cookie.setPath("/");
+    cookie.setMaxAge((int) (refreshTokenExpirationMs / 1000L));
+
+    return cookie;
   }
 }
