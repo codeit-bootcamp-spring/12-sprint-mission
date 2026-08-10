@@ -1,6 +1,5 @@
 -- 테이블
 -- User
-
 CREATE TABLE users
 (
     id         uuid PRIMARY KEY,
@@ -9,8 +8,8 @@ CREATE TABLE users
     username   varchar(50) UNIQUE       NOT NULL,
     email      varchar(100) UNIQUE      NOT NULL,
     password   varchar(60)              NOT NULL,
-    role       varchar(20)              NOT NULL,
-    profile_id uuid
+    profile_id uuid,
+    role       varchar(20)              NOT NULL
 );
 
 -- BinaryContent
@@ -23,6 +22,7 @@ CREATE TABLE binary_contents
     content_type varchar(100)             NOT NULL
 --     ,bytes        bytea        NOT NULL
 );
+
 
 -- Channel
 CREATE TABLE channels
@@ -103,7 +103,7 @@ ALTER TABLE read_statuses
             REFERENCES users (id)
             ON DELETE CASCADE;
 
--- ReadStatus (N) -> Channel (1)
+-- ReadStatus (N) -> User (1)
 ALTER TABLE read_statuses
     ADD CONSTRAINT fk_read_status_channel
         FOREIGN KEY (channel_id)

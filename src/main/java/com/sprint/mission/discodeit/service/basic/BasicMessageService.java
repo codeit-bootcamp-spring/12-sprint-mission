@@ -111,9 +111,9 @@ public class BasicMessageService implements MessageService {
     return pageResponseMapper.fromSlice(slice, nextCursor);
   }
 
-  @Override
+  @PreAuthorize("principal.userDto.id == @basicMessageService.find(#messageId).author.id")
   @Transactional
-  @PreAuthorize("@basicMessageService.isOwner(#messageId, principal.userDto.id())")
+  @Override
   public MessageDto update(UUID messageId, MessageUpdateRequest request) {
     log.debug("메시지 수정 시작: id={}, request={}", messageId, request);
     Message message = messageRepository.findById(messageId)
@@ -124,9 +124,9 @@ public class BasicMessageService implements MessageService {
     return messageMapper.toDto(message);
   }
 
-  @Override
+  @PreAuthorize("principal.userDto.id == @basicMessageService.find(#messageId).author.id")
   @Transactional
-  @PreAuthorize("@basicMessageService.isOwner(#messageId, principal.userDto.id())")
+  @Override
   public void delete(UUID messageId) {
     log.debug("메시지 삭제 시작: id={}", messageId);
     if (!messageRepository.existsById(messageId)) {
@@ -134,14 +134,5 @@ public class BasicMessageService implements MessageService {
     }
     messageRepository.deleteById(messageId);
     log.info("메시지 삭제 완료: id={}", messageId);
-  }
-
-  @Transactional(readOnly = true)
-  public boolean isOwner(UUID messageId, UUID userId) {
-    return messageRepository.findById(messageId)
-        .map(Message::getAuthor)
-        .map(User::getId)
-        .filter(userId::equals)
-        .isPresent();
   }
 }

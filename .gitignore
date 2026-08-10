@@ -180,3 +180,5 @@ gradle-app.setting
 .discodeit
 
 .env
+
+.logs

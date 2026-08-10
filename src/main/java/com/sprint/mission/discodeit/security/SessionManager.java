@@ -15,27 +15,25 @@ public class SessionManager {
 
   private final SessionRegistry sessionRegistry;
 
-  public List<SessionInformation> getActiveSessionByUserId(UUID userId) {
+  public List<SessionInformation> getActiveSessionsByUserId(UUID userId) {
     return sessionRegistry.getAllPrincipals().stream()
         .filter(principal -> principal instanceof DiscodeitUserDetails)
         .map(DiscodeitUserDetails.class::cast)
-        .filter(details -> details.getUserDto() != null
-            && userId.equals(details.getUserDto().id()))
+        .filter(details -> details.getUserDto().id().equals(userId))
         .flatMap(details -> sessionRegistry.getAllSessions(details, false).stream())
         .toList();
   }
 
   public void invalidateSessionsByUserId(UUID userId) {
-    List<SessionInformation> activeSessions = getActiveSessionByUserId(userId);
+    List<SessionInformation> activeSessionInfos = getActiveSessionsByUserId(userId);
 
-    if (!activeSessions.isEmpty()) {
-      activeSessions.forEach(SessionInformation::expireNow);
-
-      log.info("사용자 세션 무효화 완료: userId={}, sessionCount={}", userId, activeSessions.size());
+    if (!activeSessionInfos.isEmpty()) {
+      activeSessionInfos.forEach(SessionInformation::expireNow);
+      log.debug("{}개의 세션이 무효화되었습니다.", activeSessionInfos.size());
     }
   }
 
-  public boolean isOnline(UUID userId) {
-    return !getActiveSessionByUserId(userId).isEmpty();
+  public boolean hasActiveSessions(UUID userId) {
+    return !getActiveSessionsByUserId(userId).isEmpty();
   }
 }
