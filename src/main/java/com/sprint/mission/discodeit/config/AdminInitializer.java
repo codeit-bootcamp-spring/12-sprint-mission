@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,9 @@ public class AdminInitializer implements ApplicationRunner {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
+  @Value("${discodeit.admin.password}")
+  private String adminPassword;
+
   @Transactional
   @Override
   public void run(ApplicationArguments args) throws Exception {
@@ -30,7 +34,7 @@ public class AdminInitializer implements ApplicationRunner {
     User admin = new User(
         "admin",
         "admin@discodeit.com",
-        passwordEncoder.encode("admin1234"),
+        passwordEncoder.encode(adminPassword),
         null
     );
 

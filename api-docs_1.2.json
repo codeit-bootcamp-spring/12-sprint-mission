@@ -512,57 +512,6 @@
         }
       }
     },
-    "/api/users/{userId}/userStatus": {
-      "patch": {
-        "tags": [
-          "User"
-        ],
-        "summary": "User 온라인 상태 업데이트",
-        "operationId": "updateUserStatusByUserId",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "상태를 변경할 User ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserStatusUpdateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "404": {
-            "description": "해당 User의 UserStatus를 찾을 수 없음",
-            "content": {
-              "*/*": {
-                "example": "UserStatus with userId {userId} not found"
-              }
-            }
-          },
-          "200": {
-            "description": "User 온라인 상태가 성공적으로 업데이트됨",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserStatusDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/readStatuses/{readStatusId}": {
       "patch": {
         "tags": [
@@ -1166,33 +1115,6 @@
           },
           "newPassword": {
             "type": "string"
-          }
-        }
-      },
-      "UserStatusUpdateRequest": {
-        "type": "object",
-        "description": "변경할 User 온라인 상태 정보",
-        "properties": {
-          "newLastActiveAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "UserStatusDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "lastActiveAt": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       },

@@ -159,9 +159,13 @@ public class BasicUserService implements UserService {
 
     user.updateRole(userRoleUpdateRequest.newRole());
 
+    // 권한 변경 시 기존 세션 무효화
+    sessionManager.invalidateSessionsByUserId(userId);
+
     log.info("사용자 권한 수정 완료: id={}, role={}", userId, userRoleUpdateRequest.newRole());
 
-    return userMapper.toDto(user, false);
+    // 현재 세션 상태를 기준으로 online 값을 반영
+    return userMapper.toDto(user, sessionManager.isOnline(userId));
   }
 
   @Override

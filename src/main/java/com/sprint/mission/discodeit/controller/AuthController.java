@@ -5,7 +5,6 @@ import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,7 @@ public class AuthController implements AuthApi {
         .status(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
         .build();
   }
+  // 미션 명세에서 GET /api/auth/csrf-token의 응답을 203 Void로 요구하고 있어서 해당 스펙에 맞춰 구현
 
   @GetMapping(path = "me")
   @Override
@@ -46,7 +47,7 @@ public class AuthController implements AuthApi {
         .status(HttpStatus.OK)
         .body(user);
   }
-  
+
   @PutMapping("/role")
   public ResponseEntity<UserDto> updateRole(@RequestBody @Valid UserRoleUpdateRequest request) {
     UserDto updatedUser = userService.updateRole(request);
