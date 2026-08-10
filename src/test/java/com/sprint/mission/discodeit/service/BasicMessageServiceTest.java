@@ -24,7 +24,6 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.basic.BasicMessageService;
-import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.SliceImpl;
 
@@ -46,7 +46,7 @@ class BasicMessageServiceTest {
   @Mock ChannelRepository channelRepository;
   @Mock UserRepository userRepository;
   @Mock BinaryContentRepository binaryContentRepository;
-  @Mock BinaryContentStorage binaryContentStorage;
+  @Mock ApplicationEventPublisher eventPublisher;
   @Mock MessageMapper messageMapper;
   @Mock PageResponseMapper pageResponseMapper;
 

@@ -12,12 +12,13 @@ import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.storage.BinaryContentStorage;
+import com.sprint.mission.discodeit.event.BinaryContentCreatedEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,9 +34,9 @@ public class BasicUserService implements UserService {
 
   private final UserRepository userRepository;
   private final BinaryContentRepository binaryContentRepository;
-  private final BinaryContentStorage binaryContentStorage;
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   public UserDto create(UserCreateRequest userCreateRequest,
@@ -47,12 +48,12 @@ public class BasicUserService implements UserService {
       throw new UserAlreadyExistsException("username", userCreateRequest.username());
     }
 
-    // 프로필 이미지: DB에 메타 저장 후 storage에 파일 저장
+    // 프로필 이미지: DB에 메타만 저장하고, 파일 저장은 커밋 이후 리스너에게 위임
     BinaryContent profile = optionalProfileCreateRequest
         .map(req -> {
           BinaryContent bc = binaryContentRepository.save(
               new BinaryContent(req.fileName(), (long) req.bytes().length, req.contentType()));
-          binaryContentStorage.put(bc.getId(), req.bytes());
+          eventPublisher.publishEvent(new BinaryContentCreatedEvent(bc.getId(), req.bytes()));
           return bc;
         })
         .orElse(null);
@@ -103,7 +104,7 @@ public class BasicUserService implements UserService {
           Optional.ofNullable(user.getProfile()).ifPresent(binaryContentRepository::delete);
           BinaryContent bc = binaryContentRepository.save(
               new BinaryContent(req.fileName(), (long) req.bytes().length, req.contentType()));
-          binaryContentStorage.put(bc.getId(), req.bytes());
+          eventPublisher.publishEvent(new BinaryContentCreatedEvent(bc.getId(), req.bytes()));
           return bc;
         })
         .orElse(null);

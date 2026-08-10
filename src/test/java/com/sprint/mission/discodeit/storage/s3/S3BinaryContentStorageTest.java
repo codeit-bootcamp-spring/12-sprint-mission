@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
+import com.sprint.mission.discodeit.entity.BinaryContentStatus;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,7 +64,8 @@ class S3BinaryContentStorageTest {
         storage.put(id, data);
 
         BinaryContentDto dto =
-                new BinaryContentDto(id, "test.txt", (long) data.length, "text/plain", null);
+                new BinaryContentDto(id, "test.txt", (long) data.length, "text/plain",
+                    BinaryContentStatus.SUCCESS, null);
         ResponseEntity<Void> response = storage.download(dto);
 
         assertEquals(HttpStatus.FOUND, response.getStatusCode());        // 302
