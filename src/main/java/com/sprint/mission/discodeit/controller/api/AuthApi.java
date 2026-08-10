@@ -1,12 +1,10 @@
 package com.sprint.mission.discodeit.controller.api;
 
 import com.sprint.mission.discodeit.dto.data.UserDto;
-import com.sprint.mission.discodeit.dto.request.LoginRequest;
-import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,22 +14,21 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "Auth", description = "인증 API")
 public interface AuthApi {
 
-  @Operation(summary = "로그인")
+  @Operation(summary = "현재 로그인한 사용자 정보 조회")
   @ApiResponses(value = {
       @ApiResponse(
-          responseCode = "200", description = "로그인 성공",
-          content = @Content(schema = @Schema(implementation = User.class))
+          responseCode = "200",
+          description = "현재 사용자 정보 조회 성공",
+          content = @Content(schema = @Schema(implementation = UserDto.class))
       ),
       @ApiResponse(
-          responseCode = "404", description = "사용자를 찾을 수 없음",
-          content = @Content(examples = @ExampleObject(value = "User with username {username} not found"))
-      ),
-      @ApiResponse(
-          responseCode = "400", description = "비밀번호가 일치하지 않음",
-          content = @Content(examples = @ExampleObject(value = "Wrong password"))
+          responseCode = "401",
+          description = "인증되지 않은 사용자"
       )
   })
-  ResponseEntity<UserDto> login(
-      @Parameter(description = "로그인 정보") LoginRequest loginRequest
+  ResponseEntity<UserDto> me (
+      @Parameter(hidden = true)
+      DiscodeitUserDetails userDetails
   );
-}
+
+} 

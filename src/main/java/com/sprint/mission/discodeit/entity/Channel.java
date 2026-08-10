@@ -17,15 +17,12 @@ import lombok.NoArgsConstructor;
 public class Channel extends BaseUpdatableEntity {
 
   @Enumerated(EnumType.STRING)
-  @Column(length = 100)
+  @Column(nullable = false)
   private ChannelType type;
-
   @Column(length = 100)
   private String name;
-
   @Column(length = 500)
   private String description;
-
 
   public Channel(ChannelType type, String name, String description) {
     this.type = type;
@@ -37,7 +34,6 @@ public class Channel extends BaseUpdatableEntity {
     if (newName != null && !newName.equals(this.name)) {
       this.name = newName;
     }
-
     if (newDescription != null && !newDescription.equals(this.description)) {
       this.description = newDescription;
     }

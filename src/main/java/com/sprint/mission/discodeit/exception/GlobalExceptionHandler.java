@@ -1,115 +1,62 @@
 package com.sprint.mission.discodeit.exception;
 
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(DiscodeitException.class)
-  public ResponseEntity<ErrorResponse> handleDiscodeitException(DiscodeitException e) {
-    log.error("커스텀 예외 발생: code={}, message={}, details={}",
-        e.getErrorCode(), e.getMessage(), e.getDetails());
-
-    HttpStatus httpStatus = parseHttpStatus(e);
-
-    ErrorResponse response = new ErrorResponse(
-        e.getTimestamp(),
-        e.getErrorCode().name(),
-        e.getMessage(),
-        e.getDetails(),
-        e.getClass().getSimpleName(),
-        httpStatus.value()
-    );
-
-    return ResponseEntity
-        .status(httpStatus)
-        .body(response);
-  }
-
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-    log.error("잘못된 요청 예외 발생: message={}", e.getMessage());
-
-    ErrorResponse response = new ErrorResponse(
-        Instant.now(),
-        "INVALID_REQUEST",
-        e.getMessage(),
-        Map.of(),
-        e.getClass().getSimpleName(),
-        HttpStatus.BAD_REQUEST.value()
-    );
-
-    return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(response);
-  }
-
-  @ExceptionHandler(NoSuchElementException.class)
-  public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
-    log.error("리소스 조회 실패 예외 발생: message={}", e.getMessage());
-
-    ErrorResponse response = new ErrorResponse(
-        Instant.now(),
-        "RESOURCE_NOT_FOUND",
-        e.getMessage(),
-        Map.of(),
-        e.getClass().getSimpleName(),
-        HttpStatus.NOT_FOUND.value()
-    );
-
-    return ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body(response);
-  }
-
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
-    log.error("예상치 못한 예외 발생", e);
-
-    ErrorResponse response = new ErrorResponse(
-        Instant.now(),
-        "INTERNAL_SERVER_ERROR",
-        "서버 내부 오류가 발생했습니다.",
-        Map.of(),
-        e.getClass().getSimpleName(),
-        HttpStatus.INTERNAL_SERVER_ERROR.value()
-    );
-
+    log.error("예상치 못한 오류 발생: {}", e.getMessage(), e);
+    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(errorResponse);
+  }
+
+  @ExceptionHandler(DiscodeitException.class)
+  public ResponseEntity<ErrorResponse> handleDiscodeitException(DiscodeitException exception) {
+    log.error("커스텀 예외 발생: code={}, message={}", exception.getErrorCode(), exception.getMessage(),
+        exception);
+    HttpStatus status = determineHttpStatus(exception);
+    ErrorResponse response = new ErrorResponse(exception, status.value());
+    return ResponseEntity
+        .status(status)
         .body(response);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
-      MethodArgumentNotValidException e
-  ) {
-    Map<String, Object> details = e.getBindingResult()
-        .getFieldErrors()
-        .stream()
-        .collect(Collectors.toMap(
-            error -> error.getField(),
-            error -> error.getDefaultMessage(),
-            (existingMessage, newMessage) -> existingMessage
-        ));
+  public ResponseEntity<ErrorResponse> handleValidationExceptions(
+      MethodArgumentNotValidException ex) {
+    log.error("요청 유효성 검사 실패: {}", ex.getMessage());
+
+    Map<String, Object> validationErrors = new HashMap<>();
+    ex.getBindingResult().getAllErrors().forEach(error -> {
+      String fieldName = ((FieldError) error).getField();
+      String errorMessage = error.getDefaultMessage();
+      validationErrors.put(fieldName, errorMessage);
+    });
 
     ErrorResponse response = new ErrorResponse(
         Instant.now(),
-        "VALIDATION_FAILED",
-        "잘못된 요청입니다.",
-        details,
-        e.getClass().getSimpleName(),
+        "VALIDATION_ERROR",
+        "요청 데이터 유효성 검사에 실패했습니다",
+        validationErrors,
+        ex.getClass().getSimpleName(),
         HttpStatus.BAD_REQUEST.value()
     );
 
@@ -118,47 +65,25 @@ public class GlobalExceptionHandler {
         .body(response);
   }
 
-  @ExceptionHandler(MissingServletRequestParameterException.class)
-  public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
-      MissingServletRequestParameterException e
-  ) {
-    ErrorResponse response = new ErrorResponse(
-        Instant.now(),
-        "MISSING_REQUEST_PARAMETER",
-        "필수 요청 파라미터가 누락되었습니다.",
-        Map.of("parameter", e.getParameterName()),
-        e.getClass().getSimpleName(),
-        HttpStatus.BAD_REQUEST.value()
-    );
-
-    return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(response);
-  }
-
-  private HttpStatus parseHttpStatus(DiscodeitException e) {
-    ErrorCode code = e.getErrorCode();
-
-    return switch (code) {
-      case INVALID_LOGIN -> HttpStatus.UNAUTHORIZED;
-
-      case USER_NOT_FOUND,
-           USER_STATUS_NOT_FOUND,
-           CHANNEL_NOT_FOUND,
-           MESSAGE_NOT_FOUND,
-           READ_STATUS_NOT_FOUND,
-           AUTHOR_NOT_FOUND,
-           FILE_NOT_FOUND -> HttpStatus.NOT_FOUND;
-
-      case DUPLICATE_EMAIL,
-           DUPLICATE_USERNAME,
-           DUPLICATE_USER_STATUS,
-           DUPLICATE_FILE -> HttpStatus.CONFLICT;
-
-      case PRIVATE_CHANNEL_UPDATE -> HttpStatus.BAD_REQUEST;
-
-      case FILE_UPLOAD_FAILED,
-           FILE_DOWNLOAD_FAILED -> HttpStatus.INTERNAL_SERVER_ERROR;
+  private HttpStatus determineHttpStatus(DiscodeitException exception) {
+    ErrorCode errorCode = exception.getErrorCode();
+    return switch (errorCode) {
+      case USER_NOT_FOUND, CHANNEL_NOT_FOUND, MESSAGE_NOT_FOUND, BINARY_CONTENT_NOT_FOUND,
+           READ_STATUS_NOT_FOUND, USER_STATUS_NOT_FOUND -> HttpStatus.NOT_FOUND;
+      case DUPLICATE_USER, DUPLICATE_READ_STATUS, DUPLICATE_USER_STATUS -> HttpStatus.CONFLICT;
+      case INVALID_USER_CREDENTIALS -> HttpStatus.UNAUTHORIZED;
+      case PRIVATE_CHANNEL_UPDATE, INVALID_REQUEST -> HttpStatus.BAD_REQUEST;
+      case INTERNAL_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
     };
+  }
+
+  @ExceptionHandler(AuthorizationDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(
+      AuthorizationDeniedException exception) {
+    ErrorResponse response = new ErrorResponse(exception, HttpStatus.FORBIDDEN.value());
+
+    return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body(response);
   }
 }

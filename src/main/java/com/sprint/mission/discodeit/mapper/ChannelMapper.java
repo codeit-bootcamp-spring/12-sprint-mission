@@ -35,14 +35,14 @@ public abstract class ChannelMapper {
   }
 
   protected List<UserDto> resolveParticipants(Channel channel) {
-    List<UserDto> participatns = new ArrayList<>();
+    List<UserDto> participants = new ArrayList<>();
     if (channel.getType().equals(ChannelType.PRIVATE)) {
       readStatusRepository.findAllByChannelIdWithUser(channel.getId())
           .stream()
           .map(ReadStatus::getUser)
-          .map(userMapper::toDto)
-          .forEach(participatns::add);
+          .map(user -> userMapper.toDto(user, false))
+          .forEach(participants::add);
     }
-    return participatns;
+    return participants;
   }
 }

@@ -7,8 +7,6 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "binary_contents")
@@ -18,13 +16,10 @@ public class BinaryContent extends BaseEntity {
 
   @Column(nullable = false)
   private String fileName;
-
   @Column(nullable = false)
   private Long size;
-
   @Column(length = 100, nullable = false)
   private String contentType;
-
 
   public BinaryContent(String fileName, Long size, String contentType) {
     this.fileName = fileName;

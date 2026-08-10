@@ -1,23 +1,25 @@
 server:
-  port: 8090
+  port: 80
 
 spring:
-  application:
-    name: discodeit
-
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/discodeit_prod
-    username: discodeit_user_prod
-    password: discodeit1234_prod
-
-  boot:
-    admin:
-      client:
-        url: ${SPRING_BOOT_ADMIN_CLIENT_URL}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
 
 logging:
   level:
     com.sprint.mission.discodeit: info
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.SQL: info
+
+management:
+  endpoint:
+    health:
+      show-details: never
+  info:
+    env:
+      enabled: false
