@@ -152,4 +152,14 @@ public class JwtTokenProvider {
 
     return cookie;
   }
+
+  public Cookie generateRefreshTokenExpirationCookie() {
+    Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, "");
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
+    cookie.setPath("/");
+    cookie.setMaxAge(0);
+
+    return cookie;
+  }
 }
