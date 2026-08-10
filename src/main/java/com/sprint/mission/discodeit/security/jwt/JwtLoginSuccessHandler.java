@@ -5,9 +5,6 @@ import com.sprint.mission.discodeit.dto.data.JwtDto;
 import com.sprint.mission.discodeit.dto.data.JwtInformation;
 import com.sprint.mission.discodeit.dto.response.ErrorResponse;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
-import com.sprint.mission.discodeit.security.LoginSuccessHandler;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +28,12 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtRegistry<UUID> jwtRegistry;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) throws IOException {
+
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -48,7 +47,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
                 Cookie cookie = jwtTokenProvider.generateRefreshTokenCookie(refreshToken);
                 response.addCookie(cookie);
 
-                // accessToken을 브라우저에 저장.
+                // accessToken을 json응답으로 브라우저에 전달
                 JwtDto jwtDto = new JwtDto(userDetails.getUserDto(), accessToken);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write(objectMapper.writeValueAsString(jwtDto));
@@ -58,7 +57,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
                         new JwtInformation(userDetails.getUserDto(), accessToken, refreshToken)
                 );
 
-                log.info("Successfully registered JWT for user {}", userDetails.getUserDto());
+                log.info("Successfully registered JWT for user ={}", userDetails.getUserDto());
 
             } catch (Exception e) {
                 log.error(e.getMessage());

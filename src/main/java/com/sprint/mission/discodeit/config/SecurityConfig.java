@@ -1,12 +1,9 @@
 package com.sprint.mission.discodeit.config;
 
 import com.sprint.mission.discodeit.entity.Role;
-import com.sprint.mission.discodeit.security.DiscodeitUserDetailsService;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
-import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
-import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
-import com.sprint.mission.discodeit.security.jwt.JwtLogoutHandler;
+import com.sprint.mission.discodeit.security.jwt.*;
 import com.sprint.mission.discodeit.service.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
@@ -29,9 +26,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -41,12 +40,14 @@ public class SecurityConfig {
     @Value("${security.remember-me.key}") private String REMEMBER_KEY;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           JwtLoginSuccessHandler jwtLoginSuccessHandler,
-                                           LoginFailureHandler loginFailureHandler,
-                                           SessionRegistry sessionRegistry,
-                                            JwtLogoutHandler jwtLogoutHandler
-//                                           DiscodeitUserDetailsService userDetailsService
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            SessionRegistry sessionRegistry,
+            JwtLoginSuccessHandler jwtLoginSuccessHandler,
+            JwtLogoutHandler jwtLogoutHandler,
+            LoginFailureHandler loginFailureHandler,
+            JwtAuthenticationFilter jwtAuthenticationFilter
+//          DiscodeitUserDetailsService userDetailsService
     ) throws Exception {
 
         http
@@ -55,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/auth/logout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/auth/csrf-token").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/auth/refresh").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
                         .requestMatchers("/actuator/health","/actuator/info","/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
@@ -96,7 +97,20 @@ public class SecurityConfig {
                         .tokenValiditySeconds(60 * 30)
                         .userDetailsService(userDetailsService)
                         .useSecureCookie(false)*/
+                )
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
                 );
+
+        http.cors(cors -> cors.configurationSource(request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.addAllowedOriginPattern("http://localhost:8080");
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
+            config.setAllowCredentials(true);
+            return config;
+        }));
 
         return http.build();
     }
@@ -138,5 +152,10 @@ public class SecurityConfig {
     @Bean
     public SessionRegistry sessionRegistry(){
         return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public JwtRegistry jwtRegistry(JwtTokenProvider jwtTokenProvider) {
+        return new InMemoryJwtRegistry(2, jwtTokenProvider);
     }
 }

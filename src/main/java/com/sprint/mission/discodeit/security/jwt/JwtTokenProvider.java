@@ -39,13 +39,13 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider(
             @Value("${security.jwt.secret}") String secret,
-            @Value("${security.jwt.access-token-validity-seconds}") long accessTokenExpirationMs,
-            @Value("${security.jwt.refresh-token-validity-seconds}") long refreshTokenExpirationMs,
+            @Value("${security.jwt.access-token-validity-seconds}") long accessTokenExpirationSeconds,
+            @Value("${security.jwt.refresh-token-validity-seconds}") long refreshTokenExpirationSeconds,
             @Value("${security.jwt.issuer}") String issuer
     ) throws JOSEException {
         this.issuer = issuer;
-        this.accessTokenExpirationMs = accessTokenExpirationMs;
-        this.refreshTokenExpirationMs = refreshTokenExpirationMs;
+        this.accessTokenExpirationMs = accessTokenExpirationSeconds * 1000L; // ms 기준이라 1000 곱해줘야함
+        this.refreshTokenExpirationMs = refreshTokenExpirationSeconds * 1000L;
 
         byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
 
@@ -186,7 +186,7 @@ public class JwtTokenProvider {
     public Cookie generateRefreshTokenCookie(String refreshToken) {
         Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken);
         cookie.setHttpOnly(true); // XSS 방지용
-        cookie.setSecure(true); // https 요청에서만 쿠키를 전송
+        cookie.setSecure(false); // https 요청에서만 쿠키를 전송
         cookie.setPath("/"); // 모든 경로의 요청에 쿠키 포함
         cookie.setMaxAge((int) (refreshTokenExpirationMs / 1000L)); // 쿠키 저장시간
         return cookie;
@@ -196,7 +196,7 @@ public class JwtTokenProvider {
     public Cookie generateRefreshTokenExpirationCookie() {
         Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, "");
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(0);
         return cookie;

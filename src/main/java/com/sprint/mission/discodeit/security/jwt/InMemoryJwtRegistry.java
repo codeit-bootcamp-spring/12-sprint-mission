@@ -2,7 +2,6 @@ package com.sprint.mission.discodeit.security.jwt;
 
 import com.sprint.mission.discodeit.dto.data.JwtInformation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Queue;
@@ -11,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-@Component
 @RequiredArgsConstructor
 public class InMemoryJwtRegistry implements JwtRegistry<UUID>{
 
@@ -53,12 +51,10 @@ public class InMemoryJwtRegistry implements JwtRegistry<UUID>{
     // JWT 무효화 및 유효 토큰 목록에서 제거
     public void invalidateJwtInformationByUserId(UUID userId) {
         origin.computeIfPresent(userId, (key,queue)->{
-            queue.forEach(jwtInformation ->{
-                removeTokenIndex(
-                        jwtInformation.getAccessToken(),
-                        jwtInformation.getRefreshToken()
-                );
-            });
+            queue.forEach(jwtInformation -> removeTokenIndex(
+                    jwtInformation.getAccessToken(),
+                    jwtInformation.getRefreshToken()
+            ));
             queue.clear();
             return null;
         });
