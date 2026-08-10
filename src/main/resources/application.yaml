@@ -21,11 +21,15 @@ management:
   info:
     env:
       enabled: true
+  # @Timed, @Counted 같은 관측 어노테이션을 활성화한다 (기본값 false)
+  observations:
+    annotations:
+      enabled: true
 
 info:
   app:
     name: Discodeit
-    version: 2.1-M10
+    version: 2.2-M11
     java-version: "17"
     spring-boot-version: "3.4.0"
 

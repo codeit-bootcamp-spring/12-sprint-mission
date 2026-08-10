@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class MessageController implements MessageApi {
 
   private final MessageService messageService;
 
+  // 동기/비동기 처리의 응답 시간 차이를 /actuator/metrics/message.create.async 에서 확인한다
+  @Timed("message.create.async")
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<MessageDto> create(
       @RequestPart("messageCreateRequest") @Valid MessageCreateRequest messageCreateRequest,

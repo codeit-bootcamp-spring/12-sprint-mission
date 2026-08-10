@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class NotificationRequiredEventListener {
   private final ReadStatusRepository readStatusRepository;
   private final NotificationService notificationService;
 
+  @Async("eventTaskExecutor")
   @TransactionalEventListener
   // 커밋 이후라 ReadStatus 조회에 트랜잭션이 필요한데, 이미 끝난 트랜잭션에 조인하면 안 된다.
   // Spring도 @TransactionalEventListener에는 REQUIRES_NEW / NOT_SUPPORTED만 허용한다.
@@ -39,6 +41,7 @@ public class NotificationRequiredEventListener {
     notificationService.createAll(receiverIds, buildTitle(event), event.content());
   }
 
+  @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void onRoleUpdatedEvent(RoleUpdatedEvent event) {
     // 권한 변경은 당사자에게만 알린다

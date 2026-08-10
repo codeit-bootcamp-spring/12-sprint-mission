@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -20,6 +21,8 @@ public class BinaryContentCreatedEventListener {
   private final BinaryContentService binaryContentService;
 
   // @TransactionalEventListener의 기본 phase는 AFTER_COMMIT
+  // @Async를 붙이면 커밋 직후 요청 스레드를 즉시 놓아주고 파일 저장은 별도 풀에서 진행된다
+  @Async("fileUploadTaskExecutor")
   @TransactionalEventListener
   public void on(BinaryContentCreatedEvent event) {
     UUID binaryContentId = event.binaryContentId();
