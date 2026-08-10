@@ -143,6 +143,19 @@ public class JwtTokenProvider {
     }
   }
 
+  public UUID getUserId(String token) {
+    try {
+      SignedJWT signedJWT = SignedJWT.parse(token);
+
+      String userId =
+          signedJWT.getJWTClaimsSet().getStringClaim("userId");
+
+      return UUID.fromString(userId);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid token", e);
+    }
+  }
+
   public Cookie generateRefreshTokenCookie(String refreshToken) {
     Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken);
     cookie.setHttpOnly(true);

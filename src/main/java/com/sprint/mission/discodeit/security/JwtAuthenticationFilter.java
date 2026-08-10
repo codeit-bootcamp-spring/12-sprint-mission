@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
+  private final JwtRegistry jwtRegistry;
   private final DiscodeitUserDetailsService userDetailsService;
 
   @Override
@@ -30,7 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     String token = resolveToken(request);
 
-    if (StringUtils.hasText(token) && jwtTokenProvider.validateAccessToken(token)) {
+    if (StringUtils.hasText(token)
+        && jwtTokenProvider.validateAccessToken(token)
+        && jwtRegistry.hasActiveJwtInformationByAccessToken(token)) {
       String username = jwtTokenProvider.getUsernameFromToken(token);
 
       UserDetails userDetails = userDetailsService.loadUserByUsername(username);

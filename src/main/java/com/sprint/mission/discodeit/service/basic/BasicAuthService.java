@@ -49,6 +49,7 @@ public class BasicAuthService implements AuthService {
 
     Role newRole = request.newRole();
     user.updateRole(newRole);
+    jwtRegistry.invalidateJwtInformationByUserId(userId);
 
     return userMapper.toDto(user);
   }

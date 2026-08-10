@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.security.JwtAuthenticationFilter;
 import com.sprint.mission.discodeit.security.JwtLoginSuccessHandler;
 import com.sprint.mission.discodeit.security.JwtLogoutHandler;
 import com.sprint.mission.discodeit.security.JwtRegistry;
+import com.sprint.mission.discodeit.security.JwtTokenProvider;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
 import java.util.List;
@@ -131,7 +132,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public JwtRegistry jwtRegistry() {
-    return new InMemoryJwtRegistry(1);
+  public JwtRegistry jwtRegistry(JwtTokenProvider jwtTokenProvider) {
+    return new InMemoryJwtRegistry(1, jwtTokenProvider);
   }
 }
