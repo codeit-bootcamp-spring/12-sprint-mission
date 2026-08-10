@@ -10,6 +10,7 @@ import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.Role;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.NotificationService;
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class NotificationRequiredEventListenerTest {
 
   @Mock ReadStatusRepository readStatusRepository;
+  @Mock UserRepository userRepository;
   @Mock NotificationService notificationService;
 
   @InjectMocks NotificationRequiredEventListener listener;
@@ -85,6 +87,39 @@ class NotificationRequiredEventListenerTest {
         org.mockito.ArgumentMatchers.anyList(), title.capture(),
         org.mockito.ArgumentMatchers.eq("안녕"));
     assertThat(title.getValue()).isEqualTo("author (DM)");
+  }
+
+  @Test
+  @DisplayName("업로드 실패는 ADMIN 전원에게 디버깅 정보와 함께 통지한다")
+  void onS3UploadFailedEvent_notifiesAdmins() {
+    User admin = userWithId("admin");
+    given(userRepository.findAllByRole(Role.ADMIN)).willReturn(List.of(admin));
+    UUID binaryContentId = UUID.randomUUID();
+
+    listener.onS3UploadFailedEvent(new S3UploadFailedEvent(
+        "S3 파일 업로드", "7641467e", binaryContentId, "The AWS Access Key Id ... (Status Code: 403)"));
+
+    ArgumentCaptor<String> content = ArgumentCaptor.forClass(String.class);
+    then(notificationService).should().createAll(
+        org.mockito.ArgumentMatchers.eq(List.of(admin.getId())),
+        org.mockito.ArgumentMatchers.eq("S3 파일 업로드 실패"),
+        content.capture());
+
+    assertThat(content.getValue())
+        .contains("RequestId: 7641467e")
+        .contains("BinaryContentId: " + binaryContentId)
+        .contains("Status Code: 403");
+  }
+
+  @Test
+  @DisplayName("관리자가 없으면 통지를 건너뛴다")
+  void onS3UploadFailedEvent_noAdmin_skips() {
+    given(userRepository.findAllByRole(Role.ADMIN)).willReturn(List.of());
+
+    listener.onS3UploadFailedEvent(new S3UploadFailedEvent(
+        "S3 파일 업로드", "req", UUID.randomUUID(), "boom"));
+
+    then(notificationService).shouldHaveNoInteractions();
   }
 
   @Test

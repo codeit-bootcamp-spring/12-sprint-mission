@@ -41,6 +41,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// JWT 서명/검증 (JOSE 표준 구현체)
 	implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
+	// 비동기 작업의 자동 재시도 (@Retryable / @Recover). AOP 프록시가 필요하다.
+	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2'

@@ -36,7 +36,9 @@ class S3BinaryContentStorageTest {
                 props.getProperty("AWS_S3_SECRET_KEY"),
                 props.getProperty("AWS_S3_REGION"),
                 props.getProperty("AWS_S3_BUCKET"),
-                600
+                600,
+                event -> {
+                }
         );
     }
 
