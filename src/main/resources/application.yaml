@@ -11,13 +11,25 @@ spring:
       maxRequestSize: 30MB
   jpa:
     open-in-view: false
+  cache:
+    type: caffeine
+    cache-names:
+      - channels
+      - notifications
+      - users
+    caffeine:
+      # recordStats: /actuator/metrics/cache.* 에서 히트/미스를 볼 수 있게 한다
+      spec: >
+        maximumSize=100,
+        expireAfterAccess=600s,
+        recordStats
 
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,loggers
+        include: health,info,metrics,loggers,caches
   info:
     env:
       enabled: true

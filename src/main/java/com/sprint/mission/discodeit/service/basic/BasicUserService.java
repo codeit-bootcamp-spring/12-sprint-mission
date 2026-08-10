@@ -11,6 +11,8 @@ import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.config.CacheConfig;
+import com.sprint.mission.discodeit.service.UserOnlineChecker;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.event.BinaryContentCreatedEvent;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,8 +40,11 @@ public class BasicUserService implements UserService {
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
   private final ApplicationEventPublisher eventPublisher;
+  private final UserDirectory userDirectory;
+  private final UserOnlineChecker userOnlineChecker;
 
   @Override
+  @CacheEvict(cacheNames = CacheConfig.USERS, allEntries = true)
   public UserDto create(UserCreateRequest userCreateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     if (userRepository.existsByEmail(userCreateRequest.email())) {
@@ -75,15 +81,20 @@ public class BasicUserService implements UserService {
         .orElseThrow(() -> new UserNotFoundException(userId));
   }
 
+  // DB에서 오는 부분만 캐시하고, 실시간 값인 online은 매 조회마다 다시 채운다
   @Override
   @Transactional(readOnly = true)
   public List<UserDto> findAll() {
-    return userRepository.findAll().stream().map(userMapper::toDto).toList();
+    return userDirectory.findAllWithoutOnline().stream()
+        .map(dto -> new UserDto(dto.id(), dto.username(), dto.email(), dto.profile(),
+            userOnlineChecker.isOnline(dto.id()), dto.role()))
+        .toList();
   }
 
   // 수정은 비밀번호와 이메일까지 바꿀 수 있으므로 관리자에게도 열지 않고 본인으로 한정한다
   @Override
   @PreAuthorize("#userId == principal.userId")
+  @CacheEvict(cacheNames = CacheConfig.USERS, allEntries = true)
   public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
       Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
     User user = userRepository.findById(userId)
@@ -123,6 +134,7 @@ public class BasicUserService implements UserService {
   // 삭제는 어뷰징 계정 정리 같은 운영 동작이 필요하므로 RoleHierarchy 의도대로 ADMIN에게도 허용한다
   @Override
   @PreAuthorize("hasRole('ADMIN') or #userId == principal.userId")
+  @CacheEvict(cacheNames = CacheConfig.USERS, allEntries = true)
   public void delete(UUID userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new UserNotFoundException(userId));

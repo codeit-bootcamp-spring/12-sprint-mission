@@ -17,6 +17,7 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.config.CacheConfig;
 import com.sprint.mission.discodeit.service.ChannelService;
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +50,7 @@ public class BasicChannelService implements ChannelService {
   // 퍼블릭 채널 생성/수정/삭제는 채널 매니저 이상만 가능
   @Override
   @PreAuthorize("hasRole('CHANNEL_MANAGER')")
+  @CacheEvict(cacheNames = CacheConfig.CHANNELS, allEntries = true)
   public ChannelDto create(PublicChannelCreateRequest request) {
     Channel channel = new Channel(ChannelType.PUBLIC, request.name(), request.description());
     Channel saved = channelRepository.save(channel);
@@ -55,6 +59,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @CacheEvict(cacheNames = CacheConfig.CHANNELS, allEntries = true)
   public ChannelDto create(PrivateChannelCreateRequest request) {
     Channel channel = new Channel(ChannelType.PRIVATE, null, null);
     Channel saved = channelRepository.save(channel);
@@ -80,6 +85,7 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   @Transactional(readOnly = true)
+  @Cacheable(cacheNames = CacheConfig.CHANNELS, key = "#userId")
   public List<ChannelDto> findAllByUserId(UUID userId) {
     List<UUID> myChannelIds = readStatusRepository.findAllByUser_Id(userId).stream()
         .map(rs -> rs.getChannel().getId())
@@ -119,6 +125,7 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   @PreAuthorize("hasRole('CHANNEL_MANAGER')")
+  @CacheEvict(cacheNames = CacheConfig.CHANNELS, allEntries = true)
   public ChannelDto update(UUID channelId, PublicChannelUpdateRequest request) {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> new ChannelNotFoundException(channelId));
@@ -132,6 +139,7 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   @PreAuthorize("hasRole('CHANNEL_MANAGER')")
+  @CacheEvict(cacheNames = CacheConfig.CHANNELS, allEntries = true)
   public void delete(UUID channelId) {
     Channel channel = channelRepository.findById(channelId)
         .orElseThrow(() -> new ChannelNotFoundException(channelId));

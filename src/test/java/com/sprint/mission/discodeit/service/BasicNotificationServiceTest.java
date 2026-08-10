@@ -26,6 +26,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.access.AccessDeniedException;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +35,7 @@ class BasicNotificationServiceTest {
   @Mock NotificationRepository notificationRepository;
   @Mock UserRepository userRepository;
   @Mock NotificationMapper notificationMapper;
+  @Mock CacheManager cacheManager;
 
   @InjectMocks BasicNotificationService notificationService;
 
