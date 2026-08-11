@@ -41,6 +41,7 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 생성 성공")
     void create_success() {
+        // given
         BinaryContentCreateRequest request = new BinaryContentCreateRequest(
                 "file-data".getBytes(),
                 "test.txt",
@@ -74,8 +75,12 @@ class BasicBinaryContentServiceTest {
         given(binaryContentStorage.put(binaryContentId, request.data())).willReturn(binaryContentId);
         given(binaryContentMapper.toResponse(savedBinaryContent)).willReturn(expectedResponse);
 
+
+        // when
         BinaryContentResponse result = binaryContentService.create(request);
 
+
+        // then
         assertThat(result).isEqualTo(expectedResponse);
 
         then(binaryContentMapper).should().toEntity(request);
@@ -87,6 +92,7 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 엔티티 생성 성공")
     void createBinaryContent_success() {
+        // given
         BinaryContentCreateRequest request = new BinaryContentCreateRequest(
                 "file-data".getBytes(),
                 "test.txt",
@@ -112,8 +118,12 @@ class BasicBinaryContentServiceTest {
         given(binaryContentRepository.save(binaryContent)).willReturn(savedBinaryContent);
         given(binaryContentStorage.put(binaryContentId, request.data())).willReturn(binaryContentId);
 
+
+        // when
         BinaryContent result = binaryContentService.createBinaryContent(request);
 
+
+        // then
         assertThat(result).isEqualTo(savedBinaryContent);
 
         then(binaryContentMapper).should().toEntity(request);
@@ -124,6 +134,7 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 단건 조회 성공")
     void findById_success() {
+        // given
         UUID binaryContentId = UUID.randomUUID();
 
         BinaryContent binaryContent = BinaryContent.builder()
@@ -145,8 +156,12 @@ class BasicBinaryContentServiceTest {
         given(binaryContentMapper.toResponse(binaryContent))
                 .willReturn(expectedResponse);
 
+
+        // when
         BinaryContentResponse result = binaryContentService.findById(binaryContentId);
 
+
+        // then
         assertThat(result).isEqualTo(expectedResponse);
 
         then(binaryContentRepository).should().findById(binaryContentId);
@@ -156,11 +171,14 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 단건 조회 실패 - 없음")
     void findById_fail_notFound() {
+        // given
         UUID binaryContentId = UUID.randomUUID();
 
         given(binaryContentRepository.findById(binaryContentId))
                 .willReturn(Optional.empty());
 
+
+        // when & then
         assertThatThrownBy(() -> binaryContentService.findById(binaryContentId))
                 .isInstanceOf(BinaryContentNotFoundException.class);
 
@@ -170,6 +188,7 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 목록 조회 성공")
     void findAllByIdIn_success() {
+        // given
         UUID binaryContentId1 = UUID.randomUUID();
         UUID binaryContentId2 = UUID.randomUUID();
 
@@ -208,8 +227,12 @@ class BasicBinaryContentServiceTest {
         given(binaryContentMapper.toResponse(binaryContent1)).willReturn(response1);
         given(binaryContentMapper.toResponse(binaryContent2)).willReturn(response2);
 
+
+        // when
         List<BinaryContentResponse> result = binaryContentService.findAllByIdIn(ids);
 
+
+        // then
         assertThat(result).containsExactly(response1, response2);
 
         then(binaryContentRepository).should().findAllById(ids);
@@ -220,6 +243,7 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 삭제 성공")
     void delete_success() {
+        // given
         UUID binaryContentId = UUID.randomUUID();
 
         BinaryContent binaryContent = BinaryContent.builder()
@@ -232,8 +256,12 @@ class BasicBinaryContentServiceTest {
         given(binaryContentRepository.findById(binaryContentId))
                 .willReturn(Optional.of(binaryContent));
 
+
+        // when
         binaryContentService.delete(binaryContentId);
 
+
+        // then
         then(binaryContentRepository).should().findById(binaryContentId);
         then(binaryContentRepository).should().delete(binaryContent);
         then(binaryContentStorage).should().delete(binaryContentId);
@@ -242,11 +270,14 @@ class BasicBinaryContentServiceTest {
     @Test
     @DisplayName("바이너리 콘텐츠 삭제 실패 - 없음")
     void delete_fail_notFound() {
+        // given
         UUID binaryContentId = UUID.randomUUID();
 
         given(binaryContentRepository.findById(binaryContentId))
                 .willReturn(Optional.empty());
 
+
+        // when & then
         assertThatThrownBy(() -> binaryContentService.delete(binaryContentId))
                 .isInstanceOf(BinaryContentNotFoundException.class);
 

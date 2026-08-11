@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:80}
 
 spring:
   datasource:
@@ -17,13 +17,6 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
-
-  boot:
-    admin:
-      client:
-        url: ${SPRING_BOOT_ADMIN_CLIENT_URL:http://localhost:9090}
-        instance:
-          name: discodeit
 
 logging:
   level:

@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.message.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.message.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.channel.Channel;
 import com.sprint.mission.discodeit.entity.message.Message;
@@ -13,9 +14,11 @@ import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.time.Instant;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +42,8 @@ public class BasicMessageService implements MessageService {
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
     private final BinaryContentService binaryContentService;
+    private final UserMapper userMapper;
+    private final JwtRegistry jwtRegistry;
 
     @Override
     @Transactional
@@ -69,7 +75,7 @@ public class BasicMessageService implements MessageService {
                 author.getId()
         );
 
-        return messageMapper.toResponse(saved);
+        return toResponse(saved);
     }
 
     @Override
@@ -113,7 +119,7 @@ public class BasicMessageService implements MessageService {
                 : messages;
 
         List<MessageResponse> content = pageMessages.stream()
-                .map(messageMapper::toResponse)
+                .map(this::toResponse)
                 .toList();
 
         Instant nextCursor = hasNext && !pageMessages.isEmpty()
@@ -136,6 +142,7 @@ public class BasicMessageService implements MessageService {
         );
     }
 
+    @PreAuthorize("@messageSecurity.isOwner(#messageId, authentication)")
     @Override
     @Transactional
     public MessageResponse update(UUID messageId, MessageUpdateRequest request) {
@@ -147,9 +154,10 @@ public class BasicMessageService implements MessageService {
 
         log.info("Message updated. messageId={}", message.getId());
 
-        return messageMapper.toResponse(message);
+        return toResponse(message);
     }
 
+    @PreAuthorize("@messageSecurity.isOwner(#messageId, authentication)")
     @Override
     @Transactional
     public void delete(UUID messageId) {
@@ -166,6 +174,13 @@ public class BasicMessageService implements MessageService {
         }
 
         log.info("Message deleted. messageId={}, deletedAttachmentCount={}", messageId, attachmentIds.size());
+    }
+
+    @PreAuthorize("hasRole('CHANNEL_MANAGER')")
+    @Override
+    @Transactional
+    public void deleteByChannelManager(UUID messageId) {
+        deleteInternal(messageId);
     }
 
     private Channel getChannelOrThrow(UUID channelId) {
@@ -187,5 +202,30 @@ public class BasicMessageService implements MessageService {
         return message.getAttachments().stream()
                 .map(BinaryContent::getId)
                 .toList();
+    }
+
+    private void deleteInternal(UUID messageId) {
+        Message message = getMessageOrThrow(messageId);
+        List<UUID> attachmentIds = getAttachmentIds(message);
+
+        message.clearAttachments();
+        messageRepository.delete(message);
+
+        for (UUID attachmentId : attachmentIds) {
+            binaryContentService.delete(attachmentId);
+        }
+    }
+
+    private MessageResponse toResponse(Message message) {
+        User author = message.getAuthor();
+
+        UserResponse authorResponse = author == null
+                ? null
+                : userMapper.toResponse(
+                author,
+                jwtRegistry.hasActiveJwtInformationByUserId(author.getId())
+        );
+
+        return messageMapper.toResponse(message, authorResponse);
     }
 }

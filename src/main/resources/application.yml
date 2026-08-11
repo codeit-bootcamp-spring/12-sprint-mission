@@ -1,9 +1,12 @@
+server:
+  port: ${SERVER_PORT:80}
+
 spring:
   application:
     name: discodeit
 
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
   servlet:
     multipart:
@@ -35,7 +38,7 @@ management:
         include: health,info,metrics,loggers
   endpoint:
     health:
-      show-details: always
+      show-details: never
   info:
     env:
       enabled: true
@@ -43,7 +46,7 @@ management:
 info:
   app:
     name: Discodeit
-    version: 1.7.0
+    version: 2.1-M10
     java-version: 17
     spring-boot-version: 3.5.13
   datasource:
@@ -53,7 +56,8 @@ info:
     ddl-auto: ${spring.jpa.hibernate.ddl-auto}
   storage:
     type: ${discodeit.storage.type}
-    path: ${discodeit.storage.local.root-path}
+    local-root-path: ${discodeit.storage.local.root-path}
+    s3-bucket: ${discodeit.storage.s3.bucket:}
   multipart:
     max-file-size: ${spring.servlet.multipart.max-file-size}
     max-request-size: ${spring.servlet.multipart.max-request-size}
@@ -63,9 +67,28 @@ logging:
     root: info
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+    org.springframework.security: trace
 
 discodeit:
+  admin:
+    username: ${ADMIN_USERNAME:admin}
+    email: ${ADMIN_EMAIL:admin@discodeit.com}
+    password: ${ADMIN_PASSWORD:admin1234}
+  jwt:
+    secret: ${JWT_SECRET:dTwG2MEuQZnIZ84XjdSY7gPjvReTAsRW0jVDJFZPGZc=}
+    issuer: ${JWT_ISSUER:discodeit}
+    access-token-validity-ms: ${JWT_ACCESS_TOKEN_VALIDITY_MS:900000}
+    refresh-token-validity-ms: ${JWT_REFRESH_TOKEN_VALIDITY_MS:604800000}
+    max-active-jwt-count: ${JWT_MAX_ACTIVE_COUNT:1}
+    refresh-token-cookie-secure: ${JWT_REFRESH_TOKEN_COOKIE_SECURE:false}
+
   storage:
-    type: local
+    type: ${STORAGE_TYPE:local}
     local:
-      root-path: .discodeit/storage
+      root-path: ${STORAGE_LOCAL_ROOT_PATH:.discodeit/storage}
+    s3:
+      access-key: ${AWS_S3_ACCESS_KEY:}
+      secret-key: ${AWS_S3_SECRET_KEY:}
+      region: ${AWS_S3_REGION:ap-northeast-2}
+      bucket: ${AWS_S3_BUCKET:}
+      presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600}

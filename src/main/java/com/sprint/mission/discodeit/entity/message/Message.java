@@ -35,6 +35,7 @@ public class Message extends BaseUpdatableEntity {
     private User author;
 
 
+    @Builder.Default
     @ToString.Exclude
     @BatchSize(size = 100)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

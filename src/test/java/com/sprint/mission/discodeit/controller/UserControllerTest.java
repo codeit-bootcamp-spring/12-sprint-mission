@@ -14,10 +14,11 @@ import com.sprint.mission.discodeit.config.MDCLoggingInterceptor;
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.dto.user.UserUpdateRequest;
+import com.sprint.mission.discodeit.entity.user.Role;
 import com.sprint.mission.discodeit.exception.GlobalExceptionHandler;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.UserStatusService;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -33,6 +35,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @Import({GlobalExceptionHandler.class, MDCLoggingInterceptor.class})
 class UserControllerTest {
 
@@ -46,14 +49,12 @@ class UserControllerTest {
     private UserService userService;
 
     @MockitoBean
-    private UserStatusService userStatusService;
-
-    @MockitoBean
     private JpaMetamodelMappingContext jpaMetamodelMappingContext;
 
     @Test
     @DisplayName("사용자 생성 성공")
     void create_success() throws Exception {
+        // given
         UUID userId = UUID.randomUUID();
 
         UserCreateRequest request = new UserCreateRequest(
@@ -67,7 +68,8 @@ class UserControllerTest {
                 "user1",
                 "user1@test.com",
                 null,
-                false
+                false,
+                Role.USER
         );
 
         MockMultipartFile userCreateRequestPart = new MockMultipartFile(
@@ -80,20 +82,25 @@ class UserControllerTest {
         when(userService.create(eq(request), eq(Optional.empty())))
                 .thenReturn(response);
 
+
+        // when & then
         mockMvc.perform(multipart("/api/users")
                         .file(userCreateRequestPart))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userId.toString()))
                 .andExpect(jsonPath("$.username").value("user1"))
                 .andExpect(jsonPath("$.email").value("user1@test.com"))
                 .andExpect(jsonPath("$.online").value(false));
 
+
+        // then
         verify(userService).create(eq(request), eq(Optional.empty()));
     }
 
     @Test
     @DisplayName("사용자 생성 실패 - 요청 값 검증 실패")
     void create_fail_invalidRequest() throws Exception {
+        // given
         UserCreateRequest request = new UserCreateRequest(
                 "u",
                 "invalid-email",
@@ -107,6 +114,8 @@ class UserControllerTest {
                 objectMapper.writeValueAsBytes(request)
         );
 
+
+        // when & then
         mockMvc.perform(multipart("/api/users")
                         .file(userCreateRequestPart))
                 .andExpect(status().isBadRequest())
@@ -117,6 +126,7 @@ class UserControllerTest {
     @Test
     @DisplayName("사용자 단건 조회 성공")
     void findById_success() throws Exception {
+        // given
         UUID userId = UUID.randomUUID();
 
         UserResponse response = new UserResponse(
@@ -124,11 +134,14 @@ class UserControllerTest {
                 "user1",
                 "user1@test.com",
                 null,
-                true
+                true,
+                Role.USER
         );
 
         when(userService.findById(userId)).thenReturn(response);
 
+
+        // when & then
         mockMvc.perform(get("/api/users/{userId}", userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userId.toString()))
@@ -136,28 +149,36 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("user1@test.com"))
                 .andExpect(jsonPath("$.online").value(true));
 
+
+        // then
         verify(userService).findById(userId);
     }
 
     @Test
     @DisplayName("사용자 단건 조회 실패 - 사용자 없음")
     void findById_fail_userNotFound() throws Exception {
+        // given
         UUID userId = UUID.randomUUID();
 
         when(userService.findById(userId)).thenThrow(new UserNotFoundException(userId));
 
+
+        // when & then
         mockMvc.perform(get("/api/users/{userId}", userId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("USER_NOT_FOUND"))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.exceptionType").value("UserNotFoundException"));
 
+
+        // then
         verify(userService).findById(userId);
     }
 
     @Test
     @DisplayName("사용자 목록 조회 성공")
     void findAll_success() throws Exception {
+        // given
         UUID userId1 = UUID.randomUUID();
         UUID userId2 = UUID.randomUUID();
 
@@ -166,7 +187,8 @@ class UserControllerTest {
                 "user1",
                 "user1@test.com",
                 null,
-                true
+                true,
+                Role.USER
         );
 
         UserResponse response2 = new UserResponse(
@@ -174,11 +196,14 @@ class UserControllerTest {
                 "user2",
                 "user2@test.com",
                 null,
-                false
+                false,
+                Role.USER
         );
 
         when(userService.findAll()).thenReturn(List.of(response1, response2));
 
+
+        // when & then
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(userId1.toString()))
@@ -186,12 +211,15 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[1].id").value(userId2.toString()))
                 .andExpect(jsonPath("$[1].username").value("user2"));
 
+
+        // then
         verify(userService).findAll();
     }
 
     @Test
     @DisplayName("사용자 수정 성공")
     void update_success() throws Exception {
+        // given
         UUID userId = UUID.randomUUID();
 
         UserUpdateRequest request = new UserUpdateRequest(
@@ -205,7 +233,8 @@ class UserControllerTest {
                 "newUser",
                 "new@test.com",
                 null,
-                true
+                true,
+                Role.USER
         );
 
         MockMultipartFile userUpdateRequestPart = new MockMultipartFile(
@@ -218,6 +247,8 @@ class UserControllerTest {
         when(userService.update(eq(userId), eq(request), eq(Optional.empty())))
                 .thenReturn(response);
 
+
+        // when & then
         mockMvc.perform(multipart("/api/users/{userId}", userId)
                         .file(userUpdateRequestPart)
                         .with(requestBuilder -> {
@@ -229,17 +260,24 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.username").value("newUser"))
                 .andExpect(jsonPath("$.email").value("new@test.com"));
 
+
+        // then
         verify(userService).update(eq(userId), eq(request), eq(Optional.empty()));
     }
 
     @Test
     @DisplayName("사용자 삭제 성공")
     void delete_success() throws Exception {
+        // given
         UUID userId = UUID.randomUUID();
 
+
+        // when & then
         mockMvc.perform(delete("/api/users/{userId}", userId))
                 .andExpect(status().isNoContent());
 
+
+        // then
         verify(userService).delete(userId);
     }
 }

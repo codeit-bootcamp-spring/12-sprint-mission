@@ -12,18 +12,22 @@ import com.sprint.mission.discodeit.dto.message.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.message.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.channel.Channel;
 import com.sprint.mission.discodeit.entity.channel.ChannelType;
 import com.sprint.mission.discodeit.entity.message.Message;
 import com.sprint.mission.discodeit.entity.user.User;
+import com.sprint.mission.discodeit.entity.user.Role;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.message.MessageNotFoundException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -58,12 +62,19 @@ class BasicMessageServiceTest {
     @Mock
     private BinaryContentService binaryContentService;
 
+    @Mock
+    private UserMapper userMapper;
+
+    @Mock
+    private JwtRegistry jwtRegistry;
+
     @InjectMocks
     private BasicMessageService messageService;
 
     @Test
     @DisplayName("메시지 생성 성공 - 첨부파일 없음")
     void create_success_withoutAttachments() {
+        // given
         UUID channelId = UUID.randomUUID();
         UUID authorId = UUID.randomUUID();
         UUID messageId = UUID.randomUUID();
@@ -112,27 +123,38 @@ class BasicMessageServiceTest {
                 List.of()
         );
 
+        UserResponse authorResponse = new UserResponse(
+                authorId, "user1", "user1@test.com", null, false, Role.USER
+        );
+
         given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
         given(userRepository.findById(authorId)).willReturn(Optional.of(author));
         given(messageMapper.toEntity(request, channel, author, List.of())).willReturn(message);
         given(messageRepository.save(message)).willReturn(savedMessage);
-        given(messageMapper.toResponse(savedMessage)).willReturn(expectedResponse);
+        given(jwtRegistry.hasActiveJwtInformationByUserId(authorId)).willReturn(false);
+        given(userMapper.toResponse(author, false)).willReturn(authorResponse);
+        given(messageMapper.toResponse(savedMessage, authorResponse)).willReturn(expectedResponse);
 
+
+        // when
         MessageResponse result = messageService.create(request, List.of());
 
+
+        // then
         assertThat(result).isEqualTo(expectedResponse);
 
         then(channelRepository).should().findById(channelId);
         then(userRepository).should().findById(authorId);
         then(messageMapper).should().toEntity(request, channel, author, List.of());
         then(messageRepository).should().save(message);
-        then(messageMapper).should().toResponse(savedMessage);
+        then(messageMapper).should().toResponse(savedMessage, authorResponse);
         then(binaryContentService).should(never()).createBinaryContent(any());
     }
 
     @Test
     @DisplayName("메시지 생성 성공 - 첨부파일 있음")
     void create_success_withAttachments() {
+        // given
         UUID channelId = UUID.randomUUID();
         UUID authorId = UUID.randomUUID();
         UUID messageId = UUID.randomUUID();
@@ -194,26 +216,37 @@ class BasicMessageServiceTest {
                 List.of()
         );
 
+        UserResponse authorResponse = new UserResponse(
+                authorId, "user1", "user1@test.com", null, false, Role.USER
+        );
+
         given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
         given(userRepository.findById(authorId)).willReturn(Optional.of(author));
         given(binaryContentService.createBinaryContent(attachmentRequest)).willReturn(attachment);
         given(messageMapper.toEntity(request, channel, author, List.of(attachment))).willReturn(message);
         given(messageRepository.save(message)).willReturn(savedMessage);
-        given(messageMapper.toResponse(savedMessage)).willReturn(expectedResponse);
+        given(jwtRegistry.hasActiveJwtInformationByUserId(authorId)).willReturn(false);
+        given(userMapper.toResponse(author, false)).willReturn(authorResponse);
+        given(messageMapper.toResponse(savedMessage, authorResponse)).willReturn(expectedResponse);
 
+
+        // when
         MessageResponse result = messageService.create(request, List.of(attachmentRequest));
 
+
+        // then
         assertThat(result).isEqualTo(expectedResponse);
 
         then(binaryContentService).should().createBinaryContent(attachmentRequest);
         then(messageMapper).should().toEntity(request, channel, author, List.of(attachment));
         then(messageRepository).should().save(message);
-        then(messageMapper).should().toResponse(savedMessage);
+        then(messageMapper).should().toResponse(savedMessage, authorResponse);
     }
 
     @Test
     @DisplayName("메시지 생성 실패 - 채널 없음")
     void create_fail_channelNotFound() {
+        // given
         UUID channelId = UUID.randomUUID();
         UUID authorId = UUID.randomUUID();
 
@@ -225,6 +258,8 @@ class BasicMessageServiceTest {
 
         given(channelRepository.findById(channelId)).willReturn(Optional.empty());
 
+
+        // when & then
         assertThatThrownBy(() -> messageService.create(request, List.of()))
                 .isInstanceOf(ChannelNotFoundException.class);
 
@@ -236,6 +271,7 @@ class BasicMessageServiceTest {
     @Test
     @DisplayName("메시지 생성 실패 - 작성자 없음")
     void create_fail_authorNotFound() {
+        // given
         UUID channelId = UUID.randomUUID();
         UUID authorId = UUID.randomUUID();
 
@@ -254,6 +290,8 @@ class BasicMessageServiceTest {
         given(channelRepository.findById(channelId)).willReturn(Optional.of(channel));
         given(userRepository.findById(authorId)).willReturn(Optional.empty());
 
+
+        // when & then
         assertThatThrownBy(() -> messageService.create(request, List.of()))
                 .isInstanceOf(UserNotFoundException.class);
 
@@ -265,6 +303,7 @@ class BasicMessageServiceTest {
     @Test
     @DisplayName("메시지 목록 조회 성공 - 첫 페이지, 다음 페이지 있음")
     void findAllByChannelId_success_firstPage_hasNext() {
+        // given
         UUID channelId = UUID.randomUUID();
 
         Instant cursor1 = Instant.parse("2026-06-04T01:00:00Z");
@@ -316,12 +355,16 @@ class BasicMessageServiceTest {
                 any(Pageable.class)
         )).willReturn(List.of(message1, message2, message3));
 
-        given(messageMapper.toResponse(message1)).willReturn(response1);
-        given(messageMapper.toResponse(message2)).willReturn(response2);
+        given(messageMapper.toResponse(message1, null)).willReturn(response1);
+        given(messageMapper.toResponse(message2, null)).willReturn(response2);
 
         PageResponse<MessageResponse> result =
+
+                // when
                 messageService.findAllByChannelId(channelId, null, pageable);
 
+
+        // then
         assertThat(result.content()).containsExactly(response1, response2);
         assertThat(result.nextCursor()).isEqualTo(cursor2);
         assertThat(result.size()).isEqualTo(2);
@@ -331,14 +374,15 @@ class BasicMessageServiceTest {
                 any(UUID.class),
                 any(Pageable.class)
         );
-        then(messageMapper).should().toResponse(message1);
-        then(messageMapper).should().toResponse(message2);
-        then(messageMapper).should(never()).toResponse(message3);
+        then(messageMapper).should().toResponse(message1, null);
+        then(messageMapper).should().toResponse(message2, null);
+        then(messageMapper).should(never()).toResponse(message3, null);
     }
 
     @Test
     @DisplayName("메시지 목록 조회 성공 - 커서 이후, 다음 페이지 없음")
     void findAllByChannelId_success_withCursor_noNext() {
+        // given
         UUID channelId = UUID.randomUUID();
         Instant cursor = Instant.parse("2026-06-04T01:00:00Z");
         Instant createdAt = Instant.parse("2026-06-04T00:59:00Z");
@@ -367,11 +411,15 @@ class BasicMessageServiceTest {
                 any(Pageable.class)
         )).willReturn(List.of(message));
 
-        given(messageMapper.toResponse(message)).willReturn(response);
+        given(messageMapper.toResponse(message, null)).willReturn(response);
 
         PageResponse<MessageResponse> result =
+
+                // when
                 messageService.findAllByChannelId(channelId, cursor, pageable);
 
+
+        // then
         assertThat(result.content()).containsExactly(response);
         assertThat(result.nextCursor()).isNull();
         assertThat(result.size()).isEqualTo(2);
@@ -382,12 +430,13 @@ class BasicMessageServiceTest {
                 any(Instant.class),
                 any(Pageable.class)
         );
-        then(messageMapper).should().toResponse(message);
+        then(messageMapper).should().toResponse(message, null);
     }
 
     @Test
     @DisplayName("메시지 수정 성공")
     void update_success() {
+        // given
         UUID messageId = UUID.randomUUID();
 
         MessageUpdateRequest request = new MessageUpdateRequest("updated");
@@ -408,36 +457,44 @@ class BasicMessageServiceTest {
         );
 
         given(messageRepository.findById(messageId)).willReturn(Optional.of(message));
-        given(messageMapper.toResponse(message)).willReturn(expectedResponse);
+        given(messageMapper.toResponse(message, null)).willReturn(expectedResponse);
 
+
+        // when
         MessageResponse result = messageService.update(messageId, request);
 
+
+        // then
         assertThat(result).isEqualTo(expectedResponse);
         assertThat(message.getContent()).isEqualTo("updated");
 
         then(messageRepository).should().findById(messageId);
-        then(messageMapper).should().toResponse(message);
+        then(messageMapper).should().toResponse(message, null);
     }
 
     @Test
     @DisplayName("메시지 수정 실패 - 메시지 없음")
     void update_fail_messageNotFound() {
+        // given
         UUID messageId = UUID.randomUUID();
 
         MessageUpdateRequest request = new MessageUpdateRequest("updated");
 
         given(messageRepository.findById(messageId)).willReturn(Optional.empty());
 
+
+        // when & then
         assertThatThrownBy(() -> messageService.update(messageId, request))
                 .isInstanceOf(MessageNotFoundException.class);
 
         then(messageRepository).should().findById(messageId);
-        then(messageMapper).should(never()).toResponse(any());
+        then(messageMapper).should(never()).toResponse(any(), any());
     }
 
     @Test
     @DisplayName("메시지 삭제 성공 - 첨부파일 있음")
     void delete_success_withAttachments() {
+        // given
         UUID messageId = UUID.randomUUID();
         UUID attachmentId1 = UUID.randomUUID();
         UUID attachmentId2 = UUID.randomUUID();
@@ -464,8 +521,12 @@ class BasicMessageServiceTest {
 
         given(messageRepository.findById(messageId)).willReturn(Optional.of(message));
 
+
+        // when
         messageService.delete(messageId);
 
+
+        // then
         then(messageRepository).should().findById(messageId);
         then(messageRepository).should().delete(message);
         then(binaryContentService).should().delete(attachmentId1);
@@ -475,10 +536,13 @@ class BasicMessageServiceTest {
     @Test
     @DisplayName("메시지 삭제 실패 - 메시지 없음")
     void delete_fail_messageNotFound() {
+        // given
         UUID messageId = UUID.randomUUID();
 
         given(messageRepository.findById(messageId)).willReturn(Optional.empty());
 
+
+        // when & then
         assertThatThrownBy(() -> messageService.delete(messageId))
                 .isInstanceOf(MessageNotFoundException.class);
 

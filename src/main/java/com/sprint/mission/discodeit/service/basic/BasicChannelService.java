@@ -20,16 +20,19 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,7 +47,9 @@ public class BasicChannelService implements ChannelService {
     private final MessageRepository messageRepository;
     private final MessageService messageService;
     private final UserMapper userMapper;
+    private final JwtRegistry jwtRegistry;
 
+    @PreAuthorize("hasRole('CHANNEL_MANAGER')")
     @Override
     @Transactional
     public ChannelResponse createPublicChannel(CreatePublicChannelRequest request) {
@@ -75,7 +80,7 @@ public class BasicChannelService implements ChannelService {
             ReadStatus readStatus = readStatusMapper.toEntity(user, saved, now);
             readStatusRepository.save(readStatus);
 
-            participants.add(userMapper.toResponse(user));
+            participants.add(userMapper.toResponse(user, jwtRegistry.hasActiveJwtInformationByUserId(user.getId())));
         }
 
         log.info("Private channel created. channelId={}, participantCount={}", saved.getId(), participants.size());
@@ -114,6 +119,7 @@ public class BasicChannelService implements ChannelService {
                 .toList();
     }
 
+    @PreAuthorize("hasRole('CHANNEL_MANAGER')")
     @Override
     @Transactional
     public ChannelResponse update(UUID channelId, ChannelUpdateRequest request) {
@@ -133,6 +139,9 @@ public class BasicChannelService implements ChannelService {
         return toResponse(channel);
     }
 
+    @PreAuthorize("""
+        hasRole('CHANNEL_MANAGER') or @channelSecurity.isPrivate(#channelId)
+        """)
     @Override
     @Transactional
     public void delete(UUID channelId) {
@@ -142,7 +151,7 @@ public class BasicChannelService implements ChannelService {
 
         List<Message> messages = messageRepository.findAllByChannel_Id(channelId);
         for (Message message : messages) {
-            messageService.delete(message.getId());
+            messageService.deleteByChannelManager(message.getId());
         }
 
         channelRepository.delete(channel);
@@ -164,7 +173,7 @@ public class BasicChannelService implements ChannelService {
 
         return readStatusRepository.findAllByChannelIdWithUser(channel.getId()).stream()
                 .map(ReadStatus::getUser)
-                .map(userMapper::toResponse)
+                .map(user -> userMapper.toResponse(user, jwtRegistry.hasActiveJwtInformationByUserId(user.getId())))
                 .toList();
     }
 

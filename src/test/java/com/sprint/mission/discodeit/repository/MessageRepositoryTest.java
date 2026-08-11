@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.sprint.mission.discodeit.entity.channel.Channel;
 import com.sprint.mission.discodeit.entity.message.Message;
 import com.sprint.mission.discodeit.entity.user.User;
+import com.sprint.mission.discodeit.entity.user.Role;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,9 @@ class MessageRepositoryTest {
     @Test
     @DisplayName("채널 ID로 메시지 목록 조회 성공")
     void findAllByChannel_Id_success() {
+        // given
+
+        // when
         Channel channel = channelRepository.saveAndFlush(
                 Channel.createPublic("channel", "description")
         );
@@ -45,6 +49,7 @@ class MessageRepositoryTest {
                         .username("user1")
                         .email("user1@test.com")
                         .password("password")
+                        .role(Role.USER)
                         .build()
         );
 
@@ -65,6 +70,8 @@ class MessageRepositoryTest {
 
         List<Message> result = messageRepository.findAllByChannel_Id(channel.getId());
 
+
+        // then
         assertThat(result).hasSize(2);
         assertThat(result)
                 .extracting(Message::getContent)
@@ -74,14 +81,22 @@ class MessageRepositoryTest {
     @Test
     @DisplayName("채널 ID로 메시지 목록 조회 실패 - 존재하지 않는 채널")
     void findAllByChannel_Id_empty() {
+        // given
+
+        // when
         List<Message> result = messageRepository.findAllByChannel_Id(UUID.randomUUID());
 
+
+        // then
         assertThat(result).isEmpty();
     }
 
     @Test
     @DisplayName("채널의 최신 메시지 조회 성공")
     void findFirstByChannel_IdOrderByCreatedAtDesc_success() {
+        // given
+
+        // when
         Channel channel = channelRepository.saveAndFlush(
                 Channel.createPublic("channel", "description")
         );
@@ -91,6 +106,7 @@ class MessageRepositoryTest {
                         .username("user1")
                         .email("user1@test.com")
                         .password("password")
+                        .role(Role.USER)
                         .build()
         );
 
@@ -113,6 +129,8 @@ class MessageRepositoryTest {
 
         Optional<Message> result = messageRepository.findFirstByChannel_IdOrderByCreatedAtDesc(channel.getId());
 
+
+        // then
         assertThat(result).isPresent();
         assertThat(result.get().getContent()).isEqualTo("latest-message");
     }
@@ -120,6 +138,9 @@ class MessageRepositoryTest {
     @Test
     @DisplayName("채널의 최신 메시지 조회 실패 - 메시지 없음")
     void findFirstByChannel_IdOrderByCreatedAtDesc_empty() {
+        // given
+
+        // when
         Channel channel = channelRepository.saveAndFlush(
                 Channel.createPublic("channel", "description")
         );
@@ -128,12 +149,17 @@ class MessageRepositoryTest {
 
         Optional<Message> result = messageRepository.findFirstByChannel_IdOrderByCreatedAtDesc(channel.getId());
 
+
+        // then
         assertThat(result).isEmpty();
     }
 
     @Test
     @DisplayName("채널 ID로 메시지 최신순 페이징 조회 성공")
     void findAllByChannel_IdOrderByCreatedAtDesc_success() {
+        // given
+
+        // when
         Channel channel = channelRepository.saveAndFlush(
                 Channel.createPublic("channel", "description")
         );
@@ -143,6 +169,7 @@ class MessageRepositoryTest {
                         .username("user1")
                         .email("user1@test.com")
                         .password("password")
+                        .role(Role.USER)
                         .build()
         );
 
@@ -176,6 +203,8 @@ class MessageRepositoryTest {
                 PageRequest.of(0, 2)
         );
 
+
+        // then
         assertThat(result).hasSize(2);
         assertThat(result)
                 .extracting(Message::getContent)
@@ -185,6 +214,9 @@ class MessageRepositoryTest {
     @Test
     @DisplayName("커서 기준으로 채널 메시지 최신순 조회 성공")
     void findAllByChannel_IdAndCreatedAtLessThanOrderByCreatedAtDesc_success() {
+        // given
+
+        // when
         Channel channel = channelRepository.saveAndFlush(
                 Channel.createPublic("channel", "description")
         );
@@ -194,6 +226,7 @@ class MessageRepositoryTest {
                         .username("user1")
                         .email("user1@test.com")
                         .password("password")
+                        .role(Role.USER)
                         .build()
         );
 
@@ -230,6 +263,8 @@ class MessageRepositoryTest {
                 PageRequest.of(0, 2)
         );
 
+
+        // then
         assertThat(result).hasSize(2);
         assertThat(result)
                 .extracting(Message::getContent)

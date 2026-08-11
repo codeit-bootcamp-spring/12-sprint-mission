@@ -180,3 +180,9 @@ gradle-app.setting
 /file-data-map/
 .discodeit/
 .logs/
+
+.env
+*.env
+discodeit.env
+*.pem
+*.key

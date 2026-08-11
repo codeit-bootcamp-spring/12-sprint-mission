@@ -18,4 +18,5 @@ public interface MessageService {
     PageResponse<MessageResponse> findAllByChannelId(UUID channelId, Instant cursor, Pageable pageable);
     MessageResponse update(UUID messageId, MessageUpdateRequest request);
     void delete(UUID messageId);
+    void deleteByChannelManager(UUID messageId);
 }

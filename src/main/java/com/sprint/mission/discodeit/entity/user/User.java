@@ -24,13 +24,14 @@ public class User extends BaseUpdatableEntity {
     @Column(nullable = false, length = 60)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
     private BinaryContent profile;
 
-    @ToString.Exclude
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserStatus status;
 
     public void update(String username, String email, String password, BinaryContent profile) {
         if(username != null) {
@@ -47,6 +48,12 @@ public class User extends BaseUpdatableEntity {
 
         if(profile != null) {
             this.profile = profile;
+        }
+    }
+
+    public void updateRole(Role role) {
+        if (role != null) {
+            this.role = role;
         }
     }
 
