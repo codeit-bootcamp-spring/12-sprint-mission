@@ -35,6 +35,5 @@ public class AdminInitializer implements ApplicationRunner {
     User admin = new User(adminUsername, adminMail, passwordEncoder.encode(adminPassword),
         null, Role.ADMIN);
     userRepository.save(admin);
-    log.info("관리자가 초기화되었습니다.");
   }
 }

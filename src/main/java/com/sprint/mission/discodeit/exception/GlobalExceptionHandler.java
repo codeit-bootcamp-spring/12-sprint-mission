@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
     log.error("예상치 못한 오류 발생 : {}", e.getMessage(), e);
     ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
-    return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    return ResponseEntity.status(errorResponse.status()).body(errorResponse);
   }
 
   // 커스텀 에러 처리
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e) {
     log.warn("접근 거부 : {}", e.getMessage());
     ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.FORBIDDEN.value());
-    return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    return ResponseEntity.status(errorResponse.status()).body(errorResponse);
   }
 
   // 도메인 예외를 HttpStatus 번호로 매핑하는 코드
@@ -48,7 +48,8 @@ public class GlobalExceptionHandler {
       case USER_NOT_FOUND, CHANNEL_NOT_FOUND, MESSAGE_NOT_FOUND, READ_STATUS_NOT_FOUND,
            BINARY_CONTENT_NOT_FOUND -> HttpStatus.NOT_FOUND;
       case USER_DUPLICATE, READ_STATUS_DUPLICATE -> HttpStatus.CONFLICT;
-      case INVALID_USER_CREDENTIALS -> HttpStatus.UNAUTHORIZED;
+      case INVALID_USER_CREDENTIALS, AUTHENTICATION_FAILED, INVALID_REFRESH_TOKEN ->
+          HttpStatus.UNAUTHORIZED;
       case INVALID_REQUEST, PRIVATE_CHANNEL_UPDATE -> HttpStatus.BAD_REQUEST;
       case CHANNEL_ACCESS_DENIED -> HttpStatus.FORBIDDEN;
 //      case INTERNAL_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;

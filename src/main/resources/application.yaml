@@ -61,6 +61,15 @@ discodeit:
       bucket: ${AWS_S3_BUCKET}
       presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600} # (기본값: 10분)
 
+security:
+  jwt:
+    issuer: discodeit
+    secret: ${JWT_SECRET}  # 32char 이상 길게 써줘야함!!
+    access-token-validity-seconds: 3600 # 1시간
+    #    access-token-validity-seconds: 10 # 10초
+    refresh-token-validity-seconds: 86400 # 1일
+    max-active-count: 1 # 계정당 동시 활성 JWT 세션 수
+
 # actuator/info 에 노출할 정보
 info:
   app:
