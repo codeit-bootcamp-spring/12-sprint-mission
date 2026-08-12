@@ -1,6 +1,8 @@
 package com.sprint.mission.discodeit.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sprint.mission.discodeit.dto.data.UserDto;
+import com.sprint.mission.discodeit.exception.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,19 +20,23 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
   private final ObjectMapper objectMapper;
 
   @Override
-  public void onAuthenticationSuccess(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Authentication authentication
-  ) throws IOException, ServletException {
-
-    DiscodeitUserDetails userDetails = (DiscodeitUserDetails) authentication.getPrincipal();
-
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) throws IOException, ServletException {
     response.setCharacterEncoding("UTF-8");
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-    response.getWriter()
-        .write(objectMapper.writeValueAsString(userDetails.getUserDto()));
+    if (authentication.getPrincipal() instanceof DiscodeitUserDetails userDetails) {
+      response.setStatus(HttpServletResponse.SC_OK);
+      UserDto userDto = userDetails.getUserDto();
+      response.getWriter().write(objectMapper.writeValueAsString(userDto));
+
+    } else {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      ErrorResponse errorResponse = new ErrorResponse(
+          new RuntimeException("Authentication failed: Invalid user details"),
+          HttpServletResponse.SC_UNAUTHORIZED
+      );
+      response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    }
   }
 }

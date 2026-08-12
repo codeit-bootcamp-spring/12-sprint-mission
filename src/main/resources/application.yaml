@@ -57,6 +57,17 @@ discodeit:
       region: ${AWS_S3_REGION}
       bucket: ${AWS_S3_BUCKET}
       presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600} # (기본값: 10분)
+  admin:
+    username: ${DISCODEIT_ADMIN_USERNAME}
+    email: ${DISCODEIT_ADMIN_EMAIL}
+    password: ${DISCODEIT_ADMIN_PASSWORD}
+
+security:
+  jwt:
+    issuer: discodeit
+    secret: ${JWT_SECRET}
+    access-token-validity-seconds: 3600
+    refresh-token-validity-seconds: 86400
 
 logging:
   level:

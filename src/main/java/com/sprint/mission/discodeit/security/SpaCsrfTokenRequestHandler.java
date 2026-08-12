@@ -12,29 +12,37 @@ import org.springframework.util.StringUtils;
 public class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 
   private final CsrfTokenRequestHandler plain = new CsrfTokenRequestAttributeHandler();
-
-
   private final CsrfTokenRequestHandler xor = new XorCsrfTokenRequestAttributeHandler();
-
 
   @Override
   public void handle(HttpServletRequest request, HttpServletResponse response,
       Supplier<CsrfToken> csrfToken) {
-    // 응답게 토큰이 노출될 때마다 BREACH 공격을 방지하도록 XOR 방식 사용
+    /*
+     * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection of
+     * the CsrfToken when it is rendered in the response body.
+     */
     this.xor.handle(request, response, csrfToken);
-
-    // 지연 생성된 CSRF 토큰을 실제로 생성하고 쿠키에 저장
+    /*
+     * Render the token value to a cookie by causing the deferred token to be loaded.
+     */
     csrfToken.get();
   }
 
   @Override
   public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
     String headerValue = request.getHeader(csrfToken.getHeaderName());
-
-    // SPA가 헤더로 보낸 토큰은 쿠키에 저장된 원본 토큰이므로 plain 방식으로 읽음
-    // 요청 파라미터로 전달된 경우에는 XOR 방식으로 읽음
-    CsrfTokenRequestHandler handler = StringUtils.hasText(headerValue) ? this.plain : this.xor;
-
-    return handler.resolveCsrfTokenValue(request, csrfToken);
+    /*
+     * If the request contains a request header, use CsrfTokenRequestAttributeHandler
+     * to resolve the CsrfToken. This applies when a single-page application includes
+     * the header value automatically, which was obtained via a cookie containing the
+     * raw CsrfToken.
+     *
+     * In all other cases (e.g. if the request contains a request parameter), use
+     * XorCsrfTokenRequestAttributeHandler to resolve the CsrfToken. This applies
+     * when a server-side rendered form includes the _csrf request parameter as a
+     * hidden input.
+     */
+    return (StringUtils.hasText(headerValue) ? this.plain : this.xor).resolveCsrfTokenValue(request,
+        csrfToken);
   }
 }

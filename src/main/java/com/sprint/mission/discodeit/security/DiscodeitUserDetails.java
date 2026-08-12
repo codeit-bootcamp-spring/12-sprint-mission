@@ -10,9 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@EqualsAndHashCode(of = "userDto")
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(of = "userDto")
 public class DiscodeitUserDetails implements UserDetails {
 
   private final UserDto userDto;
@@ -20,11 +20,14 @@ public class DiscodeitUserDetails implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(
-        new SimpleGrantedAuthority("ROLE_" + userDto.role().name())
-    );
+    return List.of(new SimpleGrantedAuthority("ROLE_" + userDto.role().name()));
   }
-  
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
   @Override
   public String getUsername() {
     return userDto.username();
