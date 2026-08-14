@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.security;
+package com.sprint.mission.discodeit.security.jwt;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,9 +31,11 @@ public class JwtLogoutHandler implements LogoutHandler {
           .findFirst()
           .ifPresent(cookie -> {
             String refreshToken = cookie.getValue();
-            UUID userId = jwtTokenProvider.getUserId(refreshToken);
 
-            jwtRegistry.invalidateJwtInformationByUserId(userId);
+            if (jwtTokenProvider.validateRefreshToken(refreshToken)) {
+              UUID userId = jwtTokenProvider.getUserId(refreshToken); // 정상 일때만 userId 추출
+              jwtRegistry.invalidateJwtInformationByUserId(userId);
+            }
           });
     }
 

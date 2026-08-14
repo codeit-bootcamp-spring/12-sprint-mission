@@ -1,6 +1,5 @@
-package com.sprint.mission.discodeit.security;
+package com.sprint.mission.discodeit.security.jwt;
 
-import com.sprint.mission.discodeit.dto.data.JwtInformation;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -8,7 +7,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @RequiredArgsConstructor
 public class InMemoryJwtRegistry implements JwtRegistry {
@@ -124,7 +122,6 @@ public class InMemoryJwtRegistry implements JwtRegistry {
     );
   }
 
-  @Scheduled(fixedDelay = 1000 * 60 * 5)
   @Override
   public void clearExpiredJwtInformation() {
     origin.entrySet().removeIf(entry -> {

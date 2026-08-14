@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.security;
+package com.sprint.mission.discodeit.security.jwt;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -9,6 +9,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
@@ -162,6 +163,7 @@ public class JwtTokenProvider {
     cookie.setSecure(true);
     cookie.setPath("/");
     cookie.setMaxAge((int) (refreshTokenExpirationMs / 1000L));
+    cookie.setAttribute("SameSite", "Strict"); // 다른 사이트에서 시작된 요청에는 쿠키 전송을 제한
 
     return cookie;
   }
@@ -172,6 +174,7 @@ public class JwtTokenProvider {
     cookie.setSecure(true);
     cookie.setPath("/");
     cookie.setMaxAge(0);
+    cookie.setAttribute("SameSite", "Strict");
 
     return cookie;
   }
