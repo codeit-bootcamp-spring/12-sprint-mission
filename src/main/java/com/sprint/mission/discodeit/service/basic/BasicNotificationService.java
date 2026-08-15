@@ -12,6 +12,8 @@ import com.sprint.mission.discodeit.service.NotificationService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,6 +29,7 @@ public class BasicNotificationService implements NotificationService {
 
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @CacheEvict(value = "notificationsByUser", key = "#receiverId")
   public NotificationDto create(UUID receiverId, String title, String content) {
     User receiver = userRepository.findById(receiverId)
         .orElseThrow(() -> UserNotFoundException.withId(receiverId));
@@ -38,6 +41,7 @@ public class BasicNotificationService implements NotificationService {
   }
 
   @Override
+  @Cacheable(value = "notifications", key = "#receiverId")
   @Transactional(readOnly = true)
   public List<NotificationDto> findAllByReceiverId(UUID receiverId) {
     return notificationRepository.findAllByReceiverId(receiverId)
@@ -48,6 +52,7 @@ public class BasicNotificationService implements NotificationService {
 
   @Override
   @Transactional
+  @CacheEvict(value = "notificationsByUser", allEntries = true)
   public void delete(UUID notificationId, UUID requesterId) {
     Notification notification = notificationRepository.findById(notificationId)
         .orElseThrow(() -> NotificationNotFoundException.withId(notificationId));

@@ -8,7 +8,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -21,6 +23,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
   private final ObjectMapper objectMapper;
   private final JwtTokenProvider jwtTokenProvider;
   private final JwtRegistry jwtRegistry;
+  private final CacheManager cacheManager;
 
   @Override
   public void onAuthenticationSuccess(
@@ -43,6 +46,9 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
                 refreshToken
             )
         );
+
+        Optional.ofNullable(cacheManager.getCache("users"))
+            .ifPresent(cache -> cache.evict("all"));
 
         Cookie refreshTokenCookie =
             jwtTokenProvider.generateRefreshTokenCookie(refreshToken);
