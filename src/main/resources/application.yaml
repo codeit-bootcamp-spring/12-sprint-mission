@@ -21,6 +21,18 @@ spring:
     consumer:
       group-id: discodeit-notification
       auto-offset-reset: earliest
+  cache:
+    type: redis
+    cache-names:
+      - channels
+      - notifications
+      - users
+    redis:
+      enable-statistics: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 management:
   endpoints:
