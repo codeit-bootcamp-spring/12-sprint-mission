@@ -16,6 +16,11 @@ spring:
       - dev
   config:
     import: optional:file:.env[.properties]
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: discodeit-notification
+      auto-offset-reset: earliest
 
 management:
   endpoints:
