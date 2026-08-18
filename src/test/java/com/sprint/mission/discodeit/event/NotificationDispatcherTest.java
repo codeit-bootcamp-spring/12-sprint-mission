@@ -25,13 +25,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
-class NotificationRequiredEventListenerTest {
+class NotificationDispatcherTest {
 
   @Mock ReadStatusRepository readStatusRepository;
   @Mock UserRepository userRepository;
   @Mock NotificationService notificationService;
 
-  @InjectMocks NotificationRequiredEventListener listener;
+  @InjectMocks NotificationDispatcher dispatcher;
 
   private User userWithId(String username) {
     User user = new User(username, username + "@test.com", "encoded", null);
@@ -53,7 +53,7 @@ class NotificationRequiredEventListenerTest {
             new ReadStatus(author, channel, Instant.now()),
             new ReadStatus(subscriber, channel, Instant.now())));
 
-    listener.onMessageCreatedEvent(new MessageCreatedEvent(
+    dispatcher.onMessageCreated(new MessageCreatedEvent(
         UUID.randomUUID(), channelId, "announcements",
         author.getId(), "system", "이번 주 일정을 공유드립니다."));
 
@@ -79,7 +79,7 @@ class NotificationRequiredEventListenerTest {
     given(readStatusRepository.findAllByChannel_IdAndNotificationEnabledTrue(channelId))
         .willReturn(List.of(new ReadStatus(subscriber, channel, Instant.now())));
 
-    listener.onMessageCreatedEvent(new MessageCreatedEvent(
+    dispatcher.onMessageCreated(new MessageCreatedEvent(
         UUID.randomUUID(), channelId, null, author.getId(), "author", "안녕"));
 
     ArgumentCaptor<String> title = ArgumentCaptor.forClass(String.class);
@@ -96,7 +96,7 @@ class NotificationRequiredEventListenerTest {
     given(userRepository.findAllByRole(Role.ADMIN)).willReturn(List.of(admin));
     UUID binaryContentId = UUID.randomUUID();
 
-    listener.onS3UploadFailedEvent(new S3UploadFailedEvent(
+    dispatcher.onS3UploadFailed(new S3UploadFailedEvent(
         "S3 파일 업로드", "7641467e", binaryContentId, "The AWS Access Key Id ... (Status Code: 403)"));
 
     ArgumentCaptor<String> content = ArgumentCaptor.forClass(String.class);
@@ -116,7 +116,7 @@ class NotificationRequiredEventListenerTest {
   void onS3UploadFailedEvent_noAdmin_skips() {
     given(userRepository.findAllByRole(Role.ADMIN)).willReturn(List.of());
 
-    listener.onS3UploadFailedEvent(new S3UploadFailedEvent(
+    dispatcher.onS3UploadFailed(new S3UploadFailedEvent(
         "S3 파일 업로드", "req", UUID.randomUUID(), "boom"));
 
     then(notificationService).shouldHaveNoInteractions();
@@ -127,7 +127,7 @@ class NotificationRequiredEventListenerTest {
   void onRoleUpdatedEvent_notifiesOwnerOnly() {
     UUID userId = UUID.randomUUID();
 
-    listener.onRoleUpdatedEvent(new RoleUpdatedEvent(userId, Role.USER, Role.CHANNEL_MANAGER));
+    dispatcher.onRoleUpdated(new RoleUpdatedEvent(userId, Role.USER, Role.CHANNEL_MANAGER));
 
     then(notificationService).should().createAll(
         List.of(userId), "권한이 변경되었습니다.", "USER -> CHANNEL_MANAGER");

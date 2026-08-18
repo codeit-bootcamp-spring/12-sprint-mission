@@ -11,6 +11,16 @@ spring:
       maxRequestSize: 30MB
   jpa:
     open-in-view: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: discodeit-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   cache:
     type: caffeine
     cache-names:
@@ -46,6 +56,10 @@ info:
     spring-boot-version: "3.4.0"
 
 discodeit:
+  event:
+    # spring: 같은 프로세스의 @TransactionalEventListener가 알림을 생성한다
+    # kafka : 이벤트를 Kafka로 내보내고, 별도 서비스로 가정한 @KafkaListener가 알림을 생성한다
+    transport: ${EVENT_TRANSPORT:spring}
   # 아래 값들은 기본값을 두지 않는다.
   # fallback이 있으면 환경변수 주입을 빠뜨려도 예측 가능한 자격증명으로 조용히 기동해버리므로,
   # 주입 누락 시 곧바로 기동에 실패하도록 한다(fail-fast). 로컬 개발값은 dev 프로파일에 둔다.
