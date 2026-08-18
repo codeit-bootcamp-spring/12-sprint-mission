@@ -24,6 +24,9 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "discodeit.storage.type", havingValue = "local")
 public class LocalBinaryContentStorage implements BinaryContentStorage {
 
+  // 성능 비교 실험용 지연 (미션 11)
+  private static final long SIMULATED_DELAY_MILLIS = 3000L;
+
   private final Path root;
 
   public LocalBinaryContentStorage(
@@ -43,11 +46,24 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
 
   @Override
   public UUID put(UUID id, byte[] bytes) {
+    // 동기/비동기 처리의 응답 시간 차이를 눈에 보이게 하기 위한 인위적 지연.
+    // 실제 원격 스토리지의 업로드 지연을 흉내낸 것으로, 성능 비교용 실험 코드다.
+    simulateSlowUpload();
     try {
       Files.write(resolvePath(id), bytes);
       return id;
     } catch (IOException e) {
       throw new StorageException("put", id);
+    }
+  }
+
+  private void simulateSlowUpload() {
+    try {
+      Thread.sleep(SIMULATED_DELAY_MILLIS);
+    } catch (InterruptedException e) {
+      // 인터럽트 상태를 복원하지 않으면 상위 코드가 중단 요청을 알 수 없다
+      Thread.currentThread().interrupt();
+      throw new StorageException("put");
     }
   }
 

@@ -19,7 +19,8 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
-import com.sprint.mission.discodeit.storage.BinaryContentStorage;
+import com.sprint.mission.discodeit.event.BinaryContentCreatedEvent;
+import com.sprint.mission.discodeit.event.MessageCreatedEvent;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -43,9 +45,9 @@ public class BasicMessageService implements MessageService {
   private final ChannelRepository channelRepository;
   private final UserRepository userRepository;
   private final BinaryContentRepository binaryContentRepository;
-  private final BinaryContentStorage binaryContentStorage;
   private final MessageMapper messageMapper;
   private final PageResponseMapper pageResponseMapper;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   public MessageDto create(MessageCreateRequest req,
@@ -55,18 +57,25 @@ public class BasicMessageService implements MessageService {
     User author = userRepository.findById(req.authorId())
         .orElseThrow(() -> new UserNotFoundException(req.authorId()));
 
-    // 첨부파일: DB에 메타 저장 후 storage에 파일 저장
+    // 첨부파일: DB에 메타만 저장하고, 파일 저장은 커밋 이후 리스너에게 위임
+    // 첨부 1건당 이벤트 1개 → 파일 하나가 실패해도 나머지는 SUCCESS로 남는다
     List<BinaryContent> attachments = attachmentRequests.stream()
         .map(a -> {
           BinaryContent bc = binaryContentRepository.save(
               new BinaryContent(a.fileName(), (long) a.bytes().length, a.contentType()));
-          binaryContentStorage.put(bc.getId(), a.bytes());
+          eventPublisher.publishEvent(new BinaryContentCreatedEvent(bc.getId(), a.bytes()));
           return bc;
         })
         .toList();
 
     Message message = new Message(req.content(), channel, author, attachments);
     Message saved = messageRepository.save(message);
+
+    // 알림 생성은 커밋 이후 리스너가 담당한다
+    eventPublisher.publishEvent(new MessageCreatedEvent(
+        saved.getId(), channel.getId(), channel.getName(),
+        author.getId(), author.getUsername(), saved.getContent()));
+
     log.info("Message created: id={}, channelId={}", saved.getId(), req.channelId());
     return messageMapper.toDto(saved);
   }

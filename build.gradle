@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.sprint.mission'
-version = '2.1-M10'
+version = '2.2-M11'
 
 java {
 	toolchain {
@@ -41,6 +41,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// JWT 서명/검증 (JOSE 표준 구현체)
 	implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
+	// 비동기 작업의 자동 재시도 (@Retryable / @Recover). AOP 프록시가 필요하다.
+	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'com.github.ben-manes.caffeine:caffeine'
+	// 서버 경계를 넘는 이벤트 발행/구독
+	implementation 'org.springframework.kafka:spring-kafka'
+	// 여러 인스턴스가 공유하는 전역 캐시 저장소
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2'

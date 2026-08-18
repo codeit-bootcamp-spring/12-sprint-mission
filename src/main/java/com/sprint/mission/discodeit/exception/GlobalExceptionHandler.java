@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,6 +99,16 @@ public class GlobalExceptionHandler {
     log.error("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ErrorResponse.of(e, HttpStatus.INTERNAL_SERVER_ERROR.value()));
+  }
+
+  // 404: 매핑된 핸들러도 정적 리소스도 없는 경로.
+  // 아래 Exception 핸들러가 먼저 잡으면 없는 파일 요청이 500 INTERNAL_ERROR로 나간다.
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException e) {
+    log.warn("존재하지 않는 리소스: {}", e.getResourcePath());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(ErrorResponse.of(e, "RESOURCE_NOT_FOUND", "요청한 리소스를 찾을 수 없습니다.",
+            HttpStatus.NOT_FOUND.value()));
   }
 
   // 500: 그 외 예외
