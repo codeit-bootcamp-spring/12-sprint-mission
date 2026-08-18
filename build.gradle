@@ -48,6 +48,8 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:caffeine'
 	// 서버 경계를 넘는 이벤트 발행/구독
 	implementation 'org.springframework.kafka:spring-kafka'
+	// 여러 인스턴스가 공유하는 전역 캐시 저장소
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2'

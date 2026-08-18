@@ -22,7 +22,9 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   cache:
-    type: caffeine
+    # caffeine: 인스턴스마다 각자 들고 있는 로컬 캐시
+    # redis   : 여러 인스턴스가 공유하는 전역 캐시
+    type: ${CACHE_TYPE:caffeine}
     cache-names:
       - channels
       - notifications
@@ -33,6 +35,12 @@ spring:
         maximumSize=100,
         expireAfterAccess=600s,
         recordStats
+    redis:
+      enable-statistics: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 
 management:
