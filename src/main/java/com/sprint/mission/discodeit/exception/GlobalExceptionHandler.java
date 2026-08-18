@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.exception;
 
 import com.sprint.mission.discodeit.exception.binarycontent.BinaryContentNotFoundException;
+import com.sprint.mission.discodeit.exception.storage.InvalidFileUploadException;
 import com.sprint.mission.discodeit.exception.storage.StorageException;
 import com.sprint.mission.discodeit.exception.channel.ChannelNotFoundException;
 import com.sprint.mission.discodeit.exception.channel.PrivateChannelUpdateException;
@@ -33,15 +34,18 @@ public class GlobalExceptionHandler {
       ReadStatusNotFoundException.class
   })
   public ResponseEntity<ErrorResponse> handleNotFound(DiscodeitException e) {
-    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(e, HttpStatus.NOT_FOUND.value()));
   }
 
-  // 401: Unauthorized (로그인 실패)
-  @ExceptionHandler(InvalidCredentialsException.class)
+  // 401: Unauthorized (로그인 실패, 리프레시 토큰 무효)
+  @ExceptionHandler({
+      InvalidCredentialsException.class,
+      InvalidRefreshTokenException.class
+  })
   public ResponseEntity<ErrorResponse> handleUnauthorized(DiscodeitException e) {
-    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
         .body(ErrorResponse.of(e, HttpStatus.UNAUTHORIZED.value()));
   }
@@ -49,10 +53,11 @@ public class GlobalExceptionHandler {
   // 400: Bad Request (중복, PRIVATE 채널 수정 등)
   @ExceptionHandler({
       UserAlreadyExistsException.class,
-      PrivateChannelUpdateException.class
+      PrivateChannelUpdateException.class,
+      InvalidFileUploadException.class
   })
   public ResponseEntity<ErrorResponse> handleBadRequest(DiscodeitException e) {
-    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse.of(e, HttpStatus.BAD_REQUEST.value()));
   }
@@ -90,7 +95,7 @@ public class GlobalExceptionHandler {
   // 500: 스토리지 오류
   @ExceptionHandler(StorageException.class)
   public ResponseEntity<ErrorResponse> handleStorage(DiscodeitException e) {
-    log.error("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.error("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ErrorResponse.of(e, HttpStatus.INTERNAL_SERVER_ERROR.value()));
   }

@@ -3,7 +3,6 @@ package com.sprint.mission.discodeit.security;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,23 +42,5 @@ public class DiscodeitUserDetails implements UserDetails {
   @Override
   public String getUsername() {
     return userDto.username();
-  }
-
-  // SessionRegistry는 in-memory Map의 key로 Principal을 사용하므로,
-  // 같은 사용자의 세션을 동일하게 인식하려면 equals/hashCode를 재정의해야 한다
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof DiscodeitUserDetails other)) {
-      return false;
-    }
-    return Objects.equals(getUserId(), other.getUserId());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(getUserId());
   }
 }

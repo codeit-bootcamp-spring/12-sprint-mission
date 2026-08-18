@@ -1,12 +1,14 @@
 package com.sprint.mission.discodeit.config;
 
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
-import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import com.sprint.mission.discodeit.security.RestAccessDeniedHandler;
 import com.sprint.mission.discodeit.security.RestAuthenticationEntryPoint;
-import com.sprint.mission.discodeit.security.RestSessionInformationExpiredStrategy;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
-import org.springframework.beans.factory.annotation.Value;
+import com.sprint.mission.discodeit.security.jwt.JwtAuthenticationFilter;
+import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtLogoutHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
+import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,25 +19,17 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-
-  // 서버를 재시작해도 발급된 remember-me 토큰이 유지되도록 키를 고정한다
-  @Value("${discodeit.security.remember-me.key}")
-  private String rememberMeKey;
-
-  @Value("${discodeit.security.remember-me.validity-seconds}")
-  private int rememberMeValiditySeconds;
 
   // 비밀번호는 평문 저장 없이 BCrypt 해시로만 저장한다 (salt 포함 60자)
   @Bean
@@ -61,45 +55,37 @@ public class SecurityConfig {
     return handler;
   }
 
-  // 로그인 중인 사용자의 세션 정보를 관리 (온라인 여부 판단, 세션 강제 만료에 사용)
-  @Bean
-  public SessionRegistry sessionRegistry() {
-    return new SessionRegistryImpl();
-  }
-
-  // HttpSession이 만료/무효화되면 SessionRegistry의 SessionInformation도 함께 정리되도록 이벤트 발행
-  @Bean
-  public HttpSessionEventPublisher httpSessionEventPublisher() {
-    return new HttpSessionEventPublisher();
-  }
-
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,
-      LoginSuccessHandler loginSuccessHandler,
+      JwtLoginSuccessHandler jwtLoginSuccessHandler,
       LoginFailureHandler loginFailureHandler,
       RestAuthenticationEntryPoint authenticationEntryPoint,
       RestAccessDeniedHandler accessDeniedHandler,
-      RestSessionInformationExpiredStrategy sessionExpiredStrategy,
-      SessionRegistry sessionRegistry
+      JwtLogoutHandler jwtLogoutHandler,
+      JwtTokenProvider jwtTokenProvider,
+      JwtRegistry jwtRegistry
   ) throws Exception {
     http
-        // 동일 계정 동시 로그인 차단: 새로 로그인하면 기존 세션을 만료시킨다
+        // 인증 상태를 토큰으로만 판단하므로 서버는 세션을 만들지도, 참조하지도 않는다
         .sessionManagement(management -> management
-            .sessionConcurrency(concurrency -> concurrency
-                .maximumSessions(1)
-                .sessionRegistry(sessionRegistry)
-                .expiredSessionStrategy(sessionExpiredStrategy)
-            )
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(auth -> auth
             // 인증 없이 접근해야 하는 요청
             .requestMatchers(HttpMethod.GET, "/api/auth/csrf-token").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/logout").permitAll()
+            // 엑세스 토큰이 없거나 만료된 상태에서 호출되는 API
+            .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
             // API가 아닌 요청 (정적 리소스, Swagger, Actuator)
             .requestMatchers("/", "/index.html", "/favicon.ico", "/assets/**", "/error").permitAll()
-            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/actuator/**").permitAll()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            // 로드밸런서 헬스체크는 인증 없이 통과해야 한다
+            .requestMatchers("/actuator/health").permitAll()
+            // 나머지 actuator는 관리자만. loggers는 인증 없이 열어두면 로그 레벨을 바꿀 수 있고,
+            // info는 management.info.env로 DB 접속 정보까지 노출될 수 있다
+            .requestMatchers("/actuator/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         // CSR 환경이므로 CSRF 토큰을 쿠키로 내려주고, JS가 읽을 수 있도록 HttpOnly는 false
@@ -110,18 +96,13 @@ public class SecurityConfig {
         // 로그인은 UsernamePasswordAuthenticationFilter가 처리한다 (기존 AuthService.login 대체)
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
-            .successHandler(loginSuccessHandler)
+            .successHandler(jwtLoginSuccessHandler)
             .failureHandler(loginFailureHandler)
         )
-        // 로그인 유지: 세션이 만료돼도 remember-me 쿠키로 자동 재인증
-        .rememberMe(rememberMe -> rememberMe
-            .key(rememberMeKey)
-            .rememberMeParameter("remember-me")
-            .tokenValiditySeconds(rememberMeValiditySeconds)
-        )
-        // 로그아웃 흐름은 LogoutFilter가 그대로 처리하고, 처리 URL과 성공 응답만 대체한다
+        // 로그아웃 흐름은 LogoutFilter가 그대로 처리하고, 처리 URL과 토큰 무효화, 성공 응답만 대체한다
         .logout(logout -> logout
             .logoutUrl("/api/auth/logout")
+            .addLogoutHandler(jwtLogoutHandler)
             // 디폴트(SimpleUrlLogoutSuccessHandler)는 리다이렉트하므로 204만 반환하도록 대체
             .logoutSuccessHandler(
                 new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
@@ -130,7 +111,12 @@ public class SecurityConfig {
         .exceptionHandling(ex -> ex
             .authenticationEntryPoint(authenticationEntryPoint)
             .accessDeniedHandler(accessDeniedHandler)
-        );
+        )
+        // 로그인 요청을 처리하는 UsernamePasswordAuthenticationFilter보다 앞에 두어,
+        // 이미 토큰을 가진 요청은 로그인 절차를 거치지 않고 인증되도록 한다.
+        // @Component로 등록하지 않는 이유는 Boot가 서블릿 필터 체인에도 자동 등록해 두 번 실행되기 때문이다.
+        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, jwtRegistry),
+            UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
