@@ -11,8 +11,8 @@ import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.security.jwt.JwtInformation;
 import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
-import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import com.sprint.mission.discodeit.security.jwt.RotationResult;
+import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import com.sprint.mission.discodeit.service.AuthService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,18 +52,9 @@ public class BasicAuthService implements AuthService {
           new RoleUpdatedEvent(request.userId(), previousRole, request.newRole()));
     }
 
-    // 토큰에는 발급 시점의 권한이 박혀 있어 스스로 갱신되지 않는다.
-    // 변경된 권한이 즉시 반영되도록 발급된 토큰을 모두 무효화해 재로그인을 유도한다.
-    //
-    // 커밋 이후로 미루는 이유: 레지스트리는 트랜잭션에 참여하지 않는 인메모리 자원이라 롤백해도
-    // 되돌아가지 않는다. 여기서 바로 지우면 이후 트랜잭션이 실패했을 때 "권한은 그대로인데
-    // 사용자만 강제 로그아웃"된 상태가 남는다.
-    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-      @Override
-      public void afterCommit() {
-        jwtRegistry.invalidateJwtInformationByUserId(request.userId());
-      }
-    });
+    // 토큰 무효화는 RoleUpdatedEvent를 받는 리스너가 커밋 이후에 수행한다.
+    // 레지스트리는 트랜잭션에 참여하지 않는 인메모리 자원이라, 여기서 바로 지우면 이후 롤백 시
+    // "권한은 그대로인데 사용자만 강제 로그아웃"된 상태가 남는다.
 
     return userMapper.toDto(user);
   }
