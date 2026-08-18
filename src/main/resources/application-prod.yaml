@@ -19,6 +19,14 @@ spring:
       mode: never
 
 
+# 운영은 항상 HTTPS이므로 환경변수로 끌 수 있게 두지 않는다.
+# 기본값(false)에 기대면 JWT_COOKIE_SECURE 주입을 빠뜨렸을 때 리프레시 토큰 쿠키가 Secure 없이
+# 내려가고, HTTP 우회 요청을 유도당하면 14일짜리 자격증명이 평문으로 노출된다.
+discodeit:
+  security:
+    jwt:
+      cookie-secure: true
+
 logging:
   level:
     com.sprint.mission.discodeit: info

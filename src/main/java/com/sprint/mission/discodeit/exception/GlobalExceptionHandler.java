@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
       ReadStatusNotFoundException.class
   })
   public ResponseEntity<ErrorResponse> handleNotFound(DiscodeitException e) {
-    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(e, HttpStatus.NOT_FOUND.value()));
   }
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
       InvalidRefreshTokenException.class
   })
   public ResponseEntity<ErrorResponse> handleUnauthorized(DiscodeitException e) {
-    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
         .body(ErrorResponse.of(e, HttpStatus.UNAUTHORIZED.value()));
   }
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
       InvalidFileUploadException.class
   })
   public ResponseEntity<ErrorResponse> handleBadRequest(DiscodeitException e) {
-    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.warn("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse.of(e, HttpStatus.BAD_REQUEST.value()));
   }
@@ -95,7 +95,7 @@ public class GlobalExceptionHandler {
   // 500: 스토리지 오류
   @ExceptionHandler(StorageException.class)
   public ResponseEntity<ErrorResponse> handleStorage(DiscodeitException e) {
-    log.error("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails());
+    log.error("[{}] {}: {}", e.getClass().getSimpleName(), e.getErrorCode(), e.getDetails(), e);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ErrorResponse.of(e, HttpStatus.INTERNAL_SERVER_ERROR.value()));
   }

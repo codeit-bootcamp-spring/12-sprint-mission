@@ -46,6 +46,10 @@ discodeit:
       refresh-token-validity-seconds: ${JWT_REFRESH_TOKEN_VALIDITY_SECONDS:1209600}     # 14일
       # 계정당 동시 로그인 허용 수. 초과하면 가장 오래된 로그인을 무효화한다
       max-active-count: ${JWT_MAX_ACTIVE_COUNT:1}
+      # 로테이션 직후 직전 리프레시 토큰을 인정하는 유예 창.
+      # 탭 여러 개가 동시에 재발급을 요청하는 정상 상황과 탈취 후 재사용을 구분하기 위한 값으로,
+      # 길수록 탈취된 토큰이 살아있는 시간이 늘어나므로 짧게 둔다.
+      refresh-grace-seconds: ${JWT_REFRESH_GRACE_SECONDS:10}
       # 운영(HTTPS)에서는 true로 켠다
       cookie-secure: ${JWT_COOKIE_SECURE:false}
   storage:

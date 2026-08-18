@@ -26,18 +26,22 @@ public interface JwtRegistry {
   /** 엑세스 토큰이 살아있는 로그인이 있는지. 사용자의 온라인 여부 판단에 사용한다. */
   boolean hasActiveJwtInformationByUserId(UUID userId);
 
-  /** 필터에서 서버가 발급을 인정하는 엑세스 토큰인지 확인할 때 사용한다. */
-  boolean hasActiveJwtInformationByAccessToken(String accessToken);
-
-  /** 토큰 재발급 시 서버가 발급을 인정하는 리프레시 토큰인지 확인할 때 사용한다. */
-  boolean hasActiveJwtInformationByRefreshToken(String refreshToken);
-
-  /** 엑세스 토큰으로 등록 정보를 찾는다. 필터가 DB 조회 없이 Principal을 복원하기 위해 사용한다. */
+  /**
+   * 엑세스 토큰으로 등록 정보를 찾는다. 필터가 DB 조회 없이 Principal을 복원하기 위해 사용한다.
+   *
+   * <p>"활성인지 확인" 후 "찾기"로 나누면 그 사이에 로테이션·로그아웃이 끼어들 수 있고 서명 검증도
+   * 중복되므로, 조회 한 번으로 두 목적을 모두 해결한다.
+   */
   Optional<JwtInformation> findJwtInformationByAccessToken(String accessToken);
 
-  /** 토큰 재발급 시 로테이션을 수행한다. 이전 토큰 쌍은 즉시 사용할 수 없게 된다. */
-  Optional<JwtInformation> rotateJwtInformation(String refreshToken,
-      JwtInformation newJwtInformation);
+  /**
+   * 리프레시 토큰을 새 토큰 쌍으로 교체한다.
+   *
+   * <p>교체 가능 여부 확인과 교체가 하나의 원자적 연산으로 수행되며, 결과로 정상 로테이션인지
+   * 유예 창 안의 중복 요청인지 재사용인지를 알려준다.
+   */
+  RotationResult rotateJwtInformation(String refreshToken, String newAccessToken,
+      String newRefreshToken);
 
   /** 리프레시 토큰까지 만료되어 되살릴 수 없는 등록 정보를 삭제한다. */
   void clearExpiredJwtInformation();

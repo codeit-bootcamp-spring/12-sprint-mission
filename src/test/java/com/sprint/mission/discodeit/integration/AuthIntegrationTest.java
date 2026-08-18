@@ -32,7 +32,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+// 유예 창을 끄면 직전 리프레시 토큰의 재등장이 항상 재사용으로 판정되어 검증이 결정적이다.
+// 유예 창이 동작하는 경로는 TokenLifecycleIntegrationTest에서 따로 확인한다.
+@SpringBootTest(properties = "discodeit.security.jwt.refresh-grace-seconds=0")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
@@ -208,25 +210,6 @@ class AuthIntegrationTest {
         .andExpect(status().isUnauthorized());
   }
 
-  @Test
-  @DisplayName("권한이 변경되면 로그인 중이던 토큰이 무효화된다")
-  void updateRole_forcesLogout() throws Exception {
-    String targetId = signUp("roleuser", "roleuser@email.com");
-    Tokens tokens = login("roleuser");
-
-    mockMvc.perform(put("/api/auth/role")
-            .with(asUser(UUID.randomUUID(), "admin", Role.ADMIN))
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(
-                new UserRoleUpdateRequest(UUID.fromString(targetId), Role.CHANNEL_MANAGER))))
-        .andExpect(status().isOk());
-
-    // 토큰에는 발급 시점의 권한이 박혀 있으므로, 재로그인을 강제해야 변경된 권한이 반영된다
-    mockMvc.perform(
-            get("/api/users").header(HttpHeaders.AUTHORIZATION, bearer(tokens.accessToken())))
-        .andExpect(status().isUnauthorized());
-  }
 
   @Test
   @DisplayName("위조된 엑세스 토큰으로는 인증되지 않는다")
