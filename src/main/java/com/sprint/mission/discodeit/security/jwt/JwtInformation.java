@@ -1,13 +1,14 @@
-package com.sprint.mission.discodeit.dto.data;
+package com.sprint.mission.discodeit.security.jwt;
 
+import com.sprint.mission.discodeit.dto.data.UserDto;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class JwtInformation {
 
-  private UserDto userDto;
+  private final UserDto userDto;
   private String accessToken;
   private String refreshToken;
 

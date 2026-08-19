@@ -16,15 +16,35 @@ spring:
       - dev
   config:
     import: optional:file:.env[.properties]
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: discodeit-notification
+      auto-offset-reset: earliest
+  cache:
+    type: redis
+    cache-names:
+      - channels
+      - notifications
+      - users
+    redis:
+      enable-statistics: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,loggers
+        include: health,info,metrics,loggers,caches
   endpoint:
     health:
       show-details: always
+  observations:
+    annotations:
+      enabled: true
 
 info:
   name: Discodeit
