@@ -26,6 +26,10 @@ public class JwtLogoutHandler implements LogoutHandler {
             HttpServletResponse response,
             Authentication authentication
     ) {
+
+        Cookie refreshTokenCookie = jwtTokenProvider.generateRefreshTokenExpirationCookie();
+        response.addCookie(refreshTokenCookie);
+
         Arrays.stream(request.getCookies())
                 .filter(cookie ->
                     JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME.equals(cookie.getName()))
@@ -35,8 +39,7 @@ public class JwtLogoutHandler implements LogoutHandler {
                         UUID userId = jwtTokenProvider.getUserId(refreshToken);
                         jwtRegistry.invalidateJwtInformationByUserId(userId);
                     });
-        Cookie refreshTokenCookie = jwtTokenProvider.generateRefreshTokenExpirationCookie();
-        response.addCookie(refreshTokenCookie);
+
 
         log.debug("JWT logout handler executed - refresh cookie cleared");
 

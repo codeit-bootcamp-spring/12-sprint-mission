@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.security.jwt;
 
 import com.sprint.mission.discodeit.dto.data.JwtInformation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Map;
 import java.util.Queue;
@@ -51,7 +52,8 @@ public class InMemoryJwtRegistry implements JwtRegistry<UUID>{
     // JWT 무효화 및 유효 토큰 목록에서 제거
     public void invalidateJwtInformationByUserId(UUID userId) {
         origin.computeIfPresent(userId, (key,queue)->{
-            queue.forEach(jwtInformation -> removeTokenIndex(
+            queue.forEach(jwtInformation ->
+                    removeTokenIndex(
                     jwtInformation.getAccessToken(),
                     jwtInformation.getRefreshToken()
             ));
@@ -79,6 +81,27 @@ public class InMemoryJwtRegistry implements JwtRegistry<UUID>{
                         );
                     });
             return queue;
+        });
+    }
+
+    @Scheduled(fixedDelay = 1000 * 60 * 5)
+    @Override
+    public void clearExpiredJwtInformation() {
+        origin.entrySet().removeIf(entry ->{
+            Queue<JwtInformation> queue = entry.getValue();
+            queue.removeIf(jwtInformation -> {
+                boolean isExpired =
+                !jwtTokenProvider.validateAccessToken(jwtInformation.getAccessToken()) ||
+                        !jwtTokenProvider.validateRefreshToken(jwtInformation.getRefreshToken());
+                if(isExpired){
+                    removeTokenIndex(
+                            jwtInformation.getAccessToken(),
+                            jwtInformation.getRefreshToken()
+                    );
+                }
+                return isExpired;
+            });
+            return queue.isEmpty();
         });
     }
 

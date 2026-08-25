@@ -25,7 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -47,8 +47,8 @@ public class SecurityConfig {
             JwtLogoutHandler jwtLogoutHandler,
             LoginFailureHandler loginFailureHandler,
             JwtAuthenticationFilter jwtAuthenticationFilter
-//          DiscodeitUserDetailsService userDetailsService
-    ) throws Exception {
+    )
+            throws Exception {
 
         http
                 .authorizeHttpRequests(auth -> auth
@@ -71,15 +71,12 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-//                        .deleteCookies("JSESSIONID","remember-me")
                         .addLogoutHandler(jwtLogoutHandler)
                         .logoutSuccessHandler(
                                 new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                         .accessDeniedHandler(new AccessDeniedHandlerImpl())
                 )
                 .sessionManagement(management -> management

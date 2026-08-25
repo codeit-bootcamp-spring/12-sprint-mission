@@ -8,13 +8,14 @@ public interface JwtRegistry<T> {
 
     void invalidateJwtInformationByUserId(T userId); // 무효화 메소드
 
-    void rotateJwtInformation(String refreshToken, JwtInformation newJwtInformation);
-
     boolean hasActiveJwtInformationByUserId(T userId);
 
     boolean hasActiveJwtInformationAccessToken(String accessToken);
 
     boolean hasActiveJwtInformationByRefreshToken(String refreshToken);
 
+    void rotateJwtInformation(String refreshToken, JwtInformation newJwtInformation);
+
+    void clearExpiredJwtInformation();
 }
 
