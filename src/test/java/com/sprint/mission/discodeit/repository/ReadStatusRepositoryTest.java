@@ -2,14 +2,9 @@ package com.sprint.mission.discodeit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.sprint.mission.discodeit.entity.BinaryContent;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.ReadStatus;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.entity.*;
+
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.DisplayName;
@@ -45,9 +40,7 @@ class ReadStatusRepositoryTest {
    */
   private User createTestUser(String username, String email) {
     BinaryContent profile = new BinaryContent("profile.jpg", 1024L, "image/jpeg");
-    User user = new User(username, email, "password123!@#", profile);
-    // UserStatus 생성 및 연결
-    UserStatus status = new UserStatus(user, Instant.now());
+    User user = new User(username, email, "password123!@#", profile, Role.USER);
     return userRepository.save(user);
   }
 
@@ -62,9 +55,9 @@ class ReadStatusRepositoryTest {
   /**
    * TestFixture: 테스트용 읽음 상태 생성
    */
-  private ReadStatus createTestReadStatus(User user, Channel channel, Instant lastReadAt) {
+  private void createTestReadStatus(User user, Channel channel, Instant lastReadAt) {
     ReadStatus readStatus = new ReadStatus(user, channel, lastReadAt);
-    return readStatusRepository.save(readStatus);
+    readStatusRepository.save(readStatus);
   }
 
   @Test
@@ -72,12 +65,6 @@ class ReadStatusRepositoryTest {
   void findAllByUserId_ReturnsReadStatuses() {
     // given
     User user = createTestUser("testUser", "test@example.com");
-    Channel channel1 = createTestChannel(ChannelType.PUBLIC, "채널1");
-    Channel channel2 = createTestChannel(ChannelType.PRIVATE, "채널2");
-
-    Instant now = Instant.now();
-    ReadStatus readStatus1 = createTestReadStatus(user, channel1, now.minus(1, ChronoUnit.DAYS));
-    ReadStatus readStatus2 = createTestReadStatus(user, channel2, now);
 
     // 영속성 컨텍스트 초기화
     entityManager.flush();
@@ -94,13 +81,7 @@ class ReadStatusRepositoryTest {
   @DisplayName("채널 ID로 모든 읽음 상태를 사용자 정보와 함께 조회할 수 있다")
   void findAllByChannelIdWithUser_ReturnsReadStatusesWithUser() {
     // given
-    User user1 = createTestUser("user1", "user1@example.com");
-    User user2 = createTestUser("user2", "user2@example.com");
     Channel channel = createTestChannel(ChannelType.PUBLIC, "공개채널");
-
-    Instant now = Instant.now();
-    ReadStatus readStatus1 = createTestReadStatus(user1, channel, now.minus(1, ChronoUnit.DAYS));
-    ReadStatus readStatus2 = createTestReadStatus(user2, channel, now);
 
     // 영속성 컨텍스트 초기화
     entityManager.flush();
@@ -116,7 +97,6 @@ class ReadStatusRepositoryTest {
     // 사용자 정보가 함께 로드되었는지 확인 (FETCH JOIN)
     for (ReadStatus status : readStatuses) {
       assertThat(Hibernate.isInitialized(status.getUser())).isTrue();
-      assertThat(Hibernate.isInitialized(status.getUser().getStatus())).isTrue();
       assertThat(Hibernate.isInitialized(status.getUser().getProfile())).isTrue();
     }
   }
@@ -127,8 +107,6 @@ class ReadStatusRepositoryTest {
     // given
     User user = createTestUser("testUser", "test@example.com");
     Channel channel = createTestChannel(ChannelType.PUBLIC, "공개채널");
-
-    ReadStatus readStatus = createTestReadStatus(user, channel, Instant.now());
 
     // 영속성 컨텍스트 초기화
     entityManager.flush();

@@ -2,12 +2,8 @@ package com.sprint.mission.discodeit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.sprint.mission.discodeit.entity.BinaryContent;
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.entity.*;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -51,9 +47,8 @@ class MessageRepositoryTest {
    */
   private User createTestUser(String username, String email) {
     BinaryContent profile = new BinaryContent("profile.jpg", 1024L, "image/jpeg");
-    User user = new User(username, email, "password123!@#", profile);
+    User user = new User(username, email, "password123!@#", profile, Role.USER);
     // UserStatus 생성 및 연결
-    UserStatus status = new UserStatus(user, Instant.now());
     return userRepository.save(user);
   }
 
@@ -87,17 +82,8 @@ class MessageRepositoryTest {
   @DisplayName("채널 ID와 생성 시간으로 메시지를 페이징하여 조회할 수 있다")
   void findAllByChannelIdWithAuthor_ReturnsMessagesWithAuthor() {
     // given
-    User user = createTestUser("testUser", "test@example.com");
     Channel channel = createTestChannel(ChannelType.PUBLIC, "테스트채널");
-
     Instant now = Instant.now();
-    Instant fiveMinutesAgo = now.minus(5, ChronoUnit.MINUTES);
-    Instant tenMinutesAgo = now.minus(10, ChronoUnit.MINUTES);
-
-    // 채널에 세 개의 메시지 생성 (시간 순서대로)
-    Message message1 = createTestMessage("첫 번째 메시지", channel, user, tenMinutesAgo);
-    Message message2 = createTestMessage("두 번째 메시지", channel, user, fiveMinutesAgo);
-    Message message3 = createTestMessage("세 번째 메시지", channel, user, now);
 
     // 영속성 컨텍스트 초기화
     entityManager.flush();
@@ -123,7 +109,6 @@ class MessageRepositoryTest {
     // 저자 정보가 함께 로드되었는지 확인 (FETCH JOIN)
     Message firstMessage = content.get(0);
     assertThat(Hibernate.isInitialized(firstMessage.getAuthor())).isTrue();
-    assertThat(Hibernate.isInitialized(firstMessage.getAuthor().getStatus())).isTrue();
     assertThat(Hibernate.isInitialized(firstMessage.getAuthor().getProfile())).isTrue();
   }
 

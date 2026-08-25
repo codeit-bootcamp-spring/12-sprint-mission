@@ -10,6 +10,9 @@ spring:
     properties:
       hibernate:
         format_sql: false
+  config:
+    activate:
+      on-profile: prod
 
 logging:
   level:
